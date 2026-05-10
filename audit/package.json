@@ -1,0 +1,40 @@
+{
+  "name": "medspa-audit",
+  "version": "0.1.0",
+  "description": "Comprehensive med spa website audit — Lighthouse, SEO, LLM/AEO, copy, design, UX — output as a shareable HTML dashboard",
+  "type": "module",
+  "bin": {
+    "medspa-audit": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "tsx src/index.ts",
+    "dev": "tsx watch src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "postinstall": "playwright install chromium --with-deps || playwright install chromium || true"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "@mendable/firecrawl-js": "^1.19.0",
+    "chalk": "^5.4.1",
+    "cheerio": "^1.0.0",
+    "chrome-launcher": "^1.1.2",
+    "commander": "^13.1.0",
+    "csv-parse": "^5.6.0",
+    "dotenv": "^16.4.7",
+    "ejs": "^3.1.10",
+    "lighthouse": "^12.2.1",
+    "openai": "^4.71.0",
+    "ora": "^8.2.0",
+    "p-limit": "^6.2.0",
+    "playwright": "^1.49.0",
+    "serpapi": "^2.1.0",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@types/ejs": "^3.1.5",
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}

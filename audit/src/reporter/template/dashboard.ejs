@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Audit · <%= clinic.name %></title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style><%- styles %></style>
+</head>
+<body>
+<header class="report-header">
+  <div class="container">
+    <div class="eyebrow">Med spa website audit · <%= new Date(report.startedAt).toLocaleDateString() %></div>
+    <h1><%= clinic.name %> <em>audit</em></h1>
+    <div class="meta">
+      <a href="<%= clinic.url %>" target="_blank" rel="noopener"><%= clinic.url %></a>
+      <% if (clinic.city) { %> · <%= clinic.city %><%= clinic.state ? ', ' + clinic.state : '' %><% } %>
+      <% if (clinic.phone) { %> · <%= clinic.phone %><% } %>
+    </div>
+    <div class="score-block">
+      <div>
+        <div class="overall-label">Overall</div>
+        <div class="overall-score"><%= report.overallScore %><span class="denom">/100</span></div>
+      </div>
+      <div class="scorecards">
+        <% report.modules.forEach(function(m){ %>
+          <a href="#<%= m.id %>" class="scorecard <%= scoreBand(m.score) %>" style="text-decoration:none; color:inherit;">
+            <div class="label"><%= m.label %></div>
+            <div class="num"><%= m.score === null ? '—' : m.score %></div>
+            <div class="badge">
+              <% if (m.status === 'ok') { %><%= m.issues.length %> issue<%= m.issues.length === 1 ? '' : 's' %><% } else { %><%= m.status %><% } %>
+            </div>
+          </a>
+        <% }); %>
+      </div>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <div class="container">
+    <button data-tab="overview">Overview</button>
+    <% report.modules.forEach(function(m){ %>
+      <button data-tab="<%= m.id %>"><%= m.label %><% if (m.score !== null) { %><span class="tab-score"><%= m.score %></span><% } %></button>
+    <% }); %>
+  </div>
+</nav>
+
+<main>
+  <section class="tab-panel" data-tab="overview">
+    <div class="container">
+      <h2>The <em>punch list</em></h2>
+      <p class="tab-summary">Issues across every audit module, sorted by severity. Click a row to see the quick fix.</p>
+      <% var allIssues = []; report.modules.forEach(function(m){ m.issues.forEach(function(i){ allIssues.push({mod: m.label, modId: m.id, ...i}); }); }); %>
+      <% var bySev = ['critical','high','medium','low']; bySev.forEach(function(sev){
+           var bucket = allIssues.filter(function(i){ return i.severity === sev; });
+           if (bucket.length === 0) return; %>
+        <div class="issues-group">
+          <h3><%= sev %> · <%= bucket.length %></h3>
+          <% bucket.forEach(function(i){ %>
+            <div class="issue <%= i.severity %>">
+              <div class="issue-head">
+                <div class="issue-title"><%= i.title %> <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;"><%= i.mod %></span></div>
+                <span class="issue-sev"><%= i.severity %></span>
+              </div>
+              <div class="issue-body">
+                <div><%= i.description %></div>
+                <% if (i.quickFix) { %><div class="quickfix"><%= i.quickFix %></div><% } %>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      <% }); %>
+      <% if (allIssues.length === 0) { %>
+        <p>No issues detected. (Likely all modules were skipped — check API keys.)</p>
+      <% } %>
+    </div>
+  </section>
+
+  <% report.modules.forEach(function(m){ %>
+  <section class="tab-panel" data-tab="<%= m.id %>">
+    <div class="container">
+      <h2><%= m.label %> <% if (m.score !== null) { %><em>· <%= m.score %>/100</em><% } %></h2>
+
+      <% if (m.status === 'skipped') { %>
+        <div class="tab-summary skipped"><%= m.summary %><% if (m.skipReason) { %> <%= m.skipReason %><% } %></div>
+      <% } else if (m.status === 'error') { %>
+        <div class="tab-summary error"><%= m.summary %><% if (m.errorMessage) { %> <%= m.errorMessage %><% } %></div>
+      <% } else { %>
+        <p class="tab-summary"><%= m.summary %></p>
+      <% } %>
+
+      <% /* Module-specific evidence */ %>
+
+      <% if (m.id === 'design-review' && screenshots) { %>
+        <div class="evidence-grid">
+          <div>
+            <div class="label">Mobile · 390×844</div>
+            <img src="raw/screenshot-mobile.png" alt="mobile screenshot" />
+          </div>
+          <div>
+            <div class="label">Desktop · 1440×900</div>
+            <img src="raw/screenshot-desktop.png" alt="desktop screenshot" />
+          </div>
+        </div>
+      <% } %>
+
+      <% if (m.id === 'seo-ranking' && m.evidence && m.evidence.keywords) { %>
+        <table class="kw-table">
+          <thead><tr><th>Keyword</th><th>Rank</th><th>Top result (competitor)</th></tr></thead>
+          <tbody>
+            <% m.evidence.keywords.forEach(function(k){
+                 var cls = k.rank === null || k.rank > 20 ? 'bad' : k.rank > 10 ? 'warn' : 'good'; %>
+              <tr>
+                <td><%= k.keyword %></td>
+                <td><span class="kw-rank <%= cls %>"><%= k.rank === null ? 'not in top 100' : '#' + k.rank %></span></td>
+                <td>
+                  <% if (k.topThree[0]) { %>
+                    <strong><%= k.topThree[0].title %></strong><br>
+                    <a href="<%= k.topThree[0].url %>" target="_blank" rel="noopener" style="font-size:12px; color:var(--muted);"><%= k.topThree[0].url %></a>
+                  <% } %>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      <% } %>
+
+      <% if (m.id === 'copy-conversion' && m.evidence && m.evidence.coverage) { %>
+        <table class="coverage-table">
+          <thead><tr><th>Buyer-intent topic</th><th>Covered?</th></tr></thead>
+          <tbody>
+            <% Object.keys(m.evidence.coverage).forEach(function(k){ var v = m.evidence.coverage[k]; %>
+              <tr>
+                <td><%= k.replace(/([A-Z])/g, ' $1').replace(/^./, function(c){ return c.toUpperCase(); }) %></td>
+                <td class="<%= v ? 'coverage-yes' : 'coverage-no' %>"><%= v ? 'Yes' : 'No' %></td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      <% } %>
+
+      <% if (m.id === 'llm-discoverability' && m.evidence && m.evidence.rounds) { %>
+        <% m.evidence.rounds.forEach(function(r){ %>
+          <div class="llm-question"><%= r.question %></div>
+          <div class="llm-grid">
+            <% ['claude','perplexity','openai'].forEach(function(p){
+                 var a = r.answers.find(function(x){ return x.provider === p; }); %>
+              <div class="llm-card">
+                <div class="head">
+                  <div class="provider"><%= p %></div>
+                  <div class="flags">
+                    <% if (a && !a.error) { %>
+                      <span class="<%= a.mentionsClinic ? 'flag-yes' : 'flag-no' %>"><%= a.mentionsClinic ? '✓ named' : '✗ not named' %></span>
+                      &nbsp;<span class="<%= a.citesWebsite ? 'flag-yes' : 'flag-no' %>"><%= a.citesWebsite ? '✓ cited' : '✗ not cited' %></span>
+                    <% } else if (a && a.error) { %>
+                      <span class="flag-no">error / no key</span>
+                    <% } else { %>
+                      <span class="flag-no">not run</span>
+                    <% } %>
+                  </div>
+                </div>
+                <div class="answer"><% if (a) { %><%= a.answer || (a.error || '(empty)') %><% } else { %>—<% } %></div>
+                <% if (a && a.citations && a.citations.length) { %>
+                  <div class="citations">Sources: <% a.citations.slice(0, 4).forEach(function(c, i){ %><a href="<%= c %>" target="_blank" rel="noopener"><%= c %></a><% if (i < Math.min(3, a.citations.length - 1)) { %>, <% } %><% }); %></div>
+                <% } %>
+              </div>
+            <% }); %>
+          </div>
+        <% }); %>
+      <% } %>
+
+      <% if (m.id === 'ux-medspa' && m.evidence) { %>
+        <div class="ux-checks">
+          <div class="ux-check <%= m.evidence.hasTelLink ? 'yes' : 'no' %>"><div class="label">Click-to-call</div><div class="value"><%= m.evidence.hasTelLink ? 'Yes' : 'No' %></div></div>
+          <div class="ux-check <%= m.evidence.telVisibleAboveFold ? 'yes' : 'no' %>"><div class="label">Phone above fold (mobile)</div><div class="value"><%= m.evidence.telVisibleAboveFold ? 'Yes' : 'No' %></div></div>
+          <div class="ux-check <%= m.evidence.hasPhoneInHeader ? 'yes' : 'no' %>"><div class="label">Phone in header</div><div class="value"><%= m.evidence.hasPhoneInHeader ? 'Yes' : 'No' %></div></div>
+          <div class="ux-check <%= m.evidence.hasBookCta ? 'yes' : 'no' %>"><div class="label">Book CTA</div><div class="value"><%= m.evidence.hasBookCta ? 'Yes — "' + (m.evidence.bookCtaText || '') + '"' : 'No' %></div></div>
+          <div class="ux-check <%= m.evidence.bookCtaAboveFold ? 'yes' : 'no' %>"><div class="label">Book CTA above fold</div><div class="value"><%= m.evidence.bookCtaAboveFold ? 'Yes' : 'No' %></div></div>
+          <div class="ux-check <%= m.evidence.hasStickyMobileCta ? 'yes' : 'no' %>"><div class="label">Sticky mobile CTA</div><div class="value"><%= m.evidence.hasStickyMobileCta ? 'Yes' : 'No' %></div></div>
+          <div class="ux-check <%= m.evidence.liveChatProviders.length ? 'yes' : 'no' %>"><div class="label">Live chat</div><div class="value"><%= m.evidence.liveChatProviders.length ? m.evidence.liveChatProviders.join(', ') : 'None' %></div></div>
+          <div class="ux-check <%= m.evidence.hasContactForm ? 'yes' : 'no' %>"><div class="label">Contact form</div><div class="value"><%= m.evidence.hasContactForm ? m.evidence.contactFormFieldCount + ' fields' : 'None' %></div></div>
+        </div>
+      <% } %>
+
+      <% if (m.id === 'seo-onpage' && m.evidence) { %>
+        <div class="ux-checks">
+          <div class="ux-check <%= m.evidence.title ? 'yes' : 'no' %>"><div class="label">Title</div><div class="value"><%= m.evidence.titleLength %> chars</div></div>
+          <div class="ux-check <%= m.evidence.metaDescription ? 'yes' : 'no' %>"><div class="label">Meta description</div><div class="value"><%= m.evidence.metaDescriptionLength %> chars</div></div>
+          <div class="ux-check <%= m.evidence.h1Count === 1 ? 'yes' : 'no' %>"><div class="label">H1 count</div><div class="value"><%= m.evidence.h1Count %></div></div>
+          <div class="ux-check <%= m.evidence.imagesMissingAlt === 0 ? 'yes' : 'no' %>"><div class="label">Images missing alt</div><div class="value"><%= m.evidence.imagesMissingAlt %> / <%= m.evidence.imagesTotal %></div></div>
+          <div class="ux-check <%= m.evidence.hasCanonical ? 'yes' : 'no' %>"><div class="label">Canonical</div><div class="value"><%= m.evidence.hasCanonical ? 'Yes' : 'No' %></div></div>
+          <div class="ux-check <%= m.evidence.hasOpenGraph ? 'yes' : 'no' %>"><div class="label">Open Graph</div><div class="value"><%= m.evidence.hasOpenGraph ? 'Yes' : 'No' %></div></div>
+          <div class="ux-check <%= m.evidence.hasJsonLd ? 'yes' : 'no' %>"><div class="label">JSON-LD</div><div class="value"><%= m.evidence.hasJsonLd ? m.evidence.jsonLdTypes.slice(0,3).join(', ') : 'None' %></div></div>
+          <div class="ux-check <%= m.evidence.sitemapXmlOk ? 'yes' : 'no' %>"><div class="label">Sitemap.xml</div><div class="value"><%= m.evidence.sitemapXmlOk ? 'Yes' : 'No' %></div></div>
+          <div class="ux-check <%= m.evidence.robotsTxtOk ? 'yes' : 'no' %>"><div class="label">robots.txt</div><div class="value"><%= m.evidence.robotsTxtOk ? 'Yes' : 'No' %></div></div>
+        </div>
+      <% } %>
+
+      <% if (m.id === 'lighthouse' && m.evidence) { %>
+        <div class="ux-checks">
+          <% ['mobile','desktop'].forEach(function(ff){ var s = m.evidence[ff].scores; %>
+            <div class="ux-check <%= s.performance >= 90 ? 'yes' : 'no' %>"><div class="label"><%= ff %> · Performance</div><div class="value"><%= s.performance %></div></div>
+            <div class="ux-check <%= s.accessibility >= 90 ? 'yes' : 'no' %>"><div class="label"><%= ff %> · Accessibility</div><div class="value"><%= s.accessibility %></div></div>
+            <div class="ux-check <%= s.bestPractices >= 90 ? 'yes' : 'no' %>"><div class="label"><%= ff %> · Best practices</div><div class="value"><%= s.bestPractices %></div></div>
+            <div class="ux-check <%= s.seo >= 90 ? 'yes' : 'no' %>"><div class="label"><%= ff %> · SEO</div><div class="value"><%= s.seo %></div></div>
+          <% }); %>
+        </div>
+      <% } %>
+
+      <% /* Issues */ %>
+      <% if (m.issues && m.issues.length) { %>
+        <% var sevs = ['critical','high','medium','low','info']; sevs.forEach(function(sev){
+             var bucket = m.issues.filter(function(i){ return i.severity === sev; });
+             if (bucket.length === 0) return; %>
+          <div class="issues-group">
+            <h3><%= sev %> · <%= bucket.length %></h3>
+            <% bucket.forEach(function(i){ %>
+              <div class="issue <%= i.severity %>">
+                <div class="issue-head">
+                  <div class="issue-title"><%= i.title %></div>
+                  <span class="issue-sev"><%= i.severity %></span>
+                </div>
+                <div class="issue-body">
+                  <div><%= i.description %></div>
+                  <% if (i.quickFix) { %><div class="quickfix"><%= i.quickFix %></div><% } %>
+                </div>
+              </div>
+            <% }); %>
+          </div>
+        <% }); %>
+      <% } %>
+    </div>
+  </section>
+  <% }); %>
+</main>
+
+<script><%- clientJs %></script>
+</body>
+</html>

@@ -1,4 +1,5 @@
 node_modules/
+# Secrets — drop ANTHROPIC_API_KEY into templates/med-spa/.env (see .env.example)
 .env
 .env.local
 .env.*.local
@@ -8,3 +9,5 @@ dist/
 build/
 .claude/worktrees/
 .context/
+audit/output/
+audit/node_modules/
