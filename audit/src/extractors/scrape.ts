@@ -1,54 +1,89 @@
 import FirecrawlApp from '@mendable/firecrawl-js';
 
-export interface ScrapedSite {
+export interface ScrapedPage {
   url: string;
-  finalUrl: string;
   title: string;
   description: string;
   markdown: string;
   html: string;
-  pages: { url: string; title: string; markdown: string; html: string }[];
 }
 
-export async function scrapeSite(url: string): Promise<ScrapedSite> {
+export interface ScrapedSite {
+  url: string;            // input URL
+  finalUrl: string;       // resolved URL of the homepage after redirects
+  title: string;          // homepage title
+  description: string;    // homepage meta description
+  markdown: string;       // homepage markdown (for backward-compat with single-page consumers)
+  html: string;           // homepage HTML
+  pages: ScrapedPage[];   // every crawled page (homepage first, alphabetical thereafter)
+}
+
+export interface ScrapeOptions {
+  maxPages?: number;
+}
+
+function normalizePage(p: any, fallbackUrl: string): ScrapedPage {
+  const meta = p.metadata || {};
+  return {
+    url: meta.sourceURL || meta.url || fallbackUrl,
+    title: meta.title || '',
+    description: meta.description || '',
+    markdown: p.markdown || '',
+    html: p.html || '',
+  };
+}
+
+function sortPagesHomepageFirst(pages: ScrapedPage[], homepageUrl: string): ScrapedPage[] {
+  const home = pages.find((p) => p.url === homepageUrl || p.url.replace(/\/$/, '') === homepageUrl.replace(/\/$/, ''));
+  const rest = pages.filter((p) => p !== home).sort((a, b) => a.url.localeCompare(b.url));
+  return home ? [home, ...rest] : pages.sort((a, b) => a.url.localeCompare(b.url));
+}
+
+export async function scrapeSite(url: string, options: ScrapeOptions = {}): Promise<ScrapedSite> {
   const apiKey = process.env.FIRECRAWL_API_KEY;
   if (!apiKey) throw new Error('FIRECRAWL_API_KEY is not set.');
 
   const app = new FirecrawlApp({ apiKey });
+  const limit = options.maxPages ?? 15;
 
-  let result: any;
+  let crawlResult: any;
   try {
-    result = await app.scrapeUrl(url, {
-      formats: ['markdown', 'html'],
-      onlyMainContent: false,
+    crawlResult = await app.crawlUrl(url, {
+      limit,
+      scrapeOptions: {
+        formats: ['markdown', 'html'],
+        onlyMainContent: false,
+      },
     });
   } catch (err: any) {
-    throw new Error(`Firecrawl scrape failed for ${url}: ${err.message}`);
+    if (err.message?.includes('timeout') || err.statusCode === 408) {
+      crawlResult = await app.crawlUrl(url, {
+        limit: Math.min(5, limit),
+        scrapeOptions: { formats: ['markdown', 'html'], onlyMainContent: false },
+      });
+    } else {
+      throw new Error(`Firecrawl crawl failed for ${url}: ${err.message}`);
+    }
   }
 
-  if (!result || result.success === false) {
-    throw new Error(`Firecrawl returned no data for ${url}`);
+  if (!crawlResult || crawlResult.success === false || !crawlResult.data || crawlResult.data.length === 0) {
+    throw new Error(`Firecrawl returned no pages for ${url}. The site may be down, blocking crawlers, or empty.`);
   }
 
-  const markdown: string = result.markdown || '';
-  const html: string = result.html || '';
-  const meta = result.metadata || {};
-  const finalUrl: string = meta.sourceURL || meta.url || url;
+  const rawPages: ScrapedPage[] = (crawlResult.data as any[]).map((p) => normalizePage(p, url));
+
+  // The first page in the crawl response is usually the homepage, but Firecrawl
+  // doesn't guarantee it. Use the input URL as the homepage anchor.
+  const pages = sortPagesHomepageFirst(rawPages, url);
+  const home = pages[0];
 
   return {
     url,
-    finalUrl,
-    title: meta.title || '',
-    description: meta.description || '',
-    markdown,
-    html,
-    pages: [
-      {
-        url: finalUrl,
-        title: meta.title || '',
-        markdown,
-        html,
-      },
-    ],
+    finalUrl: home.url,
+    title: home.title,
+    description: home.description,
+    markdown: home.markdown,
+    html: home.html,
+    pages,
   };
 }

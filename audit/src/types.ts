@@ -12,6 +12,7 @@ export type ModuleId =
   | 'lighthouse'
   | 'seo-onpage'
   | 'seo-ranking'
+  | 'traffic-metrics'
   | 'llm-copy-aeo'
   | 'llm-discoverability'
   | 'copy-conversion'
@@ -50,6 +51,11 @@ export interface AuditInput {
   keywordsOverride?: string[];
 }
 
+export interface AuditCost {
+  totalUsd: number;
+  byLabel: Record<string, number>;
+}
+
 export interface AuditReport {
   input: AuditInput;
   clinic: ClinicInfo;
@@ -58,6 +64,8 @@ export interface AuditReport {
   overallScore: number;
   modules: ModuleResult[];
   outputDir: string;
+  cost?: AuditCost;
+  corpusStats?: { includedPages: number; droppedPages: number; totalChars: number };
 }
 
 export interface BatchEntry {
@@ -76,10 +84,15 @@ export interface CLIOptions {
   batch?: string;
   concurrency: number;
   skip: ModuleId[];
+  enable: ModuleId[];
   keywords?: string[];
   open: boolean;
   index: boolean;
   verbose: boolean;
+  maxPages: number;
+  maxCorpus: number;
+  shallowDesign: boolean;
+  budget: number; // USD; 0 disables
 }
 
 export interface AvailableKeys {
@@ -88,4 +101,5 @@ export interface AvailableKeys {
   serpapi: boolean;
   perplexity: boolean;
   openai: boolean;
+  dataforseo: boolean;
 }

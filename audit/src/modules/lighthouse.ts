@@ -1,7 +1,13 @@
 import fs from 'fs';
 import path from 'path';
+import { spawn } from 'child_process';
+import { fileURLToPath } from 'url';
 import { Issue, ModuleResult, Severity } from '../types.js';
 import { sortIssues } from '../utils/scoring.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const WORKER_PATH = path.join(__dirname, 'lighthouse-worker.mjs');
 
 interface LighthouseRun {
   formFactor: 'mobile' | 'desktop';
@@ -9,73 +15,37 @@ interface LighthouseRun {
   failedAudits: { id: string; title: string; description: string; score: number | null; displayValue?: string }[];
 }
 
-async function runLighthouse(url: string, formFactor: 'mobile' | 'desktop'): Promise<LighthouseRun> {
-  const chromeLauncher = await import('chrome-launcher');
-  const lighthouseModule: any = await import('lighthouse');
-  const lighthouse = lighthouseModule.default || lighthouseModule;
-
-  const chrome = await chromeLauncher.launch({
-    chromeFlags: ['--headless=new', '--no-sandbox', '--disable-gpu', '--disable-dev-shm-usage'],
-  });
-
-  try {
-    const config: any = {
-      extends: 'lighthouse:default',
-      settings: {
-        formFactor,
-        screenEmulation:
-          formFactor === 'desktop'
-            ? { mobile: false, width: 1350, height: 940, deviceScaleFactor: 1, disabled: false }
-            : { mobile: true, width: 412, height: 823, deviceScaleFactor: 1.75, disabled: false },
-        throttling:
-          formFactor === 'desktop'
-            ? { rttMs: 40, throughputKbps: 10240, cpuSlowdownMultiplier: 1, requestLatencyMs: 0, downloadThroughputKbps: 0, uploadThroughputKbps: 0 }
-            : undefined,
-        emulatedUserAgent:
-          formFactor === 'desktop'
-            ? 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-            : undefined,
-      },
-    };
-
-    const runnerResult = await lighthouse(
-      url,
-      { port: chrome.port, output: 'json', logLevel: 'error', onlyCategories: ['performance', 'accessibility', 'best-practices', 'seo'] },
-      config
-    );
-
-    const lhr = runnerResult.lhr;
-    const cats = lhr.categories;
-    const audits = lhr.audits;
-
-    const failedAudits: LighthouseRun['failedAudits'] = [];
-    for (const id of Object.keys(audits)) {
-      const a = audits[id];
-      if (a.score === null) continue;
-      if (a.score < 0.9) {
-        failedAudits.push({
-          id,
-          title: a.title,
-          description: a.description?.split('[')[0]?.trim() || '',
-          score: a.score,
-          displayValue: a.displayValue,
-        });
+function runLighthouse(url: string, formFactor: 'mobile' | 'desktop'): Promise<LighthouseRun> {
+  return new Promise((resolve, reject) => {
+    const child = spawn('node', [WORKER_PATH, url, formFactor], {
+      stdio: ['ignore', 'pipe', 'pipe'],
+    });
+    let stdout = '';
+    let stderr = '';
+    child.stdout.on('data', (b) => (stdout += b.toString()));
+    child.stderr.on('data', (b) => (stderr += b.toString()));
+    const timer = setTimeout(() => {
+      child.kill('SIGKILL');
+      reject(new Error(`Lighthouse worker timed out (${formFactor})`));
+    }, 180_000);
+    child.on('close', () => {
+      clearTimeout(timer);
+      const marker = '__LH_RESULT__:';
+      const idx = stdout.lastIndexOf(marker);
+      if (idx === -1) {
+        reject(new Error(`Lighthouse worker produced no result. stderr: ${stderr.slice(-400)}`));
+        return;
       }
-    }
-
-    return {
-      formFactor,
-      scores: {
-        performance: Math.round((cats.performance?.score ?? 0) * 100),
-        accessibility: Math.round((cats.accessibility?.score ?? 0) * 100),
-        bestPractices: Math.round((cats['best-practices']?.score ?? 0) * 100),
-        seo: Math.round((cats.seo?.score ?? 0) * 100),
-      },
-      failedAudits,
-    };
-  } finally {
-    await chrome.kill();
-  }
+      const jsonLine = stdout.slice(idx + marker.length).trim().split('\n')[0];
+      try {
+        const parsed = JSON.parse(jsonLine);
+        if (!parsed.ok) reject(new Error(parsed.error || 'unknown'));
+        else resolve(parsed.run as LighthouseRun);
+      } catch (e: any) {
+        reject(new Error(`Could not parse worker output: ${e.message}`));
+      }
+    });
+  });
 }
 
 function severityForScore(score: number): Severity {
@@ -87,7 +57,9 @@ function severityForScore(score: number): Severity {
 export async function runLighthouseModule(url: string, rawDir: string): Promise<ModuleResult<{ mobile: LighthouseRun; desktop: LighthouseRun }>> {
   const start = Date.now();
   try {
-    const [mobile, desktop] = await Promise.all([runLighthouse(url, 'mobile'), runLighthouse(url, 'desktop')]);
+    // Run sequentially — two simultaneous Chromes on the same machine is flaky.
+    const mobile = await runLighthouse(url, 'mobile');
+    const desktop = await runLighthouse(url, 'desktop');
 
     fs.mkdirSync(rawDir, { recursive: true });
     fs.writeFileSync(path.join(rawDir, 'lighthouse-mobile.json'), JSON.stringify(mobile, null, 2));

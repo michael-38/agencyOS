@@ -18,6 +18,8 @@
       <a href="<%= clinic.url %>" target="_blank" rel="noopener"><%= clinic.url %></a>
       <% if (clinic.city) { %> · <%= clinic.city %><%= clinic.state ? ', ' + clinic.state : '' %><% } %>
       <% if (clinic.phone) { %> · <%= clinic.phone %><% } %>
+      <% if (report.corpusStats) { %> · <%= report.corpusStats.includedPages %> pages analyzed<% } %>
+      <% if (report.cost) { %> · <span style="font-family:'JetBrains Mono', monospace;">$<%= report.cost.totalUsd.toFixed(4) %> Anthropic</span><% } %>
     </div>
     <div class="score-block">
       <div>
@@ -128,6 +130,61 @@
         </table>
       <% } %>
 
+      <% if (m.id === 'traffic-metrics' && m.evidence) { %>
+        <div class="ux-checks">
+          <div class="ux-check <%= m.evidence.estimatedMonthlyVisits >= 2000 ? 'yes' : 'no' %>">
+            <div class="label">Est. monthly visits</div>
+            <div class="value"><%= m.evidence.estimatedMonthlyVisits.toLocaleString() %></div>
+          </div>
+          <div class="ux-check <%= (m.evidence.domainRank || 0) >= 200 ? 'yes' : 'no' %>">
+            <div class="label">Domain rank</div>
+            <div class="value"><%= m.evidence.domainRank === null ? '—' : m.evidence.domainRank %>/1000</div>
+          </div>
+          <div class="ux-check <%= m.evidence.referringDomains >= 10 ? 'yes' : 'no' %>">
+            <div class="label">Referring domains</div>
+            <div class="value"><%= m.evidence.referringDomains.toLocaleString() %></div>
+          </div>
+          <div class="ux-check <%= m.evidence.backlinks >= 50 ? 'yes' : 'no' %>">
+            <div class="label">Total backlinks</div>
+            <div class="value"><%= m.evidence.backlinks.toLocaleString() %></div>
+          </div>
+          <div class="ux-check <%= m.evidence.organicKeywordCount >= 25 ? 'yes' : 'no' %>">
+            <div class="label">Keywords ranking</div>
+            <div class="value"><%= m.evidence.organicKeywordCount.toLocaleString() %></div>
+          </div>
+          <div class="ux-check <%= m.evidence.organicTrafficValueUsd >= 500 ? 'yes' : 'no' %>">
+            <div class="label">Organic traffic value</div>
+            <div class="value">$<%= m.evidence.organicTrafficValueUsd.toLocaleString() %>/mo</div>
+          </div>
+          <div class="ux-check <%= m.evidence.socialPlatforms.length >= 3 ? 'yes' : 'no' %>">
+            <div class="label">Social platforms</div>
+            <div class="value"><%= m.evidence.socialPlatforms.length ? m.evidence.socialPlatforms.join(', ') : 'None' %></div>
+          </div>
+          <div class="ux-check <%= (m.evidence.domainAgeDays || 0) > 730 ? 'yes' : 'no' %>">
+            <div class="label">Domain age</div>
+            <div class="value"><%= m.evidence.domainAgeDays === null ? '—' : (m.evidence.domainAgeDays > 365 ? Math.floor(m.evidence.domainAgeDays / 365) + 'y' : m.evidence.domainAgeDays + 'd') %></div>
+          </div>
+        </div>
+        <% if (m.evidence.topKeywords && m.evidence.topKeywords.length) { %>
+          <h3 style="margin-top:24px;">Top keywords driving traffic</h3>
+          <table class="kw-table">
+            <thead><tr><th>Keyword</th><th>Rank</th><th>Volume</th><th>Est. traffic/mo</th><th>CPC</th></tr></thead>
+            <tbody>
+              <% m.evidence.topKeywords.forEach(function(k){
+                   var cls = k.position <= 3 ? 'good' : k.position <= 10 ? 'warn' : 'bad'; %>
+                <tr>
+                  <td><%= k.keyword %></td>
+                  <td><span class="kw-rank <%= cls %>">#<%= k.position %></span></td>
+                  <td><%= k.searchVolume.toLocaleString() %></td>
+                  <td><%= k.traffic.toLocaleString() %></td>
+                  <td>$<%= k.cpc.toFixed(2) %></td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        <% } %>
+      <% } %>
+
       <% if (m.id === 'copy-conversion' && m.evidence && m.evidence.coverage) { %>
         <table class="coverage-table">
           <thead><tr><th>Buyer-intent topic</th><th>Covered?</th></tr></thead>
@@ -183,17 +240,27 @@
           <div class="ux-check <%= m.evidence.liveChatProviders.length ? 'yes' : 'no' %>"><div class="label">Live chat</div><div class="value"><%= m.evidence.liveChatProviders.length ? m.evidence.liveChatProviders.join(', ') : 'None' %></div></div>
           <div class="ux-check <%= m.evidence.hasContactForm ? 'yes' : 'no' %>"><div class="label">Contact form</div><div class="value"><%= m.evidence.hasContactForm ? m.evidence.contactFormFieldCount + ' fields' : 'None' %></div></div>
         </div>
+        <div style="margin-top:24px;">
+          <div class="label" style="font-family:'JetBrains Mono', monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); margin-bottom:8px;">Pages probed</div>
+          <ul style="font-size:13px; color:var(--ink-2); padding-left:20px;">
+            <% m.evidence.pages.forEach(function(p){ %>
+              <li><strong><%= p.label %></strong> · <a href="<%= p.url %>" target="_blank" rel="noopener" style="color:var(--muted);"><%= p.url %></a></li>
+            <% }); %>
+          </ul>
+        </div>
       <% } %>
 
       <% if (m.id === 'seo-onpage' && m.evidence) { %>
         <div class="ux-checks">
-          <div class="ux-check <%= m.evidence.title ? 'yes' : 'no' %>"><div class="label">Title</div><div class="value"><%= m.evidence.titleLength %> chars</div></div>
-          <div class="ux-check <%= m.evidence.metaDescription ? 'yes' : 'no' %>"><div class="label">Meta description</div><div class="value"><%= m.evidence.metaDescriptionLength %> chars</div></div>
-          <div class="ux-check <%= m.evidence.h1Count === 1 ? 'yes' : 'no' %>"><div class="label">H1 count</div><div class="value"><%= m.evidence.h1Count %></div></div>
-          <div class="ux-check <%= m.evidence.imagesMissingAlt === 0 ? 'yes' : 'no' %>"><div class="label">Images missing alt</div><div class="value"><%= m.evidence.imagesMissingAlt %> / <%= m.evidence.imagesTotal %></div></div>
-          <div class="ux-check <%= m.evidence.hasCanonical ? 'yes' : 'no' %>"><div class="label">Canonical</div><div class="value"><%= m.evidence.hasCanonical ? 'Yes' : 'No' %></div></div>
-          <div class="ux-check <%= m.evidence.hasOpenGraph ? 'yes' : 'no' %>"><div class="label">Open Graph</div><div class="value"><%= m.evidence.hasOpenGraph ? 'Yes' : 'No' %></div></div>
-          <div class="ux-check <%= m.evidence.hasJsonLd ? 'yes' : 'no' %>"><div class="label">JSON-LD</div><div class="value"><%= m.evidence.hasJsonLd ? m.evidence.jsonLdTypes.slice(0,3).join(', ') : 'None' %></div></div>
+          <div class="ux-check <%= m.evidence.homepage.title ? 'yes' : 'no' %>"><div class="label">Homepage title</div><div class="value"><%= m.evidence.homepage.titleLength %> chars</div></div>
+          <div class="ux-check <%= m.evidence.homepage.metaDescription ? 'yes' : 'no' %>"><div class="label">Homepage meta description</div><div class="value"><%= m.evidence.homepage.metaDescriptionLength %> chars</div></div>
+          <div class="ux-check <%= m.evidence.homepage.h1Count === 1 ? 'yes' : 'no' %>"><div class="label">Homepage H1 count</div><div class="value"><%= m.evidence.homepage.h1Count %></div></div>
+          <div class="ux-check <%= m.evidence.aggregate.totalImagesMissingAlt === 0 ? 'yes' : 'no' %>"><div class="label">Images missing alt (site-wide)</div><div class="value"><%= m.evidence.aggregate.totalImagesMissingAlt %> / <%= m.evidence.aggregate.totalImages %></div></div>
+          <div class="ux-check <%= m.evidence.homepage.hasCanonical ? 'yes' : 'no' %>"><div class="label">Canonical (homepage)</div><div class="value"><%= m.evidence.homepage.hasCanonical ? 'Yes' : 'No' %></div></div>
+          <div class="ux-check <%= m.evidence.homepage.hasOpenGraph ? 'yes' : 'no' %>"><div class="label">Open Graph (homepage)</div><div class="value"><%= m.evidence.homepage.hasOpenGraph ? 'Yes' : 'No' %></div></div>
+          <div class="ux-check <%= m.evidence.aggregate.pagesWithJsonLd > 0 ? 'yes' : 'no' %>"><div class="label">JSON-LD coverage</div><div class="value"><%= m.evidence.aggregate.pagesWithJsonLd %> / <%= m.evidence.aggregate.pagesAnalyzed %> pages</div></div>
+          <div class="ux-check <%= m.evidence.aggregate.pagesWithLocalBusinessSchema > 0 ? 'yes' : 'no' %>"><div class="label">LocalBusiness schema</div><div class="value"><%= m.evidence.aggregate.pagesWithLocalBusinessSchema > 0 ? 'Yes' : 'No' %></div></div>
+          <div class="ux-check <%= m.evidence.aggregate.pagesWithFaqSchema > 0 ? 'yes' : 'no' %>"><div class="label">FAQ schema</div><div class="value"><%= m.evidence.aggregate.pagesWithFaqSchema > 0 ? 'Yes' : 'No' %></div></div>
           <div class="ux-check <%= m.evidence.sitemapXmlOk ? 'yes' : 'no' %>"><div class="label">Sitemap.xml</div><div class="value"><%= m.evidence.sitemapXmlOk ? 'Yes' : 'No' %></div></div>
           <div class="ux-check <%= m.evidence.robotsTxtOk ? 'yes' : 'no' %>"><div class="label">robots.txt</div><div class="value"><%= m.evidence.robotsTxtOk ? 'Yes' : 'No' %></div></div>
         </div>

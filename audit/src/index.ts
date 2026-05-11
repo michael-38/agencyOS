@@ -16,6 +16,7 @@ const VALID_MODULES: ModuleId[] = [
   'lighthouse',
   'seo-onpage',
   'seo-ranking',
+  'traffic-metrics',
   'llm-copy-aeo',
   'llm-discoverability',
   'copy-conversion',
@@ -128,9 +129,14 @@ program
   .option('--output <dir>', 'Output directory', path.resolve(__dirname, '../output'))
   .option('--concurrency <n>', 'Number of clinics to audit in parallel', '2')
   .option('--skip <list>', 'Comma-separated module ids to skip')
+  .option('--enable <list>', 'Comma-separated module ids to re-enable (overrides built-in defaults). E.g. --enable design-review,ux-medspa')
   .option('--keywords <list>', 'Comma-separated SEO keyword overrides')
   .option('--open', 'Open report.html when done (single URL only)', false)
   .option('--index', 'Generate output/index.html summary across the batch', false)
+  .option('--max-pages <n>', 'Max pages to crawl per clinic (Firecrawl)', '15')
+  .option('--max-corpus <n>', 'Max chars of site corpus sent to LLM modules', '100000')
+  .option('--shallow-design', 'Fall back to 2 screenshots (home only) instead of the default 6', false)
+  .option('--budget <usd>', 'Hard abort if estimated cost exceeds this (USD). Pass 0 to disable.', '0.50')
   .option('--verbose', 'Verbose logging', false)
   .action(async (url: string | undefined, opts: any) => {
     const skipRaw = parseList(opts.skip);
@@ -142,15 +148,29 @@ program
       process.exit(1);
     }
 
+    const enableRaw = parseList(opts.enable);
+    const enable: ModuleId[] = enableRaw.filter((s): s is ModuleId => (VALID_MODULES as string[]).includes(s));
+    const invalidEnable = enableRaw.filter((s) => !(VALID_MODULES as string[]).includes(s));
+    if (invalidEnable.length) {
+      log.error(`Unknown --enable module(s): ${invalidEnable.join(', ')}`);
+      log.info(`Valid: ${VALID_MODULES.join(', ')}`);
+      process.exit(1);
+    }
+
     const options: CLIOptions = {
       output: opts.output,
       batch: opts.batch,
       concurrency: Math.max(1, Math.min(10, parseInt(opts.concurrency, 10) || 2)),
       skip,
+      enable,
       keywords: parseList(opts.keywords).length ? parseList(opts.keywords) : undefined,
       open: !!opts.open,
       index: !!opts.index,
       verbose: !!opts.verbose,
+      maxPages: Math.max(1, Math.min(50, parseInt(opts.maxPages, 10) || 15)),
+      maxCorpus: Math.max(10_000, parseInt(opts.maxCorpus, 10) || 100_000),
+      shallowDesign: !!opts.shallowDesign,
+      budget: Math.max(0, parseFloat(opts.budget) || 0),
     };
 
     fs.mkdirSync(options.output, { recursive: true });
@@ -167,6 +187,8 @@ program
       ['SERPAPI_API_KEY', 'seo-ranking module'],
       ['PERPLEXITY_API_KEY', 'llm-discoverability (Perplexity leg)'],
       ['OPENAI_API_KEY', 'llm-discoverability (ChatGPT leg)'],
+      ['DATAFORSEO_LOGIN', 'traffic-metrics module'],
+      ['DATAFORSEO_PASSWORD', 'traffic-metrics module'],
     ] as const) {
       if (!process.env[name]) log.warn(`${name} not set — ${key} will be skipped or partial.`);
     }
