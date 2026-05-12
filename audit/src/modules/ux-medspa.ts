@@ -13,6 +13,7 @@ const CHAT_PROVIDERS: { name: string; patterns: RegExp[] }[] = [
   { name: 'LiveChat', patterns: [/livechatinc\.com/i, /__lc/i] },
   { name: 'Podium', patterns: [/podium\.com\/widget/i, /Podium/i] },
   { name: 'Birdeye', patterns: [/birdeye\.com/i] },
+  { name: 'Hyperworkflow', patterns: [/HyperworkflowChat/i, /hyperworkflow-chat/i] },
 ];
 
 interface UxEvidence {
