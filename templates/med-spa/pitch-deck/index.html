@@ -1,0 +1,646 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Pitch deck · Med spa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f4e8e0;
+    --bg-2: #ece0d5;
+    --paper: #faf2ea;
+    --ink: #1a1412;
+    --ink-2: #3a2d26;
+    --muted: #7a675a;
+    --line: #d9c7b7;
+    --accent: #b8644a;
+    --accent-deep: #8f4a34;
+    --accent-soft: #e6b8a3;
+    --good: #5a7d5a;
+    --warn: #c19553;
+    --bad: #b14b3b;
+    --info: #6b7d8a;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter Tight', system-ui, -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+
+  .serif { font-family: 'Fraunces', 'Times New Roman', serif; font-weight: 300; }
+  .mono  { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+  /* ------------------- slide framework ------------------- */
+  .deck { position: relative; height: 100vh; width: 100vw; overflow: hidden; }
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 6vh 8vw;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 280ms ease;
+  }
+  .slide.active { opacity: 1; pointer-events: auto; }
+  .slide-inner { width: 100%; max-width: 1100px; }
+
+  .eyebrow {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  h1.slide-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(40px, 6.4vw, 84px);
+    line-height: 1.05;
+    margin: 0 0 28px;
+    letter-spacing: -0.015em;
+  }
+  h1.slide-title em { font-style: italic; color: var(--accent); }
+
+  .lede {
+    font-size: clamp(17px, 1.6vw, 22px);
+    line-height: 1.5;
+    color: var(--ink-2);
+    max-width: 760px;
+  }
+
+  /* ------------------- chrome ------------------- */
+  .chrome {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 50;
+  }
+  .chrome > * { pointer-events: auto; }
+
+  .prospect-input {
+    position: fixed;
+    top: 18px;
+    right: 22px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .prospect-input input {
+    border: 0;
+    background: transparent;
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--ink);
+    width: 180px;
+    outline: none;
+    padding: 2px 0;
+  }
+
+  .counter {
+    position: fixed;
+    bottom: 18px;
+    right: 22px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+  }
+  .hint {
+    position: fixed;
+    bottom: 18px;
+    left: 22px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    opacity: 0.7;
+  }
+
+  /* ------------------- slide-specific patterns ------------------- */
+
+  /* Title slide */
+  .title-slide .slide-inner { text-align: left; }
+  .title-slide h1 { font-size: clamp(56px, 8.2vw, 112px); margin-bottom: 16px; }
+  .title-slide .meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 36px;
+  }
+
+  /* Divider slide */
+  .divider-slide .slide-inner { text-align: left; max-width: 1000px; }
+  .divider-slide h1 { font-size: clamp(56px, 7.6vw, 104px); }
+  .divider-slide .rule {
+    height: 1px;
+    background: var(--line);
+    margin-top: 36px;
+    width: 240px;
+  }
+
+  /* Stat hero (Deficiency 1) */
+  .stat-hero {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 56px;
+    align-items: center;
+    margin: 32px 0 28px;
+  }
+  .stat-hero .num {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(140px, 18vw, 260px);
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    color: var(--accent);
+  }
+  .stat-hero .caption {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(20px, 2vw, 28px);
+    line-height: 1.35;
+    color: var(--ink-2);
+    font-style: italic;
+  }
+  .stat-hero .caption .source {
+    display: block;
+    margin-top: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-style: normal;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .stat-implication {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--bad);
+    padding: 18px 22px;
+    border-radius: 4px;
+    font-size: clamp(15px, 1.3vw, 18px);
+    color: var(--ink-2);
+    max-width: 800px;
+  }
+
+  /* Two-column comparison (Deficiency 2) */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 32px;
+  }
+  .two-col .col {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    padding: 24px 26px;
+    border-radius: 4px;
+  }
+  .two-col .col .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+  .two-col .col h3 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(22px, 2vw, 30px);
+    margin: 0 0 16px;
+    letter-spacing: -0.01em;
+  }
+  .two-col .col h3 em { font-style: italic; color: var(--accent); }
+  .two-col .col p { margin: 0; color: var(--ink-2); font-size: clamp(14px, 1.1vw, 16px); }
+  .two-col .col .examples {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px dashed var(--line);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    line-height: 1.9;
+  }
+  .two-col .col .examples span {
+    display: inline-block;
+    padding: 2px 8px;
+    margin: 0 6px 6px 0;
+    background: var(--bg-2);
+    border-radius: 2px;
+  }
+
+  /* Issue stack (Deficiency 3) */
+  .issue-stack { margin-top: 28px; display: grid; gap: 10px; max-width: 860px; }
+  .issue {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--bad);
+    padding: 16px 20px;
+    border-radius: 3px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+  .issue .issue-title {
+    font-weight: 500;
+    font-size: clamp(15px, 1.3vw, 18px);
+  }
+  .issue .issue-sev {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 2px;
+    background: var(--bad);
+    color: white;
+    white-space: nowrap;
+  }
+  .issue.warn { border-left-color: var(--warn); }
+  .issue.warn .issue-sev { background: var(--warn); }
+  .framing {
+    margin-top: 28px;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(17px, 1.5vw, 22px);
+    color: var(--ink-2);
+    max-width: 820px;
+    line-height: 1.5;
+  }
+
+  /* Scenario card (Deficiency 4) */
+  .scenario-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--bad);
+    padding: 32px 36px;
+    border-radius: 4px;
+    margin-top: 28px;
+    max-width: 880px;
+  }
+  .scenario-card .scenario-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent-deep);
+    margin-bottom: 14px;
+  }
+  .scenario-card p {
+    margin: 0 0 14px;
+    font-size: clamp(16px, 1.4vw, 20px);
+    color: var(--ink-2);
+    line-height: 1.55;
+  }
+  .scenario-card p:last-child { margin-bottom: 0; }
+  .scenario-card .punch {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(20px, 1.7vw, 26px);
+    color: var(--accent);
+    border-top: 1px solid var(--line);
+    padding-top: 14px;
+    margin-top: 18px;
+  }
+
+  /* Placeholder slides */
+  .placeholder {
+    margin-top: 24px;
+    background: var(--bg-2);
+    border: 1px dashed var(--line);
+    padding: 32px 36px;
+    border-radius: 4px;
+    max-width: 800px;
+  }
+  .placeholder .todo-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .placeholder p {
+    margin: 0;
+    color: var(--muted);
+    font-style: italic;
+    font-size: clamp(15px, 1.2vw, 17px);
+  }
+
+  /* ------------------- print (PDF export) ------------------- */
+  @media print {
+    body { background: white; overflow: visible; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .deck { height: auto; overflow: visible; }
+    .slide {
+      position: relative;
+      inset: auto;
+      opacity: 1 !important;
+      pointer-events: auto;
+      page-break-after: always;
+      break-after: page;
+      min-height: 100vh;
+      transition: none;
+    }
+    .chrome { display: none; }
+  }
+
+  @media (max-width: 720px) {
+    .stat-hero { grid-template-columns: 1fr; gap: 16px; }
+    .two-col { grid-template-columns: 1fr; }
+    .prospect-input input { width: 120px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+
+  <!-- 1. TITLE -->
+  <section class="slide title-slide active">
+    <div class="slide-inner">
+      <div class="eyebrow">Med spa website audit</div>
+      <h1 class="slide-title"><span data-clinic-name>Your clinic</span> <em>audit</em></h1>
+      <p class="lede">A short walk-through of what's costing you patients today — and what we'd change.</p>
+      <div class="meta">Prepared for the team</div>
+    </div>
+  </section>
+
+  <!-- 2. SECTION DIVIDER -->
+  <section class="slide divider-slide">
+    <div class="slide-inner">
+      <div class="eyebrow">Section 01 · The diagnosis</div>
+      <h1 class="slide-title">Four things <em>costing you patients</em>.</h1>
+      <div class="rule"></div>
+    </div>
+  </section>
+
+  <!-- 3. DEFICIENCY 1 — SPEED -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow">Deficiency 01 · Speed</div>
+      <h1 class="slide-title">Your site is <em>too slow</em>.</h1>
+      <div class="stat-hero">
+        <div class="num">53%</div>
+        <div class="caption">
+          of mobile site visits are abandoned if a page takes longer than three seconds to load.
+          <span class="source">Google / SOASTA Research, 2017</span>
+        </div>
+      </div>
+      <div class="stat-implication">
+        That's more than half of your ad spend, your Google clicks, and your Instagram traffic — gone before they ever see your work. The patient never gets the chance to decide whether to book.
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. DEFICIENCY 2 — DISCOVERABILITY -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow">Deficiency 02 · Discoverability</div>
+      <h1 class="slide-title">Patients can't <em>find you</em>.</h1>
+      <p class="lede">Your site content isn't optimized for how people actually search — on Google, and increasingly on AI.</p>
+      <div class="two-col">
+        <div class="col">
+          <div class="label">Google search</div>
+          <h3>You don't rank for what <em>patients type</em>.</h3>
+          <p>Without optimized service pages, location targeting, and treatment-specific content, you're invisible on the searches that bring high-intent patients.</p>
+          <div class="examples">
+            <span>botox near me</span>
+            <span>med spa [your city]</span>
+            <span>lip filler cost</span>
+            <span>laser resurfacing reviews</span>
+          </div>
+        </div>
+        <div class="col">
+          <div class="label">AI recommendations</div>
+          <h3>ChatGPT doesn't <em>name you</em>.</h3>
+          <p>When patients ask ChatGPT, Gemini, or Perplexity for the best med spa in their area, those engines pull from structured, well-written sites. You're not in the answer.</p>
+          <div class="examples">
+            <span>"best med spa in [city]"</span>
+            <span>"who does the best botox near me"</span>
+            <span>"recommend a clinic for…"</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. DEFICIENCY 3 — DESIGN -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow">Deficiency 03 · Design & conversion</div>
+      <h1 class="slide-title">Your site says <em>budget</em>, not <em>premium</em>.</h1>
+      <p class="lede">An outdated design quietly tells visitors your clinic isn't worth a $3,000–$5,000 treatment — before they read a single word about your work.</p>
+      <div class="issue-stack">
+        <div class="issue">
+          <div class="issue-title">Phone number isn't tap-to-call on mobile</div>
+          <div class="issue-sev">Critical</div>
+        </div>
+        <div class="issue">
+          <div class="issue-title">No booking calendar widget — patients have to call or fill a form</div>
+          <div class="issue-sev">Critical</div>
+        </div>
+        <div class="issue">
+          <div class="issue-title">No clear before-and-after gallery of real patients</div>
+          <div class="issue-sev">High</div>
+        </div>
+        <div class="issue warn">
+          <div class="issue-title">Visual brand doesn't match the price point of your services</div>
+          <div class="issue-sev">High</div>
+        </div>
+      </div>
+      <div class="framing">People decide in seconds whether your clinic is the kind of place they trust with their face. Right now, the site is making that decision for them.</div>
+    </div>
+  </section>
+
+  <!-- 6. DEFICIENCY 4 — CHATBOT / RESPONSE -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow">Deficiency 04 · Response time</div>
+      <h1 class="slide-title">You're <em>invisible after hours</em>.</h1>
+      <p class="lede">Most aesthetic research happens in the evening. Without an instant-response chatbot, the highest-intent visitors leave with their questions unanswered.</p>
+      <div class="scenario-card">
+        <div class="scenario-label">A typical scenario</div>
+        <p>It's 10:14pm. A patient who's been considering Botox for six months is on your treatments page, comparing you to two competitors. She has one question about pricing for her first appointment.</p>
+        <p>Your form says "we'll get back to you within one business day." She doesn't wait. She opens the next tab — your competitor has a chat widget that answers her in eight seconds and books her for Saturday.</p>
+        <div class="punch">You lost the patient at the exact moment her intent was highest.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. DIVIDER — THE FIX -->
+  <section class="slide divider-slide">
+    <div class="slide-inner">
+      <div class="eyebrow">Section 02 · The fix</div>
+      <h1 class="slide-title">Here's <em>what we'd build</em>.</h1>
+      <div class="rule"></div>
+    </div>
+  </section>
+
+  <!-- 8. OFFER OVERVIEW (placeholder) -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow">The offer</div>
+      <h1 class="slide-title">One-line <em>value prop</em>.</h1>
+      <div class="placeholder">
+        <div class="todo-label">TODO · fill</div>
+        <p>A single sentence positioning what you do — e.g. "We rebuild your med spa's website into a fast, AI-discoverable, conversion-optimized funnel that books premium consults around the clock."</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. DELIVERABLES (placeholder) -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow">Deliverables</div>
+      <h1 class="slide-title">What <em>you get</em>.</h1>
+      <div class="placeholder">
+        <div class="todo-label">TODO · fill</div>
+        <p>Grid of deliverables — new design, SEO + AI optimization, booking widget, before/after gallery, 24/7 chatbot concierge, analytics + reporting.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. TIMELINE (placeholder) -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow">Timeline</div>
+      <h1 class="slide-title">How it <em>rolls out</em>.</h1>
+      <div class="placeholder">
+        <div class="todo-label">TODO · fill</div>
+        <p>Phased timeline — week 1: discovery + audit. Week 2–3: design + content. Week 4: build + integrate. Week 5: launch + measure.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11. PRICING (placeholder) -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow">Investment</div>
+      <h1 class="slide-title">What it <em>costs</em>.</h1>
+      <div class="placeholder">
+        <div class="todo-label">TODO · fill</div>
+        <p>Pricing tiers or single number with payment terms. Framed against the cost of a single lost patient ($3–5k+) so the ROI is obvious.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12. CASE STUDY / PROOF (placeholder) -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow">Proof</div>
+      <h1 class="slide-title">It <em>works</em>.</h1>
+      <div class="placeholder">
+        <div class="todo-label">TODO · fill</div>
+        <p>Before / after numbers from a prior client — page speed score, conversion rate, monthly bookings, Google ranking changes. Add a quote.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13. NEXT STEPS (placeholder) -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow">Next step</div>
+      <h1 class="slide-title">Want the <em>full audit</em>?</h1>
+      <p class="lede">We'll send a complete, scored report on <span data-clinic-name>your clinic</span>'s site within 24 hours — every issue ranked by severity, with the exact fix for each.</p>
+      <div class="placeholder">
+        <div class="todo-label">TODO · fill</div>
+        <p>Replace with a real CTA — link to scheduling page, your email, or whatever you want them to do next.</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- chrome (hidden in print) -->
+<div class="chrome">
+  <label class="prospect-input">
+    <span>Prospect</span>
+    <input id="prospect" type="text" placeholder="Clinic name" autocomplete="off" />
+  </label>
+  <div class="counter"><span id="cur">01</span> / <span id="total">13</span></div>
+  <div class="hint">← →  ·  space  ·  f fullscreen  ·  ⌘P print</div>
+</div>
+
+<script>
+(function () {
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total = slides.length;
+  document.getElementById('total').textContent = String(total).padStart(2, '0');
+  const cur = document.getElementById('cur');
+  let i = 0;
+
+  function go(n) {
+    i = Math.max(0, Math.min(total - 1, n));
+    slides.forEach((s, idx) => s.classList.toggle('active', idx === i));
+    cur.textContent = String(i + 1).padStart(2, '0');
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (document.activeElement && document.activeElement.tagName === 'INPUT') return;
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); go(i + 1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); go(i - 1); }
+    else if (e.key === 'Home') { e.preventDefault(); go(0); }
+    else if (e.key === 'End') { e.preventDefault(); go(total - 1); }
+    else if (e.key.toLowerCase() === 'f') {
+      e.preventDefault();
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+      else document.exitFullscreen?.();
+    }
+  });
+
+  // Click advances (but ignore clicks on the chrome / input)
+  document.getElementById('deck').addEventListener('click', () => go(i + 1));
+
+  // Prospect-name input — live updates, persisted to localStorage
+  const input = document.getElementById('prospect');
+  const KEY = 'pitch-deck-prospect';
+  const targets = document.querySelectorAll('[data-clinic-name]');
+  function paint(name) {
+    const n = (name || '').trim() || 'Your clinic';
+    targets.forEach((el) => { el.textContent = n; });
+  }
+  const saved = localStorage.getItem(KEY) || '';
+  input.value = saved;
+  paint(saved);
+  input.addEventListener('input', () => {
+    paint(input.value);
+    localStorage.setItem(KEY, input.value);
+  });
+  // Prevent click-to-advance when typing
+  input.addEventListener('click', (e) => e.stopPropagation());
+})();
+</script>
+</body>
+</html>
