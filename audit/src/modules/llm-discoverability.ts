@@ -4,6 +4,8 @@ import fs from 'fs';
 import path from 'path';
 import { ClinicInfo, Issue, ModuleResult } from '../types.js';
 import { sortIssues } from '../utils/scoring.js';
+import { MODELS } from '../utils/models.js';
+import { CostTracker } from '../utils/cost.js';
 
 type Provider = 'claude' | 'perplexity' | 'openai';
 
@@ -26,17 +28,32 @@ interface Evidence {
   providers: Provider[];
 }
 
-function buildQuestions(clinic: ClinicInfo): string[] {
-  const city = clinic.city || 'your area';
+function buildLocation(clinic: ClinicInfo): string | null {
+  if (!clinic.city) return null;
+  return clinic.state ? `${clinic.city}, ${clinic.state}` : clinic.city;
+}
+
+// Each question is tagged with a model tier:
+//   - 'judgment' → Sonnet 4.6 (comparative / recommendation questions where ranking matters)
+//   - 'recognition' → Haiku 4.5 (does the model recognize the entity at all? — low-judgment recall)
+//
+// claude.ai's free tier serves Haiku and paid serves Sonnet, so using both is
+// actually closer to "what real users see" than running everything on one tier.
+type QuestionTier = 'judgment' | 'recognition';
+interface QuestionSpec { text: string; tier: QuestionTier; }
+
+function buildQuestions(clinic: ClinicInfo, location: string): QuestionSpec[] {
   const top = clinic.services[0] || 'botox';
   const second = clinic.services[1] || 'lip filler';
   return [
-    `What are the best med spas in ${city}?`,
-    `Where can I get ${top.toLowerCase()} in ${city}?`,
-    `Tell me about ${clinic.name}.`,
-    `Does ${clinic.name} offer ${second.toLowerCase()}?`,
-    `Who are the practitioners at ${clinic.name}?`,
-    `What are the hours and location of ${clinic.name}?`,
+    // Comparative landscape — judgment matters → Sonnet.
+    { text: `What are the best med spas in ${location}?`, tier: 'judgment' },
+    { text: `Where can I get ${top.toLowerCase()} in ${location}?`, tier: 'judgment' },
+    { text: `Recommend a top-rated provider for ${second.toLowerCase()} in ${location}.`, tier: 'judgment' },
+    // Entity recognition — does Claude know the clinic? → Haiku.
+    { text: `Tell me about ${clinic.name}, a med spa in ${location}.`, tier: 'recognition' },
+    { text: `What services does ${clinic.name} in ${location} offer?`, tier: 'recognition' },
+    { text: `Who are the practitioners at ${clinic.name} in ${location}?`, tier: 'recognition' },
   ];
 }
 
@@ -48,17 +65,23 @@ function detectMention(text: string, clinic: ClinicInfo): { mentionsClinic: bool
   return { mentionsClinic, citesWebsite };
 }
 
-async function askClaude(question: string, clinic: ClinicInfo): Promise<ProviderAnswer> {
+async function askClaude(
+  question: string,
+  clinic: ClinicInfo,
+  model: string,
+  costTracker?: CostTracker
+): Promise<ProviderAnswer> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return { provider: 'claude', answer: '', citations: [], mentionsClinic: false, citesWebsite: false, error: 'no key' };
-  const client = new Anthropic({ apiKey });
+  const client = new Anthropic({ apiKey, maxRetries: 8 });
   try {
     const response = await client.messages.create({
-      model: 'claude-sonnet-4-5-20250929',
+      model,
       max_tokens: 1024,
-      tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 4 } as any],
+      tools: [{ type: 'web_search_20260209', name: 'web_search', max_uses: 4 } as any],
       messages: [{ role: 'user', content: question }],
     });
+    costTracker?.add('llm-discoverability', model, response.usage as any);
     let answer = '';
     const citations: string[] = [];
     for (const block of response.content) {
@@ -136,7 +159,8 @@ async function askOpenAI(question: string, clinic: ClinicInfo): Promise<Provider
 
 export async function runLlmDiscoverabilityModule(
   clinic: ClinicInfo,
-  rawDir: string
+  rawDir: string,
+  costTracker?: CostTracker
 ): Promise<ModuleResult<Evidence>> {
   const start = Date.now();
   const providers: Provider[] = [];
@@ -157,15 +181,30 @@ export async function runLlmDiscoverabilityModule(
     };
   }
 
-  const questions = buildQuestions(clinic);
+  const location = buildLocation(clinic);
+  if (!location) {
+    return {
+      id: 'llm-discoverability',
+      label: 'LLM discoverability',
+      status: 'skipped',
+      score: null,
+      summary: 'Skipped — clinic city is unknown, cannot ground LLM questions in a location.',
+      issues: [],
+      skipReason: 'Provide --city or ensure the site exposes a city so questions can be tied to a real market.',
+      durationMs: Date.now() - start,
+    };
+  }
+
+  const questions = buildQuestions(clinic, location);
   const rounds: QuestionRound[] = [];
   for (const q of questions) {
+    const claudeModel = q.tier === 'judgment' ? MODELS.consumer_proxy : MODELS.cheap_extraction;
     const answers = await Promise.all([
-      providers.includes('claude') ? askClaude(q, clinic) : null,
-      providers.includes('perplexity') ? askPerplexity(q, clinic) : null,
-      providers.includes('openai') ? askOpenAI(q, clinic) : null,
+      providers.includes('claude') ? askClaude(q.text, clinic, claudeModel, costTracker) : null,
+      providers.includes('perplexity') ? askPerplexity(q.text, clinic) : null,
+      providers.includes('openai') ? askOpenAI(q.text, clinic) : null,
     ]);
-    rounds.push({ question: q, answers: answers.filter(Boolean) as ProviderAnswer[] });
+    rounds.push({ question: q.text, answers: answers.filter(Boolean) as ProviderAnswer[] });
   }
 
   fs.mkdirSync(rawDir, { recursive: true });
@@ -187,7 +226,7 @@ export async function runLlmDiscoverabilityModule(
   const issues: Issue[] = [];
   for (const provider of providers) {
     const answers = rounds.flatMap((r) => r.answers.filter((a) => a.provider === provider));
-    const directQuestions = rounds.slice(2).flatMap((r) => r.answers.filter((a) => a.provider === provider));
+    const directQuestions = rounds.slice(3).flatMap((r) => r.answers.filter((a) => a.provider === provider));
     const directMentions = directQuestions.filter((a) => a.mentionsClinic).length;
     const directCites = directQuestions.filter((a) => a.citesWebsite).length;
 

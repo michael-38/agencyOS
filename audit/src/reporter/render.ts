@@ -49,6 +49,7 @@ export async function renderIndex(entries: BatchEntry[], outputPath: string): Pr
     'lighthouse',
     'seo-onpage',
     'seo-ranking',
+    'traffic-metrics',
     'llm-copy-aeo',
     'llm-discoverability',
     'copy-conversion',

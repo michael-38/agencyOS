@@ -1,9 +1,13 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { ClinicInfo } from '../types.js';
 import { domainOf } from '../utils/url.js';
+import { MODELS } from '../utils/models.js';
+import { log } from '../utils/logger.js';
+import { CostTracker } from '../utils/cost.js';
+import { headTail } from '../utils/excerpt.js';
 import { ScrapedSite } from './scrape.js';
 
-const MODEL = 'claude-sonnet-4-5-20250929';
+const MODEL = MODELS.cheap_extraction;
 
 const TOOL_SCHEMA = {
   name: 'record_clinic_info',
@@ -27,12 +31,13 @@ const TOOL_SCHEMA = {
 
 export async function extractClinicInfo(
   site: ScrapedSite,
-  overrides: { name?: string; city?: string } = {}
+  overrides: { name?: string; city?: string } = {},
+  costTracker?: CostTracker
 ): Promise<ClinicInfo> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) throw new Error('ANTHROPIC_API_KEY is not set.');
 
-  const client = new Anthropic({ apiKey });
+  const client = new Anthropic({ apiKey, maxRetries: 8 });
 
   const prompt = `You are extracting structured business info for a med spa clinic website audit.
 
@@ -41,7 +46,7 @@ TITLE: ${site.title}
 META DESCRIPTION: ${site.description}
 
 PAGE CONTENT (markdown, truncated):
-${site.markdown.slice(0, 15000)}
+${headTail(site.markdown, 10_000, 4_000)}
 
 Identify the clinic name, city, state, primary phone, and a list of services/treatments offered. Use the record_clinic_info tool. Use empty string for fields you cannot confidently determine.`;
 
@@ -53,6 +58,8 @@ Identify the clinic name, city, state, primary phone, and a list of services/tre
     messages: [{ role: 'user', content: prompt }],
   });
 
+  log.usage('clinic-info', response.usage as any);
+  costTracker?.add('clinic-info', MODEL, response.usage as any);
   let extracted: { name: string; city: string; state: string; phone: string; services: string[] } | null = null;
   for (const block of response.content) {
     if (block.type === 'tool_use') {

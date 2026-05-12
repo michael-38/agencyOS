@@ -1,4 +1,4 @@
-import { chromium } from 'playwright';
+import { chromium, Browser } from 'playwright';
 import { Issue, ModuleResult } from '../types.js';
 import { scoreFromIssues, sortIssues } from '../utils/scoring.js';
 
@@ -16,7 +16,9 @@ const CHAT_PROVIDERS: { name: string; patterns: RegExp[] }[] = [
   { name: 'Hyperworkflow', patterns: [/HyperworkflowChat/i, /hyperworkflow-chat/i] },
 ];
 
-interface UxEvidence {
+interface PageProbe {
+  url: string;
+  label: string;
   hasTelLink: boolean;
   telHref: string | null;
   telVisibleAboveFold: boolean;
@@ -29,12 +31,24 @@ interface UxEvidence {
   contactFormFieldCount: number;
   liveChatProviders: string[];
   hasPhoneInHeader: boolean;
-  mobileAvgTapTargetWarn: boolean;
 }
 
-export async function runUxMedspaModule(url: string): Promise<ModuleResult<UxEvidence>> {
-  const start = Date.now();
-  const browser = await chromium.launch({ headless: true });
+interface UxEvidence {
+  pages: PageProbe[];
+  // Aggregated booleans — if ANY probed page has the feature, it's true
+  hasTelLink: boolean;
+  telVisibleAboveFold: boolean;
+  hasBookCta: boolean;
+  bookCtaText: string | null;
+  bookCtaAboveFold: boolean;
+  hasStickyMobileCta: boolean;
+  hasContactForm: boolean;
+  contactFormFieldCount: number;
+  liveChatProviders: string[];
+  hasPhoneInHeader: boolean;
+}
+
+async function probePage(browser: Browser, url: string, label: string): Promise<PageProbe | null> {
   try {
     const ctx = await browser.newContext({
       viewport: { width: 390, height: 844 },
@@ -47,84 +61,140 @@ export async function runUxMedspaModule(url: string): Promise<ModuleResult<UxEvi
     const page = await ctx.newPage();
     await page.goto(url, { waitUntil: 'networkidle', timeout: 60_000 }).catch(() => {});
     await page.waitForTimeout(1500);
-
     const html = await page.content();
 
-    const ev: UxEvidence = await page.evaluate(() => {
-      const data: any = {};
+    const data: any = await page.evaluate(() => {
       const FOLD = 844;
       const tel = Array.from(document.querySelectorAll('a[href^="tel:"]')) as HTMLAnchorElement[];
-      data.hasTelLink = tel.length > 0;
-      data.telHref = tel[0]?.href || null;
-      data.telVisibleAboveFold = tel.some((a) => {
-        const r = a.getBoundingClientRect();
-        return r.top >= 0 && r.top < FOLD && r.width > 0 && r.height > 0;
-      });
-
       const bookRegex = /book|consult|schedule|appointment|reserve/i;
       const bookCandidates = Array.from(document.querySelectorAll('a, button')) as HTMLElement[];
       const bookEls = bookCandidates.filter((el) => bookRegex.test((el.innerText || '').trim()) && el.offsetParent !== null);
-      data.hasBookCta = bookEls.length > 0;
-      data.bookCtaText = bookEls[0] ? bookEls[0].innerText.trim().slice(0, 60) : null;
-      data.bookCtaAboveFold = bookEls.some((el) => {
-        const r = el.getBoundingClientRect();
-        return r.top >= 0 && r.top < FOLD;
-      });
-      data.bookCtaCount = bookEls.length;
 
       const stickyEls = Array.from(document.querySelectorAll('*')).filter((el) => {
         const s = window.getComputedStyle(el as HTMLElement);
         return (s.position === 'fixed' || s.position === 'sticky') && (el as HTMLElement).offsetHeight < 200;
       }) as HTMLElement[];
-      const stickyHasCta = stickyEls.some((el) => {
-        const txt = (el.innerText || '').toLowerCase();
-        return /book|call|consult|schedule|tel/.test(txt);
-      });
-      data.hasStickyMobileCta = stickyHasCta;
+      const stickyHasCta = stickyEls.some((el) => /book|call|consult|schedule|tel/.test((el.innerText || '').toLowerCase()));
 
       const forms = Array.from(document.querySelectorAll('form')) as HTMLFormElement[];
       const contactForms = forms.filter((f) => {
         const txt = ((f.innerText || '') + ' ' + (f.getAttribute('action') || '')).toLowerCase();
         return /contact|consult|book|appointment|message|inquiry/.test(txt);
       });
-      data.hasContactForm = contactForms.length > 0;
-      data.contactFormFieldCount = contactForms[0]
-        ? contactForms[0].querySelectorAll('input:not([type=hidden]), select, textarea').length
-        : 0;
 
-      const headerSel = ['header', 'nav', '[role="banner"]'];
       let phoneInHeader = false;
-      for (const sel of headerSel) {
+      for (const sel of ['header', 'nav', '[role="banner"]']) {
         const h = document.querySelector(sel);
         if (h && h.querySelector('a[href^="tel:"]')) {
           phoneInHeader = true;
           break;
         }
       }
-      data.hasPhoneInHeader = phoneInHeader;
-      return data;
+
+      return {
+        hasTelLink: tel.length > 0,
+        telHref: tel[0]?.href || null,
+        telVisibleAboveFold: tel.some((a) => {
+          const r = a.getBoundingClientRect();
+          return r.top >= 0 && r.top < FOLD && r.width > 0 && r.height > 0;
+        }),
+        hasBookCta: bookEls.length > 0,
+        bookCtaText: bookEls[0] ? bookEls[0].innerText.trim().slice(0, 60) : null,
+        bookCtaAboveFold: bookEls.some((el) => {
+          const r = el.getBoundingClientRect();
+          return r.top >= 0 && r.top < FOLD;
+        }),
+        bookCtaCount: bookEls.length,
+        hasStickyMobileCta: stickyHasCta,
+        hasContactForm: contactForms.length > 0,
+        contactFormFieldCount: contactForms[0]
+          ? contactForms[0].querySelectorAll('input:not([type=hidden]), select, textarea').length
+          : 0,
+        hasPhoneInHeader: phoneInHeader,
+      };
     });
 
     const liveChatProviders: string[] = [];
     for (const p of CHAT_PROVIDERS) {
       if (p.patterns.some((re) => re.test(html))) liveChatProviders.push(p.name);
     }
-    ev.liveChatProviders = liveChatProviders;
-    ev.mobileAvgTapTargetWarn = false;
+
+    await ctx.close();
+    return { url, label, liveChatProviders, ...data };
+  } catch {
+    return null;
+  }
+}
+
+export interface UxTargets {
+  home: string;
+  booking?: string;
+  contact?: string;
+}
+
+export async function runUxMedspaModule(targets: UxTargets): Promise<ModuleResult<UxEvidence>> {
+  const start = Date.now();
+  const browser = await chromium.launch({ headless: true });
+  try {
+    const probeJobs: { url: string; label: string }[] = [{ url: targets.home, label: 'home' }];
+    if (targets.booking && targets.booking !== targets.home) probeJobs.push({ url: targets.booking, label: 'booking' });
+    if (targets.contact && targets.contact !== targets.home && targets.contact !== targets.booking) {
+      probeJobs.push({ url: targets.contact, label: 'contact' });
+    }
+
+    const probesRaw = await Promise.all(probeJobs.map((j) => probePage(browser, j.url, j.label)));
+    const probes = probesRaw.filter((p): p is PageProbe => p !== null);
+    if (probes.length === 0) {
+      return {
+        id: 'ux-medspa',
+        label: 'UX (med spa)',
+        status: 'error',
+        score: null,
+        summary: 'All UX probes failed.',
+        issues: [],
+        errorMessage: 'No pages were reachable for UX probing',
+        durationMs: Date.now() - start,
+      };
+    }
+
+    // Aggregate: any probed page satisfying a check is enough
+    const liveChatProvidersAgg = Array.from(new Set(probes.flatMap((p) => p.liveChatProviders)));
+    const bookCtaPage = probes.find((p) => p.hasBookCta && p.bookCtaAboveFold) || probes.find((p) => p.hasBookCta);
+    const formPage = probes.reduce<PageProbe | null>((best, p) => {
+      if (!p.hasContactForm) return best;
+      if (!best) return p;
+      return p.contactFormFieldCount > best.contactFormFieldCount ? p : best;
+    }, null);
+
+    const ev: UxEvidence = {
+      pages: probes,
+      hasTelLink: probes.some((p) => p.hasTelLink),
+      telVisibleAboveFold: probes.some((p) => p.telVisibleAboveFold),
+      hasBookCta: probes.some((p) => p.hasBookCta),
+      bookCtaText: bookCtaPage?.bookCtaText ?? null,
+      bookCtaAboveFold: probes.some((p) => p.bookCtaAboveFold),
+      hasStickyMobileCta: probes.some((p) => p.hasStickyMobileCta),
+      hasContactForm: !!formPage,
+      contactFormFieldCount: formPage?.contactFormFieldCount ?? 0,
+      liveChatProviders: liveChatProvidersAgg,
+      hasPhoneInHeader: probes.some((p) => p.hasPhoneInHeader),
+    };
+
+    const homepageProbe = probes.find((p) => p.label === 'home')!;
 
     const issues: Issue[] = [];
     if (!ev.hasTelLink) {
       issues.push({
         severity: 'critical',
-        title: 'No click-to-call (tel:) link anywhere on the page',
-        description: 'Mobile users cannot tap to dial. Highest-intent visitors lose a frictionless conversion path.',
+        title: 'No click-to-call (tel:) link anywhere on the site',
+        description: 'Mobile users cannot tap to dial on any of the probed pages.',
         quickFix: 'Add <a href="tel:+1XXXXXXXXXX">Call (xxx) xxx-xxxx</a> in the header and as a sticky mobile button.',
       });
-    } else if (!ev.telVisibleAboveFold) {
+    } else if (!homepageProbe.telVisibleAboveFold) {
       issues.push({
         severity: 'high',
-        title: 'Phone link present but not above the fold on mobile',
-        description: 'Calls require scrolling first.',
+        title: 'Phone link present but not above the fold on the homepage (mobile)',
+        description: 'High-intent visitors must scroll first.',
         quickFix: 'Move the tel: link into the mobile header so it appears in the first 844px.',
       });
     }
@@ -137,24 +207,32 @@ export async function runUxMedspaModule(url: string): Promise<ModuleResult<UxEvi
       });
     }
 
-    if (!ev.hasBookCta) {
-      issues.push({
-        severity: 'critical',
-        title: 'No "Book consultation" call-to-action detected',
-        description: 'Visitors at peak intent have nowhere obvious to convert.',
-        quickFix: 'Add a primary CTA button in the header: "Book a Consultation". Repeat it after every services section.',
-      });
-    } else if (!ev.bookCtaAboveFold) {
+    if (!homepageProbe.hasBookCta && ev.hasBookCta) {
+      const where = probes.find((p) => p.hasBookCta)?.label;
       issues.push({
         severity: 'high',
-        title: 'Book-consultation CTA exists but is below the fold',
+        title: `Book-consultation CTA only exists on /${where}, not the homepage`,
+        description: 'Visitors landing on the homepage never see the conversion action.',
+        quickFix: 'Add a primary "Book a Consultation" CTA to the homepage header.',
+      });
+    } else if (!ev.hasBookCta) {
+      issues.push({
+        severity: 'critical',
+        title: 'No "Book consultation" call-to-action detected on any probed page',
+        description: 'Visitors at peak intent have nowhere obvious to convert.',
+        quickFix: 'Add a primary CTA button: "Book a Consultation". Repeat after every services section.',
+      });
+    } else if (!homepageProbe.bookCtaAboveFold) {
+      issues.push({
+        severity: 'high',
+        title: 'Homepage Book CTA is below the fold',
         description: 'Users must scroll to find the conversion action.',
         quickFix: 'Place the primary CTA in the header so it is visible without scrolling.',
       });
-    } else if (ev.bookCtaCount === 1) {
+    } else if (homepageProbe.bookCtaCount === 1) {
       issues.push({
         severity: 'low',
-        title: 'Only one "Book" CTA on the page',
+        title: 'Only one "Book" CTA on the homepage',
         description: 'Long pages should repeat the conversion action.',
         quickFix: 'Repeat the booking CTA after each services / before-after / testimonial section.',
       });
@@ -169,17 +247,17 @@ export async function runUxMedspaModule(url: string): Promise<ModuleResult<UxEvi
       });
     }
 
-    if (liveChatProviders.length === 0) {
+    if (liveChatProvidersAgg.length === 0) {
       issues.push({
         severity: 'high',
-        title: 'No live chat widget detected',
-        description: 'Med spa buyers want to ask "how much?" / "does it hurt?" / "do you have availability Saturday?" before committing. Live chat at peak intent converts.',
+        title: 'No live chat widget detected on any probed page',
+        description: 'Med spa buyers want to ask "how much?" / "does it hurt?" / "do you have availability Saturday?" before committing.',
         quickFix: 'Install Podium, Birdeye, or Tidio. SMS-back chat widgets convert best for local service businesses.',
       });
     } else {
       issues.push({
         severity: 'info',
-        title: `Live chat present: ${liveChatProviders.join(', ')}`,
+        title: `Live chat present: ${liveChatProvidersAgg.join(', ')}`,
         description: 'Confirm responses are timely; abandoned chats hurt more than no chat.',
       });
     }
@@ -187,7 +265,7 @@ export async function runUxMedspaModule(url: string): Promise<ModuleResult<UxEvi
     if (!ev.hasContactForm) {
       issues.push({
         severity: 'medium',
-        title: 'No contact / consultation form detected',
+        title: 'No contact / consultation form detected on any probed page',
         description: 'Some visitors will not call or chat — a form is the asynchronous fallback.',
         quickFix: 'Add a short consultation request form (name, phone, treatment of interest).',
       });
@@ -205,7 +283,7 @@ export async function runUxMedspaModule(url: string): Promise<ModuleResult<UxEvi
       label: 'UX (med spa)',
       status: 'ok',
       score: scoreFromIssues(issues.filter((i) => i.severity !== 'info')),
-      summary: `Tel: ${ev.hasTelLink ? '✓' : '✗'} · Book CTA: ${ev.hasBookCta ? '✓' : '✗'} · Sticky: ${ev.hasStickyMobileCta ? '✓' : '✗'} · Live chat: ${liveChatProviders[0] || 'none'}`,
+      summary: `Probed ${probes.length} page(s) · Tel: ${ev.hasTelLink ? '✓' : '✗'} · Book CTA: ${ev.hasBookCta ? '✓' : '✗'} · Sticky: ${ev.hasStickyMobileCta ? '✓' : '✗'} · Live chat: ${liveChatProvidersAgg[0] || 'none'}`,
       issues: sortIssues(issues),
       evidence: ev,
       durationMs: Date.now() - start,
