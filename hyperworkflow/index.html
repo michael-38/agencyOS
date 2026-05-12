@@ -24,11 +24,7 @@
 <meta name="twitter:description" content="Conversion-tuned websites with 24/7 AI chat and analytics for med spas, physio, massage, and therapy practices.">
 <meta name="twitter:image" content="https://hyperworkflow.ai/og.jpg">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"></noscript>
+<link rel="preload" as="font" type="font/woff2" href="/fonts/space-grotesk-latin.woff2" crossorigin>
 
 <script type="application/ld+json">
 {
@@ -99,6 +95,16 @@
 </script>
 
 <style>
+/* ---------- self-hosted font (eliminates Google Fonts critical chain) ---------- */
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/fonts/space-grotesk-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 /* ---------- tokens ---------- */
 :root {
   --bg: #FFFFFF;
@@ -402,18 +408,18 @@ input, select, textarea { font: inherit; color: inherit; }
   color: var(--ink); font-weight: 600; font-size: 14px;
 }
 .bookings-title .live-dot {
-  width: 8px; height: 8px; border-radius: 50%; background: #10B981;
+  width: 8px; height: 8px; border-radius: 50%; background: #047857;
   position: relative;
   animation: live-pulse 2s ease-in-out infinite;
 }
 .bookings-title .live-label {
   font-family: var(--mono); font-size: 10px;
   text-transform: uppercase; letter-spacing: 0.1em;
-  color: #10B981;
+  color: #047857;
 }
 @keyframes live-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(16,185,129,.55); }
-  50% { box-shadow: 0 0 0 7px rgba(16,185,129,0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(4,120,87,.55); }
+  50% { box-shadow: 0 0 0 7px rgba(4,120,87,0); }
 }
 .bookings-count {
   font-family: var(--mono); font-size: 11px; font-weight: 600;

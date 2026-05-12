@@ -7,7 +7,7 @@ node_modules/
 .DS_Store
 dist/
 build/
-.claude/worktrees/
+.claude/
 .context/
 audit/output/
 audit/node_modules/
