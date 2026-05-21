@@ -964,6 +964,10 @@ input, select, textarea { font: inherit; color: inherit; }
 .audit-form .form-note {
   font-size: 13px; color: var(--muted); margin-top: 14px; text-align: center;
 }
+.audit-form .form-error {
+  font-size: 14px; color: #c8242a; margin-top: 12px; text-align: center;
+}
+.audit-form .btn-primary[disabled] { opacity: 0.6; cursor: not-allowed; }
 .contact-card {
   border: 1px solid var(--line);
   border-radius: var(--radius-xl);
@@ -1704,7 +1708,9 @@ PLACEHOLDERS (search "data-placeholder" or this list to find):
               <option>Other</option>
             </select>
           </div>
-          <button type="submit" class="btn btn-primary">Run my audit →</button>
+          <input type="text" name="company_website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+          <button type="submit" class="btn btn-primary" id="auditSubmit">Run my audit →</button>
+          <p class="form-error" id="auditError" hidden role="alert"></p>
           <p class="form-note">We email the audit within 24 hours, Mon–Fri. You'll never get put on a sales drip — promise.</p>
         </div>
         <div class="success-state" id="auditSuccess" hidden>
@@ -1867,14 +1873,52 @@ window.HyperworkflowChat = { ready: true, version: "1.0" };
       e.preventDefault();
       var fields = document.getElementById('auditFormFields');
       var success = document.getElementById('auditSuccess');
+      var submitBtn = document.getElementById('auditSubmit');
+      var errorEl = document.getElementById('auditError');
       if (!auditForm.checkValidity()) {
         auditForm.reportValidity();
         return;
       }
-      /* TODO: POST to /api/audit when wired up */
-      fields.hidden = true;
-      success.hidden = false;
-      success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+      errorEl.hidden = true;
+      errorEl.textContent = '';
+      var originalLabel = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending…';
+
+      var payload = {
+        url: document.getElementById('auditUrl').value.trim(),
+        name: document.getElementById('auditName').value.trim(),
+        email: document.getElementById('auditEmail').value.trim(),
+        industry: document.getElementById('auditIndustry').value,
+        company_website: (auditForm.elements['company_website'] || {}).value || ''
+      };
+
+      fetch('/api/audit', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(payload)
+      }).then(function(res){
+        return res.json().catch(function(){ return { ok: false, error: 'Unexpected server response.' }; })
+          .then(function(data){ return { status: res.status, data: data }; });
+      }).then(function(result){
+        if (result.status >= 200 && result.status < 300 && result.data && result.data.ok) {
+          fields.hidden = true;
+          success.hidden = false;
+          success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return;
+        }
+        var msg = (result.data && result.data.error) || 'Something went wrong. Try again or email hello@hyperworkflow.ai.';
+        errorEl.textContent = msg;
+        errorEl.hidden = false;
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalLabel;
+      }).catch(function(){
+        errorEl.textContent = 'Network error. Check your connection and try again.';
+        errorEl.hidden = false;
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalLabel;
+      });
     });
   }
 
