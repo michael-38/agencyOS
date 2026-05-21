@@ -27,4 +27,5 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           wranglerVersion: "4"
-          command: pages deploy hyperworkflow --project-name=hyperworkflow --branch=main --commit-dirty=true
+          workingDirectory: hyperworkflow
+          command: pages deploy . --project-name=hyperworkflow --branch=main --commit-dirty=true
