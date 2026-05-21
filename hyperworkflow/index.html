@@ -1684,15 +1684,15 @@ PLACEHOLDERS (search "data-placeholder" or this list to find):
         <div id="auditFormFields">
           <div class="form-row">
             <label for="auditUrl">Your website URL</label>
-            <input type="url" id="auditUrl" name="url" placeholder="https://yourclinic.com" required>
+            <input type="text" id="auditUrl" name="url" placeholder="yourclinic.com" required maxlength="2048" inputmode="url" autocomplete="url" autocapitalize="off" autocorrect="off" spellcheck="false">
           </div>
           <div class="form-row">
             <label for="auditName">Your name</label>
-            <input type="text" id="auditName" name="name" placeholder="First and last" required>
+            <input type="text" id="auditName" name="name" placeholder="First and last" required maxlength="200" autocomplete="name">
           </div>
           <div class="form-row">
             <label for="auditEmail">Email</label>
-            <input type="email" id="auditEmail" name="email" placeholder="you@yourclinic.com" required>
+            <input type="email" id="auditEmail" name="email" placeholder="you@yourclinic.com" required maxlength="254" autocomplete="email" autocapitalize="off" spellcheck="false">
           </div>
           <div class="form-row">
             <label for="auditIndustry">Industry</label>
