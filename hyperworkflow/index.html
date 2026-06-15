@@ -205,17 +205,33 @@ input, select, textarea { font: inherit; color: inherit; }
   transition: background .15s ease, color .15s ease, transform .15s ease, box-shadow .15s ease, border-color .15s ease;
 }
 .btn-primary {
-  background: var(--accent);
+  background: linear-gradient(135deg, #2a62ff 0%, var(--accent) 52%, #0034d9 100%);
   color: #fff;
-  box-shadow: 0 4px 18px rgba(0,64,255,.28);
+  box-shadow: 0 6px 20px rgba(0,64,255,.30);
+  position: relative;
+  overflow: hidden;
 }
-.btn-primary:hover { background: var(--accent-2); box-shadow: 0 6px 22px rgba(0,64,255,.36); }
+.btn-primary::after {
+  content: "";
+  position: absolute; top: 0; left: -130%;
+  width: 55%; height: 100%;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,.38), transparent);
+  transform: skewX(-18deg);
+  transition: left .6s ease;
+  pointer-events: none;
+}
+.btn-primary:hover { box-shadow: 0 10px 28px rgba(0,64,255,.42); transform: translateY(-2px); }
+.btn-primary:hover::after { left: 150%; }
+.btn-primary:active { transform: translateY(0); }
+.btn svg { transition: transform .2s ease; }
+.btn:hover svg { transform: translateX(3px); }
 .btn-secondary {
   background: transparent;
   color: var(--ink);
   border: 1.5px solid var(--line);
 }
-.btn-secondary:hover { border-color: var(--ink); }
+.btn-secondary:hover { border-color: var(--ink); transform: translateY(-2px); }
+.btn-secondary:active { transform: translateY(0); }
 .section--ink .btn-secondary { color: #fff; border-color: rgba(255,255,255,.2); }
 .section--ink .btn-secondary:hover { border-color: #fff; }
 .btn-ghost { background: none; color: var(--accent); padding: 8px 10px; min-height: auto; font-weight: 600; }
@@ -266,8 +282,16 @@ input, select, textarea { font: inherit; color: inherit; }
 }
 .nav-links a {
   padding: 8px 12px; border-radius: 8px; color: var(--ink-2); font-weight: 500;
+  position: relative;
 }
-.nav-links a:hover { background: var(--bg-alt); color: var(--ink); }
+.nav-links a::after {
+  content: ""; position: absolute; left: 12px; right: 12px; bottom: 4px; height: 2px;
+  background: var(--accent); border-radius: 2px;
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .24s cubic-bezier(.2,.7,.2,1);
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after { transform: scaleX(1); }
 .nav-cta { display: flex; gap: 10px; align-items: center; }
 .nav-cta .btn-primary { padding: 12px 18px; min-height: 44px; font-size: 15px; white-space: nowrap; }
 .nav-cta .cta-short { display: none; }
@@ -325,7 +349,7 @@ input, select, textarea { font: inherit; color: inherit; }
 @media (min-width: 920px) {
   .hero-grid { grid-template-columns: 1.15fr 0.85fr; gap: clamp(48px, 5vw, 80px); }
 }
-.hero h1 { margin-bottom: 24px; max-width: 14ch; }
+.hero h1 { margin-bottom: 24px; max-width: 16ch; }
 .hero .lead { margin-bottom: 32px; }
 .hero-cta { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 28px; }
 .hero-note { font-size: 14px; color: var(--muted); margin-bottom: 40px; }
@@ -354,147 +378,112 @@ input, select, textarea { font: inherit; color: inherit; }
   font-weight: 700;
 }
 
-/* hero figure */
+/* hero figure: automation hub */
 .hero-figure {
   position: relative;
-  aspect-ratio: 5 / 5.6;
+  aspect-ratio: 1 / 1.02;
   border-radius: var(--radius-xl);
-  background: linear-gradient(160deg, #F4F6FF 0%, #ECEEFC 60%, #DDE2FF 100%);
+  background: radial-gradient(125% 95% at 50% 6%, #EBF0FF 0%, #F4F7FF 48%, #FFFFFF 100%);
   border: 1px solid var(--line);
   box-shadow: var(--shadow-lg);
   overflow: hidden;
-  padding: 20px;
-  display: flex;
-  align-items: stretch;
+  isolation: isolate;
+}
+.hero-figure::before {
+  content: "";
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(0,64,255,.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,64,255,.05) 1px, transparent 1px);
+  background-size: 34px 34px;
+  -webkit-mask-image: radial-gradient(78% 78% at 50% 42%, #000 52%, transparent 100%);
+  mask-image: radial-gradient(78% 78% at 50% 42%, #000 52%, transparent 100%);
+  pointer-events: none;
 }
 @media (max-width: 720px) {
-  .hero-figure { aspect-ratio: 5 / 4.5; max-width: 480px; margin: 0 auto; }
+  .hero-figure { aspect-ratio: 1 / 0.92; width: 100%; max-width: 460px; margin: 0 auto; }
 }
-.browser-frame {
-  flex: 1;
-  background: #fff;
-  border-radius: var(--radius-md);
-  box-shadow: 0 10px 30px rgba(10,10,11,.08);
-  display: flex; flex-direction: column;
-  overflow: hidden;
-  position: relative;
+.hub { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+/* connector spokes + flowing pulses */
+.hub-spoke { fill: none; stroke: #CAD5F4; stroke-width: 2; stroke-linecap: round; }
+.hub-flow {
+  fill: none; stroke-width: 3.4; stroke-linecap: round;
+  stroke-dasharray: 3 17;
+  animation: hub-flow 1.5s linear infinite;
 }
-.browser-bar {
-  display: flex; align-items: center; gap: 6px;
-  padding: 10px 12px; background: #F7F7F8; border-bottom: 1px solid var(--line);
+.hub-flow.in { stroke: var(--accent); }
+.hub-flow.out { stroke: #10B981; animation-duration: 1.9s; }
+.hub-flow.f2 { animation-delay: -.5s; }
+.hub-flow.f3 { animation-delay: -1s; }
+@keyframes hub-flow { to { stroke-dashoffset: -20; } }
+
+/* AI core */
+.hub-glow { transform-box: fill-box; transform-origin: center; animation: hub-breathe 5s ease-in-out infinite; }
+@keyframes hub-breathe { 0%,100% { opacity: .55; transform: scale(1); } 50% { opacity: .85; transform: scale(1.09); } }
+.hub-ring {
+  fill: none; stroke: var(--accent); stroke-width: 1.6;
+  transform-box: fill-box; transform-origin: center; opacity: 0;
+  animation: hub-ping 3.4s ease-out infinite;
 }
-.browser-bar span { width: 9px; height: 9px; border-radius: 50%; background: #E2E2E5; }
-.browser-bar .url {
-  flex: 1; margin-left: 8px; height: 18px; border-radius: 4px;
-  background: #fff; border: 1px solid var(--line);
-  font-family: var(--mono); font-size: 10px; color: var(--muted);
-  display: flex; align-items: center; padding: 0 8px;
+.hub-ring.r2 { animation-delay: 1.7s; }
+@keyframes hub-ping { 0% { transform: scale(.78); opacity: .5; } 100% { transform: scale(1.95); opacity: 0; } }
+.hub-spin {
+  fill: none; stroke: rgba(0,64,255,.38); stroke-width: 2;
+  stroke-dasharray: 5 11; stroke-linecap: round;
+  transform-box: fill-box; transform-origin: center;
+  animation: hub-spin 13s linear infinite;
 }
-/* hero bookings feed */
-.bookings-app {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  padding: 16px 18px 18px;
-  gap: 14px;
-  position: relative;
-  overflow: hidden;
+.hub-orbit {
+  fill: none; stroke: rgba(0,64,255,.13); stroke-width: 1.5; stroke-dasharray: 2 9;
+  transform-box: fill-box; transform-origin: center;
+  animation: hub-spin 64s linear infinite;
 }
-.bookings-head {
-  display: flex; justify-content: space-between; align-items: center;
+@keyframes hub-spin { to { transform: rotate(360deg); } }
+.hub-core { filter: drop-shadow(0 12px 24px rgba(0,52,217,.45)); }
+.hub-spark { fill: #fff; transform-box: fill-box; transform-origin: center; animation: hub-spark 5s ease-in-out infinite; }
+@keyframes hub-spark { 0%,100% { transform: scale(1) rotate(0); } 50% { transform: scale(1.1) rotate(9deg); } }
+
+/* channel nodes */
+.hub-node-float { transform-box: fill-box; transform-origin: center; animation: hub-float 6s ease-in-out infinite; }
+.hub-node-float.n2 { animation-delay: -2s; }
+.hub-node-float.n3 { animation-delay: -4s; }
+@keyframes hub-float { 0%,100% { transform: translateY(-3.5px); } 50% { transform: translateY(3.5px); } }
+.hub-node-box { fill: #fff; stroke: var(--line); stroke-width: 1.5; filter: drop-shadow(0 8px 16px rgba(10,10,11,.09)); }
+.hub-node-icon { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.hub-node-label { fill: var(--ink-2); font: 600 11px var(--font); text-anchor: middle; letter-spacing: .02em; }
+
+/* outcome toasts */
+.hub-toast { opacity: 0; transform-box: fill-box; transform-origin: center; animation: hub-toast 9s ease-in-out infinite; }
+.hub-toast.t2 { animation-delay: 3s; }
+.hub-toast.t3 { animation-delay: 6s; }
+@keyframes hub-toast {
+  0% { opacity: 0; transform: translateY(10px) scale(.94); }
+  4%, 31% { opacity: 1; transform: translateY(0) scale(1); }
+  35%, 100% { opacity: 0; transform: translateY(-10px) scale(.98); }
 }
-.bookings-title {
-  display: flex; align-items: center; gap: 9px;
-  color: var(--ink); font-weight: 600; font-size: 14px;
-}
-.bookings-title .live-dot {
-  width: 8px; height: 8px; border-radius: 50%; background: #047857;
-  position: relative;
-  animation: live-pulse 2s ease-in-out infinite;
-}
-.bookings-title .live-label {
-  font-family: var(--mono); font-size: 10px;
-  text-transform: uppercase; letter-spacing: 0.1em;
-  color: #047857;
-}
-@keyframes live-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(4,120,87,.55); }
-  50% { box-shadow: 0 0 0 7px rgba(4,120,87,0); }
-}
-.bookings-count {
-  font-family: var(--mono); font-size: 11px; font-weight: 600;
-  color: var(--accent); background: var(--accent-soft);
-  padding: 4px 10px; border-radius: 999px;
-  letter-spacing: 0.04em;
-}
-.bookings-feed {
-  flex: 1;
-  overflow: hidden;
-  mask-image: linear-gradient(180deg, transparent 0, #000 8%, #000 88%, transparent 100%);
-  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 8%, #000 88%, transparent 100%);
-}
-.bookings-list {
-  display: flex; flex-direction: column; gap: 8px;
-  animation: scroll-feed 22s linear infinite;
-  margin: 0; padding: 0; list-style: none;
-}
-@keyframes scroll-feed {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-50%); }
-}
-.bk {
-  flex-shrink: 0;
-  background: #FAFAFB;
+.hub-toast-box { fill: #fff; stroke: var(--accent-soft); stroke-width: 1.5; filter: drop-shadow(0 12px 22px rgba(10,10,11,.13)); }
+.hub-toast-check { fill: #10B981; }
+.hub-toast-text { fill: var(--ink); font: 600 12.5px var(--font); }
+
+/* live counter chip */
+.hub-badge {
+  position: absolute; top: 16px; left: 16px;
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,.82);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
   border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 10px 12px;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 4px 10px;
-  font-size: 12px;
-}
-.bk-avatar {
-  grid-row: span 2;
-  width: 28px; height: 28px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  background: var(--accent-soft); color: var(--accent);
-  font-weight: 700; font-size: 11px;
-  letter-spacing: 0;
-}
-.bk-name { font-weight: 600; color: var(--ink); font-size: 12.5px; line-height: 1.2; }
-.bk-meta { color: var(--ink-2); font-size: 11px; line-height: 1.3; }
-.bk-meta em { color: var(--accent); font-weight: 600; font-style: normal; }
-.bk-time {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--muted);
-  letter-spacing: 0.04em;
-  grid-row: span 2;
-  text-align: right;
-  align-self: center;
-}
-.bookings-pop {
-  position: absolute;
-  left: 14px; right: 14px; bottom: 14px;
-  background: var(--ink); color: #fff;
-  font-size: 11.5px; font-weight: 500;
-  padding: 10px 14px;
   border-radius: 999px;
-  display: flex; align-items: center; gap: 8px;
-  box-shadow: 0 10px 24px rgba(10,10,11,.22);
-  animation: pop-cycle 7s ease-in-out infinite;
+  padding: 7px 13px 7px 11px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: .03em;
+  color: var(--ink-2);
+  box-shadow: var(--shadow-sm);
 }
-.bookings-pop .pop-sparkle {
-  width: 7px; height: 7px; border-radius: 50%;
-  background: #10B981;
-  box-shadow: 0 0 0 3px rgba(16,185,129,.25);
-}
-.bookings-pop strong { font-weight: 700; }
-@keyframes pop-cycle {
-  0%, 6% { transform: translateY(60px); opacity: 0; }
-  12%, 88% { transform: translateY(0); opacity: 1; }
-  94%, 100% { transform: translateY(60px); opacity: 0; }
+.hub-badge .dot { width: 8px; height: 8px; border-radius: 50%; background: #10B981; animation: live-pulse 2s ease-in-out infinite; }
+.hub-badge b { color: var(--ink); font-weight: 700; }
+@keyframes live-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(16,185,129,.5); }
+  50% { box-shadow: 0 0 0 6px rgba(16,185,129,0); }
 }
 
 /* ---------- industries marquee ---------- */
@@ -1069,6 +1058,39 @@ input, select, textarea { font: inherit; color: inherit; }
   transform: translateY(0);
 }
 
+/* ---------- scroll progress ---------- */
+.scroll-progress {
+  position: absolute; left: 0; right: 0; bottom: -1px; height: 2px;
+  transform: scaleX(0); transform-origin: 0 50%;
+  background: linear-gradient(90deg, var(--accent), #5B7CFF);
+  transition: transform .08s linear;
+  z-index: 60;
+}
+
+/* ---------- hero entrance ---------- */
+@keyframes heroIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes figIn { from { opacity: 0; transform: translateY(26px) scale(.96); } to { opacity: 1; transform: none; } }
+.hero-text > * { animation: heroIn .7s cubic-bezier(.22,.7,.2,1) both; }
+.hero-text > *:nth-child(1) { animation-delay: .05s; }
+.hero-text > *:nth-child(2) { animation-delay: .12s; }
+.hero-text > *:nth-child(3) { animation-delay: .19s; }
+.hero-text > *:nth-child(4) { animation-delay: .26s; }
+.hero-text > *:nth-child(5) { animation-delay: .33s; }
+.hero-text > *:nth-child(6) { animation-delay: .40s; }
+.hero-figure { animation: figIn .9s .18s cubic-bezier(.22,.7,.2,1) both; }
+
+/* ---------- gradient keyword ---------- */
+.grad-text {
+  background: linear-gradient(100deg, var(--accent) 0%, #5B7CFF 50%, var(--accent) 100%);
+  background-size: 220% 100%;
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+  animation: grad-shift 6s ease-in-out infinite;
+}
+@keyframes grad-shift { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+
+.stat-unit { font-size: .55em; font-weight: 600; letter-spacing: 0; }
+
 /* ---------- reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -1079,9 +1101,13 @@ input, select, textarea { font: inherit; color: inherit; }
   }
   .reveal { opacity: 1; transform: none; }
   .marquee { animation: none; }
-  .bookings-list { animation: none; }
-  .bookings-pop { animation: none; transform: none; opacity: 1; }
-  .live-dot { animation: none; }
+  .scroll-progress { transition: none; }
+  .hero-text > *, .hero-figure { animation: none !important; opacity: 1; transform: none; }
+  .grad-text { animation: none; }
+  .hub-flow, .hub-spin, .hub-orbit, .hub-glow, .hub-spark, .hub-node-float, .hub-badge .dot { animation: none !important; }
+  .hub-ring { animation: none !important; opacity: 0; }
+  .hub-toast { animation: none !important; opacity: 0; }
+  .hub-toast.t1 { opacity: 1; }
 }
 </style>
 </head>
@@ -1107,6 +1133,7 @@ PLACEHOLDERS (search "data-placeholder" or this list to find):
 
 <!-- ========== HEADER ========== -->
 <header class="site-header" id="header">
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
   <div class="container nav">
     <a href="#" class="brand" aria-label="Hyperworkflow home">
       <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5l8 7-8 7V5z"/><path d="M12 5l8 7-8 7V5z"/></svg></span>
@@ -1145,7 +1172,7 @@ PLACEHOLDERS (search "data-placeholder" or this list to find):
   <div class="container hero-grid">
     <div class="hero-text">
       <p class="eyebrow">AI Automation Studio · Live in ~2 weeks</p>
-      <h1>AI agents that do the busywork for you.</h1>
+      <h1>AI agents that do the <span class="grad-text">busywork</span> for&nbsp;you.</h1>
       <p class="lead">We design and build custom AI agents and automations for businesses in any industry — agents that answer Instagram DMs and website inquiries in seconds, and workflows that erase the tedious, repetitive work eating your team's week.</p>
       <div class="hero-cta">
         <a href="#audit" class="btn btn-primary">Get a free automation audit
@@ -1156,11 +1183,11 @@ PLACEHOLDERS (search "data-placeholder" or this list to find):
       <p class="hero-note">Custom-built for businesses across e-commerce, real estate, home services, healthcare, and more.</p>
       <div class="hero-stats">
         <div>
-          <div class="stat-num" data-placeholder="true">12<span style="font-size:.55em;font-weight:600;letter-spacing:0;"> hrs</span></div>
+          <div class="stat-num" data-placeholder="true" data-count="12" data-suffix=" hrs"><span class="stat-val">12</span><span class="stat-unit"> hrs</span></div>
           <div class="stat-label">Manual work removed<br>per week, on average</div>
         </div>
         <div>
-          <div class="stat-num" data-placeholder="true">&lt;60<span style="font-size:.55em;font-weight:600;letter-spacing:0;"> sec</span></div>
+          <div class="stat-num" data-placeholder="true" data-count="60" data-prefix="&lt;" data-suffix=" sec"><span class="stat-val">&lt;60</span><span class="stat-unit"> sec</span></div>
           <div class="stat-label">Average reply to<br>a new lead or DM</div>
         </div>
         <div>
@@ -1168,53 +1195,111 @@ PLACEHOLDERS (search "data-placeholder" or this list to find):
           <div class="stat-label">Agents that<br>never clock out</div>
         </div>
         <div>
-          <div class="stat-num" data-placeholder="true">3.2×</div>
+          <div class="stat-num" data-placeholder="true" data-count="3.2" data-decimals="1" data-suffix="×"><span class="stat-val">3.2</span><span class="stat-unit">×</span></div>
           <div class="stat-label">More inquiries<br>answered &amp; converted</div>
         </div>
       </div>
     </div>
     <div class="hero-figure" aria-hidden="true">
-      <div class="browser-frame">
-        <div class="browser-bar">
-          <span></span><span></span><span></span>
-          <div class="url">app.hyperworkflow.ai/activity</div>
-        </div>
-        <div class="bookings-app">
-          <div class="bookings-head">
-            <div class="bookings-title">
-              <span class="live-dot"></span>
-              <span class="live-label">Live</span>
-              <span>Agent activity</span>
-            </div>
-            <div class="bookings-count">+38 today</div>
-          </div>
-          <div class="bookings-feed">
-            <ul class="bookings-list">
-              <li class="bk"><span class="bk-avatar">SK</span><span class="bk-name">Sarah K.</span><span class="bk-time">11:24 PM</span><span class="bk-meta">DM answered &amp; lead booked · <em>Instagram</em></span></li>
-              <li class="bk"><span class="bk-avatar">ML</span><span class="bk-name">Marcus L.</span><span class="bk-time">11:18 PM</span><span class="bk-meta">Inquiry replied &amp; qualified · <em>Website</em></span></li>
-              <li class="bk"><span class="bk-avatar">ER</span><span class="bk-name">Emily R.</span><span class="bk-time">10:42 PM</span><span class="bk-meta">Quote sent &amp; follow-up set · <em>Email</em></span></li>
-              <li class="bk"><span class="bk-avatar">DT</span><span class="bk-name">David T.</span><span class="bk-time">10:31 PM</span><span class="bk-meta">New lead synced to CRM · <em>Automation</em></span></li>
-              <li class="bk"><span class="bk-avatar">PN</span><span class="bk-name">Priya N.</span><span class="bk-time">9:56 PM</span><span class="bk-meta">Order question resolved · <em>WhatsApp</em></span></li>
-              <li class="bk"><span class="bk-avatar">JW</span><span class="bk-name">Jordan W.</span><span class="bk-time">9:48 PM</span><span class="bk-meta">DM answered &amp; routed to sales · <em>Instagram</em></span></li>
-              <li class="bk"><span class="bk-avatar">AL</span><span class="bk-name">Ana L.</span><span class="bk-time">9:32 PM</span><span class="bk-meta">Invoice drafted &amp; emailed · <em>Automation</em></span></li>
-              <li class="bk"><span class="bk-avatar">MP</span><span class="bk-name">Mike P.</span><span class="bk-time">9:14 PM</span><span class="bk-meta">Inquiry replied &amp; call booked · <em>Website</em></span></li>
-              <!-- duplicate for seamless loop -->
-              <li class="bk"><span class="bk-avatar">SK</span><span class="bk-name">Sarah K.</span><span class="bk-time">11:24 PM</span><span class="bk-meta">DM answered &amp; lead booked · <em>Instagram</em></span></li>
-              <li class="bk"><span class="bk-avatar">ML</span><span class="bk-name">Marcus L.</span><span class="bk-time">11:18 PM</span><span class="bk-meta">Inquiry replied &amp; qualified · <em>Website</em></span></li>
-              <li class="bk"><span class="bk-avatar">ER</span><span class="bk-name">Emily R.</span><span class="bk-time">10:42 PM</span><span class="bk-meta">Quote sent &amp; follow-up set · <em>Email</em></span></li>
-              <li class="bk"><span class="bk-avatar">DT</span><span class="bk-name">David T.</span><span class="bk-time">10:31 PM</span><span class="bk-meta">New lead synced to CRM · <em>Automation</em></span></li>
-              <li class="bk"><span class="bk-avatar">PN</span><span class="bk-name">Priya N.</span><span class="bk-time">9:56 PM</span><span class="bk-meta">Order question resolved · <em>WhatsApp</em></span></li>
-              <li class="bk"><span class="bk-avatar">JW</span><span class="bk-name">Jordan W.</span><span class="bk-time">9:48 PM</span><span class="bk-meta">DM answered &amp; routed to sales · <em>Instagram</em></span></li>
-              <li class="bk"><span class="bk-avatar">AL</span><span class="bk-name">Ana L.</span><span class="bk-time">9:32 PM</span><span class="bk-meta">Invoice drafted &amp; emailed · <em>Automation</em></span></li>
-              <li class="bk"><span class="bk-avatar">MP</span><span class="bk-name">Mike P.</span><span class="bk-time">9:14 PM</span><span class="bk-meta">Inquiry replied &amp; call booked · <em>Website</em></span></li>
-            </ul>
-          </div>
-          <div class="bookings-pop">
-            <span class="pop-sparkle"></span>
-            <span><strong>+1 lead captured</strong> · just now via Instagram</span>
-          </div>
-        </div>
-      </div>
+      <svg class="hub" viewBox="0 0 460 470" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Inquiries from every channel flow into one AI agent that replies, qualifies, and books automatically">
+        <defs>
+          <radialGradient id="hubGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#3b6bff" stop-opacity=".5"/>
+            <stop offset="55%" stop-color="#3b6bff" stop-opacity=".14"/>
+            <stop offset="100%" stop-color="#3b6bff" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="hubCore" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#4570ff"/>
+            <stop offset="100%" stop-color="#0034cc"/>
+          </linearGradient>
+        </defs>
+
+        <!-- ambient glow + orbit -->
+        <circle class="hub-glow" cx="230" cy="210" r="92" fill="url(#hubGlow)"/>
+        <circle class="hub-orbit" cx="230" cy="210" r="122"/>
+
+        <!-- base connector spokes -->
+        <path class="hub-spoke" d="M96 120 L230 210"/>
+        <path class="hub-spoke" d="M230 70 L230 210"/>
+        <path class="hub-spoke" d="M364 120 L230 210"/>
+        <path class="hub-spoke" d="M230 210 L230 356"/>
+
+        <!-- flowing pulses: inputs in, outcome out -->
+        <path class="hub-flow in" d="M96 120 L230 210"/>
+        <path class="hub-flow in f2" d="M230 70 L230 210"/>
+        <path class="hub-flow in f3" d="M364 120 L230 210"/>
+        <path class="hub-flow out" d="M230 210 L230 356"/>
+
+        <!-- core -->
+        <circle class="hub-spin" cx="230" cy="210" r="64"/>
+        <circle class="hub-ring" cx="230" cy="210" r="52"/>
+        <circle class="hub-ring r2" cx="230" cy="210" r="52"/>
+        <circle class="hub-core" cx="230" cy="210" r="46" fill="url(#hubCore)"/>
+        <g transform="translate(230,210) scale(1.3)">
+          <path class="hub-spark" d="M0,-14 C1.6,-4 4,-1.6 14,0 C4,1.6 1.6,4 0,14 C-1.6,4 -4,1.6 -14,0 C-4,-1.6 -1.6,-4 0,-14 Z"/>
+        </g>
+
+        <!-- channel nodes -->
+        <g transform="translate(96,120)">
+          <g class="hub-node-float">
+            <rect class="hub-node-box" x="-29" y="-29" width="58" height="58" rx="16"/>
+            <g class="hub-node-icon" transform="translate(0,-2)">
+              <rect x="-9" y="-9" width="18" height="18" rx="5.5"/>
+              <circle cx="0" cy="0" r="4.2"/>
+              <circle cx="5.4" cy="-5.4" r="1.5" style="fill:var(--accent);stroke:none"/>
+            </g>
+            <text class="hub-node-label" y="49">Instagram</text>
+          </g>
+        </g>
+        <g transform="translate(230,70)">
+          <g class="hub-node-float n2">
+            <rect class="hub-node-box" x="-29" y="-29" width="58" height="58" rx="16"/>
+            <g class="hub-node-icon" transform="translate(0,-2)">
+              <circle cx="0" cy="0" r="9"/>
+              <path d="M-9 0 H9"/>
+              <path d="M0 -9 a 5 9 0 0 0 0 18 a 5 9 0 0 0 0 -18"/>
+            </g>
+            <text class="hub-node-label" y="49">Website</text>
+          </g>
+        </g>
+        <g transform="translate(364,120)">
+          <g class="hub-node-float n3">
+            <rect class="hub-node-box" x="-29" y="-29" width="58" height="58" rx="16"/>
+            <g class="hub-node-icon" transform="translate(0,-1)">
+              <rect x="-9" y="-7" width="18" height="14" rx="2.5"/>
+              <path d="M-9 -4 L0 3 L9 -4"/>
+            </g>
+            <text class="hub-node-label" y="49">Email</text>
+          </g>
+        </g>
+
+        <!-- cycling outcome toasts -->
+        <g transform="translate(230,388)">
+          <g class="hub-toast t1">
+            <rect class="hub-toast-box" x="-86" y="-18" width="172" height="36" rx="18"/>
+            <circle class="hub-toast-check" cx="-62" cy="0" r="9"/>
+            <path d="M-66 0 l3 3 l5.5 -6.5" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <text class="hub-toast-text" x="-46" y="4.5">Lead booked</text>
+          </g>
+        </g>
+        <g transform="translate(230,388)">
+          <g class="hub-toast t2">
+            <rect class="hub-toast-box" x="-86" y="-18" width="172" height="36" rx="18"/>
+            <circle class="hub-toast-check" cx="-62" cy="0" r="9"/>
+            <path d="M-66 0 l3 3 l5.5 -6.5" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <text class="hub-toast-text" x="-46" y="4.5">Replied in 8s</text>
+          </g>
+        </g>
+        <g transform="translate(230,388)">
+          <g class="hub-toast t3">
+            <rect class="hub-toast-box" x="-86" y="-18" width="172" height="36" rx="18"/>
+            <circle class="hub-toast-check" cx="-62" cy="0" r="9"/>
+            <path d="M-66 0 l3 3 l5.5 -6.5" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <text class="hub-toast-text" x="-46" y="4.5">Synced to CRM</text>
+          </g>
+        </g>
+      </svg>
+      <div class="hub-badge"><span class="dot"></span><span><b id="hubCount">38</b> handled today</span></div>
     </div>
   </div>
 </section>
@@ -1832,10 +1917,15 @@ window.HyperworkflowChat = { ready: true, version: "1.0" };
 (function(){
   'use strict';
 
-  /* ----- sticky nav shadow ----- */
+  /* ----- sticky nav shadow + scroll progress ----- */
   var header = document.getElementById('header');
+  var progress = document.getElementById('scrollProgress');
   var onScroll = function(){
     header.setAttribute('data-scrolled', window.scrollY > 8 ? 'true' : 'false');
+    if (progress) {
+      var h = document.documentElement.scrollHeight - window.innerHeight;
+      progress.style.transform = 'scaleX(' + (h > 0 ? Math.min(1, window.scrollY / h) : 0) + ')';
+    }
   };
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
@@ -1870,6 +1960,46 @@ window.HyperworkflowChat = { ready: true, version: "1.0" };
     document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
   } else {
     document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('is-visible'); });
+  }
+
+  /* ----- hero stat count-up ----- */
+  var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function countUp(el){
+    var target = parseFloat(el.getAttribute('data-count'));
+    if (isNaN(target)) return;
+    var dec = parseInt(el.getAttribute('data-decimals') || '0', 10);
+    var prefix = el.getAttribute('data-prefix') || '';
+    var valEl = el.querySelector('.stat-val');
+    if (!valEl) return;
+    var dur = 1100, startT = null;
+    function frame(t){
+      if (startT === null) startT = t;
+      var p = Math.min(1, (t - startT) / dur);
+      var eased = 1 - Math.pow(1 - p, 3);
+      valEl.textContent = prefix + (target * eased).toFixed(dec);
+      if (p < 1) requestAnimationFrame(frame);
+      else valEl.textContent = prefix + target.toFixed(dec);
+    }
+    requestAnimationFrame(frame);
+  }
+  var statsWrap = document.querySelector('.hero-stats');
+  if (statsWrap && !prefersReduced && 'IntersectionObserver' in window) {
+    var statObs = new IntersectionObserver(function(entries, obs){
+      entries.forEach(function(e){
+        if (e.isIntersecting) {
+          statsWrap.querySelectorAll('.stat-num[data-count]').forEach(countUp);
+          obs.disconnect();
+        }
+      });
+    }, { threshold: 0.4 });
+    statObs.observe(statsWrap);
+  }
+
+  /* ----- hero hub live counter ----- */
+  var hubCount = document.getElementById('hubCount');
+  if (hubCount && !prefersReduced) {
+    var hc = parseInt(hubCount.textContent, 10) || 38;
+    setInterval(function(){ hc++; hubCount.textContent = hc; }, 4200);
   }
 
   /* ----- audit form submit ----- */
