@@ -1,0 +1,2779 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Audit · Utah Aesthetic Surgery</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>:root {
+  --bg: #f4e8e0;
+  --bg-2: #ece0d5;
+  --paper: #faf2ea;
+  --ink: #1a1412;
+  --ink-2: #3a2d26;
+  --muted: #7a675a;
+  --line: #d9c7b7;
+  --accent: #b8644a;
+  --accent-deep: #8f4a34;
+  --accent-soft: #e6b8a3;
+
+  --good: #5a7d5a;
+  --warn: #c19553;
+  --bad: #b14b3b;
+  --info: #6b7d8a;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Inter Tight', system-ui, -apple-system, sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+.serif { font-family: 'Fraunces', 'Times New Roman', serif; font-weight: 400; }
+.mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+a { color: var(--accent-deep); }
+
+.container { max-width: 1200px; margin: 0 auto; padding: 0 32px; }
+
+header.report-header {
+  padding: 56px 0 32px;
+  border-bottom: 1px solid var(--line);
+}
+header .eyebrow {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+header h1 {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-size: 48px;
+  line-height: 1.1;
+  margin: 0 0 8px;
+  letter-spacing: -0.01em;
+}
+header h1 em { font-style: italic; color: var(--accent); }
+header .meta { color: var(--muted); font-size: 13px; }
+header .meta a { color: var(--accent-deep); text-decoration: underline; }
+
+.score-block { display: flex; align-items: flex-end; gap: 48px; margin-top: 32px; flex-wrap: wrap; }
+.overall-score {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-size: 96px;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+.overall-score .denom { color: var(--muted); font-size: 32px; }
+.overall-label { color: var(--muted); font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; font-family: 'JetBrains Mono', monospace; margin-bottom: 8px; }
+
+.scorecards { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; flex: 1; }
+.scorecard {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  padding: 14px 16px;
+  border-radius: 4px;
+}
+.scorecard .label { font-size: 11px; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; font-family: 'JetBrains Mono', monospace; }
+.scorecard .num { font-family: 'Fraunces', serif; font-weight: 300; font-size: 32px; margin-top: 4px; }
+.scorecard .badge { font-size: 10px; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.1em; text-transform: uppercase; }
+.scorecard.good .num { color: var(--good); }
+.scorecard.warn .num { color: var(--warn); }
+.scorecard.bad .num { color: var(--bad); }
+.scorecard.none .num { color: var(--muted); font-size: 24px; }
+
+nav.tabs {
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  z-index: 10;
+  padding: 12px 0;
+  margin-top: 32px;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+nav.tabs .container { display: flex; gap: 4px; }
+nav.tabs button {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 8px 14px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--ink-2);
+  cursor: pointer;
+  border-radius: 4px;
+}
+nav.tabs button:hover { background: var(--paper); }
+nav.tabs button.active { background: var(--ink); color: var(--bg); }
+nav.tabs .tab-score { font-size: 10px; opacity: 0.7; margin-left: 6px; }
+
+main { padding: 40px 0 80px; }
+section.tab-panel { display: none; }
+section.tab-panel.active { display: block; }
+section.tab-panel h2 {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-size: 36px;
+  margin: 0 0 8px;
+  letter-spacing: -0.01em;
+}
+section.tab-panel h2 em { font-style: italic; color: var(--accent); }
+section.tab-panel .tab-summary {
+  font-size: 16px;
+  color: var(--ink-2);
+  max-width: 720px;
+  margin-bottom: 32px;
+}
+section.tab-panel .tab-summary.skipped {
+  background: var(--bg-2);
+  border-left: 3px solid var(--muted);
+  padding: 16px 20px;
+}
+section.tab-panel .tab-summary.error {
+  background: #f7e6e2;
+  border-left: 3px solid var(--bad);
+  padding: 16px 20px;
+}
+
+.issues-group { margin-bottom: 32px; }
+.issues-group h3 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 12px;
+}
+.issue {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--muted);
+  padding: 16px 18px;
+  margin-bottom: 8px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.issue.critical { border-left-color: var(--bad); }
+.issue.high { border-left-color: var(--bad); opacity: 0.95; }
+.issue.medium { border-left-color: var(--warn); }
+.issue.low { border-left-color: var(--info); }
+.issue.info { border-left-color: var(--good); }
+.issue .issue-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+.issue .issue-title { font-weight: 600; flex: 1; }
+.issue .issue-sev {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+.issue.critical .issue-sev { background: var(--bad); color: white; }
+.issue.high .issue-sev { background: var(--bad); color: white; opacity: 0.85; }
+.issue.medium .issue-sev { background: var(--warn); color: white; }
+.issue.low .issue-sev { background: var(--info); color: white; }
+.issue.info .issue-sev { background: var(--good); color: white; }
+.issue .issue-body { margin-top: 8px; color: var(--ink-2); display: none; }
+.issue.expanded .issue-body { display: block; }
+.issue .quickfix {
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: var(--bg-2);
+  border-left: 2px solid var(--accent);
+  font-size: 14px;
+}
+.issue .quickfix::before {
+  content: 'Quick fix · ';
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-deep);
+}
+
+.evidence-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 24px 0; }
+.evidence-grid img { width: 100%; border: 1px solid var(--line); border-radius: 4px; background: white; }
+.evidence-grid .label { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+
+.kw-table, .coverage-table { width: 100%; border-collapse: collapse; margin: 16px 0 32px; }
+.kw-table th, .kw-table td, .coverage-table th, .coverage-table td {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+  font-size: 14px;
+}
+.kw-table th, .coverage-table th { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+.kw-rank { font-family: 'JetBrains Mono', monospace; font-weight: 600; }
+.kw-rank.good { color: var(--good); }
+.kw-rank.warn { color: var(--warn); }
+.kw-rank.bad { color: var(--bad); }
+.coverage-yes { color: var(--good); font-weight: 600; }
+.coverage-no { color: var(--bad); font-weight: 600; }
+
+.llm-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 16px 0 32px; }
+.llm-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  padding: 14px 16px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+.llm-card .head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.llm-card .provider { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.llm-card .flags { font-family: 'JetBrains Mono', monospace; font-size: 10px; }
+.llm-card .flag-yes { color: var(--good); }
+.llm-card .flag-no { color: var(--bad); }
+.llm-card .answer { color: var(--ink-2); white-space: pre-wrap; max-height: 160px; overflow: auto; }
+.llm-card .citations { margin-top: 8px; font-size: 11px; color: var(--muted); word-break: break-all; }
+.llm-question { font-family: 'Fraunces', serif; font-size: 18px; font-style: italic; color: var(--accent); margin: 24px 0 8px; }
+
+.ux-checks { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin: 16px 0 32px; }
+.ux-check { background: var(--paper); border: 1px solid var(--line); padding: 12px 14px; border-radius: 4px; font-size: 13px; }
+.ux-check .label { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.ux-check .value { font-weight: 600; margin-top: 4px; }
+.ux-check.yes .value { color: var(--good); }
+.ux-check.no .value { color: var(--bad); }
+
+@media (max-width: 720px) {
+  .container { padding: 0 20px; }
+  header h1 { font-size: 32px; }
+  .overall-score { font-size: 64px; }
+  .score-block { gap: 24px; }
+  .scorecards { width: 100%; }
+  .evidence-grid, .llm-grid { grid-template-columns: 1fr; }
+}
+
+@media print {
+  nav.tabs { display: none; }
+  section.tab-panel { display: block !important; page-break-after: always; }
+  .issue .issue-body { display: block !important; }
+  body { background: white; }
+  header.report-header { border-bottom: 2px solid var(--ink); }
+}
+</style>
+</head>
+<body>
+<header class="report-header">
+  <div class="container">
+    <div class="eyebrow">Med spa website audit · 6/23/2026</div>
+    <h1>Utah Aesthetic Surgery <em>audit</em></h1>
+    <div class="meta">
+      <a href="https://utah-aesthetic-surgery.com/" target="_blank" rel="noopener">https://utah-aesthetic-surgery.com/</a>
+       · South Jordan, UT
+       · 801-810-0761
+       · 7 pages analyzed
+       · <span style="font-family:'JetBrains Mono', monospace;">$0.1852 Anthropic</span>
+    </div>
+    <div class="score-block">
+      <div>
+        <div class="overall-label">Overall</div>
+        <div class="overall-score">51<span class="denom">/100</span></div>
+      </div>
+      <div class="scorecards">
+        
+          <a href="#lighthouse" class="scorecard good" style="text-decoration:none; color:inherit;">
+            <div class="label">Lighthouse</div>
+            <div class="num">86</div>
+            <div class="badge">
+              59 issues
+            </div>
+          </a>
+        
+          <a href="#seo-onpage" class="scorecard bad" style="text-decoration:none; color:inherit;">
+            <div class="label">SEO (on-page)</div>
+            <div class="num">21</div>
+            <div class="badge">
+              10 issues
+            </div>
+          </a>
+        
+          <a href="#seo-ranking" class="scorecard none" style="text-decoration:none; color:inherit;">
+            <div class="label">SEO (Google rank)</div>
+            <div class="num">—</div>
+            <div class="badge">
+              skipped
+            </div>
+          </a>
+        
+          <a href="#traffic-metrics" class="scorecard none" style="text-decoration:none; color:inherit;">
+            <div class="label">Traffic &amp; authority</div>
+            <div class="num">—</div>
+            <div class="badge">
+              skipped
+            </div>
+          </a>
+        
+          <a href="#llm-copy-aeo" class="scorecard bad" style="text-decoration:none; color:inherit;">
+            <div class="label">LLM copy / AEO</div>
+            <div class="num">48</div>
+            <div class="badge">
+              8 issues
+            </div>
+          </a>
+        
+          <a href="#llm-discoverability" class="scorecard none" style="text-decoration:none; color:inherit;">
+            <div class="label">LLM discoverability</div>
+            <div class="num">—</div>
+            <div class="badge">
+              skipped
+            </div>
+          </a>
+        
+          <a href="#copy-conversion" class="scorecard bad" style="text-decoration:none; color:inherit;">
+            <div class="label">Copy &amp; conversion</div>
+            <div class="num">42</div>
+            <div class="badge">
+              8 issues
+            </div>
+          </a>
+        
+          <a href="#design-review" class="scorecard none" style="text-decoration:none; color:inherit;">
+            <div class="label">Design</div>
+            <div class="num">—</div>
+            <div class="badge">
+              skipped
+            </div>
+          </a>
+        
+          <a href="#ux-medspa" class="scorecard none" style="text-decoration:none; color:inherit;">
+            <div class="label">UX (med spa)</div>
+            <div class="num">—</div>
+            <div class="badge">
+              skipped
+            </div>
+          </a>
+        
+      </div>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <div class="container">
+    <button data-tab="overview">Overview</button>
+    
+      <button data-tab="lighthouse">Lighthouse<span class="tab-score">86</span></button>
+    
+      <button data-tab="seo-onpage">SEO (on-page)<span class="tab-score">21</span></button>
+    
+      <button data-tab="seo-ranking">SEO (Google rank)</button>
+    
+      <button data-tab="traffic-metrics">Traffic &amp; authority</button>
+    
+      <button data-tab="llm-copy-aeo">LLM copy / AEO<span class="tab-score">48</span></button>
+    
+      <button data-tab="llm-discoverability">LLM discoverability</button>
+    
+      <button data-tab="copy-conversion">Copy &amp; conversion<span class="tab-score">42</span></button>
+    
+      <button data-tab="design-review">Design</button>
+    
+      <button data-tab="ux-medspa">UX (med spa)</button>
+    
+  </div>
+</nav>
+
+<main>
+  <section class="tab-panel" data-tab="overview">
+    <div class="container">
+      <h2>The <em>punch list</em></h2>
+      <p class="tab-summary">Issues across every audit module, sorted by severity. Click a row to see the quick fix.</p>
+      
+      
+        <div class="issues-group">
+          <h3>critical · 4</h3>
+          
+            <div class="issue critical">
+              <div class="issue-head">
+                <div class="issue-title">Homepage missing &lt;title&gt; tag <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">SEO (on-page)</span></div>
+                <span class="issue-sev">critical</span>
+              </div>
+              <div class="issue-body">
+                <div>Search engines and social previews show a blank title.</div>
+                <div class="quickfix">Add a 50–60 char title including clinic name + primary city/service.</div>
+              </div>
+            </div>
+          
+            <div class="issue critical">
+              <div class="issue-head">
+                <div class="issue-title">Zero pricing or cost signals anywhere on the site <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">LLM copy / AEO</span></div>
+                <span class="issue-sev">critical</span>
+              </div>
+              <div class="issue-body">
+                <div>Not a single page contains a price, price range, or &#39;starting at&#39; figure for any procedure (BBL, breast augmentation, tummy tuck, rhinoplasty, blepharoplasty, facelift). LLMs answering &#39;How much does a BBL cost in South Jordan, UT?&#39; cannot cite this site at all.</div>
+                <div class="quickfix">Add a &#39;Pricing&#39; section to each procedure page and to the homepage. Minimum viable example: &#39;Brazilian Butt Lift (BBL) at Utah Aesthetic Surgery starts at $8,500–$14,000 depending on the volume of liposuction required. Breast augmentation starts at $6,500–$10,000 including implants, anesthesia, and facility fees. Tummy tuck (abdominoplasty) starts at $7,500. Exact quotes are provided at your complimentary consultation.&#39; Even broad ranges dramatically improve AEO citability.</div>
+              </div>
+            </div>
+          
+            <div class="issue critical">
+              <div class="issue-head">
+                <div class="issue-title">No pricing or cost information for any procedure <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Copy &amp; conversion</span></div>
+                <span class="issue-sev">critical</span>
+              </div>
+              <div class="issue-body">
+                <div>Not one procedure page or the homepage discloses a price, range, or &#39;starting at&#39; figure. High-intent buyers comparison-shopping surgeons in the Salt Lake area will immediately leave for competitors who show pricing. The &#39;Contact us for pricing&#39; model is an invisible wall at the top of the funnel.</div>
+                <div class="quickfix">Add a &#39;What Does [Procedure] Cost?&#39; section to each page. Paste-ready example for breast augmentation: &#39;Breast augmentation at Utah Aesthetic Surgery starts at $6,500–$10,000, which includes surgeon fees, anesthesia, implants, and facility costs. The final quote depends on implant type (silicone vs. saline), placement technique, and surgical complexity. We provide an itemized quote at your free consultation.&#39; Mirror this pattern for every other procedure.</div>
+              </div>
+            </div>
+          
+            <div class="issue critical">
+              <div class="issue-head">
+                <div class="issue-title">No dedicated &#39;Book a Consultation&#39; CTA — only generic contact form links <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Copy &amp; conversion</span></div>
+                <span class="issue-sev">critical</span>
+              </div>
+              <div class="issue-body">
+                <div>Every &#39;Make An Appointment&#39; and &#39;Get Started&#39; link resolves to /contact-us/, which shows a blank contact form with no context, confirmation language, or reassurance copy. There is no button or page specifically labeled &#39;Book a Free Consultation&#39; or &#39;Schedule Your Consult.&#39; Generic contact links do not convert as well as consultation-specific CTAs.</div>
+                <div class="quickfix">Rename the CTA button across all pages to &#39;Book Your Free Consultation&#39; and add a sentence above the contact form on /contact-us/ reading: &#39;Schedule your complimentary consultation with Dr. Robert Rodrigues. During your visit, you&#39;ll receive a personalized surgical plan, full pricing quote, and answers to all your questions — with no obligation to book.&#39; Also add an inline CTA at the bottom of each procedure page: &#39;Ready to explore [procedure name]? Call (801) 810-0761 or click below to book your free consultation with Dr. Rodrigues in South Jordan, UT.&#39;</div>
+              </div>
+            </div>
+          
+        </div>
+      
+        <div class="issues-group">
+          <h3>high · 46</h3>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">📱 First Contentful Paint <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>First Contentful Paint marks the time at which the first text or image is painted.</div>
+                <div class="quickfix">Current: 4.3 s</div>
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">📱 Largest Contentful Paint <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>Largest Contentful Paint marks the time at which the largest text or image is painted.</div>
+                <div class="quickfix">Current: 8.9 s</div>
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">📱 Speed Index <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>Speed Index shows how quickly the contents of a page are visibly populated.</div>
+                <div class="quickfix">Current: 6.4 s</div>
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">📱 Time to Interactive <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>Time to Interactive is the amount of time it takes for the page to become fully interactive.</div>
+                <div class="quickfix">Current: 9.0 s</div>
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">📱 Largest Contentful Paint element <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>This is the largest contentful element painted within the viewport.</div>
+                <div class="quickfix">Current: 8,940 ms</div>
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">📱 `[aria-hidden=&#34;true&#34;]` elements contain focusable descendents <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>Focusable descendents within an `</div>
+                
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">📱 Background and foreground colors do not have a sufficient contrast ratio. <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>Low-contrast text is difficult or impossible for many users to read.</div>
+                
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">📱 Heading elements are not in a sequentially-descending order <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>Properly ordered headings that do not skip levels convey the semantic structure of the page, making it easier to navigate and understand when using assistive technologies.</div>
+                
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">📱 `[user-scalable=&#34;no&#34;]` is used in the `&lt;meta name=&#34;viewport&#34;&gt;` element or the `[maximum-scale]` attribute is less than 5. <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>Disabling zooming is problematic for users with low vision who rely on screen magnification to properly see the contents of a web page.</div>
+                
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">📱 Eliminate render-blocking resources <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>Resources are blocking the first paint of your page. Consider delivering critical JS/CSS inline and deferring all non-critical JS/styles.</div>
+                <div class="quickfix">Current: Est savings of 2,000 ms</div>
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">📱 Reduce unused CSS <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>Reduce unused rules from stylesheets and defer CSS not used for above-the-fold content to decrease bytes consumed by network activity.</div>
+                <div class="quickfix">Current: Est savings of 61 KiB</div>
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">📱 Reduce unused JavaScript <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>Reduce unused JavaScript and defer loading scripts until they are required to decrease bytes consumed by network activity.</div>
+                <div class="quickfix">Current: Est savings of 148 KiB</div>
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">📱 Serve images in next-gen formats <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>Image formats like WebP and AVIF often provide better compression than PNG or JPEG, which means faster downloads and less data consumption.</div>
+                <div class="quickfix">Current: Est savings of 430 KiB</div>
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">📱 Links do not have descriptive text <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>Descriptive link text helps search engines understand your content.</div>
+                <div class="quickfix">Current: 1 link found</div>
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">📱 Use efficient cache lifetimes <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>A long cache lifetime can speed up repeat visits to your page.</div>
+                <div class="quickfix">Current: Est savings of 389 KiB</div>
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">📱 Font display <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>Consider setting</div>
+                <div class="quickfix">Current: Est savings of 530 ms</div>
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">📱 Improve image delivery <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>Reducing the download time of images can improve the perceived load time of the page and LCP.</div>
+                <div class="quickfix">Current: Est savings of 273 KiB</div>
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">📱 Network dependency tree <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div></div>
+                
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">📱 Render blocking requests <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>Requests are blocking the page&#39;s initial render, which may delay LCP.</div>
+                <div class="quickfix">Current: Est savings of 2,340 ms</div>
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">🖥 First Contentful Paint <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>First Contentful Paint marks the time at which the first text or image is painted.</div>
+                <div class="quickfix">Current: 2.1 s</div>
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">🖥 Largest Contentful Paint <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>Largest Contentful Paint marks the time at which the largest text or image is painted.</div>
+                <div class="quickfix">Current: 2.5 s</div>
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">🖥 Speed Index <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>Speed Index shows how quickly the contents of a page are visibly populated.</div>
+                <div class="quickfix">Current: 2.9 s</div>
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">🖥 Largest Contentful Paint element <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>This is the largest contentful element painted within the viewport.</div>
+                <div class="quickfix">Current: 2,470 ms</div>
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">🖥 `[aria-hidden=&#34;true&#34;]` elements contain focusable descendents <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>Focusable descendents within an `</div>
+                
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">🖥 Background and foreground colors do not have a sufficient contrast ratio. <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>Low-contrast text is difficult or impossible for many users to read.</div>
+                
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">🖥 Heading elements are not in a sequentially-descending order <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>Properly ordered headings that do not skip levels convey the semantic structure of the page, making it easier to navigate and understand when using assistive technologies.</div>
+                
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">🖥 `[user-scalable=&#34;no&#34;]` is used in the `&lt;meta name=&#34;viewport&#34;&gt;` element or the `[maximum-scale]` attribute is less than 5. <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>Disabling zooming is problematic for users with low vision who rely on screen magnification to properly see the contents of a web page.</div>
+                
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">🖥 Eliminate render-blocking resources <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>Resources are blocking the first paint of your page. Consider delivering critical JS/CSS inline and deferring all non-critical JS/styles.</div>
+                <div class="quickfix">Current: Est savings of 210 ms</div>
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">🖥 Reduce unused CSS <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>Reduce unused rules from stylesheets and defer CSS not used for above-the-fold content to decrease bytes consumed by network activity.</div>
+                <div class="quickfix">Current: Est savings of 61 KiB</div>
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">🖥 Serve images in next-gen formats <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>Image formats like WebP and AVIF often provide better compression than PNG or JPEG, which means faster downloads and less data consumption.</div>
+                <div class="quickfix">Current: Est savings of 740 KiB</div>
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">🖥 Links do not have descriptive text <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>Descriptive link text helps search engines understand your content.</div>
+                <div class="quickfix">Current: 1 link found</div>
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">🖥 Use efficient cache lifetimes <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>A long cache lifetime can speed up repeat visits to your page.</div>
+                <div class="quickfix">Current: Est savings of 442 KiB</div>
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">🖥 Font display <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>Consider setting</div>
+                <div class="quickfix">Current: Est savings of 550 ms</div>
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">🖥 Improve image delivery <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>Reducing the download time of images can improve the perceived load time of the page and LCP.</div>
+                <div class="quickfix">Current: Est savings of 686 KiB</div>
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">🖥 LCP request discovery <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>Optimize LCP by making the LCP image</div>
+                
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">🖥 Network dependency tree <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div></div>
+                
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">🖥 Render blocking requests <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>Requests are blocking the page&#39;s initial render, which may delay LCP.</div>
+                <div class="quickfix">Current: Est savings of 440 ms</div>
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">Homepage missing meta description <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">SEO (on-page)</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>Google may auto-generate a snippet from random page text.</div>
+                <div class="quickfix">Add a 120–160 char meta description on the homepage.</div>
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">11 of 11 pages missing &lt;title&gt; <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">SEO (on-page)</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>Inner pages without titles cannot rank for their topic.</div>
+                <div class="quickfix">Set a unique 50–60 char &lt;title&gt; on every page.</div>
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">No structured data (JSON-LD) on any page <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">SEO (on-page)</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>Critical for local search &amp; LLM understanding. Missing MedicalBusiness/LocalBusiness schema.</div>
+                <div class="quickfix">Add JSON-LD with @type &#34;MedicalBusiness&#34; + address, phone, hours, services on the homepage.</div>
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">Dr. Rodrigues&#39;s credentials are vague — board certification bodies never named <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">LLM copy / AEO</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>The site repeatedly says &#39;double board-certified&#39; and &#39;board-certified plastic surgeon&#39; but never names the certifying boards (e.g., American Board of Plastic Surgery, American Board of Surgery). LLMs require specific, verifiable named entities to cite authoritatively.</div>
+                <div class="quickfix">On the Meet the Doctor page and homepage bio, add: &#39;Dr. Robert Rodrigues is double board-certified by the American Board of Plastic Surgery (ABPS) and the American Board of Surgery (ABS). He completed his plastic surgery residency at [Institution Name] and has practiced aesthetic surgery in South Jordan, Utah for [X] years.&#39; Also add his medical school and any fellowship training.</div>
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">City and neighborhood almost never appear in body copy — geo-cues confined to footer address <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">LLM copy / AEO</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>Across all procedure pages (BBL, blepharoplasty, breast augmentation, facelift, etc.), &#39;South Jordan&#39; and &#39;Utah&#39; appear only in the footer address block and occasionally in a tagline. Body paragraphs never situate the clinic geographically. LLMs answering &#39;best plastic surgeon near South Jordan&#39; cannot confidently cite pages that lack in-body geo-signals.</div>
+                <div class="quickfix">Insert a geo-anchored sentence into the opening paragraph of every procedure page. Example for the BBL page: &#39;Dr. Robert Rodrigues performs Brazilian Butt Lift surgery at Utah Aesthetic Surgery, located at 10382 S. Jordan Gateway, Suite 100, in South Jordan, Utah—conveniently serving patients throughout Salt Lake County, Draper, Riverton, and the greater Salt Lake City area.&#39;</div>
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">No sitewide FAQ hub — per-page &#39;Common Questions&#39; blocks are minimal (3–4 Q&amp;As) and lack specificity <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">LLM copy / AEO</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>Each procedure page has a 3–5 item &#39;Common Questions&#39; section, but answers are very brief and generic (e.g., &#39;Long-lasting, especially with stable weight&#39;). There is no dedicated FAQ page, and questions do not match real user search queries like &#39;How long does BBL recovery take?&#39; or &#39;Does breast augmentation feel natural?&#39;</div>
+                <div class="quickfix">Create a standalone /faq/ page and expand each procedure&#39;s FAQ to at least 8 Q&amp;As with substantive answers. Example for BBL: &#39;Q: How long is BBL recovery in South Jordan, UT? A: Most Utah Aesthetic Surgery BBL patients avoid direct sitting for 2 weeks, use a BBL pillow for weeks 2–6, and return to desk work within 10–14 days. Full results stabilize at 3–6 months, with 60–80% of transferred fat surviving long-term.&#39;</div>
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">Credentials listed vaguely — certifying boards, training institutions, and years of experience omitted <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Copy &amp; conversion</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>Dr. Rodrigues is described as &#39;double board-certified&#39; across multiple pages, but the certifying board names, his medical school, residency program, fellowship (if any), and number of years in practice are never stated. One testimonial mentions she&#39;s been a patient since 2008, implying 15+ years of experience — but this is not stated in the doctor&#39;s bio. Buyers cross-shopping surgeons look for specific credentials.</div>
+                <div class="quickfix">Add a credential block to the Meet the Doctor page and embed a shorter version on the homepage. Example: &#39;Dr. Robert Rodrigues, MD — Double Board-Certified by the American Board of Plastic Surgery and the American Board of Surgery. [Medical School], [Residency Institution]. Practicing aesthetic and reconstructive plastic surgery in South Jordan, Utah since [year]. Over [X] procedures performed.&#39; If a fellowship exists, name the institution and specialty.</div>
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">No financing or payment plan information anywhere on the site <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Copy &amp; conversion</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>Plastic surgery procedures costing $6,500–$15,000+ require financing for many patients. The site makes no mention of CareCredit, Cherry, Alphaeon, in-house payment plans, or any financing option. This is a significant conversion blocker for cost-sensitive prospects.</div>
+                <div class="quickfix">Add a &#39;Financing&#39; section to the homepage and each procedure page. Example: &#39;Utah Aesthetic Surgery works with CareCredit and Cherry to offer flexible monthly payment plans. Many patients finance their procedure for as little as $X/month with approved credit. Ask about financing options during your consultation or call (801) 810-0761.&#39; Apply to enroll with CareCredit at carecredit.com/providers if not already enrolled.</div>
+              </div>
+            </div>
+          
+            <div class="issue high">
+              <div class="issue-head">
+                <div class="issue-title">No parking, transit, or neighborhood context on the location/contact page <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Copy &amp; conversion</span></div>
+                <span class="issue-sev">high</span>
+              </div>
+              <div class="issue-body">
+                <div>The address (10382 S. Jordan Gateway, Suite 100, South Jordan, UT 84095) appears in the footer and on the contact page, but there is no information about parking availability, proximity to landmarks, freeway access (I-15 exit), or nearby cities served. This creates friction for first-time visitors.</div>
+                <div class="quickfix">Add a location block to /contact-us/: &#39;Utah Aesthetic Surgery is located on S. Jordan Gateway in South Jordan, UT, just off the [nearest I-15 exit] exit — approximately [X] minutes south of downtown Salt Lake City and [X] minutes from Draper and Riverton. Free parking is available in the building lot. Suite 100 is located on the ground floor.&#39; Include a Google Maps embed.</div>
+              </div>
+            </div>
+          
+        </div>
+      
+        <div class="issues-group">
+          <h3>medium · 28</h3>
+          
+            <div class="issue medium">
+              <div class="issue-head">
+                <div class="issue-title">📱 Minimize main-thread work <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">medium</span>
+              </div>
+              <div class="issue-body">
+                <div>Consider reducing the time spent parsing, compiling and executing JS. You may find delivering smaller JS payloads helps with this.</div>
+                <div class="quickfix">Current: 2.8 s</div>
+              </div>
+            </div>
+          
+            <div class="issue medium">
+              <div class="issue-head">
+                <div class="issue-title">📱 Ensure text remains visible during webfont load <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">medium</span>
+              </div>
+              <div class="issue-body">
+                <div>Leverage the `font-display` CSS feature to ensure text is user-visible while webfonts are loading.</div>
+                
+              </div>
+            </div>
+          
+            <div class="issue medium">
+              <div class="issue-head">
+                <div class="issue-title">📱 Image elements do not have explicit `width` and `height` <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">medium</span>
+              </div>
+              <div class="issue-body">
+                <div>Set an explicit width and height on image elements to reduce layout shifts and improve CLS.</div>
+                
+              </div>
+            </div>
+          
+            <div class="issue medium">
+              <div class="issue-head">
+                <div class="issue-title">📱 Serve static assets with an efficient cache policy <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">medium</span>
+              </div>
+              <div class="issue-body">
+                <div>A long cache lifetime can speed up repeat visits to your page.</div>
+                <div class="quickfix">Current: 95 resources found</div>
+              </div>
+            </div>
+          
+            <div class="issue medium">
+              <div class="issue-head">
+                <div class="issue-title">📱 Efficiently encode images <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">medium</span>
+              </div>
+              <div class="issue-body">
+                <div>Optimized images load faster and consume less cellular data.</div>
+                <div class="quickfix">Current: Est savings of 63 KiB</div>
+              </div>
+            </div>
+          
+            <div class="issue medium">
+              <div class="issue-head">
+                <div class="issue-title">📱 Enable text compression <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">medium</span>
+              </div>
+              <div class="issue-body">
+                <div>Text-based resources should be served with compression (gzip, deflate or brotli) to minimize total network bytes.</div>
+                <div class="quickfix">Current: Est savings of 11 KiB</div>
+              </div>
+            </div>
+          
+            <div class="issue medium">
+              <div class="issue-head">
+                <div class="issue-title">📱 Properly size images <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">medium</span>
+              </div>
+              <div class="issue-body">
+                <div>Serve images that are appropriately-sized to save cellular data and improve load time.</div>
+                <div class="quickfix">Current: Est savings of 34 KiB</div>
+              </div>
+            </div>
+          
+            <div class="issue medium">
+              <div class="issue-head">
+                <div class="issue-title">📱 Avoid serving legacy JavaScript to modern browsers <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">medium</span>
+              </div>
+              <div class="issue-body">
+                <div>Polyfills and transforms enable legacy browsers to use new JavaScript features. However, many aren&#39;t necessary for modern browsers. Consider modifying your JavaScript build process to not transpile</div>
+                <div class="quickfix">Current: Est savings of 8 KiB</div>
+              </div>
+            </div>
+          
+            <div class="issue medium">
+              <div class="issue-head">
+                <div class="issue-title">📱 Avoid an excessive DOM size <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">medium</span>
+              </div>
+              <div class="issue-body">
+                <div>A large DOM will increase memory usage, cause longer</div>
+                <div class="quickfix">Current: 1,202 elements</div>
+              </div>
+            </div>
+          
+            <div class="issue medium">
+              <div class="issue-head">
+                <div class="issue-title">📱 Does not use passive listeners to improve scrolling performance <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">medium</span>
+              </div>
+              <div class="issue-body">
+                <div>Consider marking your touch and wheel event listeners as `passive` to improve your page&#39;s scroll performance.</div>
+                
+              </div>
+            </div>
+          
+            <div class="issue medium">
+              <div class="issue-head">
+                <div class="issue-title">📱 Legacy JavaScript <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">medium</span>
+              </div>
+              <div class="issue-body">
+                <div>Polyfills and transforms enable older browsers to use new JavaScript features. However, many aren&#39;t necessary for modern browsers. Consider modifying your JavaScript build process to not transpile</div>
+                <div class="quickfix">Current: Est savings of 8 KiB</div>
+              </div>
+            </div>
+          
+            <div class="issue medium">
+              <div class="issue-head">
+                <div class="issue-title">🖥 Ensure text remains visible during webfont load <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">medium</span>
+              </div>
+              <div class="issue-body">
+                <div>Leverage the `font-display` CSS feature to ensure text is user-visible while webfonts are loading.</div>
+                
+              </div>
+            </div>
+          
+            <div class="issue medium">
+              <div class="issue-head">
+                <div class="issue-title">🖥 Image elements do not have explicit `width` and `height` <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">medium</span>
+              </div>
+              <div class="issue-body">
+                <div>Set an explicit width and height on image elements to reduce layout shifts and improve CLS.</div>
+                
+              </div>
+            </div>
+          
+            <div class="issue medium">
+              <div class="issue-head">
+                <div class="issue-title">🖥 Serve static assets with an efficient cache policy <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">medium</span>
+              </div>
+              <div class="issue-body">
+                <div>A long cache lifetime can speed up repeat visits to your page.</div>
+                <div class="quickfix">Current: 108 resources found</div>
+              </div>
+            </div>
+          
+            <div class="issue medium">
+              <div class="issue-head">
+                <div class="issue-title">🖥 Reduce unused JavaScript <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">medium</span>
+              </div>
+              <div class="issue-body">
+                <div>Reduce unused JavaScript and defer loading scripts until they are required to decrease bytes consumed by network activity.</div>
+                <div class="quickfix">Current: Est savings of 147 KiB</div>
+              </div>
+            </div>
+          
+            <div class="issue medium">
+              <div class="issue-head">
+                <div class="issue-title">🖥 Efficiently encode images <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">medium</span>
+              </div>
+              <div class="issue-body">
+                <div>Optimized images load faster and consume less cellular data.</div>
+                <div class="quickfix">Current: Est savings of 63 KiB</div>
+              </div>
+            </div>
+          
+            <div class="issue medium">
+              <div class="issue-head">
+                <div class="issue-title">🖥 Enable text compression <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">medium</span>
+              </div>
+              <div class="issue-body">
+                <div>Text-based resources should be served with compression (gzip, deflate or brotli) to minimize total network bytes.</div>
+                <div class="quickfix">Current: Est savings of 11 KiB</div>
+              </div>
+            </div>
+          
+            <div class="issue medium">
+              <div class="issue-head">
+                <div class="issue-title">🖥 Properly size images <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">medium</span>
+              </div>
+              <div class="issue-body">
+                <div>Serve images that are appropriately-sized to save cellular data and improve load time.</div>
+                <div class="quickfix">Current: Est savings of 460 KiB</div>
+              </div>
+            </div>
+          
+            <div class="issue medium">
+              <div class="issue-head">
+                <div class="issue-title">🖥 Avoid serving legacy JavaScript to modern browsers <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">medium</span>
+              </div>
+              <div class="issue-body">
+                <div>Polyfills and transforms enable legacy browsers to use new JavaScript features. However, many aren&#39;t necessary for modern browsers. Consider modifying your JavaScript build process to not transpile</div>
+                <div class="quickfix">Current: Est savings of 8 KiB</div>
+              </div>
+            </div>
+          
+            <div class="issue medium">
+              <div class="issue-head">
+                <div class="issue-title">🖥 Avoid an excessive DOM size <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">medium</span>
+              </div>
+              <div class="issue-body">
+                <div>A large DOM will increase memory usage, cause longer</div>
+                <div class="quickfix">Current: 1,198 elements</div>
+              </div>
+            </div>
+          
+            <div class="issue medium">
+              <div class="issue-head">
+                <div class="issue-title">🖥 Legacy JavaScript <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">medium</span>
+              </div>
+              <div class="issue-body">
+                <div>Polyfills and transforms enable older browsers to use new JavaScript features. However, many aren&#39;t necessary for modern browsers. Consider modifying your JavaScript build process to not transpile</div>
+                <div class="quickfix">Current: Est savings of 8 KiB</div>
+              </div>
+            </div>
+          
+            <div class="issue medium">
+              <div class="issue-head">
+                <div class="issue-title">11 of 11 pages missing meta description <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">SEO (on-page)</span></div>
+                <span class="issue-sev">medium</span>
+              </div>
+              <div class="issue-body">
+                <div>Inner pages get truncated/auto-generated snippets in search.</div>
+                <div class="quickfix">Author a unique 120–160 char meta description per page.</div>
+              </div>
+            </div>
+          
+            <div class="issue medium">
+              <div class="issue-head">
+                <div class="issue-title">Homepage has no Open Graph tags <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">SEO (on-page)</span></div>
+                <span class="issue-sev">medium</span>
+              </div>
+              <div class="issue-body">
+                <div>Social shares get a blank/generic preview.</div>
+                <div class="quickfix">Add og:title, og:description, og:image, og:url.</div>
+              </div>
+            </div>
+          
+            <div class="issue medium">
+              <div class="issue-head">
+                <div class="issue-title">No treatment durations or operative time facts on any procedure page <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">LLM copy / AEO</span></div>
+                <span class="issue-sev">medium</span>
+              </div>
+              <div class="issue-body">
+                <div>LLMs commonly answer &#39;How long does a tummy tuck take?&#39; or &#39;How many hours is BBL surgery?&#39; None of the procedure pages include operative time, anesthesia type, or appointment duration — all highly citable facts.</div>
+                <div class="quickfix">Add a &#39;Procedure Details&#39; callout box to each page. Example: &#39;BBL at Utah Aesthetic Surgery: Operative time: 2.5–4 hours | Anesthesia: General | Facility: Accredited outpatient surgical center | Recovery: 2–6 weeks | Fat survival: 60–80%.&#39;</div>
+              </div>
+            </div>
+          
+            <div class="issue medium">
+              <div class="issue-head">
+                <div class="issue-title">Morpheus8 listed on homepage but has no dedicated page or body copy <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">LLM copy / AEO</span></div>
+                <span class="issue-sev">medium</span>
+              </div>
+              <div class="issue-body">
+                <div>Morpheus8 skin tightening appears as a homepage thumbnail with no supporting page, description, pricing, or FAQ. This wastes a high-search-volume brand-name keyword and provides zero citability for LLM queries about Morpheus8 in South Jordan.</div>
+                <div class="quickfix">Either create a /morpheus8/ page with full treatment copy (what it is, how many sessions, downtime, starting price) or remove it from the homepage to avoid confusing LLMs about the clinic&#39;s actual service scope.</div>
+              </div>
+            </div>
+          
+            <div class="issue medium">
+              <div class="issue-head">
+                <div class="issue-title">Liposuction listed as a homepage procedure card but has no dedicated page <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">LLM copy / AEO</span></div>
+                <span class="issue-sev">medium</span>
+              </div>
+              <div class="issue-body">
+                <div>Liposuction appears on the homepage services grid but does not exist as a standalone page in the navigation or the site corpus. LLMs cannot retrieve factual content about a service that has no page.</div>
+                <div class="quickfix">Create a /liposuction/ page with at minimum: procedure overview, candidate criteria, recovery timeline, combination procedures (e.g., BBL, tummy tuck), and a &#39;starting at&#39; price. Until then, remove the liposuction card from the homepage or redirect to the BBL page which describes liposuction as Step 1.</div>
+              </div>
+            </div>
+          
+            <div class="issue medium">
+              <div class="issue-head">
+                <div class="issue-title">Trust reviews lack aggregate score and platform badges <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Copy &amp; conversion</span></div>
+                <span class="issue-sev">medium</span>
+              </div>
+              <div class="issue-body">
+                <div>The homepage testimonials are strong and named, but there is no aggregate star rating (e.g., &#39;4.9 stars across 120 Google reviews&#39;), no Google/RealSelf/Healthgrades badge, and no link to an external review profile. Buyers want third-party validation, not just on-site quotes.</div>
+                <div class="quickfix">Above the testimonials section, add: &#39;Dr. Rodrigues holds a [X.X]-star rating across [N] verified patient reviews on Google. [Link: Read our Google reviews]&#39; and embed the Google review widget or a RealSelf badge if the practice has a profile. If not enrolled on RealSelf, create a profile — it is free and high-converting for plastic surgery patients.</div>
+              </div>
+            </div>
+          
+            <div class="issue medium">
+              <div class="issue-head">
+                <div class="issue-title">Objection handling exists but is shallow — pain, anesthesia type, and candidacy disqualifiers not addressed <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Copy &amp; conversion</span></div>
+                <span class="issue-sev">medium</span>
+              </div>
+              <div class="issue-body">
+                <div>Each procedure page touches on risks and candidacy, but does not directly answer the highest-anxiety buyer questions: &#39;Will this hurt?&#39;, &#39;What kind of anesthesia is used?&#39;, &#39;What if I&#39;m not a candidate?&#39;, &#39;What happens if I&#39;m unhappy with results?&#39; These are documented top questions for plastic surgery prospects.</div>
+                <div class="quickfix">Add a &#39;Your Safety &amp; Comfort&#39; section to each procedure page. Example for BBL: &#39;Q: Will I be under general anesthesia? A: Yes — BBL at Utah Aesthetic Surgery is performed under general anesthesia in an accredited outpatient surgical facility. Q: Will it hurt? A: Postoperative discomfort is managed with a prescribed pain protocol; most patients describe soreness rather than sharp pain for the first 3–5 days. Q: What if I&#39;m not satisfied? A: Dr. Rodrigues discusses realistic expectations during consultation. Revision options are always discussed openly.&#39;</div>
+              </div>
+            </div>
+          
+        </div>
+      
+        <div class="issues-group">
+          <h3>low · 7</h3>
+          
+            <div class="issue low">
+              <div class="issue-head">
+                <div class="issue-title">🖥 Time to Interactive <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Lighthouse</span></div>
+                <span class="issue-sev">low</span>
+              </div>
+              <div class="issue-body">
+                <div>Time to Interactive is the amount of time it takes for the page to become fully interactive.</div>
+                <div class="quickfix">Current: 2.5 s</div>
+              </div>
+            </div>
+          
+            <div class="issue low">
+              <div class="issue-head">
+                <div class="issue-title">11 pages have multiple &lt;h1&gt; tags <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">SEO (on-page)</span></div>
+                <span class="issue-sev">low</span>
+              </div>
+              <div class="issue-body">
+                <div>Multiple H1s confuse heading hierarchy.</div>
+                <div class="quickfix">Demote secondary H1s to H2.</div>
+              </div>
+            </div>
+          
+            <div class="issue low">
+              <div class="issue-head">
+                <div class="issue-title">Homepage missing canonical URL <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">SEO (on-page)</span></div>
+                <span class="issue-sev">low</span>
+              </div>
+              <div class="issue-body">
+                <div>Helps avoid duplicate-content issues.</div>
+                <div class="quickfix">Add &lt;link rel=&#34;canonical&#34; href=&#34;…&#34;&gt;.</div>
+              </div>
+            </div>
+          
+            <div class="issue low">
+              <div class="issue-head">
+                <div class="issue-title">No Twitter card tags <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">SEO (on-page)</span></div>
+                <span class="issue-sev">low</span>
+              </div>
+              <div class="issue-body">
+                <div>X/Twitter shares look bare.</div>
+                <div class="quickfix">Add twitter:card, twitter:title, twitter:description, twitter:image.</div>
+              </div>
+            </div>
+          
+            <div class="issue low">
+              <div class="issue-head">
+                <div class="issue-title">No favicon <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">SEO (on-page)</span></div>
+                <span class="issue-sev">low</span>
+              </div>
+              <div class="issue-body">
+                <div>Tabs, bookmarks, and search results show a generic icon.</div>
+                <div class="quickfix">Add &lt;link rel=&#34;icon&#34; href=&#34;/favicon.ico&#34;&gt;.</div>
+              </div>
+            </div>
+          
+            <div class="issue low">
+              <div class="issue-head">
+                <div class="issue-title">Placeholder text &#39;ADD ANYTHING HERE OR JUST REMOVE IT…&#39; appears on every page in the corpus <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">LLM copy / AEO</span></div>
+                <span class="issue-sev">low</span>
+              </div>
+              <div class="issue-body">
+                <div>This un-edited theme placeholder text appears in the header area of every page and signals to crawlers and LLMs that the site may be under construction or low-quality.</div>
+                <div class="quickfix">Delete the placeholder text from the theme header widget on all pages immediately. Replace with either nothing, or a trust signal such as: &#39;Double Board-Certified Plastic Surgeon Serving South Jordan &amp; Salt Lake County | Call (801) 810-0761.&#39;</div>
+              </div>
+            </div>
+          
+            <div class="issue low">
+              <div class="issue-head">
+                <div class="issue-title">Gallery page is image-only with no procedure labels, patient context, or results copy <span style="color:var(--muted); font-weight:400; font-size:12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-left: 8px;">Copy &amp; conversion</span></div>
+                <span class="issue-sev">low</span>
+              </div>
+              <div class="issue-body">
+                <div>The /gallery/ page lists &#39;Abdominoplasty,&#39; &#39;Breast Aug,&#39; and &#39;BBL&#39; as section headers but no image carries a caption, patient age range, procedure details, or outcome description. This misses a conversion opportunity where buyers are already engaged visually.</div>
+                <div class="quickfix">Add a 2-sentence caption under each before/after image set. Example: &#39;Abdominoplasty patient, 38-year-old mother of three. Six months post-op following extended tummy tuck with muscle repair performed by Dr. Rodrigues in South Jordan, UT. Individual results vary.&#39; This also adds AEO-citeable content to the gallery page.</div>
+              </div>
+            </div>
+          
+        </div>
+      
+      
+    </div>
+  </section>
+
+  
+  <section class="tab-panel" data-tab="lighthouse">
+    <div class="container">
+      <h2>Lighthouse <em>· 86/100</em></h2>
+
+      
+        <p class="tab-summary">Mobile perf 61, desktop perf 72. 59 audit(s) below 90.</p>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <div class="ux-checks">
+          
+            <div class="ux-check no"><div class="label">mobile · Performance</div><div class="value">61</div></div>
+            <div class="ux-check no"><div class="label">mobile · Accessibility</div><div class="value">87</div></div>
+            <div class="ux-check yes"><div class="label">mobile · Best practices</div><div class="value">100</div></div>
+            <div class="ux-check yes"><div class="label">mobile · SEO</div><div class="value">92</div></div>
+          
+            <div class="ux-check no"><div class="label">desktop · Performance</div><div class="value">72</div></div>
+            <div class="ux-check no"><div class="label">desktop · Accessibility</div><div class="value">87</div></div>
+            <div class="ux-check yes"><div class="label">desktop · Best practices</div><div class="value">100</div></div>
+            <div class="ux-check yes"><div class="label">desktop · SEO</div><div class="value">92</div></div>
+          
+        </div>
+      
+
+      
+      
+        
+          <div class="issues-group">
+            <h3>high · 37</h3>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">📱 First Contentful Paint</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>First Contentful Paint marks the time at which the first text or image is painted.</div>
+                  <div class="quickfix">Current: 4.3 s</div>
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">📱 Largest Contentful Paint</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>Largest Contentful Paint marks the time at which the largest text or image is painted.</div>
+                  <div class="quickfix">Current: 8.9 s</div>
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">📱 Speed Index</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>Speed Index shows how quickly the contents of a page are visibly populated.</div>
+                  <div class="quickfix">Current: 6.4 s</div>
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">📱 Time to Interactive</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>Time to Interactive is the amount of time it takes for the page to become fully interactive.</div>
+                  <div class="quickfix">Current: 9.0 s</div>
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">📱 Largest Contentful Paint element</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>This is the largest contentful element painted within the viewport.</div>
+                  <div class="quickfix">Current: 8,940 ms</div>
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">📱 `[aria-hidden=&#34;true&#34;]` elements contain focusable descendents</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>Focusable descendents within an `</div>
+                  
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">📱 Background and foreground colors do not have a sufficient contrast ratio.</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>Low-contrast text is difficult or impossible for many users to read.</div>
+                  
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">📱 Heading elements are not in a sequentially-descending order</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>Properly ordered headings that do not skip levels convey the semantic structure of the page, making it easier to navigate and understand when using assistive technologies.</div>
+                  
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">📱 `[user-scalable=&#34;no&#34;]` is used in the `&lt;meta name=&#34;viewport&#34;&gt;` element or the `[maximum-scale]` attribute is less than 5.</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>Disabling zooming is problematic for users with low vision who rely on screen magnification to properly see the contents of a web page.</div>
+                  
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">📱 Eliminate render-blocking resources</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>Resources are blocking the first paint of your page. Consider delivering critical JS/CSS inline and deferring all non-critical JS/styles.</div>
+                  <div class="quickfix">Current: Est savings of 2,000 ms</div>
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">📱 Reduce unused CSS</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>Reduce unused rules from stylesheets and defer CSS not used for above-the-fold content to decrease bytes consumed by network activity.</div>
+                  <div class="quickfix">Current: Est savings of 61 KiB</div>
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">📱 Reduce unused JavaScript</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>Reduce unused JavaScript and defer loading scripts until they are required to decrease bytes consumed by network activity.</div>
+                  <div class="quickfix">Current: Est savings of 148 KiB</div>
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">📱 Serve images in next-gen formats</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>Image formats like WebP and AVIF often provide better compression than PNG or JPEG, which means faster downloads and less data consumption.</div>
+                  <div class="quickfix">Current: Est savings of 430 KiB</div>
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">📱 Links do not have descriptive text</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>Descriptive link text helps search engines understand your content.</div>
+                  <div class="quickfix">Current: 1 link found</div>
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">📱 Use efficient cache lifetimes</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>A long cache lifetime can speed up repeat visits to your page.</div>
+                  <div class="quickfix">Current: Est savings of 389 KiB</div>
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">📱 Font display</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>Consider setting</div>
+                  <div class="quickfix">Current: Est savings of 530 ms</div>
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">📱 Improve image delivery</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>Reducing the download time of images can improve the perceived load time of the page and LCP.</div>
+                  <div class="quickfix">Current: Est savings of 273 KiB</div>
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">📱 Network dependency tree</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div></div>
+                  
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">📱 Render blocking requests</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>Requests are blocking the page&#39;s initial render, which may delay LCP.</div>
+                  <div class="quickfix">Current: Est savings of 2,340 ms</div>
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">🖥 First Contentful Paint</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>First Contentful Paint marks the time at which the first text or image is painted.</div>
+                  <div class="quickfix">Current: 2.1 s</div>
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">🖥 Largest Contentful Paint</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>Largest Contentful Paint marks the time at which the largest text or image is painted.</div>
+                  <div class="quickfix">Current: 2.5 s</div>
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">🖥 Speed Index</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>Speed Index shows how quickly the contents of a page are visibly populated.</div>
+                  <div class="quickfix">Current: 2.9 s</div>
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">🖥 Largest Contentful Paint element</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>This is the largest contentful element painted within the viewport.</div>
+                  <div class="quickfix">Current: 2,470 ms</div>
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">🖥 `[aria-hidden=&#34;true&#34;]` elements contain focusable descendents</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>Focusable descendents within an `</div>
+                  
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">🖥 Background and foreground colors do not have a sufficient contrast ratio.</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>Low-contrast text is difficult or impossible for many users to read.</div>
+                  
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">🖥 Heading elements are not in a sequentially-descending order</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>Properly ordered headings that do not skip levels convey the semantic structure of the page, making it easier to navigate and understand when using assistive technologies.</div>
+                  
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">🖥 `[user-scalable=&#34;no&#34;]` is used in the `&lt;meta name=&#34;viewport&#34;&gt;` element or the `[maximum-scale]` attribute is less than 5.</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>Disabling zooming is problematic for users with low vision who rely on screen magnification to properly see the contents of a web page.</div>
+                  
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">🖥 Eliminate render-blocking resources</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>Resources are blocking the first paint of your page. Consider delivering critical JS/CSS inline and deferring all non-critical JS/styles.</div>
+                  <div class="quickfix">Current: Est savings of 210 ms</div>
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">🖥 Reduce unused CSS</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>Reduce unused rules from stylesheets and defer CSS not used for above-the-fold content to decrease bytes consumed by network activity.</div>
+                  <div class="quickfix">Current: Est savings of 61 KiB</div>
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">🖥 Serve images in next-gen formats</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>Image formats like WebP and AVIF often provide better compression than PNG or JPEG, which means faster downloads and less data consumption.</div>
+                  <div class="quickfix">Current: Est savings of 740 KiB</div>
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">🖥 Links do not have descriptive text</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>Descriptive link text helps search engines understand your content.</div>
+                  <div class="quickfix">Current: 1 link found</div>
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">🖥 Use efficient cache lifetimes</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>A long cache lifetime can speed up repeat visits to your page.</div>
+                  <div class="quickfix">Current: Est savings of 442 KiB</div>
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">🖥 Font display</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>Consider setting</div>
+                  <div class="quickfix">Current: Est savings of 550 ms</div>
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">🖥 Improve image delivery</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>Reducing the download time of images can improve the perceived load time of the page and LCP.</div>
+                  <div class="quickfix">Current: Est savings of 686 KiB</div>
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">🖥 LCP request discovery</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>Optimize LCP by making the LCP image</div>
+                  
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">🖥 Network dependency tree</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div></div>
+                  
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">🖥 Render blocking requests</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>Requests are blocking the page&#39;s initial render, which may delay LCP.</div>
+                  <div class="quickfix">Current: Est savings of 440 ms</div>
+                </div>
+              </div>
+            
+          </div>
+        
+          <div class="issues-group">
+            <h3>medium · 21</h3>
+            
+              <div class="issue medium">
+                <div class="issue-head">
+                  <div class="issue-title">📱 Minimize main-thread work</div>
+                  <span class="issue-sev">medium</span>
+                </div>
+                <div class="issue-body">
+                  <div>Consider reducing the time spent parsing, compiling and executing JS. You may find delivering smaller JS payloads helps with this.</div>
+                  <div class="quickfix">Current: 2.8 s</div>
+                </div>
+              </div>
+            
+              <div class="issue medium">
+                <div class="issue-head">
+                  <div class="issue-title">📱 Ensure text remains visible during webfont load</div>
+                  <span class="issue-sev">medium</span>
+                </div>
+                <div class="issue-body">
+                  <div>Leverage the `font-display` CSS feature to ensure text is user-visible while webfonts are loading.</div>
+                  
+                </div>
+              </div>
+            
+              <div class="issue medium">
+                <div class="issue-head">
+                  <div class="issue-title">📱 Image elements do not have explicit `width` and `height`</div>
+                  <span class="issue-sev">medium</span>
+                </div>
+                <div class="issue-body">
+                  <div>Set an explicit width and height on image elements to reduce layout shifts and improve CLS.</div>
+                  
+                </div>
+              </div>
+            
+              <div class="issue medium">
+                <div class="issue-head">
+                  <div class="issue-title">📱 Serve static assets with an efficient cache policy</div>
+                  <span class="issue-sev">medium</span>
+                </div>
+                <div class="issue-body">
+                  <div>A long cache lifetime can speed up repeat visits to your page.</div>
+                  <div class="quickfix">Current: 95 resources found</div>
+                </div>
+              </div>
+            
+              <div class="issue medium">
+                <div class="issue-head">
+                  <div class="issue-title">📱 Efficiently encode images</div>
+                  <span class="issue-sev">medium</span>
+                </div>
+                <div class="issue-body">
+                  <div>Optimized images load faster and consume less cellular data.</div>
+                  <div class="quickfix">Current: Est savings of 63 KiB</div>
+                </div>
+              </div>
+            
+              <div class="issue medium">
+                <div class="issue-head">
+                  <div class="issue-title">📱 Enable text compression</div>
+                  <span class="issue-sev">medium</span>
+                </div>
+                <div class="issue-body">
+                  <div>Text-based resources should be served with compression (gzip, deflate or brotli) to minimize total network bytes.</div>
+                  <div class="quickfix">Current: Est savings of 11 KiB</div>
+                </div>
+              </div>
+            
+              <div class="issue medium">
+                <div class="issue-head">
+                  <div class="issue-title">📱 Properly size images</div>
+                  <span class="issue-sev">medium</span>
+                </div>
+                <div class="issue-body">
+                  <div>Serve images that are appropriately-sized to save cellular data and improve load time.</div>
+                  <div class="quickfix">Current: Est savings of 34 KiB</div>
+                </div>
+              </div>
+            
+              <div class="issue medium">
+                <div class="issue-head">
+                  <div class="issue-title">📱 Avoid serving legacy JavaScript to modern browsers</div>
+                  <span class="issue-sev">medium</span>
+                </div>
+                <div class="issue-body">
+                  <div>Polyfills and transforms enable legacy browsers to use new JavaScript features. However, many aren&#39;t necessary for modern browsers. Consider modifying your JavaScript build process to not transpile</div>
+                  <div class="quickfix">Current: Est savings of 8 KiB</div>
+                </div>
+              </div>
+            
+              <div class="issue medium">
+                <div class="issue-head">
+                  <div class="issue-title">📱 Avoid an excessive DOM size</div>
+                  <span class="issue-sev">medium</span>
+                </div>
+                <div class="issue-body">
+                  <div>A large DOM will increase memory usage, cause longer</div>
+                  <div class="quickfix">Current: 1,202 elements</div>
+                </div>
+              </div>
+            
+              <div class="issue medium">
+                <div class="issue-head">
+                  <div class="issue-title">📱 Does not use passive listeners to improve scrolling performance</div>
+                  <span class="issue-sev">medium</span>
+                </div>
+                <div class="issue-body">
+                  <div>Consider marking your touch and wheel event listeners as `passive` to improve your page&#39;s scroll performance.</div>
+                  
+                </div>
+              </div>
+            
+              <div class="issue medium">
+                <div class="issue-head">
+                  <div class="issue-title">📱 Legacy JavaScript</div>
+                  <span class="issue-sev">medium</span>
+                </div>
+                <div class="issue-body">
+                  <div>Polyfills and transforms enable older browsers to use new JavaScript features. However, many aren&#39;t necessary for modern browsers. Consider modifying your JavaScript build process to not transpile</div>
+                  <div class="quickfix">Current: Est savings of 8 KiB</div>
+                </div>
+              </div>
+            
+              <div class="issue medium">
+                <div class="issue-head">
+                  <div class="issue-title">🖥 Ensure text remains visible during webfont load</div>
+                  <span class="issue-sev">medium</span>
+                </div>
+                <div class="issue-body">
+                  <div>Leverage the `font-display` CSS feature to ensure text is user-visible while webfonts are loading.</div>
+                  
+                </div>
+              </div>
+            
+              <div class="issue medium">
+                <div class="issue-head">
+                  <div class="issue-title">🖥 Image elements do not have explicit `width` and `height`</div>
+                  <span class="issue-sev">medium</span>
+                </div>
+                <div class="issue-body">
+                  <div>Set an explicit width and height on image elements to reduce layout shifts and improve CLS.</div>
+                  
+                </div>
+              </div>
+            
+              <div class="issue medium">
+                <div class="issue-head">
+                  <div class="issue-title">🖥 Serve static assets with an efficient cache policy</div>
+                  <span class="issue-sev">medium</span>
+                </div>
+                <div class="issue-body">
+                  <div>A long cache lifetime can speed up repeat visits to your page.</div>
+                  <div class="quickfix">Current: 108 resources found</div>
+                </div>
+              </div>
+            
+              <div class="issue medium">
+                <div class="issue-head">
+                  <div class="issue-title">🖥 Reduce unused JavaScript</div>
+                  <span class="issue-sev">medium</span>
+                </div>
+                <div class="issue-body">
+                  <div>Reduce unused JavaScript and defer loading scripts until they are required to decrease bytes consumed by network activity.</div>
+                  <div class="quickfix">Current: Est savings of 147 KiB</div>
+                </div>
+              </div>
+            
+              <div class="issue medium">
+                <div class="issue-head">
+                  <div class="issue-title">🖥 Efficiently encode images</div>
+                  <span class="issue-sev">medium</span>
+                </div>
+                <div class="issue-body">
+                  <div>Optimized images load faster and consume less cellular data.</div>
+                  <div class="quickfix">Current: Est savings of 63 KiB</div>
+                </div>
+              </div>
+            
+              <div class="issue medium">
+                <div class="issue-head">
+                  <div class="issue-title">🖥 Enable text compression</div>
+                  <span class="issue-sev">medium</span>
+                </div>
+                <div class="issue-body">
+                  <div>Text-based resources should be served with compression (gzip, deflate or brotli) to minimize total network bytes.</div>
+                  <div class="quickfix">Current: Est savings of 11 KiB</div>
+                </div>
+              </div>
+            
+              <div class="issue medium">
+                <div class="issue-head">
+                  <div class="issue-title">🖥 Properly size images</div>
+                  <span class="issue-sev">medium</span>
+                </div>
+                <div class="issue-body">
+                  <div>Serve images that are appropriately-sized to save cellular data and improve load time.</div>
+                  <div class="quickfix">Current: Est savings of 460 KiB</div>
+                </div>
+              </div>
+            
+              <div class="issue medium">
+                <div class="issue-head">
+                  <div class="issue-title">🖥 Avoid serving legacy JavaScript to modern browsers</div>
+                  <span class="issue-sev">medium</span>
+                </div>
+                <div class="issue-body">
+                  <div>Polyfills and transforms enable legacy browsers to use new JavaScript features. However, many aren&#39;t necessary for modern browsers. Consider modifying your JavaScript build process to not transpile</div>
+                  <div class="quickfix">Current: Est savings of 8 KiB</div>
+                </div>
+              </div>
+            
+              <div class="issue medium">
+                <div class="issue-head">
+                  <div class="issue-title">🖥 Avoid an excessive DOM size</div>
+                  <span class="issue-sev">medium</span>
+                </div>
+                <div class="issue-body">
+                  <div>A large DOM will increase memory usage, cause longer</div>
+                  <div class="quickfix">Current: 1,198 elements</div>
+                </div>
+              </div>
+            
+              <div class="issue medium">
+                <div class="issue-head">
+                  <div class="issue-title">🖥 Legacy JavaScript</div>
+                  <span class="issue-sev">medium</span>
+                </div>
+                <div class="issue-body">
+                  <div>Polyfills and transforms enable older browsers to use new JavaScript features. However, many aren&#39;t necessary for modern browsers. Consider modifying your JavaScript build process to not transpile</div>
+                  <div class="quickfix">Current: Est savings of 8 KiB</div>
+                </div>
+              </div>
+            
+          </div>
+        
+          <div class="issues-group">
+            <h3>low · 1</h3>
+            
+              <div class="issue low">
+                <div class="issue-head">
+                  <div class="issue-title">🖥 Time to Interactive</div>
+                  <span class="issue-sev">low</span>
+                </div>
+                <div class="issue-body">
+                  <div>Time to Interactive is the amount of time it takes for the page to become fully interactive.</div>
+                  <div class="quickfix">Current: 2.5 s</div>
+                </div>
+              </div>
+            
+          </div>
+        
+      
+    </div>
+  </section>
+  
+  <section class="tab-panel" data-tab="seo-onpage">
+    <div class="container">
+      <h2>SEO (on-page) <em>· 21/100</em></h2>
+
+      
+        <p class="tab-summary">10 issue(s) across 11 pages. JSON-LD on 0/11 pages; sitemap present.</p>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <div class="ux-checks">
+          <div class="ux-check no"><div class="label">Homepage title</div><div class="value">0 chars</div></div>
+          <div class="ux-check no"><div class="label">Homepage meta description</div><div class="value">0 chars</div></div>
+          <div class="ux-check no"><div class="label">Homepage H1 count</div><div class="value">2</div></div>
+          <div class="ux-check no"><div class="label">Images missing alt (site-wide)</div><div class="value">155 / 1364</div></div>
+          <div class="ux-check no"><div class="label">Canonical (homepage)</div><div class="value">No</div></div>
+          <div class="ux-check no"><div class="label">Open Graph (homepage)</div><div class="value">No</div></div>
+          <div class="ux-check no"><div class="label">JSON-LD coverage</div><div class="value">0 / 11 pages</div></div>
+          <div class="ux-check no"><div class="label">LocalBusiness schema</div><div class="value">No</div></div>
+          <div class="ux-check no"><div class="label">FAQ schema</div><div class="value">No</div></div>
+          <div class="ux-check yes"><div class="label">Sitemap.xml</div><div class="value">Yes</div></div>
+          <div class="ux-check yes"><div class="label">robots.txt</div><div class="value">Yes</div></div>
+        </div>
+      
+
+      
+
+      
+      
+        
+          <div class="issues-group">
+            <h3>critical · 1</h3>
+            
+              <div class="issue critical">
+                <div class="issue-head">
+                  <div class="issue-title">Homepage missing &lt;title&gt; tag</div>
+                  <span class="issue-sev">critical</span>
+                </div>
+                <div class="issue-body">
+                  <div>Search engines and social previews show a blank title.</div>
+                  <div class="quickfix">Add a 50–60 char title including clinic name + primary city/service.</div>
+                </div>
+              </div>
+            
+          </div>
+        
+          <div class="issues-group">
+            <h3>high · 3</h3>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">Homepage missing meta description</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>Google may auto-generate a snippet from random page text.</div>
+                  <div class="quickfix">Add a 120–160 char meta description on the homepage.</div>
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">11 of 11 pages missing &lt;title&gt;</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>Inner pages without titles cannot rank for their topic.</div>
+                  <div class="quickfix">Set a unique 50–60 char &lt;title&gt; on every page.</div>
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">No structured data (JSON-LD) on any page</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>Critical for local search &amp; LLM understanding. Missing MedicalBusiness/LocalBusiness schema.</div>
+                  <div class="quickfix">Add JSON-LD with @type &#34;MedicalBusiness&#34; + address, phone, hours, services on the homepage.</div>
+                </div>
+              </div>
+            
+          </div>
+        
+          <div class="issues-group">
+            <h3>medium · 2</h3>
+            
+              <div class="issue medium">
+                <div class="issue-head">
+                  <div class="issue-title">11 of 11 pages missing meta description</div>
+                  <span class="issue-sev">medium</span>
+                </div>
+                <div class="issue-body">
+                  <div>Inner pages get truncated/auto-generated snippets in search.</div>
+                  <div class="quickfix">Author a unique 120–160 char meta description per page.</div>
+                </div>
+              </div>
+            
+              <div class="issue medium">
+                <div class="issue-head">
+                  <div class="issue-title">Homepage has no Open Graph tags</div>
+                  <span class="issue-sev">medium</span>
+                </div>
+                <div class="issue-body">
+                  <div>Social shares get a blank/generic preview.</div>
+                  <div class="quickfix">Add og:title, og:description, og:image, og:url.</div>
+                </div>
+              </div>
+            
+          </div>
+        
+          <div class="issues-group">
+            <h3>low · 4</h3>
+            
+              <div class="issue low">
+                <div class="issue-head">
+                  <div class="issue-title">11 pages have multiple &lt;h1&gt; tags</div>
+                  <span class="issue-sev">low</span>
+                </div>
+                <div class="issue-body">
+                  <div>Multiple H1s confuse heading hierarchy.</div>
+                  <div class="quickfix">Demote secondary H1s to H2.</div>
+                </div>
+              </div>
+            
+              <div class="issue low">
+                <div class="issue-head">
+                  <div class="issue-title">Homepage missing canonical URL</div>
+                  <span class="issue-sev">low</span>
+                </div>
+                <div class="issue-body">
+                  <div>Helps avoid duplicate-content issues.</div>
+                  <div class="quickfix">Add &lt;link rel=&#34;canonical&#34; href=&#34;…&#34;&gt;.</div>
+                </div>
+              </div>
+            
+              <div class="issue low">
+                <div class="issue-head">
+                  <div class="issue-title">No Twitter card tags</div>
+                  <span class="issue-sev">low</span>
+                </div>
+                <div class="issue-body">
+                  <div>X/Twitter shares look bare.</div>
+                  <div class="quickfix">Add twitter:card, twitter:title, twitter:description, twitter:image.</div>
+                </div>
+              </div>
+            
+              <div class="issue low">
+                <div class="issue-head">
+                  <div class="issue-title">No favicon</div>
+                  <span class="issue-sev">low</span>
+                </div>
+                <div class="issue-body">
+                  <div>Tabs, bookmarks, and search results show a generic icon.</div>
+                  <div class="quickfix">Add &lt;link rel=&#34;icon&#34; href=&#34;/favicon.ico&#34;&gt;.</div>
+                </div>
+              </div>
+            
+          </div>
+        
+      
+    </div>
+  </section>
+  
+  <section class="tab-panel" data-tab="seo-ranking">
+    <div class="container">
+      <h2>SEO (Google rank) </h2>
+
+      
+        <div class="tab-summary skipped">Skipped — SERPAPI_API_KEY not set. Set SERPAPI_API_KEY in .env to run Google ranking checks.</div>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+      
+    </div>
+  </section>
+  
+  <section class="tab-panel" data-tab="traffic-metrics">
+    <div class="container">
+      <h2>Traffic &amp; authority </h2>
+
+      
+        <div class="tab-summary skipped">Skipped — DataForSEO credentials not set. Set DATAFORSEO_LOGIN and DATAFORSEO_PASSWORD in .env to run traffic-metrics.</div>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+      
+    </div>
+  </section>
+  
+  <section class="tab-panel" data-tab="llm-copy-aeo">
+    <div class="container">
+      <h2>LLM copy / AEO <em>· 48/100</em></h2>
+
+      
+        <p class="tab-summary">Utah Aesthetic Surgery has a named practitioner, good procedural step-by-step structure, and per-page FAQ blocks, but critically lacks pricing signals of any kind, geo-specific body copy beyond a name drop, detailed credential assertions (board certifications unnamed), and a sitewide FAQ hub—limiting LLM citability significantly.</p>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+      
+        
+          <div class="issues-group">
+            <h3>critical · 1</h3>
+            
+              <div class="issue critical">
+                <div class="issue-head">
+                  <div class="issue-title">Zero pricing or cost signals anywhere on the site</div>
+                  <span class="issue-sev">critical</span>
+                </div>
+                <div class="issue-body">
+                  <div>Not a single page contains a price, price range, or &#39;starting at&#39; figure for any procedure (BBL, breast augmentation, tummy tuck, rhinoplasty, blepharoplasty, facelift). LLMs answering &#39;How much does a BBL cost in South Jordan, UT?&#39; cannot cite this site at all.</div>
+                  <div class="quickfix">Add a &#39;Pricing&#39; section to each procedure page and to the homepage. Minimum viable example: &#39;Brazilian Butt Lift (BBL) at Utah Aesthetic Surgery starts at $8,500–$14,000 depending on the volume of liposuction required. Breast augmentation starts at $6,500–$10,000 including implants, anesthesia, and facility fees. Tummy tuck (abdominoplasty) starts at $7,500. Exact quotes are provided at your complimentary consultation.&#39; Even broad ranges dramatically improve AEO citability.</div>
+                </div>
+              </div>
+            
+          </div>
+        
+          <div class="issues-group">
+            <h3>high · 3</h3>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">Dr. Rodrigues&#39;s credentials are vague — board certification bodies never named</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>The site repeatedly says &#39;double board-certified&#39; and &#39;board-certified plastic surgeon&#39; but never names the certifying boards (e.g., American Board of Plastic Surgery, American Board of Surgery). LLMs require specific, verifiable named entities to cite authoritatively.</div>
+                  <div class="quickfix">On the Meet the Doctor page and homepage bio, add: &#39;Dr. Robert Rodrigues is double board-certified by the American Board of Plastic Surgery (ABPS) and the American Board of Surgery (ABS). He completed his plastic surgery residency at [Institution Name] and has practiced aesthetic surgery in South Jordan, Utah for [X] years.&#39; Also add his medical school and any fellowship training.</div>
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">City and neighborhood almost never appear in body copy — geo-cues confined to footer address</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>Across all procedure pages (BBL, blepharoplasty, breast augmentation, facelift, etc.), &#39;South Jordan&#39; and &#39;Utah&#39; appear only in the footer address block and occasionally in a tagline. Body paragraphs never situate the clinic geographically. LLMs answering &#39;best plastic surgeon near South Jordan&#39; cannot confidently cite pages that lack in-body geo-signals.</div>
+                  <div class="quickfix">Insert a geo-anchored sentence into the opening paragraph of every procedure page. Example for the BBL page: &#39;Dr. Robert Rodrigues performs Brazilian Butt Lift surgery at Utah Aesthetic Surgery, located at 10382 S. Jordan Gateway, Suite 100, in South Jordan, Utah—conveniently serving patients throughout Salt Lake County, Draper, Riverton, and the greater Salt Lake City area.&#39;</div>
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">No sitewide FAQ hub — per-page &#39;Common Questions&#39; blocks are minimal (3–4 Q&amp;As) and lack specificity</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>Each procedure page has a 3–5 item &#39;Common Questions&#39; section, but answers are very brief and generic (e.g., &#39;Long-lasting, especially with stable weight&#39;). There is no dedicated FAQ page, and questions do not match real user search queries like &#39;How long does BBL recovery take?&#39; or &#39;Does breast augmentation feel natural?&#39;</div>
+                  <div class="quickfix">Create a standalone /faq/ page and expand each procedure&#39;s FAQ to at least 8 Q&amp;As with substantive answers. Example for BBL: &#39;Q: How long is BBL recovery in South Jordan, UT? A: Most Utah Aesthetic Surgery BBL patients avoid direct sitting for 2 weeks, use a BBL pillow for weeks 2–6, and return to desk work within 10–14 days. Full results stabilize at 3–6 months, with 60–80% of transferred fat surviving long-term.&#39;</div>
+                </div>
+              </div>
+            
+          </div>
+        
+          <div class="issues-group">
+            <h3>medium · 3</h3>
+            
+              <div class="issue medium">
+                <div class="issue-head">
+                  <div class="issue-title">No treatment durations or operative time facts on any procedure page</div>
+                  <span class="issue-sev">medium</span>
+                </div>
+                <div class="issue-body">
+                  <div>LLMs commonly answer &#39;How long does a tummy tuck take?&#39; or &#39;How many hours is BBL surgery?&#39; None of the procedure pages include operative time, anesthesia type, or appointment duration — all highly citable facts.</div>
+                  <div class="quickfix">Add a &#39;Procedure Details&#39; callout box to each page. Example: &#39;BBL at Utah Aesthetic Surgery: Operative time: 2.5–4 hours | Anesthesia: General | Facility: Accredited outpatient surgical center | Recovery: 2–6 weeks | Fat survival: 60–80%.&#39;</div>
+                </div>
+              </div>
+            
+              <div class="issue medium">
+                <div class="issue-head">
+                  <div class="issue-title">Morpheus8 listed on homepage but has no dedicated page or body copy</div>
+                  <span class="issue-sev">medium</span>
+                </div>
+                <div class="issue-body">
+                  <div>Morpheus8 skin tightening appears as a homepage thumbnail with no supporting page, description, pricing, or FAQ. This wastes a high-search-volume brand-name keyword and provides zero citability for LLM queries about Morpheus8 in South Jordan.</div>
+                  <div class="quickfix">Either create a /morpheus8/ page with full treatment copy (what it is, how many sessions, downtime, starting price) or remove it from the homepage to avoid confusing LLMs about the clinic&#39;s actual service scope.</div>
+                </div>
+              </div>
+            
+              <div class="issue medium">
+                <div class="issue-head">
+                  <div class="issue-title">Liposuction listed as a homepage procedure card but has no dedicated page</div>
+                  <span class="issue-sev">medium</span>
+                </div>
+                <div class="issue-body">
+                  <div>Liposuction appears on the homepage services grid but does not exist as a standalone page in the navigation or the site corpus. LLMs cannot retrieve factual content about a service that has no page.</div>
+                  <div class="quickfix">Create a /liposuction/ page with at minimum: procedure overview, candidate criteria, recovery timeline, combination procedures (e.g., BBL, tummy tuck), and a &#39;starting at&#39; price. Until then, remove the liposuction card from the homepage or redirect to the BBL page which describes liposuction as Step 1.</div>
+                </div>
+              </div>
+            
+          </div>
+        
+          <div class="issues-group">
+            <h3>low · 1</h3>
+            
+              <div class="issue low">
+                <div class="issue-head">
+                  <div class="issue-title">Placeholder text &#39;ADD ANYTHING HERE OR JUST REMOVE IT…&#39; appears on every page in the corpus</div>
+                  <span class="issue-sev">low</span>
+                </div>
+                <div class="issue-body">
+                  <div>This un-edited theme placeholder text appears in the header area of every page and signals to crawlers and LLMs that the site may be under construction or low-quality.</div>
+                  <div class="quickfix">Delete the placeholder text from the theme header widget on all pages immediately. Replace with either nothing, or a trust signal such as: &#39;Double Board-Certified Plastic Surgeon Serving South Jordan &amp; Salt Lake County | Call (801) 810-0761.&#39;</div>
+                </div>
+              </div>
+            
+          </div>
+        
+      
+    </div>
+  </section>
+  
+  <section class="tab-panel" data-tab="llm-discoverability">
+    <div class="container">
+      <h2>LLM discoverability </h2>
+
+      
+        <div class="tab-summary skipped">Skipped — disabled by default — re-enable with --enable llm-discoverability. disabled by default — re-enable with --enable llm-discoverability</div>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+      
+    </div>
+  </section>
+  
+  <section class="tab-panel" data-tab="copy-conversion">
+    <div class="container">
+      <h2>Copy &amp; conversion <em>· 42/100</em></h2>
+
+      
+        <p class="tab-summary">Utah Aesthetic Surgery has a serviceable procedure catalog, real before/after photos, patient testimonials, and visible hours, but fails critically on pricing transparency, financing disclosure, and a dedicated consultation CTA — and is materially weak on credential specificity, objection handling depth, and FAQ quality.</p>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <table class="coverage-table">
+          <thead><tr><th>Buyer-intent topic</th><th>Covered?</th></tr></thead>
+          <tbody>
+            
+              <tr>
+                <td>Services List</td>
+                <td class="coverage-yes">Yes</td>
+              </tr>
+            
+              <tr>
+                <td>Pricing Transparency</td>
+                <td class="coverage-no">No</td>
+              </tr>
+            
+              <tr>
+                <td>What To Expect</td>
+                <td class="coverage-yes">Yes</td>
+              </tr>
+            
+              <tr>
+                <td>Before After Evidence</td>
+                <td class="coverage-yes">Yes</td>
+              </tr>
+            
+              <tr>
+                <td>Credentials</td>
+                <td class="coverage-no">No</td>
+              </tr>
+            
+              <tr>
+                <td>Hours</td>
+                <td class="coverage-yes">Yes</td>
+              </tr>
+            
+              <tr>
+                <td>Location Parking</td>
+                <td class="coverage-no">No</td>
+              </tr>
+            
+              <tr>
+                <td>Financing</td>
+                <td class="coverage-no">No</td>
+              </tr>
+            
+              <tr>
+                <td>Consultation Cta</td>
+                <td class="coverage-no">No</td>
+              </tr>
+            
+              <tr>
+                <td>Trust Reviews</td>
+                <td class="coverage-yes">Yes</td>
+              </tr>
+            
+              <tr>
+                <td>Objection Handling</td>
+                <td class="coverage-yes">Yes</td>
+              </tr>
+            
+              <tr>
+                <td>Faq</td>
+                <td class="coverage-yes">Yes</td>
+              </tr>
+            
+          </tbody>
+        </table>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+      
+        
+          <div class="issues-group">
+            <h3>critical · 2</h3>
+            
+              <div class="issue critical">
+                <div class="issue-head">
+                  <div class="issue-title">No pricing or cost information for any procedure</div>
+                  <span class="issue-sev">critical</span>
+                </div>
+                <div class="issue-body">
+                  <div>Not one procedure page or the homepage discloses a price, range, or &#39;starting at&#39; figure. High-intent buyers comparison-shopping surgeons in the Salt Lake area will immediately leave for competitors who show pricing. The &#39;Contact us for pricing&#39; model is an invisible wall at the top of the funnel.</div>
+                  <div class="quickfix">Add a &#39;What Does [Procedure] Cost?&#39; section to each page. Paste-ready example for breast augmentation: &#39;Breast augmentation at Utah Aesthetic Surgery starts at $6,500–$10,000, which includes surgeon fees, anesthesia, implants, and facility costs. The final quote depends on implant type (silicone vs. saline), placement technique, and surgical complexity. We provide an itemized quote at your free consultation.&#39; Mirror this pattern for every other procedure.</div>
+                </div>
+              </div>
+            
+              <div class="issue critical">
+                <div class="issue-head">
+                  <div class="issue-title">No dedicated &#39;Book a Consultation&#39; CTA — only generic contact form links</div>
+                  <span class="issue-sev">critical</span>
+                </div>
+                <div class="issue-body">
+                  <div>Every &#39;Make An Appointment&#39; and &#39;Get Started&#39; link resolves to /contact-us/, which shows a blank contact form with no context, confirmation language, or reassurance copy. There is no button or page specifically labeled &#39;Book a Free Consultation&#39; or &#39;Schedule Your Consult.&#39; Generic contact links do not convert as well as consultation-specific CTAs.</div>
+                  <div class="quickfix">Rename the CTA button across all pages to &#39;Book Your Free Consultation&#39; and add a sentence above the contact form on /contact-us/ reading: &#39;Schedule your complimentary consultation with Dr. Robert Rodrigues. During your visit, you&#39;ll receive a personalized surgical plan, full pricing quote, and answers to all your questions — with no obligation to book.&#39; Also add an inline CTA at the bottom of each procedure page: &#39;Ready to explore [procedure name]? Call (801) 810-0761 or click below to book your free consultation with Dr. Rodrigues in South Jordan, UT.&#39;</div>
+                </div>
+              </div>
+            
+          </div>
+        
+          <div class="issues-group">
+            <h3>high · 3</h3>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">Credentials listed vaguely — certifying boards, training institutions, and years of experience omitted</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>Dr. Rodrigues is described as &#39;double board-certified&#39; across multiple pages, but the certifying board names, his medical school, residency program, fellowship (if any), and number of years in practice are never stated. One testimonial mentions she&#39;s been a patient since 2008, implying 15+ years of experience — but this is not stated in the doctor&#39;s bio. Buyers cross-shopping surgeons look for specific credentials.</div>
+                  <div class="quickfix">Add a credential block to the Meet the Doctor page and embed a shorter version on the homepage. Example: &#39;Dr. Robert Rodrigues, MD — Double Board-Certified by the American Board of Plastic Surgery and the American Board of Surgery. [Medical School], [Residency Institution]. Practicing aesthetic and reconstructive plastic surgery in South Jordan, Utah since [year]. Over [X] procedures performed.&#39; If a fellowship exists, name the institution and specialty.</div>
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">No financing or payment plan information anywhere on the site</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>Plastic surgery procedures costing $6,500–$15,000+ require financing for many patients. The site makes no mention of CareCredit, Cherry, Alphaeon, in-house payment plans, or any financing option. This is a significant conversion blocker for cost-sensitive prospects.</div>
+                  <div class="quickfix">Add a &#39;Financing&#39; section to the homepage and each procedure page. Example: &#39;Utah Aesthetic Surgery works with CareCredit and Cherry to offer flexible monthly payment plans. Many patients finance their procedure for as little as $X/month with approved credit. Ask about financing options during your consultation or call (801) 810-0761.&#39; Apply to enroll with CareCredit at carecredit.com/providers if not already enrolled.</div>
+                </div>
+              </div>
+            
+              <div class="issue high">
+                <div class="issue-head">
+                  <div class="issue-title">No parking, transit, or neighborhood context on the location/contact page</div>
+                  <span class="issue-sev">high</span>
+                </div>
+                <div class="issue-body">
+                  <div>The address (10382 S. Jordan Gateway, Suite 100, South Jordan, UT 84095) appears in the footer and on the contact page, but there is no information about parking availability, proximity to landmarks, freeway access (I-15 exit), or nearby cities served. This creates friction for first-time visitors.</div>
+                  <div class="quickfix">Add a location block to /contact-us/: &#39;Utah Aesthetic Surgery is located on S. Jordan Gateway in South Jordan, UT, just off the [nearest I-15 exit] exit — approximately [X] minutes south of downtown Salt Lake City and [X] minutes from Draper and Riverton. Free parking is available in the building lot. Suite 100 is located on the ground floor.&#39; Include a Google Maps embed.</div>
+                </div>
+              </div>
+            
+          </div>
+        
+          <div class="issues-group">
+            <h3>medium · 2</h3>
+            
+              <div class="issue medium">
+                <div class="issue-head">
+                  <div class="issue-title">Trust reviews lack aggregate score and platform badges</div>
+                  <span class="issue-sev">medium</span>
+                </div>
+                <div class="issue-body">
+                  <div>The homepage testimonials are strong and named, but there is no aggregate star rating (e.g., &#39;4.9 stars across 120 Google reviews&#39;), no Google/RealSelf/Healthgrades badge, and no link to an external review profile. Buyers want third-party validation, not just on-site quotes.</div>
+                  <div class="quickfix">Above the testimonials section, add: &#39;Dr. Rodrigues holds a [X.X]-star rating across [N] verified patient reviews on Google. [Link: Read our Google reviews]&#39; and embed the Google review widget or a RealSelf badge if the practice has a profile. If not enrolled on RealSelf, create a profile — it is free and high-converting for plastic surgery patients.</div>
+                </div>
+              </div>
+            
+              <div class="issue medium">
+                <div class="issue-head">
+                  <div class="issue-title">Objection handling exists but is shallow — pain, anesthesia type, and candidacy disqualifiers not addressed</div>
+                  <span class="issue-sev">medium</span>
+                </div>
+                <div class="issue-body">
+                  <div>Each procedure page touches on risks and candidacy, but does not directly answer the highest-anxiety buyer questions: &#39;Will this hurt?&#39;, &#39;What kind of anesthesia is used?&#39;, &#39;What if I&#39;m not a candidate?&#39;, &#39;What happens if I&#39;m unhappy with results?&#39; These are documented top questions for plastic surgery prospects.</div>
+                  <div class="quickfix">Add a &#39;Your Safety &amp; Comfort&#39; section to each procedure page. Example for BBL: &#39;Q: Will I be under general anesthesia? A: Yes — BBL at Utah Aesthetic Surgery is performed under general anesthesia in an accredited outpatient surgical facility. Q: Will it hurt? A: Postoperative discomfort is managed with a prescribed pain protocol; most patients describe soreness rather than sharp pain for the first 3–5 days. Q: What if I&#39;m not satisfied? A: Dr. Rodrigues discusses realistic expectations during consultation. Revision options are always discussed openly.&#39;</div>
+                </div>
+              </div>
+            
+          </div>
+        
+          <div class="issues-group">
+            <h3>low · 1</h3>
+            
+              <div class="issue low">
+                <div class="issue-head">
+                  <div class="issue-title">Gallery page is image-only with no procedure labels, patient context, or results copy</div>
+                  <span class="issue-sev">low</span>
+                </div>
+                <div class="issue-body">
+                  <div>The /gallery/ page lists &#39;Abdominoplasty,&#39; &#39;Breast Aug,&#39; and &#39;BBL&#39; as section headers but no image carries a caption, patient age range, procedure details, or outcome description. This misses a conversion opportunity where buyers are already engaged visually.</div>
+                  <div class="quickfix">Add a 2-sentence caption under each before/after image set. Example: &#39;Abdominoplasty patient, 38-year-old mother of three. Six months post-op following extended tummy tuck with muscle repair performed by Dr. Rodrigues in South Jordan, UT. Individual results vary.&#39; This also adds AEO-citeable content to the gallery page.</div>
+                </div>
+              </div>
+            
+          </div>
+        
+      
+    </div>
+  </section>
+  
+  <section class="tab-panel" data-tab="design-review">
+    <div class="container">
+      <h2>Design </h2>
+
+      
+        <div class="tab-summary skipped">Skipped — disabled by default — re-enable with --enable design-review. disabled by default — re-enable with --enable design-review</div>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+      
+    </div>
+  </section>
+  
+  <section class="tab-panel" data-tab="ux-medspa">
+    <div class="container">
+      <h2>UX (med spa) </h2>
+
+      
+        <div class="tab-summary skipped">Skipped — disabled by default — re-enable with --enable ux-medspa. disabled by default — re-enable with --enable ux-medspa</div>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+      
+    </div>
+  </section>
+  
+</main>
+
+<script>(function () {
+  function activate(id) {
+    document.querySelectorAll('nav.tabs button').forEach((b) => b.classList.toggle('active', b.dataset.tab === id));
+    document.querySelectorAll('section.tab-panel').forEach((p) => p.classList.toggle('active', p.dataset.tab === id));
+    if (history.replaceState) history.replaceState(null, '', '#' + id);
+  }
+
+  document.querySelectorAll('nav.tabs button').forEach((btn) => {
+    btn.addEventListener('click', () => activate(btn.dataset.tab));
+  });
+
+  document.addEventListener('click', (e) => {
+    const el = e.target.closest('.issue');
+    if (el) el.classList.toggle('expanded');
+  });
+
+  const fromHash = location.hash.replace('#', '');
+  if (fromHash && document.querySelector('section.tab-panel[data-tab="' + fromHash + '"]')) {
+    activate(fromHash);
+  } else {
+    activate('overview');
+  }
+})();
+</script>
+</body>
+</html>
