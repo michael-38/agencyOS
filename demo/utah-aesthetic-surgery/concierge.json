@@ -1,0 +1,7 @@
+{
+  "label": "Utah Aesthetic Surgery",
+  "model": "claude-haiku-4-5-20251001",
+  "maxTokens": 450,
+  "port": 8767,
+  "fallbackReply": "I'm not sure how to help with that — could you tell me a bit more about your goals?"
+}
