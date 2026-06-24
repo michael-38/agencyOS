@@ -1,0 +1,7 @@
+{
+  "label": "Ritual Beauty med-spa",
+  "model": "claude-haiku-4-5-20251001",
+  "maxTokens": 400,
+  "port": 8765,
+  "fallbackReply": "I'm not sure how to help with that — could you tell me a bit more about your skin goals?"
+}
