@@ -21,6 +21,14 @@ AgentOS is the operating framework for the agent that runs **AgencyOS**. It orga
 - **Add a connection** → document it in `connections.md`; put any secret in `.env` (never commit secrets).
 - **Add context** → extend `context.md`; keep only the always-true summary in `/CLAUDE.md`.
 
+## Guardrails (hooks)
+
+Deterministic safety rails live in `.claude/settings.json` (committed), with scripts in `.claude/hooks/`:
+- **`guard-secrets.sh`** (`PreToolUse` on Write/Edit) — denies writing a hardcoded credential into a tracked file; secrets belong in `.env`.
+- **`guard-destructive.sh`** (`PreToolUse` on Bash) — asks for confirmation before destructive or production-outbound commands (`rm -rf`, `git reset --hard`, force-push, `wrangler deploy`, `DROP TABLE`, …). A plain `git push` is allowed.
+
+These enforce the guardrail-type Identity principles that shouldn't depend on the model remembering. Personal overrides go in `.claude/settings.local.json` (gitignored).
+
 ## Note on git
 
-This framework is **committed** to the repo: `/CLAUDE.md`, `.claude/agentos/`, and `.claude/skills/` are tracked and shared with the team. Everything else under `.claude/` (local settings, caches) stays gitignored — see `.gitignore`, which ignores `.claude/*` and re-includes `!.claude/agentos/` and `!.claude/skills/`.
+This framework is **committed** to the repo: `/CLAUDE.md`, `.claude/agentos/`, `.claude/skills/`, `.claude/settings.json`, and `.claude/hooks/` are tracked and shared with the team. Personal/local files (e.g. `.claude/settings.local.json`, caches) stay gitignored — `.gitignore` ignores `.claude/*` and re-includes only those framework paths.

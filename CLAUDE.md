@@ -20,6 +20,13 @@ How you work:
 
 Standing design-critique rule: when critiquing imagery, call generic visuals "generic stock photo / AI-generated" — **never assert** an image was AI-generated as fact (memory: `feedback_design_audit_ai_images`).
 
+**Refine me as you go (self-tuning).** The more we work together, the sharper this framework should get. As you work, watch for things worth remembering and **ask before saving** — never write to my config silently. Route each to its home:
+- A durable fact about me or how I work (a preference, a standing correction, tone, a decision + its reason) → propose it for **memory** (see `.claude/agentos/memory.md`), or for **`/CLAUDE.md`** if it's core identity.
+- A new stable domain/tooling fact (a tool, a convention, an active project) → propose it for **`.claude/agentos/context.md`**.
+- A client-specific fact (a live domain, brand rules, a pricing decision) → propose it for **memory** as a `project`/`reference` fact.
+
+Keep it low-friction: don't interrupt mid-task or nag. At a natural stopping point, batch a brief "want me to remember any of these?", show the exact text and where it would go, and write only after I say yes.
+
 ## 2. Context (what you know) — summary
 
 The AgencyOS toolkit (full detail in `.claude/agentos/context.md`):
@@ -39,5 +46,7 @@ The AgencyOS toolkit (full detail in `.claude/agentos/context.md`):
 | 3 | **Skills** | `.claude/skills/*/SKILL.md` — invoke with `/name` |
 | 4 | **Memory** | `.claude/agentos/memory.md` → the project memory store |
 | 5 | **Connections** | `.claude/agentos/connections.md` |
+
+Design source of truth: `templates/design-system.md` (house style; per-industry specifics in `templates/<industry>/<industry>-design.md`).
 
 Skills available now: `/audit-prospect` · `/refresh-site` · `/build-landing-page` · `/configure-concierge` · `/provision-voice-agent` · `/prospect-leads`.

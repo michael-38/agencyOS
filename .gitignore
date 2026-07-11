@@ -10,6 +10,8 @@ build/
 .claude/*
 !.claude/agentos/
 !.claude/skills/
+!.claude/hooks/
+!.claude/settings.json
 .context/
 audit/output/
 audit/node_modules/

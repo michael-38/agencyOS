@@ -30,3 +30,5 @@ After writing a fact file, add a one-line pointer to `MEMORY.md`: `- [Title](fil
 - `feedback` — web-search current official docs before answering fast-moving-tool questions (`feedback_always_search_web`).
 
 As the agency takes on clients, add `project` / `reference` facts here — one file each, indexed in `MEMORY.md` (e.g. a client's live domain, brand rules, or a pricing decision).
+
+> The operator proactively offers to capture new facts as we work — see **"Refine me as you go"** in `/CLAUDE.md`. Nothing is saved to memory or config without your OK.
