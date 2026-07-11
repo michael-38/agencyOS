@@ -7,7 +7,9 @@ node_modules/
 .DS_Store
 dist/
 build/
-.claude/
+.claude/*
+!.claude/agentos/
+!.claude/skills/
 .context/
 audit/output/
 audit/node_modules/
