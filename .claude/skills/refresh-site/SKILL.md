@@ -11,7 +11,7 @@ Refresh target: **$ARGUMENTS**
 2. Run the pipeline (scrape → analyze → populate → output):
    - Single: `npx tsx src/index.ts $0`
    - Batch: `npx tsx src/index.ts --batch <file.csv>` — CSV columns: `url` (required), optional `type`/`industry`, `phone`. See `cli/src/index.ts` for the full flag list.
-3. Industry populators live in `cli/src/populators/` (plumbing, roofing, shared); rewrite prompts in `cli/src/prompts/`. Pick or extend the populator matching the business type.
+3. Industry populators live in `cli/src/populators/` (hvac, plumbing, roofing, shared); rewrite prompts in `cli/src/prompts/`. Pick or extend the populator matching the business type.
 4. Preview the generated page and compare it against the original as a before/after.
 5. Deploy via the path in `.claude/agentos/connections.md` (Cloudflare Pages) once approved.
 

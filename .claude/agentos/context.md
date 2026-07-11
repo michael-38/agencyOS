@@ -11,7 +11,7 @@ Modules: `lighthouse`, `seo-onpage`, `seo-ranking`, `traffic-metrics`, `llm-copy
 Run: `cd audit && npm install && npx tsx src/index.ts <url> --open`. Reports → `audit/output/`. Batch → add `--batch <file.csv> --index`.
 
 ### `cli/` — SiteRefresh
-Scrapes an outdated contractor site → extracts business data → rewrites copy with Claude → generates a modern landing page. Industry populators in `src/populators/` (plumbing, roofing, shared); rewrite prompts in `src/prompts/`.
+Scrapes an outdated contractor site → extracts business data → rewrites copy with Claude → generates a modern landing page. Industry populators in `src/populators/` (hvac, plumbing, roofing, shared); rewrite prompts in `src/prompts/`.
 Run: `cd cli && npm install && npx tsx src/index.ts <url>`.
 
 ### `templates/` — landing pages + design system + concierge
@@ -20,7 +20,7 @@ Run: `cd cli && npm install && npx tsx src/index.ts <url>`.
 - Concierge (med-spa): `serve.js` (generic, shared) + `concierge.json` (config) + `concierge-prompt.md` (system prompt). Run: `node serve.js [port]` (default 8765).
 
 ### `demo/voice-agent/` — voice-agent SaaS
-Next.js 16 + React 19 admin/client app for managing AI phone agents. Stack: Vapi (calls), Supabase (data/auth), Twilio (SMS), Stripe (billing), Google Calendar (availability). Agent skills: `check_availability`, `schedule/reschedule/cancel_appointment`. Docs: `ARCHITECTURE.md`, `PRD.md`, `VAPI-INTEGRATION.md`, `DATABASE.md`, `API.md`, `IMPLEMENTATION-GUIDE.md`. Run: `cd demo/voice-agent/app && npm run dev`.
+Next.js 16 + React 19 admin/client app for managing AI phone agents. Stack: Vapi (calls), Supabase (data/auth), Twilio (SMS), Stripe (billing), Google Calendar (availability). Agent skills: `check_availability`, `schedule/reschedule/cancel_appointment`. Docs (in `demo/voice-agent/`): `ARCHITECTURE.md`, `PRD.md`, `VAPI-INTEGRATION.md`, `DATABASE.md`, `API.md`, `IMPLEMENTATION-GUIDE.md`. Run: `cd demo/voice-agent/app && npm run dev`.
 
 ### Also
 - `hyperworkflow/` — the agency's marketing site (hyperworkflow.ai), deployed to Cloudflare Pages via GitHub Actions.

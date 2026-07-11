@@ -7,7 +7,7 @@ argument-hint: [client-name]
 Provision a voice agent for **$ARGUMENTS**.
 
 ## Orient first (read the docs)
-`demo/voice-agent/`: `ARCHITECTURE.md` (system + data flow), `PRD.md` (features), `VAPI-INTEGRATION.md` (assistant + tool/webhook setup), `DATABASE.md` (schema), `API.md`.
+`demo/voice-agent/`: `ARCHITECTURE.md` (system + data flow), `PRD.md` (features), `VAPI-INTEGRATION.md` (assistant + tool/webhook setup), `DATABASE.md` (schema), `API.md`, `IMPLEMENTATION-GUIDE.md` (step-by-step how-to).
 
 ## Steps
 1. Run the manager app: `cd demo/voice-agent/app && npm run dev`.

@@ -26,9 +26,8 @@ After writing a fact file, add a one-line pointer to `MEMORY.md`: `- [Title](fil
 - Don't save what the code, git history, or `CLAUDE.md` already record.
 
 ## Current facts
-- `feedback` — never assert imagery is AI-generated; say "generic stock photo / AI-generated" (`feedback_design_audit_ai_images`).
-- `feedback` — web-search current official docs before answering fast-moving-tool questions (`feedback_always_search_web`).
+The live index is `MEMORY.md` in the store above (auto-loaded each session) — read it there rather than duplicating it here. Today it holds two `feedback` facts (`feedback_design_audit_ai_images`, `feedback_always_search_web`).
 
-As the agency takes on clients, add `project` / `reference` facts here — one file each, indexed in `MEMORY.md` (e.g. a client's live domain, brand rules, or a pricing decision).
+As the agency takes on clients, add `project` / `reference` facts — one file each, indexed in `MEMORY.md` (e.g. a client's live domain, brand rules, or a pricing decision).
 
 > The operator proactively offers to capture new facts as we work — see **"Refine me as you go"** in `/CLAUDE.md`. Nothing is saved to memory or config without your OK.

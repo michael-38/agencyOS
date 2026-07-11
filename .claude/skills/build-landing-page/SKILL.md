@@ -10,7 +10,7 @@ Build a **$0** landing page for **$1**.
 1. Read `templates/design-system.md` first — the source of truth for typography, color, spacing, and CTAs.
 2. Start from `templates/$0/` (one of: `med-spa`, `hvac`, `roofing`, `plumbing`). Each has `index.html`, `<industry>-copy.md`, `<industry>-design.md`.
 3. Copy the template to the client's directory and replace copy/design with the client's real content — name, services, offers, proof, contact. Match the design system; don't drift.
-4. Preview locally: `node serve.js [port]` from the page directory (default port 8765; serves static files, plus concierge chat if configured).
+4. Preview locally: `node serve.js [port]` from the page directory (default port 8765; serves static files, plus concierge chat if configured). `serve.js` ships only with `templates/med-spa/` — for hvac/roofing/plumbing, copy `templates/med-spa/serve.js` (and the `concierge.*` files, if using chat) into the client dir first.
 5. If the client wants an AI chat assistant, run `/configure-concierge`.
 6. Deploy to Cloudflare Pages (see `.claude/agentos/connections.md`) once approved.
 

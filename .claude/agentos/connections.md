@@ -1,6 +1,6 @@
 # Connections — how the operator reaches real systems
 
-No secrets here. Secret **values** live in `.env` files (gitignored); this documents what exists and the variable name. Each tool's `.env.example` is the authoritative list.
+No secrets here. Secret **values** live in `.env` files (gitignored); this documents what exists and the variable name. Where an `.env.example` exists (e.g. `audit/.env.example`), it's the authoritative list.
 
 ## AI
 | System | Used by | Env var |
@@ -27,7 +27,7 @@ Optional integrations degrade gracefully — the module is skipped if its key is
 | Stripe | billing |
 | Google Calendar (OAuth, per client) | availability + appointment events |
 
-Exact variable names: `demo/voice-agent/app/.env` and the app docs (`VAPI-INTEGRATION.md`, `DATABASE.md`).
+Exact variable names: the app docs (`VAPI-INTEGRATION.md`, `DATABASE.md`, `API.md`) — there's no committed `.env.example` for the voice agent yet.
 
 ## Deploy
 | System | Purpose |
@@ -45,4 +45,4 @@ Git + GitHub `gh` CLI. Base branch: `main`. Open PRs with `gh pr create --base m
 | Google Calendar | list / create / update events, suggest times |
 | Google Drive | search / read / create files |
 
-MCP servers are declared in `.mcp.json` at the project root (`command` / SSE / HTTP transports; env vars support `${VAR:-default}` fallbacks). None are committed in this repo yet.
+The Gmail/Calendar/Drive connections above come from the Claude Code session config, not this repo. To declare MCP servers in-repo, add a `.mcp.json` at the project root (`command` / SSE / HTTP transports; env vars support `${VAR:-default}` fallbacks) — none are committed yet.
