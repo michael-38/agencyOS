@@ -397,74 +397,54 @@ input, select, textarea { font: inherit; color: inherit; }
 @media (max-width: 720px) {
   .hero-figure { aspect-ratio: 1 / 0.92; width: 100%; max-width: 460px; margin: 0 auto; }
 }
-.tl { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.wf { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 
-/* calendar cells */
-.tl-week { fill: var(--muted); font: 500 10px var(--mono); letter-spacing: .12em; }
-.tl-day { fill: var(--ink-2); font: 700 20px var(--font); text-anchor: middle; }
-.tl-day.ship { fill: #fff; }
-.tl-box { stroke: rgba(0,64,255,.10); stroke-width: 1; }
-.tl-box.ship { stroke: none; filter: drop-shadow(0 10px 20px rgba(0,52,217,.4)); }
-.tl-legend { fill: var(--muted); font: 500 10px var(--mono); letter-spacing: .06em; }
+/* zone captions + node labels */
+.wf-caption { fill: var(--muted); font: 500 10px var(--mono); letter-spacing: .1em; }
+.wf-caption-accent { fill: var(--accent); }
+.wf-caption-right { text-anchor: end; }
+.wf-label { fill: var(--muted); font: 600 10px var(--font); text-anchor: middle; letter-spacing: .02em; }
 
-/* sequential cell entrance */
-.tl-cell { opacity: 0; transform-box: fill-box; transform-origin: center; animation: tl-in .5s cubic-bezier(.22,.7,.2,1) forwards; }
-.tl-cell.c1 { animation-delay: .45s; }
-.tl-cell.c2 { animation-delay: .54s; }
-.tl-cell.c3 { animation-delay: .63s; }
-.tl-cell.c4 { animation-delay: .72s; }
-.tl-cell.c5 { animation-delay: .81s; }
-.tl-cell.c6 { animation-delay: .90s; }
-.tl-cell.c7 { animation-delay: .99s; }
-.tl-cell.c8 { animation-delay: 1.08s; }
-.tl-cell.c9 { animation-delay: 1.17s; }
-.tl-cell.c10 { animation-delay: 1.26s; }
-@keyframes tl-in {
-  from { opacity: 0; transform: translateY(8px) scale(.94); }
-  to { opacity: 1; transform: none; }
+/* before: the manual tangle */
+.wf-zig { stroke: #AFC0EC; stroke-width: 2; stroke-linejoin: round; }
+.wf-cross { stroke: #D3DCF6; stroke-width: 1.5; }
+.wf-loop { stroke: #9AA7CF; stroke-width: 1.8; stroke-dasharray: 4 5; }
+.wf-loop-arrow { stroke: #9AA7CF; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.wf-node { fill: #fff; stroke: #AABCF0; stroke-width: 2; }
+.wf-ring-wait {
+  stroke: #FFB84D; stroke-width: 2;
+  transform-box: fill-box; transform-origin: center;
+  animation: wf-wait 2.2s ease-in-out infinite;
 }
+@keyframes wf-wait { 0%, 100% { opacity: .25; transform: scale(.85); } 50% { opacity: .9; transform: scale(1.12); } }
+.wf-dot-before { fill: var(--ink-2); stroke: #fff; stroke-width: 2; }
 
-/* day cursor sweeping through the sprint */
-.tl-cursor {
-  fill: none; stroke: var(--accent); stroke-width: 2.5;
-  opacity: 0;
-  animation: tl-fade .4s ease-out 1.5s forwards, tl-cursor 15s cubic-bezier(.6,0,.3,1) 1.8s infinite;
-}
-@keyframes tl-fade { to { opacity: .9; } }
-@keyframes tl-cursor {
-  0%, 8% { transform: translate(0, 0); }
-  10%, 18% { transform: translate(74px, 0); }
-  20%, 28% { transform: translate(148px, 0); }
-  30%, 38% { transform: translate(222px, 0); }
-  40%, 48% { transform: translate(296px, 0); }
-  50%, 58% { transform: translate(0, 124px); }
-  60%, 68% { transform: translate(74px, 124px); }
-  70%, 78% { transform: translate(148px, 124px); }
-  80%, 88% { transform: translate(222px, 124px); }
-  90%, 100% { transform: translate(296px, 124px); }
-}
+/* the transformation pill */
+.wf-pill { fill: #fff; stroke: var(--accent-soft); stroke-width: 1.5; filter: drop-shadow(0 8px 18px rgba(10,10,11,.10)); }
+.wf-pill-text { fill: var(--accent); font: 600 10.5px var(--mono); letter-spacing: .1em; text-anchor: middle; }
 
-/* ship-day ping */
-.tl-ring {
-  fill: none; stroke: var(--accent); stroke-width: 1.6;
+/* after: the automated flow */
+.wf-line { stroke: #C7D4FA; stroke-width: 3; stroke-linecap: round; }
+.wf-flow {
+  stroke: var(--accent); stroke-width: 3; stroke-linecap: round;
+  stroke-dasharray: 3 15;
+  animation: wf-dash 1.5s linear infinite;
+}
+@keyframes wf-dash { to { stroke-dashoffset: -18; } }
+.wf-in { fill: #fff; stroke: var(--accent); stroke-width: 2; }
+.wf-agent { filter: drop-shadow(0 10px 20px rgba(0,52,217,.4)); }
+.wf-spark { fill: #fff; transform-box: fill-box; transform-origin: center; animation: wf-spark 5s ease-in-out infinite; }
+@keyframes wf-spark { 0%, 100% { transform: scale(1) rotate(0); } 50% { transform: scale(1.12) rotate(9deg); } }
+.wf-expert { fill: #fff; stroke: var(--line); stroke-width: 1.5; filter: drop-shadow(0 6px 12px rgba(10,10,11,.10)); }
+.wf-expert-icon { stroke: var(--accent); stroke-width: 1.8; stroke-linecap: round; }
+.wf-done { fill: #10B981; }
+.wf-ping {
+  stroke: #10B981; stroke-width: 1.6;
   transform-box: fill-box; transform-origin: center; opacity: 0;
-  animation: tl-ping 3.4s ease-out 1.8s infinite;
+  animation: wf-ping 2.4s ease-out 2.3s infinite; /* period matches the after-dot so pings land on arrivals */
 }
-.tl-ring.r2 { animation-delay: 3.5s; }
-@keyframes tl-ping { 0% { transform: scale(.9); opacity: .55; } 100% { transform: scale(1.45); opacity: 0; } }
-
-/* milestone toasts */
-.tl-toast { opacity: 0; transform-box: fill-box; transform-origin: center; animation: tl-toast 9s ease-in-out infinite; }
-.tl-toast.t2 { animation-delay: 3s; }
-.tl-toast.t3 { animation-delay: 6s; }
-@keyframes tl-toast {
-  0% { opacity: 0; transform: translateY(10px) scale(.94); }
-  4%, 31% { opacity: 1; transform: translateY(0) scale(1); }
-  35%, 100% { opacity: 0; transform: translateY(-10px) scale(.98); }
-}
-.tl-toast-box { fill: #fff; stroke: var(--accent-soft); stroke-width: 1.5; filter: drop-shadow(0 12px 22px rgba(10,10,11,.13)); }
-.tl-toast-check { fill: #10B981; }
-.tl-toast-text { fill: var(--ink); font: 600 12.5px var(--font); }
+@keyframes wf-ping { 0% { transform: scale(.9); opacity: .55; } 100% { transform: scale(1.7); opacity: 0; } }
+.wf-dot-after { fill: #fff; stroke: var(--accent); stroke-width: 2.5; }
 
 /* sprint badge chip */
 .fig-badge {
@@ -909,10 +889,10 @@ input, select, textarea { font: inherit; color: inherit; }
   .scroll-progress { transition: none; }
   .hero-text > *, .hero-figure { animation: none !important; opacity: 1; transform: none; }
   .grad-text { animation: none; }
-  .tl-cell, .tl-cursor, .fig-badge .dot { animation: none !important; opacity: 1; transform: none; }
-  .tl-ring { animation: none !important; opacity: 0; }
-  .tl-toast { animation: none !important; opacity: 0; }
-  .tl-toast.t1 { opacity: 1; }
+  .wf-dot { display: none; } /* SMIL motion ignores CSS animation overrides — hide the moving dots instead */
+  .wf-flow, .wf-spark, .fig-badge .dot { animation: none !important; }
+  .wf-ring-wait { animation: none !important; opacity: .6; transform: none; }
+  .wf-ping { animation: none !important; opacity: 0; }
 }
 </style>
 </head>
@@ -1005,104 +985,92 @@ PLACEHOLDERS (search "data-placeholder" or this list to find):
       </div>
     </div>
     <div class="hero-figure" aria-hidden="true">
-      <svg class="tl" viewBox="0 0 460 470" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ten-working-day sprint calendar: shadow the expert days 1–2, prioritize day 3, build days 4–5, validate days 6–9, ship day 10">
+      <svg class="wf" viewBox="0 0 460 470" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Before and after: an eleven-step manual workflow full of handoffs and rework becomes one automated flow — intake, agent, a single expert review, done">
         <defs>
-          <linearGradient id="shipGrad" x1="0" y1="0" x2="0" y2="1">
+          <linearGradient id="agentGrad" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stop-color="#4570ff"/>
             <stop offset="100%" stop-color="#0034cc"/>
           </linearGradient>
         </defs>
+        <g transform="translate(0,12)">
 
-        <!-- week 1 -->
-        <text class="tl-week" x="52" y="100">WEEK 1</text>
-        <g class="tl-cell c1">
-          <rect class="tl-box" x="52" y="112" width="60" height="60" rx="14" fill="#EAF0FF"/>
-          <text class="tl-day" x="82" y="150">1</text>
-        </g>
-        <g class="tl-cell c2">
-          <rect class="tl-box" x="126" y="112" width="60" height="60" rx="14" fill="#EAF0FF"/>
-          <text class="tl-day" x="156" y="150">2</text>
-        </g>
-        <g class="tl-cell c3">
-          <rect class="tl-box" x="200" y="112" width="60" height="60" rx="14" fill="#D9E3FF"/>
-          <text class="tl-day" x="230" y="150">3</text>
-        </g>
-        <g class="tl-cell c4">
-          <rect class="tl-box" x="274" y="112" width="60" height="60" rx="14" fill="#BFD1FF"/>
-          <text class="tl-day" x="304" y="150">4</text>
-        </g>
-        <g class="tl-cell c5">
-          <rect class="tl-box" x="348" y="112" width="60" height="60" rx="14" fill="#BFD1FF"/>
-          <text class="tl-day" x="378" y="150">5</text>
-        </g>
+        <!-- BEFORE: the manual way -->
+        <text class="wf-caption" x="52" y="86">THE MANUAL WAY</text>
+        <text class="wf-caption wf-caption-right" x="404" y="86">11 STEPS · REWORK</text>
 
-        <!-- week 2 -->
-        <text class="tl-week" x="52" y="224">WEEK 2</text>
-        <g class="tl-cell c6">
-          <rect class="tl-box" x="52" y="236" width="60" height="60" rx="14" fill="#9DB9FF"/>
-          <text class="tl-day" x="82" y="274">6</text>
-        </g>
-        <g class="tl-cell c7">
-          <rect class="tl-box" x="126" y="236" width="60" height="60" rx="14" fill="#9DB9FF"/>
-          <text class="tl-day" x="156" y="274">7</text>
-        </g>
-        <g class="tl-cell c8">
-          <rect class="tl-box" x="200" y="236" width="60" height="60" rx="14" fill="#9DB9FF"/>
-          <text class="tl-day" x="230" y="274">8</text>
-        </g>
-        <g class="tl-cell c9">
-          <rect class="tl-box" x="274" y="236" width="60" height="60" rx="14" fill="#9DB9FF"/>
-          <text class="tl-day" x="304" y="274">9</text>
-        </g>
-        <g class="tl-cell c10">
-          <rect class="tl-box ship" x="348" y="236" width="60" height="60" rx="14" fill="url(#shipGrad)"/>
-          <text class="tl-day ship" x="378" y="274">10</text>
-        </g>
-        <rect class="tl-ring" x="345" y="233" width="66" height="66" rx="17"/>
-        <rect class="tl-ring r2" x="345" y="233" width="66" height="66" rx="17"/>
+        <!-- tangle garnish -->
+        <path class="wf-cross" d="M126 116 L301 178"/>
+        <path class="wf-cross" d="M91 178 L266 116"/>
+        <path class="wf-cross" d="M161 178 L336 116"/>
+        <path class="wf-cross" d="M196 116 L371 178"/>
 
-        <!-- day cursor sweeping through the sprint -->
-        <rect class="tl-cursor" x="49" y="109" width="66" height="66" rx="17"/>
+        <!-- zigzag of handoffs -->
+        <path class="wf-zig" d="M56 116 L91 178 L126 116 L161 178 L196 116 L231 178 L266 116 L301 178 L336 116 L371 178 L404 116"/>
+        <!-- rework loop-back -->
+        <path class="wf-loop" d="M266 116 C254 88 208 88 196 116"/>
+        <path class="wf-loop-arrow" d="M203 106 L196 116 L205 118"/>
 
-        <!-- phase legend -->
-        <rect class="tl-dot" x="52" y="333" width="8" height="8" rx="2" fill="#EAF0FF" stroke="#B9C9F8" stroke-width="1"/>
-        <text class="tl-legend" x="64" y="341">Shadow</text>
-        <rect class="tl-dot" x="116" y="333" width="8" height="8" rx="2" fill="#D9E3FF" stroke="#B9C9F8" stroke-width="1"/>
-        <text class="tl-legend" x="128" y="341">Prioritize</text>
-        <rect class="tl-dot" x="205" y="333" width="8" height="8" rx="2" fill="#BFD1FF" stroke="#B9C9F8" stroke-width="1"/>
-        <text class="tl-legend" x="217" y="341">Build</text>
-        <rect class="tl-dot" x="263" y="333" width="8" height="8" rx="2" fill="#9DB9FF" stroke="#B9C9F8" stroke-width="1"/>
-        <text class="tl-legend" x="275" y="341">Validate</text>
-        <rect class="tl-dot" x="340" y="333" width="8" height="8" rx="2" fill="var(--accent)"/>
-        <text class="tl-legend" x="352" y="341">Ship</text>
+        <!-- step nodes -->
+        <circle class="wf-node" cx="56" cy="116" r="5"/>
+        <circle class="wf-node" cx="91" cy="178" r="5"/>
+        <circle class="wf-node" cx="126" cy="116" r="5"/>
+        <circle class="wf-node" cx="161" cy="178" r="5"/>
+        <circle class="wf-node" cx="196" cy="116" r="5"/>
+        <circle class="wf-node" cx="231" cy="178" r="5"/>
+        <circle class="wf-node" cx="266" cy="116" r="5"/>
+        <circle class="wf-node" cx="301" cy="178" r="5"/>
+        <circle class="wf-node" cx="336" cy="116" r="5"/>
+        <circle class="wf-node" cx="371" cy="178" r="5"/>
+        <circle class="wf-node" cx="404" cy="116" r="5"/>
+        <circle class="wf-ring-wait" cx="231" cy="178" r="10"/>
 
-        <!-- cycling milestone toasts -->
-        <g transform="translate(230,396)">
-          <g class="tl-toast t1">
-            <rect class="tl-toast-box" x="-100" y="-18" width="200" height="36" rx="18"/>
-            <circle class="tl-toast-check" cx="-76" cy="0" r="9"/>
-            <path d="M-80 0 l3 3 l5.5 -6.5" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-            <text class="tl-toast-text" x="-60" y="4.5">Day 3 · ranked</text>
-          </g>
+        <text class="wf-label" x="56" y="140">Intake</text>
+        <text class="wf-label" x="161" y="202">Approve</text>
+        <text class="wf-label" x="266" y="140">Re-key</text>
+        <text class="wf-label" x="336" y="140">Chase</text>
+
+        <!-- the grinding dot (slow, retraces the rework loop) -->
+        <circle class="wf-dot wf-dot-before" r="5.5">
+          <animateMotion dur="10s" repeatCount="indefinite" path="M56 116 L91 178 L126 116 L161 178 L196 116 L231 178 L266 116 C254 88 208 88 196 116 L231 178 L266 116 L301 178 L336 116 L371 178 L404 116"/>
+        </circle>
+
+        <!-- the transformation -->
+        <rect class="wf-pill" x="118" y="248" width="224" height="30" rx="15"/>
+        <text class="wf-pill-text" x="230" y="267">↓ ONE TWO-WEEK SPRINT ↓</text>
+
+        <!-- AFTER: with an agent -->
+        <text class="wf-caption wf-caption-accent" x="52" y="316">WITH AN AGENT</text>
+        <text class="wf-caption wf-caption-right" x="404" y="316">1 REVIEW</text>
+
+        <path class="wf-line" d="M56 354 L404 354"/>
+        <path class="wf-flow" d="M56 354 L404 354"/>
+
+        <!-- the fast dot (drawn under the nodes: work goes into the agent) -->
+        <circle class="wf-dot wf-dot-after" r="5.5">
+          <animateMotion dur="2.4s" repeatCount="indefinite" path="M56 354 L404 354"/>
+        </circle>
+
+        <rect class="wf-in" x="49" y="347" width="14" height="14" rx="4"/>
+        <rect class="wf-agent" x="174" y="332" width="44" height="44" rx="12" fill="url(#agentGrad)"/>
+        <g transform="translate(196,354)">
+          <path class="wf-spark" d="M0,-11 C1.3,-3 3.2,-1.3 11,0 C3.2,1.3 1.3,3.2 0,11 C-1.3,3.2 -3.2,1.3 -11,0 C-3.2,-1.3 -1.3,-3 0,-11 Z"/>
         </g>
-        <g transform="translate(230,396)">
-          <g class="tl-toast t2">
-            <rect class="tl-toast-box" x="-100" y="-18" width="200" height="36" rx="18"/>
-            <circle class="tl-toast-check" cx="-76" cy="0" r="9"/>
-            <path d="M-80 0 l3 3 l5.5 -6.5" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-            <text class="tl-toast-text" x="-60" y="4.5">Day 5 · first agent run</text>
-          </g>
+        <circle class="wf-expert" cx="300" cy="354" r="15"/>
+        <g class="wf-expert-icon" transform="translate(300,354)">
+          <circle cx="0" cy="-3.2" r="3.4"/>
+          <path d="M-6 7 C-6 1.8 6 1.8 6 7"/>
         </g>
-        <g transform="translate(230,396)">
-          <g class="tl-toast t3">
-            <rect class="tl-toast-box" x="-100" y="-18" width="200" height="36" rx="18"/>
-            <circle class="tl-toast-check" cx="-76" cy="0" r="9"/>
-            <path d="M-80 0 l3 3 l5.5 -6.5" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-            <text class="tl-toast-text" x="-60" y="4.5">Day 10 · shipped</text>
-          </g>
+        <circle class="wf-ping" cx="404" cy="354" r="13"/>
+        <circle class="wf-done" cx="404" cy="354" r="11"/>
+        <path d="M399.5 354 l3 3 l6 -7" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+        <text class="wf-label" x="56" y="392">Intake</text>
+        <text class="wf-label" x="196" y="392">Agent</text>
+        <text class="wf-label" x="300" y="392">Your expert</text>
+        <text class="wf-label" x="404" y="392">Done</text>
         </g>
       </svg>
-      <div class="fig-badge"><span class="dot"></span><span>Two-week sprint · ships day 10</span></div>
+      <div class="fig-badge"><span class="dot"></span><span>Same workflow · before &amp; after</span></div>
     </div>
   </div>
 </section>
