@@ -15,3 +15,5 @@ build/
 .context/
 audit/output/
 audit/node_modules/
+.gstack/
+.wrangler/
