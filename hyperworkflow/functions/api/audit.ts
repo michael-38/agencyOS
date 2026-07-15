@@ -13,15 +13,15 @@ interface Submission {
   company_website?: string;
 }
 
-const INDUSTRIES = new Set([
-  "E-commerce / Retail",
-  "Real Estate",
-  "Home Services",
-  "Healthcare / Wellness",
-  "Professional Services",
-  "Hospitality / Food",
-  "Agency / Marketing",
-  "SaaS / Technology",
+// Business functions offered in the form's select (field is still named "industry" on the wire).
+const FUNCTIONS = new Set([
+  "Operations",
+  "Finance",
+  "Customer support",
+  "Sales & marketing",
+  "HR & people",
+  "Engineering & product",
+  "Legal & compliance",
   "Other",
 ]);
 
@@ -103,7 +103,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
 
   if (!name || name.length > 200 || hasControlChars(name)) return json(400, { ok: false, error: "Please enter your name." });
   if (!EMAIL_RE.test(email) || email.length > 254) return json(400, { ok: false, error: "Please enter a valid email." });
-  if (!INDUSTRIES.has(industry)) return json(400, { ok: false, error: "Please pick an industry." });
+  if (!FUNCTIONS.has(industry)) return json(400, { ok: false, error: "Please pick a function." });
   if (notes.length > MAX_NOTES) return json(400, { ok: false, error: "Please shorten your notes a little." });
   const url = normalizeUrl(rawUrl);
   if (!url) return json(400, { ok: false, error: "Please enter a valid website URL." });
@@ -121,31 +121,31 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
 
   const prospectText =
     `Hi ${name.split(/\s+/)[0] || "there"},\n\n` +
-    `Thanks for the automation audit request on ${websiteDisplay}. I'm on it! I'll map your highest-ROI agents and automations and send it to the email you provided.\n\n` +
-    `If you have any other questions, feel free to hit reply on this email.\n\n` +
+    `Thanks for booking a call about ${websiteDisplay}. I'll reply within one business day with a couple of times.\n\n` +
+    `If you can, hit reply with a line about the workflow you'd hand off first — it makes the call sharper.\n\n` +
     `Michael\n` +
     `hyperworkflow.ai`;
 
   const notifyText =
-    `New audit request\n\n` +
+    `New call request\n\n` +
     `URL:       ${url}\n` +
     `Name:      ${name}\n` +
     `Email:     ${email}\n` +
-    `Industry:  ${industry}\n` +
-    (notes ? `\nWants to automate:\n${notes}\n` : ``) +
+    `Function:  ${industry}\n` +
+    (notes ? `\nWants to discuss:\n${notes}\n` : ``) +
     `\n` +
     `IP:        ${ip} (${country})\n` +
     `UA:        ${ua}\n`;
 
   const notifyHtml =
-    `<h2 style="margin:0 0 12px;font:600 16px system-ui">New audit request</h2>` +
+    `<h2 style="margin:0 0 12px;font:600 16px system-ui">New call request</h2>` +
     `<table style="font:14px system-ui;border-collapse:collapse">` +
     `<tr><td style="padding:4px 12px 4px 0;color:#666">URL</td><td><a href="${safeUrl}">${safeUrl}</a></td></tr>` +
     `<tr><td style="padding:4px 12px 4px 0;color:#666">Name</td><td>${safeName}</td></tr>` +
     `<tr><td style="padding:4px 12px 4px 0;color:#666">Email</td><td><a href="mailto:${safeEmail}">${safeEmail}</a></td></tr>` +
-    `<tr><td style="padding:4px 12px 4px 0;color:#666">Industry</td><td>${safeIndustry}</td></tr>` +
+    `<tr><td style="padding:4px 12px 4px 0;color:#666">Function</td><td>${safeIndustry}</td></tr>` +
     (notes
-      ? `<tr><td style="padding:4px 12px 4px 0;color:#666;vertical-align:top">Automate</td><td>${escapeHtml(notes).replace(/\n/g, "<br>")}</td></tr>`
+      ? `<tr><td style="padding:4px 12px 4px 0;color:#666;vertical-align:top">Discuss</td><td>${escapeHtml(notes).replace(/\n/g, "<br>")}</td></tr>`
       : ``) +
     `<tr><td style="padding:4px 12px 4px 0;color:#666">IP</td><td>${escapeHtml(ip)} (${escapeHtml(country)})</td></tr>` +
     `</table>` +
@@ -159,7 +159,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
         from: env.FROM_EMAIL,
         to: email,
         reply_to: env.NOTIFY_EMAIL,
-        subject: "Got your audit request",
+        subject: "Got your call request",
         text: prospectText,
         headers,
       }),
@@ -167,7 +167,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
         from: env.FROM_EMAIL,
         to: env.NOTIFY_EMAIL,
         reply_to: email,
-        subject: `New audit request: ${url}`,
+        subject: `New call request: ${url}`,
         text: notifyText,
         html: notifyHtml,
         headers,
