@@ -1,6 +1,6 @@
 # Plumbing — Industry Design Tokens & Assets
 
-> Extends the shared design system (`../design-system.md`) with plumbing-specific colors, imagery, and component treatments.
+> Extends the house floor (`/DESIGN.md`) and the industry world (`DESIGN.md` in this directory) with plumbing-specific colors, imagery, and component treatments.
 
 ---
 

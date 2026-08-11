@@ -15,8 +15,10 @@ Scrapes an outdated contractor site → extracts business data → rewrites copy
 Run: `cd cli && npm install && npx tsx src/index.ts <url>`.
 
 ### `templates/` — landing pages + design system + concierge
-- `design-system.md` — the **source of truth** for typography, color, spacing, and CTAs. Read it before any visual work.
-- `med-spa/`, `hvac/`, `roofing/`, `plumbing/` — each has `index.html`, `<industry>-copy.md`, `<industry>-design.md`.
+- **Design source of truth is `/DESIGN.md` (house floor) + `templates/<industry>/DESIGN.md` (industry world).** `design-system.md` is retired to a pointer stub. See the Design authority table in `/CLAUDE.md`.
+- `med-spa/`, `hvac/`, `roofing/`, `plumbing/` — each has `index.html`, `<industry>-copy.md`, `<industry>-design.md` (full token tables), plus an impeccable `PRODUCT.md` + `DESIGN.md` industry record.
+- **Audience differs by template:** hvac / roofing / plumbing are B2C client landing pages aimed at homeowners. `med-spa/` is AgencyOS's own B2B **pitch** page aimed at med spa *owners* — there is no patient-facing med spa template yet.
+- Seed a client build so it stops inheriting the agency record: `node .impeccable/seed-client.mjs <industry> demo/<client>`.
 - Concierge (med-spa): `serve.js` (generic, shared) + `concierge.json` (config) + `concierge-prompt.md` (system prompt). Run: `node serve.js [port]` (default 8765).
 
 ### `demo/voice-agent/` — voice-agent SaaS

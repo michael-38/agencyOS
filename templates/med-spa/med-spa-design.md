@@ -1,6 +1,6 @@
 # Med Spa — Industry Design Tokens & Assets
 
-> Extends the shared design system (`../design-system.md`) with med-spa-specific colors, typography, and component treatments. **This template breaks from the home-services system intentionally** — med spa is a luxury/aesthetic vertical, so the visual language is editorial-magazine instead of trustworthy-utility.
+> Extends the house floor (`/DESIGN.md`) and the industry world (`DESIGN.md` in this directory) with med-spa-specific colors, typography, and component treatments. **This template breaks from the home-services system intentionally** — med spa is a luxury/aesthetic vertical, so the visual language is editorial-magazine instead of trustworthy-utility.
 
 > Design source: handoff bundle from Claude Design (`Revitalize Clinic.html`). The visual identity is preserved; the *content* is reframed to pitch a redesigned website to med spa **owners**, not patients.
 

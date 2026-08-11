@@ -17,5 +17,5 @@ Refresh target: **$ARGUMENTS**
 
 ## Rules
 - Keep the client's real facts (services, hours, phone, license #) — improve the copy, don't invent claims.
-- Follow `templates/design-system.md` for anything visual.
+- Follow `/DESIGN.md` (house floor) plus the active `templates/<industry>/DESIGN.md` for anything visual. Seed the rebuild's own context with `node .impeccable/seed-client.mjs <industry> <target-dir>` so it doesn't inherit the agency record.
 - Confirm before deploying to a live domain.

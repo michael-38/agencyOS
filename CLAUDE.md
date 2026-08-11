@@ -14,7 +14,7 @@ How you work:
 - **Evidence over assertion.** Back claims with numbers (Lighthouse scores, audit findings) and screenshots — not adjectives.
 - **Honest reporting.** If a step failed, a test broke, or you skipped something, say so plainly with the output. Never report unverified work as done.
 - **Reuse before building.** The repo already has the audit CLI, SiteRefresh CLI, templates, the concierge pattern, and the voice-agent app — wrap and reuse them; don't reinvent.
-- **Match the house style.** Follow `templates/design-system.md` for anything visual, and existing code conventions for anything technical.
+- **Match the house style.** Follow `/DESIGN.md` (the house floor) plus the active `templates/<industry>/DESIGN.md` for anything visual, and existing code conventions for anything technical.
 - **Confirm before outward-facing or destructive actions** — sending outreach, deploying to a live domain, deleting client data.
 - **Check current docs first.** Web-search the latest official docs before answering questions about fast-moving tools (Claude Code, Anthropic API, Cloudflare, framework versions).
 
@@ -32,7 +32,7 @@ Keep it low-friction: don't interrupt mid-task or nag. At a natural stopping poi
 The AgencyOS toolkit (full detail in `.claude/agentos/context.md`):
 - `audit/` — website audit CLI: 9 modules → a shareable HTML dashboard.
 - `cli/` — SiteRefresh: scrape an outdated site → rewrite copy with Claude → generate a modern page.
-- `templates/` — med-spa / hvac / roofing / plumbing landing pages + `design-system.md` + the AI concierge.
+- `templates/` — med-spa / hvac / roofing / plumbing landing pages, each with its own `PRODUCT.md` + `DESIGN.md` industry record, + the AI concierge.
 - `demo/voice-agent/` — Vapi + Supabase + Next.js voice-agent SaaS.
 - `hyperworkflow/` — the agency's own marketing site (hyperworkflow.ai, Cloudflare Pages).
 - `demo/utah-aesthetic-surgery/` — a real reference build. `lead-gen-target-industries.md` — the prospecting playbook.
@@ -47,6 +47,29 @@ The AgencyOS toolkit (full detail in `.claude/agentos/context.md`):
 | 4 | **Memory** | `.claude/agentos/memory.md` → the project memory store |
 | 5 | **Connections** | `.claude/agentos/connections.md` |
 
-Design source of truth: `templates/design-system.md` (house style; per-industry specifics in `templates/<industry>/<industry>-design.md`).
+## Design authority (read before any visual work)
 
-Skills available now: `/audit-prospect` · `/refresh-site` · `/build-landing-page` · `/configure-concierge` · `/provision-voice-agent` · `/prospect-leads`.
+**Source of truth is the impeccable context pair.** `templates/design-system.md` is retired to a pointer stub.
+
+| Layer | File | Scope |
+|---|---|---|
+| House floor | `/DESIGN.md` | Binding on every page. Grid, type, components, motion, perf, WCAG AA. |
+| Agency record | `/PRODUCT.md` | AgencyOS + hyperworkflow.ai only. **Not** client truth. |
+| Industry world | `templates/<industry>/DESIGN.md` | Palette, mode, proof model, urgency, CTA model. |
+| Industry record | `templates/<industry>/PRODUCT.md` | That vertical's customer, economics, and claim limits. |
+| Token detail | `templates/<industry>/<industry>-design.md` | Full tables. Unchanged, still authoritative for exact values. |
+| Client build | `demo/<client>/PRODUCT.md` + `DESIGN.md` | Seeded from the industry, then brand-token overrides. |
+
+Two mechanics that are easy to get wrong:
+
+1. **Impeccable resolves two levels only, per file** — `<activeProject>/` then `<repoRoot>/`. No intermediate chain. An industry `DESIGN.md` overrides the root one **whole-file**, which is why each industry world opens with an explicit `EXTENDS /DESIGN.md` directive. Honor it.
+2. **A client directory inherits the *agency* record, not its industry.** Always seed:
+   `node .impeccable/seed-client.mjs <industry> demo/<client>` — then replace every `[CLIENT]` marker with verified facts.
+
+Project boundaries are declared in `.impeccable/config.json`.
+
+**Skill precedence.** `/impeccable` and the 13 `taste-skill` design skills each assert their own opinionated systems. On AgencyOS surfaces, `/DESIGN.md` + the active industry world **outrank all of them**. Use those skills to raise craft *inside* the house floor — never to substitute their palette, type scale, or component vocabulary for ours. The one sanctioned exception is `templates/med-spa/DESIGN.md`, which documents its overrides in an explicit table.
+
+Default to `/impeccable`; most taste skills were written for greenfield Tailwind work and conflict with a conversion-optimized static template (`high-end-visual-design` bans Inter; `gpt-taste` mandates GSAP and forbids layout repetition). **Per-skill routing, verdicts, and the exact conflicts: `.claude/agentos/design-skills.md` — read it before invoking one.**
+
+Skills available now: `/audit-prospect` · `/refresh-site` · `/build-landing-page` · `/configure-concierge` · `/provision-voice-agent` · `/prospect-leads` · `/impeccable`.

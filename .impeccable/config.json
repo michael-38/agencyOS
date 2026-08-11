@@ -1,0 +1,7 @@
+{
+  "projectRoots": [
+    "templates/*",
+    "demo/*",
+    "hyperworkflow"
+  ]
+}
