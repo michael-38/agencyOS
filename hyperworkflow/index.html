@@ -3,25 +3,39 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0A0A0B">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#FAFAF9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#131417" media="(prefers-color-scheme: dark)">
 <meta name="robots" content="index,follow,max-image-preview:large">
-<meta name="color-scheme" content="light">
-<title>Hyperworkflow — Real Workflows, Automated in Two Weeks</title>
-<meta name="description" content="Agentic Implementation: a two-week sprint that pairs us with your domain experts. We shadow the real work, build a working AI agent alongside your team, and ship on day 10.">
+<title>Hyperworkflow: real workflows, automated in two weeks</title>
+<meta name="description" content="Agentic Implementation is a two-week sprint. We shadow your domain experts doing the real work, build a working AI agent alongside them, and ship on day 10.">
 <link rel="canonical" href="https://hyperworkflow.ai/">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://hyperworkflow.ai/">
 <meta property="og:site_name" content="Hyperworkflow">
-<meta property="og:title" content="Hyperworkflow — Real Workflows, Automated in Two Weeks">
-<meta property="og:description" content="Agentic Implementation pairs us with your domain experts for a two-week sprint — shadow the real work, build a working AI agent together, ship on day 10.">
+<meta property="og:title" content="Hyperworkflow: real workflows, automated in two weeks">
+<meta property="og:description" content="A two-week sprint with your domain experts. We shadow the real work, build a working AI agent together, and ship on day 10.">
+<meta property="og:image" content="https://hyperworkflow.ai/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Hyperworkflow. Real workflows, automated in two weeks.">
 
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hyperworkflow — Real Workflows, Automated in Two Weeks">
-<meta name="twitter:description" content="Agentic Implementation: a two-week sprint with your domain experts — a working AI agent shipped by day 10.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Hyperworkflow: real workflows, automated in two weeks">
+<meta name="twitter:description" content="A two-week sprint with your domain experts. A working AI agent shipped by day 10.">
+<meta name="twitter:image" content="https://hyperworkflow.ai/og.png">
 
-<link rel="preload" as="font" type="font/woff2" href="/fonts/space-grotesk-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/fonts/geist-latin.woff2" crossorigin>
+<!-- Photography is served by picsum, which 302s to a second origin. Warm both,
+     and without crossorigin: <img> loads are not CORS requests, so a CORS
+     connection would sit unused. -->
+<link rel="preconnect" href="https://picsum.photos">
+<link rel="preconnect" href="https://fastly.picsum.photos">
+
+<!-- Theme resolution before first paint, so the page never flashes the wrong mode. -->
+<script>(function(){try{var t=localStorage.getItem('hw-theme');if(t==='light'||t==='dark'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();</script>
 
 <script type="application/ld+json">
 {
@@ -31,7 +45,7 @@
   "name": "Hyperworkflow",
   "url": "https://hyperworkflow.ai/",
   "logo": "https://hyperworkflow.ai/favicon.svg",
-  "description": "AI engineering studio running Agentic Implementation sprints — two weeks paired with a client's domain experts to shadow real work, build a working AI agent alongside the team, and ship on day 10. Custom AI agents and software, built with you.",
+  "description": "AI engineering studio running Agentic Implementation sprints. Two weeks paired with a client's domain experts to shadow real work, build a working AI agent alongside the team, and ship on day 10. Custom AI agents and software, built with you.",
   "email": "hello@hyperworkflow.ai",
   "contactPoint": {
     "@type": "ContactPoint",
@@ -59,8 +73,7 @@
     "agentic implementation","AI agents","workflow automation","business process automation",
     "process discovery","human-in-the-loop AI","custom software development",
     "LLM integration","AI adoption and enablement"
-  ],
-  "sameAs": []
+  ]
 }
 </script>
 
@@ -70,53 +83,103 @@
   "@type": "FAQPage",
   "@id": "https://hyperworkflow.ai/#faq",
   "mainEntity": [
-    {"@type":"Question","name":"What is the Agentic Implementation program?","acceptedAnswer":{"@type":"Answer","text":"A two-week sprint where we pair with your domain experts — the people who actually do the work. We shadow the real job, rank the automation opportunities, build a working agent alongside your team, validate it on real work, and ship on day 10."}},
-    {"@type":"Question","name":"Why two weeks?","acceptedAnswer":{"@type":"Answer","text":"Long enough to observe real work, build, and validate — short enough to force decisions. The sprint is designed to get your first real win into production fast, not to produce a report."}},
-    {"@type":"Question","name":"How much of our expert's time does it take?","acceptedAnswer":{"@type":"Answer","text":"Days 1–2 are the heaviest — we shadow them doing their normal work, so it costs attention, not extra hours. After that, expect a couple of focused hours a day for building and validating together."}},
+    {"@type":"Question","name":"What is the Agentic Implementation program?","acceptedAnswer":{"@type":"Answer","text":"A two-week sprint where we pair with your domain experts, the people who actually do the work. We shadow the real job, rank the automation opportunities, build a working agent alongside your team, validate it on real work, and ship on day 10."}},
+    {"@type":"Question","name":"Why two weeks?","acceptedAnswer":{"@type":"Answer","text":"Long enough to observe real work, build, and validate. Short enough to force decisions. The sprint is designed to get your first real win into production fast, not to produce a report."}},
+    {"@type":"Question","name":"How much of our expert's time does it take?","acceptedAnswer":{"@type":"Answer","text":"Days 1 and 2 are the heaviest. We shadow them doing their normal work, so it costs attention, not extra hours. After that, expect a couple of focused hours a day for building and validating together."}},
+    {"@type":"Question","name":"What kinds of work fit best?","acceptedAnswer":{"@type":"Answer","text":"Repetitive knowledge work in any function: intake, triage, drafting, reconciliation, reporting, scheduling. If someone can show us the work, we can usually shadow it."}},
     {"@type":"Question","name":"What do we walk away with?","acceptedAnswer":{"@type":"Answer","text":"A working agent in production, a ranked map of your automation opportunities, validation evidence from real work, and a team that knows how to do this again."}},
     {"@type":"Question","name":"What happens after the sprint?","acceptedAnswer":{"@type":"Answer","text":"Whatever you want: extend with follow-on sprints, keep us on as an ongoing partner, or take it fully in-house. The handoff is designed in from day one."}},
     {"@type":"Question","name":"Do we own what you build?","acceptedAnswer":{"@type":"Answer","text":"Yes. The code, the prompts, the integrations, the data, and the accounts. No lock-in."}},
     {"@type":"Question","name":"What about security and data access?","acceptedAnswer":{"@type":"Answer","text":"Least-privilege access, working in your environment wherever possible, and human review on what the agent does. We'll walk through the specifics on the call."}},
-    {"@type":"Question","name":"What if the agent doesn't validate?","acceptedAnswer":{"@type":"Answer","text":"Then we don't ship it. Days 6–9 exist to find that out before it touches real work — and you keep the opportunity map, the documentation, and everything we learned."}},
-    {"@type":"Question","name":"What kinds of work fit best?","acceptedAnswer":{"@type":"Answer","text":"Repetitive knowledge work in any function — intake, triage, drafting, reconciliation, reporting, scheduling. If someone can show us the work, we can usually shadow it."}},
+    {"@type":"Question","name":"What if the agent doesn't validate?","acceptedAnswer":{"@type":"Answer","text":"Then we don't ship it. Days 6 to 9 exist to find that out before it touches real work, and you keep the opportunity map, the documentation, and everything we learned."}},
     {"@type":"Question","name":"How much does it cost?","acceptedAnswer":{"@type":"Answer","text":"We scope it on the call. The first call is free, and you'll leave with a clear recommendation either way."}}
   ]
 }
 </script>
 
 <style>
-/* ---------- self-hosted font (eliminates Google Fonts critical chain) ---------- */
+/* ============================================================
+   HYPERWORKFLOW
+   Direction: "Instrument" - graphite ground, one burnt-orange
+   signal, sharp panels, mono tabular figures.
+   Dials: DESIGN_VARIANCE 7 / MOTION_INTENSITY 5 / VISUAL_DENSITY 4
+   ============================================================ */
+
+/* ---------- self-hosted variable fonts (Geist, OFL 1.1) ---------- */
 @font-face {
-  font-family: 'Space Grotesk';
+  font-family: 'Geist';
   font-style: normal;
-  font-weight: 400 700;
+  font-weight: 100 900;
   font-display: swap;
-  src: url('/fonts/space-grotesk-latin.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  src: url('/fonts/geist-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2190-2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/fonts/geist-mono-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2190-2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
-/* ---------- tokens ---------- */
+/* ---------- tokens: light is the base, dark overrides below ---------- */
 :root {
-  --bg: #FFFFFF;
-  --bg-alt: #F7F7F8;
-  --ink: #0A0A0B;
-  --ink-2: #3A3A3F;
-  --muted: #6B6B72;
-  --line: #E5E5E8;
-  --accent: #0040FF;
-  --accent-2: #0033CC;
-  --accent-soft: #E6ECFF;
-  --radius-sm: 8px;
-  --radius-md: 14px;
-  --radius-lg: 20px;
-  --radius-xl: 28px;
-  --container: 1180px;
+  --ground: #FAFAF9;
+  --ground-2: #F1F1EF;
+  --ink: #14161A;
+  --ink-2: #3E434B;
+  --ink-3: #656A72;
+  --rule: #DEDEDA;
+  /* --signal is for graphic fills only. Text and any surface that carries
+     text uses --signal-ink, which is dark enough to pass WCAG AA. */
+  --signal: #E4572E;
+  --signal-ink: #B8401D;
+  --signal-deep: #93300F;
+  --signal-wash: #FBEAE3;
+  --on-signal: #FFFFFF;
+  /* shadows are tinted to the ground hue, never pure black */
+  --shade: 32 30 28;
+
+  --r-control: 4px;
+  --r-panel: 0px;
+
+  --container: 1200px;
   --pad: clamp(20px, 4vw, 56px);
-  --shadow-sm: 0 1px 3px rgba(10,10,11,.06);
-  --shadow-md: 0 6px 24px rgba(10,10,11,.08);
-  --shadow-lg: 0 14px 40px rgba(10,10,11,.12);
-  --font: "Space Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font: 'Geist', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+:root[data-theme="dark"] {
+  --ground: #131417;
+  --ground-2: #1B1D21;
+  --ink: #F2F2F0;
+  --ink-2: #B9BCC2;
+  --ink-3: #878C94;
+  --rule: #2A2D33;
+  --signal: #FF6B3D;
+  --signal-ink: #FF6B3D;
+  --signal-deep: #FF8A63;
+  --signal-wash: #2A1710;
+  --on-signal: #17110D;
+  --shade: 0 0 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #131417;
+    --ground-2: #1B1D21;
+    --ink: #F2F2F0;
+    --ink-2: #B9BCC2;
+    --ink-3: #878C94;
+    --rule: #2A2D33;
+    --signal: #FF6B3D;
+    --signal-ink: #FF6B3D;
+    --signal-deep: #FF8A63;
+    --signal-wash: #2A1710;
+    --on-signal: #17110D;
+    --shade: 0 0 0;
+  }
 }
 
 /* ---------- reset ---------- */
@@ -128,1074 +191,708 @@ body {
   font-size: 16px;
   line-height: 1.6;
   color: var(--ink);
-  background: var(--bg);
+  background: var(--ground);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 @media (min-width: 720px) { body { font-size: 17px; } }
-h1, h2, h3, h4 { margin: 0 0 .5em; line-height: 1.1; font-weight: 700; letter-spacing: -0.02em; }
-h1 { font-size: clamp(36px, 6vw, 64px); font-weight: 700; }
-h2 { font-size: clamp(28px, 4vw, 44px); }
-h3 { font-size: clamp(20px, 2.2vw, 24px); line-height: 1.2; letter-spacing: -0.01em; }
-h4 { font-size: 18px; }
-p { margin: 0 0 1em; color: var(--ink-2); }
+
+h1, h2, h3, h4 { margin: 0 0 .5em; line-height: 1.12; font-weight: 600; letter-spacing: -0.025em; text-wrap: balance; }
+h1 { font-size: clamp(36px, 4.4vw, 50px); letter-spacing: -0.032em; }
+h2 { font-size: clamp(27px, 3.4vw, 40px); }
+h3 { font-size: clamp(19px, 1.9vw, 22px); letter-spacing: -0.018em; }
+h4 { font-size: 15px; font-weight: 600; }
+p { margin: 0 0 1em; color: var(--ink-2); text-wrap: pretty; }
 a { color: inherit; text-decoration: none; }
 button { font: inherit; cursor: pointer; border: 0; background: none; color: inherit; }
-img, svg { display: block; max-width: 100%; }
+img { display: block; max-width: 100%; height: auto; }
+svg { display: block; }
 ul { margin: 0; padding: 0; list-style: none; }
 input, select, textarea { font: inherit; color: inherit; }
-::selection { background: var(--accent); color: #fff; }
+::selection { background: var(--signal-ink); color: var(--on-signal); }
+
+/* every figure on the page is mono and tabular */
+.num { font-family: var(--mono); font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1; }
 
 /* ---------- skip link ---------- */
 .skip {
   position: absolute; left: -9999px; top: 0;
-  padding: 12px 16px; background: var(--ink); color: #fff;
-  z-index: 100; border-radius: 0 0 var(--radius-sm) 0;
+  padding: 12px 16px; background: var(--ink); color: var(--ground);
+  z-index: 100; border-radius: 0 0 var(--r-control) 0;
 }
 .skip:focus { left: 0; }
 
-/* ---------- layout ---------- */
-.container { max-width: var(--container); margin: 0 auto; padding: 0 var(--pad); }
-.section { padding: clamp(56px, 9vw, 120px) 0; }
-.section--alt { background: var(--bg-alt); }
-.section--ink { background: var(--ink); color: #fff; }
-.section--ink p, .section--ink h2, .section--ink h3 { color: inherit; }
-.section--ink .muted { color: #9D9DA5; }
+/* ---------- layout primitives ---------- */
+.wrap { max-width: var(--container); margin: 0 auto; padding-inline: var(--pad); }
+.section { padding-block: clamp(64px, 8vw, 128px); }
+.section-recessed { background: var(--ground-2); }
 
 .eyebrow {
   font-family: var(--mono);
-  font-size: 12px;
-  letter-spacing: 0.12em;
+  font-size: 11.5px;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--muted);
-  margin: 0 0 16px;
+  color: var(--ink-3);
+  margin: 0 0 14px;
   font-weight: 500;
 }
-.section--ink .eyebrow { color: #9D9DA5; }
-.lead {
-  font-size: clamp(17px, 1.8vw, 20px);
-  line-height: 1.55;
-  color: var(--ink-2);
-  max-width: 60ch;
+.lede { font-size: clamp(17px, 1.7vw, 19px); line-height: 1.55; color: var(--ink-2); max-width: 65ch; }
+.head { max-width: 65ch; margin-bottom: clamp(36px, 4.5vw, 64px); }
+.mock-note {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.04em;
+  color: var(--ink-3);
+  margin: 18px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--rule);
 }
 
-/* ---------- buttons ---------- */
+/* ---------- buttons: 4px radius, no gradient, no glow ---------- */
 .btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 14px 22px;
-  border-radius: var(--radius-md);
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 1;
-  min-height: 48px;
-  letter-spacing: -0.01em;
-  transition: background .15s ease, color .15s ease, transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+  display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+  padding: 13px 20px;
+  border-radius: var(--r-control);
+  font-weight: 500; font-size: 15.5px; line-height: 1;
+  min-height: 48px; letter-spacing: -0.01em;
+  border: 1px solid transparent;
+  transition: background .18s ease, color .18s ease, border-color .18s ease, transform .1s ease;
 }
-.btn-primary {
-  background: linear-gradient(135deg, #2a62ff 0%, var(--accent) 52%, #0034d9 100%);
-  color: #fff;
-  box-shadow: 0 6px 20px rgba(0,64,255,.30);
-  position: relative;
-  overflow: hidden;
+.btn-primary { background: var(--signal-ink); color: var(--on-signal); }
+.btn-primary:hover { background: var(--signal-deep); }
+.btn-primary:active { transform: translateY(1px); }
+.btn-secondary { background: transparent; color: var(--ink); border-color: var(--rule); }
+.btn-secondary:hover { border-color: var(--ink); }
+.btn-secondary:active { transform: translateY(1px); }
+.btn-quiet {
+  display: inline-flex; align-items: center; gap: 7px;
+  color: var(--signal-ink); font-weight: 500; font-size: 15.5px;
+  border-bottom: 1px solid transparent; padding-bottom: 2px;
 }
-.btn-primary::after {
-  content: "";
-  position: absolute; top: 0; left: -130%;
-  width: 55%; height: 100%;
-  background: linear-gradient(100deg, transparent, rgba(255,255,255,.38), transparent);
-  transform: skewX(-18deg);
-  transition: left .6s ease;
-  pointer-events: none;
-}
-.btn-primary:hover { box-shadow: 0 10px 28px rgba(0,64,255,.42); transform: translateY(-2px); }
-.btn-primary:hover::after { left: 150%; }
-.btn-primary:active { transform: translateY(0); }
-.btn svg { transition: transform .2s ease; }
-.btn:hover svg { transform: translateX(3px); }
-.btn-secondary {
-  background: transparent;
-  color: var(--ink);
-  border: 1.5px solid var(--line);
-}
-.btn-secondary:hover { border-color: var(--ink); transform: translateY(-2px); }
-.btn-secondary:active { transform: translateY(0); }
-.section--ink .btn-secondary { color: #fff; border-color: rgba(255,255,255,.2); }
-.section--ink .btn-secondary:hover { border-color: #fff; }
-.btn-ghost { background: none; color: var(--accent); padding: 8px 10px; min-height: auto; font-weight: 600; }
-.btn-ghost:hover { color: var(--accent-2); }
-.btn:focus-visible, a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visible, select:focus-visible {
-  outline: 3px solid var(--accent);
-  outline-offset: 2px;
-}
+.btn-quiet:hover { border-bottom-color: var(--signal-ink); }
+:focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; }
 
 /* ---------- header ---------- */
-.site-header {
+.masthead {
   position: sticky; top: 0; z-index: 50;
-  background: rgba(255,255,255,.85);
-  backdrop-filter: saturate(180%) blur(12px);
-  -webkit-backdrop-filter: saturate(180%) blur(12px);
+  background: var(--ground);
   border-bottom: 1px solid transparent;
-  transition: border-color .15s ease, background .15s ease;
-}
-.site-header[data-scrolled="true"] { border-bottom-color: var(--line); }
-.nav {
-  display: flex; align-items: center; justify-content: space-between;
-  height: 64px; gap: 24px;
-}
-.brand {
-  display: flex; align-items: center; gap: 10px;
-  font-weight: 700; letter-spacing: -0.02em; font-size: 19px;
-}
-.brand-mark {
-  display: inline-flex;
-  width: 28px; height: 28px;
-  background: var(--accent);
-  border-radius: 8px;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  box-shadow: 0 2px 6px rgba(0,64,255,.25);
-}
-.brand-mark svg {
-  width: 16px; height: 16px;
-  color: #fff;
-}
-.site-footer .brand-mark {
-  background: var(--accent);
-  box-shadow: 0 2px 8px rgba(0,64,255,.35);
-}
-.nav-links {
-  display: none; gap: 4px; align-items: center; font-size: 15px;
-}
-.nav-links a {
-  padding: 8px 12px; border-radius: 8px; color: var(--ink-2); font-weight: 500;
-  position: relative;
-}
-.nav-links a::after {
-  content: ""; position: absolute; left: 12px; right: 12px; bottom: 4px; height: 2px;
-  background: var(--accent); border-radius: 2px;
-  transform: scaleX(0); transform-origin: left;
-  transition: transform .24s cubic-bezier(.2,.7,.2,1);
-}
-.nav-links a:hover { color: var(--ink); }
-.nav-links a:hover::after { transform: scaleX(1); }
-.nav-cta { display: flex; gap: 10px; align-items: center; }
-.nav-cta .btn-primary { padding: 12px 18px; min-height: 44px; font-size: 15px; white-space: nowrap; }
-.nav-cta .cta-short { display: none; }
-.menu-toggle {
-  display: inline-flex; width: 44px; height: 44px;
-  align-items: center; justify-content: center;
-  border-radius: 10px; border: 1px solid var(--line);
-  flex-shrink: 0;
-}
-.menu-toggle svg { width: 20px; height: 20px; }
-@media (max-width: 480px) {
-  .nav { gap: 8px; }
-  .nav-cta { gap: 6px; }
-  .nav-cta .btn-primary { padding: 10px 14px; font-size: 14px; }
-  .nav-cta .cta-long { display: none; }
-  .nav-cta .cta-short { display: inline; }
-  .nav-cta .btn-primary svg { display: none; }
-  .brand { font-size: 17px; gap: 8px; }
-  .brand-mark { width: 26px; height: 26px; }
-}
-@media (max-width: 360px) {
-  .site-header .container.nav { padding-left: 14px; padding-right: 14px; }
-  .brand span:last-child { display: none; }
-}
-@media (min-width: 920px) {
-  .nav-links { display: flex; }
-  .menu-toggle { display: none; }
-}
-
-/* mobile menu drawer */
-.nav-drawer {
-  position: fixed; inset: 64px 0 0 0;
-  /* the header's backdrop-filter makes it this fixed element's containing block,
-     so bottom:0 collapses — size against the viewport explicitly instead */
-  height: calc(100vh - 64px);
-  overflow-y: auto;
-  background: var(--bg); z-index: 40;
-  padding: 24px var(--pad);
-  display: none; flex-direction: column; gap: 4px;
-  border-top: 1px solid var(--line);
-}
-.nav-drawer[data-open="true"] { display: flex; }
-.nav-drawer a {
-  padding: 14px 16px; border-radius: 10px;
-  font-size: 18px; font-weight: 500; color: var(--ink);
-}
-.nav-drawer a:hover { background: var(--bg-alt); }
-.nav-drawer .btn { margin-top: 16px; }
-@media (min-width: 920px) { .nav-drawer { display: none !important; } }
-
-/* ---------- hero ---------- */
-.hero { padding-top: clamp(48px, 7vw, 96px); padding-bottom: clamp(56px, 8vw, 112px); }
-.hero-grid {
-  display: grid;
-  gap: clamp(40px, 6vw, 64px);
-  grid-template-columns: 1fr;
-  align-items: center;
-}
-@media (min-width: 920px) {
-  .hero-grid { grid-template-columns: 1.15fr 0.85fr; gap: clamp(48px, 5vw, 80px); }
-}
-.hero h1 { margin-bottom: 24px; max-width: 16ch; }
-.hero .lead { margin-bottom: 32px; }
-.hero-cta { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 28px; }
-.hero-note { font-size: 14px; color: var(--muted); margin-bottom: 40px; }
-.hero-stats {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px 28px;
-  padding-top: 28px;
-  border-top: 1px solid var(--line);
-}
-@media (min-width: 720px) { .hero-stats { grid-template-columns: repeat(4, 1fr); } }
-.stat-num {
-  font-size: clamp(28px, 3.4vw, 36px);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  line-height: 1;
-  margin-bottom: 8px;
-}
-.stat-label {
-  font-family: var(--mono); font-size: 11px;
-  letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--muted); line-height: 1.4;
-}
-.placeholder-dot::after {
-  content: "·"; color: var(--accent); margin-left: 4px;
-  font-weight: 700;
-}
-
-/* hero figure: sprint timeline */
-.hero-figure {
-  position: relative;
-  aspect-ratio: 1 / 1.02;
-  border-radius: var(--radius-xl);
-  background: radial-gradient(125% 95% at 50% 6%, #EBF0FF 0%, #F4F7FF 48%, #FFFFFF 100%);
-  border: 1px solid var(--line);
-  box-shadow: var(--shadow-lg);
-  overflow: hidden;
-  isolation: isolate;
-}
-.hero-figure::before {
-  content: "";
-  position: absolute; inset: 0;
-  background-image:
-    linear-gradient(rgba(0,64,255,.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,64,255,.05) 1px, transparent 1px);
-  background-size: 34px 34px;
-  -webkit-mask-image: radial-gradient(78% 78% at 50% 42%, #000 52%, transparent 100%);
-  mask-image: radial-gradient(78% 78% at 50% 42%, #000 52%, transparent 100%);
-  pointer-events: none;
-}
-@media (max-width: 720px) {
-  .hero-figure { aspect-ratio: 1 / 0.92; width: 100%; max-width: 460px; margin: 0 auto; }
-}
-.wf { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-
-/* zone captions + node labels */
-.wf-caption { fill: var(--muted); font: 500 10px var(--mono); letter-spacing: .1em; }
-.wf-caption-accent { fill: var(--accent); }
-.wf-caption-right { text-anchor: end; }
-.wf-label { fill: var(--muted); font: 600 10px var(--font); text-anchor: middle; letter-spacing: .02em; }
-
-/* before: the manual tangle */
-.wf-zig { stroke: #AFC0EC; stroke-width: 2; stroke-linejoin: round; }
-.wf-cross { stroke: #D3DCF6; stroke-width: 1.5; }
-.wf-loop { stroke: #9AA7CF; stroke-width: 1.8; stroke-dasharray: 4 5; }
-.wf-loop-arrow { stroke: #9AA7CF; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-.wf-node { fill: #fff; stroke: #AABCF0; stroke-width: 2; }
-.wf-ring-wait {
-  stroke: #FFB84D; stroke-width: 2;
-  transform-box: fill-box; transform-origin: center;
-  animation: wf-wait 2.2s ease-in-out infinite;
-}
-@keyframes wf-wait { 0%, 100% { opacity: .25; transform: scale(.85); } 50% { opacity: .9; transform: scale(1.12); } }
-.wf-dot-before { fill: var(--ink-2); stroke: #fff; stroke-width: 2; }
-
-/* the transformation pill */
-.wf-pill { fill: #fff; stroke: var(--accent-soft); stroke-width: 1.5; filter: drop-shadow(0 8px 18px rgba(10,10,11,.10)); }
-.wf-pill-text { fill: var(--accent); font: 600 10.5px var(--mono); letter-spacing: .1em; text-anchor: middle; }
-
-/* after: the automated flow */
-.wf-line { stroke: #C7D4FA; stroke-width: 3; stroke-linecap: round; }
-.wf-flow {
-  stroke: var(--accent); stroke-width: 3; stroke-linecap: round;
-  stroke-dasharray: 3 15;
-  animation: wf-dash 1.5s linear infinite;
-}
-@keyframes wf-dash { to { stroke-dashoffset: -18; } }
-.wf-in { fill: #fff; stroke: var(--accent); stroke-width: 2; }
-.wf-agent { filter: drop-shadow(0 10px 20px rgba(0,52,217,.4)); }
-.wf-spark { fill: #fff; transform-box: fill-box; transform-origin: center; animation: wf-spark 5s ease-in-out infinite; }
-@keyframes wf-spark { 0%, 100% { transform: scale(1) rotate(0); } 50% { transform: scale(1.12) rotate(9deg); } }
-.wf-expert { fill: #fff; stroke: var(--line); stroke-width: 1.5; filter: drop-shadow(0 6px 12px rgba(10,10,11,.10)); }
-.wf-expert-icon { stroke: var(--accent); stroke-width: 1.8; stroke-linecap: round; }
-.wf-done { fill: #10B981; }
-.wf-ping {
-  stroke: #10B981; stroke-width: 1.6;
-  transform-box: fill-box; transform-origin: center; opacity: 0;
-  animation: wf-ping 2.4s ease-out 2.3s infinite; /* period matches the after-dot so pings land on arrivals */
-}
-@keyframes wf-ping { 0% { transform: scale(.9); opacity: .55; } 100% { transform: scale(1.7); opacity: 0; } }
-.wf-dot-after { fill: #fff; stroke: var(--accent); stroke-width: 2.5; }
-
-/* sprint badge chip */
-.fig-badge {
-  position: absolute; top: 16px; left: 16px;
-  display: inline-flex; align-items: center; gap: 8px;
-  background: rgba(255,255,255,.82);
-  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 7px 13px 7px 11px;
-  font-family: var(--mono); font-size: 11px; letter-spacing: .03em;
-  color: var(--ink-2);
-  box-shadow: var(--shadow-sm);
-}
-.fig-badge .dot { width: 8px; height: 8px; border-radius: 50%; background: #10B981; animation: live-pulse 2s ease-in-out infinite; }
-@keyframes live-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(16,185,129,.5); }
-  50% { box-shadow: 0 0 0 6px rgba(16,185,129,0); }
-}
-
-/* ---------- workflow ticker ---------- */
-.ticker-section { padding: 28px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--bg-alt); overflow: hidden; }
-.marquee {
-  display: flex;
-  gap: 48px;
-  white-space: nowrap;
-  animation: scroll 32s linear infinite;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--ink-2);
-}
-.marquee span { display: inline-flex; align-items: center; gap: 8px; }
-.marquee span::before {
-  content: ""; width: 4px; height: 4px; background: var(--accent); border-radius: 50%;
-}
-.marquee strong { color: var(--ink); font-weight: 700; }
-@keyframes scroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-
-/* ---------- value props ---------- */
-.vp-header { max-width: 720px; margin-bottom: 56px; }
-.vp-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
-}
-@media (min-width: 720px) { .vp-grid { grid-template-columns: 1fr 1fr; } }
-@media (min-width: 1040px) { .vp-grid { grid-template-columns: repeat(3, 1fr); } }
-.vp-card {
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  padding: 28px;
-  display: flex; flex-direction: column; gap: 10px;
-  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
-}
-.vp-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--accent-soft); }
-.vp-icon {
-  width: 40px; height: 40px;
-  border-radius: 10px; background: var(--accent-soft);
-  display: flex; align-items: center; justify-content: center;
-  color: var(--accent);
-  margin-bottom: 4px;
-}
-.vp-icon svg { width: 22px; height: 22px; }
-.vp-card h3 { font-size: 20px; line-height: 1.25; margin: 0 0 6px; }
-.vp-card p { font-size: 15px; line-height: 1.55; margin: 0; }
-.vp-stat { color: var(--accent); font-weight: 700; }
-
-/* ---------- services ---------- */
-.svc-grid {
-  display: grid; gap: 20px;
-  grid-template-columns: 1fr;
-  margin-top: 48px;
-}
-@media (min-width: 920px) { .svc-grid { grid-template-columns: repeat(3, 1fr); } }
-.svc-card {
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  padding: 32px;
-}
-.svc-card .vp-icon { background: var(--ink); color: #fff; }
-.svc-card h3 { font-size: 22px; margin-bottom: 12px; margin-top: 16px; }
-.svc-card p { font-size: 16px; }
-.svc-bullets { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
-.svc-bullets li {
-  display: flex; gap: 10px; align-items: flex-start;
-  font-size: 14px; color: var(--ink-2);
-}
-.svc-bullets li::before {
-  content: ""; width: 6px; height: 6px; background: var(--accent);
-  border-radius: 50%; margin-top: 8px; flex: none;
-}
-
-/* ---------- cases ---------- */
-.cases-grid {
-  display: grid; gap: 20px;
-  grid-template-columns: 1fr;
-  margin-top: 48px;
-}
-@media (min-width: 920px) { .cases-grid { grid-template-columns: repeat(3, 1fr); } }
-.case-card {
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  padding: 28px;
-  display: flex; flex-direction: column; gap: 18px;
-}
-.case-meta {
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-.case-card h3 { font-size: 20px; margin: 0; }
-.case-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 16px; }
-.case-stat { font-size: 13px; }
-.case-stat-label {
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--muted);
-  display: block;
-  margin-bottom: 2px;
-}
-.case-stat-value { font-weight: 700; color: var(--ink); font-size: 15px; }
-.case-stat-value .from { color: var(--muted); font-weight: 500; }
-.case-stat-value .arrow { color: var(--accent); margin: 0 4px; }
-.case-quote {
-  font-size: 14.5px; line-height: 1.55; color: var(--ink);
-  border-left: 2px solid var(--accent);
-  padding: 4px 0 4px 14px;
-  margin: 0;
-}
-.case-attr {
-  font-size: 13px; color: var(--muted);
-  font-family: var(--mono); letter-spacing: 0.03em;
-}
-
-/* ---------- process ---------- */
-.process-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 24px;
-  margin-top: 48px;
-}
-@media (min-width: 720px) { .process-grid { grid-template-columns: 1fr 1fr; } }
-@media (min-width: 1040px) { .process-grid { grid-template-columns: repeat(5, 1fr); } }
-.process-step {
-  border-top: 2px solid var(--ink);
-  padding-top: 18px;
-}
-.process-step .step-num {
-  font-family: var(--mono);
-  font-size: 12px;
-  letter-spacing: 0.1em;
-  color: var(--accent);
-  font-weight: 600;
-  margin-bottom: 10px;
-}
-.process-step h3 { font-size: 18px; margin: 0 0 8px; }
-.process-step p { font-size: 14.5px; line-height: 1.55; margin: 0; color: var(--ink-2); }
-.process-foot { margin-top: 48px; }
-.process-foot .eyebrow { margin-bottom: 0; }
-
-/* ---------- about / credentials ---------- */
-.about-block { max-width: 760px; }
-.badges {
-  display: flex; flex-wrap: wrap; gap: 8px; margin-top: 32px;
-}
-.badges li {
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink);
-  padding: 8px 14px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: #fff;
-}
-
-/* ---------- testimonials ---------- */
-.testi-grid {
-  display: grid; gap: 20px;
-  grid-template-columns: 1fr;
-  margin-top: 48px;
-}
-@media (min-width: 920px) { .testi-grid { grid-template-columns: repeat(3, 1fr); } }
-.testi-card {
-  background: rgba(255,255,255,.04);
-  border: 1px solid rgba(255,255,255,.08);
-  border-radius: var(--radius-lg);
-  padding: 28px;
-  display: flex; flex-direction: column; gap: 18px;
-}
-.stars { color: var(--accent); letter-spacing: 0.15em; font-size: 14px; }
-.section--ink .stars { color: #FFB84D; }
-.testi-quote { font-size: 17px; line-height: 1.5; }
-.testi-attr { font-size: 13px; color: #9D9DA5; font-family: var(--mono); letter-spacing: 0.03em; }
-
-/* ---------- faq ---------- */
-.faq-grid {
-  display: grid; gap: clamp(32px, 5vw, 64px);
-  grid-template-columns: 1fr;
-  margin-top: 48px;
-}
-@media (min-width: 920px) { .faq-grid { grid-template-columns: 0.7fr 1.3fr; align-items: start; } }
-.faq-list { display: flex; flex-direction: column; gap: 4px; }
-.faq-item {
-  border-top: 1px solid var(--line);
-}
-.faq-item:last-child { border-bottom: 1px solid var(--line); }
-.faq-item summary {
-  list-style: none;
-  cursor: pointer;
-  padding: 22px 0;
-  font-size: 18px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  display: flex;
-  gap: 16px;
-  align-items: flex-start;
-  justify-content: space-between;
-}
-.faq-item summary::-webkit-details-marker { display: none; }
-.faq-item summary::after {
-  content: "";
-  flex: none;
-  width: 22px; height: 22px;
-  background: var(--accent-soft);
-  border-radius: 50%;
-  position: relative;
-  margin-top: 4px;
-  transition: transform .2s ease, background .2s ease;
-}
-.faq-item summary::before {
-  content: ""; position: absolute; right: 6px;
-  margin-top: 14px;
-  width: 10px; height: 2px;
-  background: var(--accent);
-  z-index: 1;
-}
-.faq-item[open] summary::after { transform: rotate(45deg); background: var(--accent); }
-.faq-item[open] summary::before { background: #fff; }
-.faq-item p {
-  padding: 0 32px 22px 0;
-  font-size: 16px;
-  line-height: 1.6;
-  margin: 0;
-  color: var(--ink-2);
-}
-
-/* ---------- audit form ---------- */
-.form-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 32px;
-  margin-top: 48px;
-  align-items: start;
-}
-@media (min-width: 920px) { .form-grid { grid-template-columns: 1.4fr 1fr; gap: 56px; } }
-.audit-form {
-  background: var(--bg-alt);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-xl);
-  padding: clamp(28px, 4vw, 40px);
-}
-.form-row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
-.form-row label {
-  font-size: 14px; font-weight: 600;
-}
-.form-row input, .form-row select, .form-row textarea {
-  padding: 14px 16px;
-  border: 1.5px solid var(--line);
-  border-radius: var(--radius-sm);
-  background: #fff;
-  font-size: 16px;
-}
-.form-row textarea { resize: vertical; min-height: 84px; line-height: 1.5; }
-.form-row input:focus, .form-row select:focus, .form-row textarea:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(0,64,255,.15);
-}
-.audit-form .btn-primary { width: 100%; font-size: 17px; padding: 18px 22px; min-height: 56px; margin-top: 8px; }
-.audit-form .form-note {
-  font-size: 13px; color: var(--muted); margin-top: 14px; text-align: center;
-}
-.audit-form .form-error {
-  font-size: 14px; color: #c8242a; margin-top: 12px; text-align: center;
-}
-.audit-form .btn-primary[disabled] { opacity: 0.6; cursor: not-allowed; }
-.contact-card {
-  border: 1px solid var(--line);
-  border-radius: var(--radius-xl);
-  padding: 28px;
-}
-.contact-card h3 { font-size: 18px; margin-bottom: 18px; }
-.contact-row {
-  display: flex; flex-direction: column; gap: 4px;
-  padding: 14px 0; border-bottom: 1px solid var(--line);
-}
-.contact-row:last-child { border-bottom: 0; }
-.contact-label {
-  font-family: var(--mono); font-size: 11px;
-  letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
-}
-.contact-value { font-size: 15px; color: var(--ink); }
-.contact-value a { color: var(--accent); }
-.contact-value a:hover { color: var(--accent-2); }
-.success-state {
-  text-align: center;
-  padding: 40px 20px;
-}
-.success-state svg { width: 56px; height: 56px; color: #10B981; margin: 0 auto 16px; }
-.success-state h3 { margin-bottom: 8px; }
-.success-state p { margin: 0; font-size: 15px; color: var(--ink-2); }
-
-/* ---------- mobile sticky CTA ---------- */
-.mobile-cta {
-  position: fixed;
-  left: 0; right: 0; bottom: 0;
-  display: none;
-  z-index: 60;
-  background: #fff;
-  border-top: 1px solid var(--line);
-  padding-bottom: env(safe-area-inset-bottom);
-  box-shadow: 0 -4px 20px rgba(10,10,11,.08);
-}
-.mobile-cta-inner {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 1px; background: var(--line);
-}
-.mobile-cta a {
-  background: #fff;
-  display: flex; align-items: center; justify-content: center;
-  gap: 8px;
-  padding: 16px 12px;
-  font-weight: 600;
-  font-size: 15px;
-  color: var(--ink);
-  min-height: 56px;
-}
-.mobile-cta a.primary { background: var(--accent); color: #fff; }
-.mobile-cta a svg { width: 18px; height: 18px; }
-@media (max-width: 720px) {
-  .mobile-cta { display: block; }
-  body { padding-bottom: calc(58px + env(safe-area-inset-bottom)); }
-}
-
-/* ---------- footer ---------- */
-.site-footer { background: var(--ink); color: #fff; padding: clamp(56px, 8vw, 96px) 0 32px; }
-.footer-grid {
-  display: grid; gap: 40px;
-  grid-template-columns: 1fr;
-}
-@media (min-width: 720px) { .footer-grid { grid-template-columns: 1.4fr 1fr 1fr 1fr; } }
-.footer-brand p { color: #9D9DA5; font-size: 14.5px; line-height: 1.55; max-width: 32ch; margin-top: 16px; }
-.footer-col h4 {
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #9D9DA5;
-  margin: 0 0 16px;
-  font-weight: 500;
-}
-.footer-col ul { display: flex; flex-direction: column; gap: 10px; }
-.footer-col a { color: #fff; font-size: 14.5px; }
-.footer-col a:hover { color: var(--accent); }
-.footer-bottom {
-  margin-top: clamp(48px, 6vw, 72px);
-  padding-top: 24px;
-  border-top: 1px solid rgba(255,255,255,.1);
-  display: flex; flex-wrap: wrap; gap: 14px;
-  justify-content: space-between;
-  font-size: 13px; color: #9D9DA5;
-}
-.footer-bottom ul { display: flex; gap: 18px; flex-wrap: wrap; }
-.footer-bottom a:hover { color: #fff; }
-
-/* ---------- scroll reveal ---------- */
-.reveal {
-  opacity: 0;
-  transform: translateY(16px);
-  transition: opacity .5s ease-out, transform .5s ease-out;
-}
-.reveal.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* ---------- scroll progress ---------- */
-.scroll-progress {
-  position: absolute; left: 0; right: 0; bottom: -1px; height: 2px;
-  transform: scaleX(0); transform-origin: 0 50%;
-  background: linear-gradient(90deg, var(--accent), #5B7CFF);
-  transition: transform .08s linear;
-  z-index: 60;
-}
-
-/* ---------- hero entrance ---------- */
-@keyframes heroIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes figIn { from { opacity: 0; transform: translateY(26px) scale(.96); } to { opacity: 1; transform: none; } }
-.hero-text > * { animation: heroIn .7s cubic-bezier(.22,.7,.2,1) both; }
-.hero-text > *:nth-child(1) { animation-delay: .05s; }
-.hero-text > *:nth-child(2) { animation-delay: .12s; }
-.hero-text > *:nth-child(3) { animation-delay: .19s; }
-.hero-text > *:nth-child(4) { animation-delay: .26s; }
-.hero-text > *:nth-child(5) { animation-delay: .33s; }
-.hero-text > *:nth-child(6) { animation-delay: .40s; }
-.hero-figure { animation: figIn .9s .18s cubic-bezier(.22,.7,.2,1) both; }
-
-/* ---------- gradient keyword ---------- */
-.grad-text {
-  background: linear-gradient(100deg, var(--accent) 0%, #5B7CFF 50%, var(--accent) 100%);
-  background-size: 220% 100%;
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent; color: transparent;
-  animation: grad-shift 6s ease-in-out infinite;
-}
-@keyframes grad-shift { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
-
-.stat-unit { font-size: .55em; font-weight: 600; letter-spacing: 0; }
-
-/* ---------- reduced motion ---------- */
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-    scroll-behavior: auto !important;
+  transition: border-color .18s ease;
+}
+.masthead[data-stuck="true"] { border-bottom-color: var(--rule); }
+.progress {
+  position: absolute; left: 0; bottom: -1px; height: 2px; width: 100%;
+  background: var(--signal); transform-origin: 0 50%; transform: scaleX(0);
+}
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .progress { animation: track-scroll linear both; animation-timeline: scroll(root block); }
   }
-  .reveal { opacity: 1; transform: none; }
-  .marquee { animation: none; }
-  .scroll-progress { transition: none; }
-  .hero-text > *, .hero-figure { animation: none !important; opacity: 1; transform: none; }
-  .grad-text { animation: none; }
-  .wf-dot { display: none; } /* SMIL motion ignores CSS animation overrides — hide the moving dots instead */
-  .wf-flow, .wf-spark, .fig-badge .dot { animation: none !important; }
-  .wf-ring-wait { animation: none !important; opacity: .6; transform: none; }
-  .wf-ping { animation: none !important; opacity: 0; }
+}
+@keyframes track-scroll { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+.masthead-bar { display: flex; align-items: center; justify-content: space-between; height: 68px; gap: 20px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 600; letter-spacing: -0.025em; font-size: 18px; }
+.brand-mark {
+  display: inline-flex; width: 26px; height: 26px;
+  background: var(--signal); border-radius: var(--r-control);
+  align-items: center; justify-content: center; flex-shrink: 0;
+}
+.brand-mark svg { width: 15px; height: 15px; color: var(--on-signal); }
+
+.masthead-nav { display: none; gap: 2px; align-items: center; font-size: 14.5px; }
+.masthead-nav a {
+  padding: 8px 11px; color: var(--ink-2); font-weight: 450;
+  border-bottom: 1px solid transparent;
+}
+.masthead-nav a:hover { color: var(--ink); border-bottom-color: var(--signal); }
+.masthead-actions { display: flex; gap: 10px; align-items: center; }
+.masthead-actions .btn-primary { padding: 11px 16px; min-height: 42px; font-size: 14.5px; white-space: nowrap; }
+
+/* theme control: a labelled segmented switch, deliberately not a sun/moon toggle */
+.theme-switch {
+  display: none; align-items: center;
+  border: 1px solid var(--rule); border-radius: var(--r-control);
+  padding: 2px; gap: 2px;
+}
+.theme-switch button {
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 6px 8px; color: var(--ink-3); border-radius: 2px;
+  transition: background .15s ease, color .15s ease;
+}
+.theme-switch button:hover { color: var(--ink); }
+.theme-switch button[aria-pressed="true"] { background: var(--ink); color: var(--ground); }
+
+.menu-btn {
+  display: inline-flex; flex-direction: column; justify-content: center; gap: 4px;
+  width: 44px; height: 44px; padding: 0 11px;
+  border: 1px solid var(--rule); border-radius: var(--r-control); flex-shrink: 0;
+}
+.menu-btn span { display: block; height: 1.5px; background: var(--ink); border-radius: 1px; }
+
+.drawer { display: none; border-top: 1px solid var(--rule); padding: 12px var(--pad) 20px; background: var(--ground); }
+.drawer[data-open="true"] { display: block; }
+.drawer a { display: block; padding: 13px 0; border-bottom: 1px solid var(--rule); color: var(--ink-2); font-size: 16px; }
+.drawer a:last-of-type { border-bottom: 0; }
+.drawer .btn-primary { display: flex; margin-top: 14px; color: var(--on-signal); }
+.drawer-theme { display: flex; margin-top: 16px; }
+
+@media (min-width: 1000px) {
+  .masthead-nav { display: flex; }
+  .menu-btn { display: none; }
+  .drawer { display: none !important; }
+  /* only room for the switch in the bar once the hamburger is gone;
+     below this width it lives in the drawer instead */
+  .masthead-actions .theme-switch { display: flex; }
+}
+
+/* ============================================================
+   1. HERO - asymmetric split, type left, photograph right
+   ============================================================ */
+.hero { padding-block: clamp(40px, 5vw, 72px) clamp(56px, 6vw, 88px); }
+.hero-split { display: grid; gap: clamp(32px, 4vw, 56px); align-items: center; }
+@media (min-width: 900px) { .hero-split { grid-template-columns: 1.2fr 0.8fr; } }
+.hero h1 { margin-bottom: 20px; max-width: 24ch; }
+.hero .lede { max-width: 46ch; margin-bottom: 30px; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.hero-shot { position: relative; }
+.hero-shot img { width: 100%; aspect-ratio: 5 / 6; object-fit: cover; border-radius: var(--r-panel); }
+@media (min-width: 900px) { .hero-shot img { aspect-ratio: 4 / 5; } }
+
+/* ============================================================
+   2. GAUGE - the signature. One measurement, drawn to scale.
+   Two bars on a shared axis. No background track.
+   ============================================================ */
+.gauge-wrap { border-top: 1px solid var(--rule); padding-block: clamp(48px, 6vw, 84px); }
+.gauge-title { font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 30px; }
+.gauge { display: grid; gap: 22px; }
+/* three tracks: label, the bar's own column, then a fixed column for the
+   figure. The bar is a percentage of its column, so a 100% bar can never
+   push the figure outside the container. */
+.gauge-row { display: grid; grid-template-columns: 72px 1fr 88px; align-items: center; gap: 14px; }
+.gauge-key { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); }
+.gauge-bar {
+  height: 22px; min-width: 6px;
+  width: var(--w);
+  transition: width .9s cubic-bezier(.16,1,.3,1);
+}
+.gauge-row[data-state="before"] .gauge-bar { background: var(--ink-3); }
+.gauge-row[data-state="after"] .gauge-bar { background: var(--signal); }
+.gauge-value { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: clamp(16px, 1.8vw, 20px); font-weight: 500; white-space: nowrap; }
+.gauge-row[data-state="after"] .gauge-value { color: var(--signal-ink); }
+/* bars start collapsed and draw in when the section is seen */
+.gauge-wrap:not(.is-seen) .gauge-bar { width: 0; }
+
+@media (max-width: 560px) {
+  .gauge-row { grid-template-columns: 1fr 76px; grid-template-areas: "key key" "bar val"; gap: 8px 12px; }
+  .gauge-key { grid-area: key; }
+  .gauge-bar { grid-area: bar; }
+  .gauge-value { grid-area: val; }
+}
+
+.gauge-axis { display: flex; margin: 8px 102px 0 86px; border-top: 1px solid var(--rule); }
+@media (max-width: 560px) { .gauge-axis { margin-left: 0; margin-right: 88px; } }
+.gauge-tick { flex: 1; font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); padding-top: 7px; border-left: 1px solid var(--rule); padding-left: 6px; }
+.gauge-tick:first-child { border-left: 0; padding-left: 0; }
+
+.figures { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px 20px; margin-top: clamp(40px, 5vw, 64px); padding-top: clamp(32px, 4vw, 44px); border-top: 1px solid var(--rule); }
+@media (min-width: 780px) { .figures { grid-template-columns: repeat(4, 1fr); } }
+.figure-val { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: clamp(26px, 3.4vw, 38px); font-weight: 500; letter-spacing: -0.03em; line-height: 1; margin-bottom: 10px; }
+.figure-unit { font-size: .5em; color: var(--ink-3); letter-spacing: 0; }
+.figure-key { font-size: 13.5px; color: var(--ink-3); line-height: 1.45; }
+
+/* ============================================================
+   3. TICKER - the page's single marquee
+   ============================================================ */
+.ticker { overflow: hidden; border-block: 1px solid var(--rule); padding-block: 18px; }
+.ticker-track { display: flex; gap: 40px; width: max-content; animation: slide 34s linear infinite; }
+.ticker-track span { font-family: var(--mono); font-size: 12.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); white-space: nowrap; }
+.ticker-track span.lit { color: var(--signal-ink); }
+@keyframes slide { to { transform: translateX(-50%); } }
+
+/* ============================================================
+   4. RAIL - the ten days, drawn proportionally.
+   Column width IS the number of days.
+   ============================================================ */
+/* A gantt, not a column split. Each row carries a span bar showing exactly
+   which of the ten days it occupies, so the proportion stays honest while
+   the prose keeps a readable measure. */
+.rail-scale { display: grid; grid-template-columns: repeat(10, 1fr); border-bottom: 1px solid var(--ink); }
+.rail-scale span { font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); padding: 0 0 7px 5px; border-left: 1px solid var(--rule); }
+.rail-scale span:first-child { border-left: 0; padding-left: 0; }
+
+.rail-step { padding: 24px 0 28px; border-bottom: 1px solid var(--rule); display: grid; gap: 8px 32px; }
+@media (min-width: 820px) { .rail-step { grid-template-columns: 250px 1fr; align-items: start; } }
+.rail-span { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(10, 1fr); height: 5px; margin-bottom: 18px; }
+.rail-span i { background: var(--signal); grid-column: var(--from) / var(--to); }
+.rail-days { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--signal-ink); margin: 0 0 6px; }
+.rail-step h3 { margin: 0; }
+.rail-step p { font-size: 15px; margin: 0; max-width: 62ch; }
+.outcomes { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 32px; }
+.outcomes li {
+  font-family: var(--mono); font-size: 12px; letter-spacing: 0.02em;
+  padding: 8px 13px; border: 1px solid var(--rule); border-radius: var(--r-control); color: var(--ink-2);
+}
+
+/* ============================================================
+   5. TENETS - two-column alternating, no cards, no icons
+   ============================================================ */
+.tenets { display: grid; gap: 1px; background: var(--rule); border-block: 1px solid var(--rule); }
+.tenet { background: var(--ground); display: grid; gap: 14px; padding: clamp(28px, 3.4vw, 44px) 0; }
+@media (min-width: 820px) {
+  .tenet { grid-template-columns: 0.9fr 1.1fr; gap: clamp(28px, 4vw, 64px); align-items: start; padding-inline: clamp(20px, 3vw, 40px); }
+  .tenet:nth-child(even) { direction: rtl; }
+  .tenet:nth-child(even) > * { direction: ltr; }
+}
+.tenet h3 { margin: 0; max-width: 20ch; }
+.tenet p { margin: 0; font-size: 15.5px; }
+.tenet em { font-style: normal; color: var(--ink); font-weight: 500; }
+
+/* ============================================================
+   6. BENTO - exactly three cells, two carry a photograph
+   ============================================================ */
+.bento { display: grid; gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
+@media (min-width: 900px) { .bento { grid-template-columns: 1.25fr 1fr; grid-template-rows: auto auto; } }
+.cell { background: var(--ground); padding: clamp(24px, 3vw, 36px); display: flex; flex-direction: column; }
+@media (min-width: 900px) { .cell-lead { grid-row: span 2; } }
+.cell-shot { margin: 0 0 22px; overflow: hidden; }
+.cell-shot img { width: 100%; object-fit: cover; aspect-ratio: 16 / 7; }
+/* the lead cell spans two rows, so its photo absorbs the surplus height
+   rather than leaving a hole above the list */
+@media (min-width: 900px) {
+  .cell-lead .cell-shot { flex: 1 1 auto; min-height: 300px; }
+  .cell-lead .cell-shot img { height: 100%; aspect-ratio: auto; }
+}
+@media (max-width: 899px) { .cell-lead .cell-shot img { aspect-ratio: 16 / 9; } }
+.cell h3 { margin-bottom: 10px; }
+.cell > p { font-size: 15px; margin-bottom: 18px; }
+.cell-list { margin-top: auto; display: grid; gap: 9px; }
+.cell-list li { font-size: 14px; color: var(--ink-2); padding-left: 18px; position: relative; }
+.cell-list li::before { content: ""; position: absolute; left: 0; top: .62em; width: 8px; height: 1px; background: var(--signal); }
+
+/* ============================================================
+   7. CASES - horizontal scroll-snap panels
+   ============================================================ */
+.cases {
+  display: grid; grid-auto-flow: column; grid-auto-columns: min(84%, 420px);
+  gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain; padding-bottom: 14px;
+}
+.case { scroll-snap-align: start; border: 1px solid var(--rule); display: flex; flex-direction: column; }
+.case-shot img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
+.case-body { padding: 22px; display: flex; flex-direction: column; flex: 1; }
+.case-fn { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--signal-ink); margin-bottom: 10px; }
+.case h3 { font-size: 19px; margin-bottom: 18px; }
+.case-lines { display: grid; gap: 9px; margin-bottom: 20px; }
+.case-line { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 13.5px; }
+.case-line dt { color: var(--ink-3); }
+.case-line dd { margin: 0; font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 13px; white-space: nowrap; }
+.case-line .was { color: var(--ink-3); text-decoration: line-through; text-decoration-thickness: 1px; }
+.case-line .now { color: var(--signal-ink); font-weight: 500; }
+.case blockquote { margin: 0 0 14px; font-size: 14.5px; color: var(--ink-2); line-height: 1.5; }
+.case-who { margin-top: auto; font-size: 12.5px; color: var(--ink-3); }
+
+/* ============================================================
+   8. ABOUT - editorial statement over a full-width band
+   ============================================================ */
+.about-band { position: relative; }
+.about-band img { width: 100%; aspect-ratio: 21 / 9; object-fit: cover; }
+@media (max-width: 700px) { .about-band img { aspect-ratio: 4 / 3; } }
+.about-say { max-width: 62ch; margin-top: clamp(32px, 4vw, 52px); }
+.about-say h2 { margin-bottom: 18px; }
+.marks { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+.marks li { font-family: var(--mono); font-size: 12px; padding: 8px 13px; border: 1px solid var(--rule); border-radius: var(--r-control); color: var(--ink-2); }
+
+/* ============================================================
+   9. QUOTE WALL - staggered columns, same theme as the page
+   ============================================================ */
+.wall { columns: 1; column-gap: 20px; }
+@media (min-width: 720px) { .wall { columns: 2; } }
+@media (min-width: 1040px) { .wall { columns: 3; } }
+.quote { break-inside: avoid; margin: 0 0 20px; padding: 24px; border: 1px solid var(--rule); }
+.quote:nth-child(2) { margin-top: 26px; }
+.quote:nth-child(3) { margin-top: 12px; }
+.quote p { font-size: 15.5px; line-height: 1.55; color: var(--ink); margin-bottom: 16px; }
+.quote footer { font-size: 13px; color: var(--ink-3); }
+.quote footer strong { display: block; color: var(--ink-2); font-weight: 500; }
+
+/* ============================================================
+   10. FAQ - grouped two-column list, answers always visible
+   ============================================================ */
+.faq-set { display: grid; gap: clamp(32px, 4vw, 52px); }
+.faq-set + .faq-set { margin-top: clamp(32px, 4vw, 52px); padding-top: clamp(32px, 4vw, 52px); border-top: 1px solid var(--rule); }
+@media (min-width: 880px) { .faq-set { grid-template-columns: 0.5fr 1.5fr; } }
+.faq-set h3 { font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; margin: 0; }
+.faq-qs { display: grid; gap: 26px; }
+@media (min-width: 620px) { .faq-qs { grid-template-columns: 1fr 1fr; gap: 26px 36px; } }
+.faq-q h4 { margin-bottom: 7px; font-size: 16px; }
+.faq-q p { font-size: 14.5px; margin: 0; }
+
+/* ============================================================
+   11. BOOK - form left, contact right
+   ============================================================ */
+.book { display: grid; gap: clamp(28px, 4vw, 48px); }
+@media (min-width: 920px) { .book { grid-template-columns: 1.15fr 0.85fr; } }
+.field { display: grid; gap: 7px; margin-bottom: 18px; }
+.field label { font-size: 13.5px; font-weight: 500; color: var(--ink-2); }
+.field .opt { font-weight: 400; color: var(--ink-3); }
+.field input, .field select, .field textarea {
+  padding: 13px 14px; background: var(--ground);
+  border: 1px solid var(--rule); border-radius: var(--r-control);
+  font-size: 16px; color: var(--ink);
+  transition: border-color .15s ease;
+}
+.field textarea { resize: vertical; min-height: 88px; }
+.field input::placeholder, .field textarea::placeholder { color: var(--ink-3); }
+.field input:hover, .field select:hover, .field textarea:hover { border-color: var(--ink-3); }
+.field input:focus, .field select:focus, .field textarea:focus { border-color: var(--signal); outline-offset: 1px; }
+.form-submit { width: 100%; margin-top: 4px; }
+.form-err { font-size: 13.5px; color: var(--signal-deep); margin: 12px 0 0; }
+:root[data-theme="dark"] .form-err { color: var(--signal-deep); }
+.form-fine { font-size: 12.5px; color: var(--ink-3); margin: 14px 0 0; }
+.sent { border: 1px solid var(--signal); padding: 30px; }
+.sent-tick { font-family: var(--mono); font-size: 26px; color: var(--signal-ink); line-height: 1; margin-bottom: 14px; }
+.sent h3 { margin-bottom: 8px; }
+.sent p { margin: 0; font-size: 15px; }
+
+.contact { border: 1px solid var(--rule); padding: clamp(24px, 3vw, 32px); align-self: start; }
+.contact h3 { margin-bottom: 22px; }
+.contact-line { display: grid; gap: 3px; padding: 13px 0; border-top: 1px solid var(--rule); }
+.contact-line:first-of-type { border-top: 0; padding-top: 0; }
+.contact-line dt { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); }
+.contact-line dd { margin: 0; font-size: 14.5px; color: var(--ink-2); }
+.contact-line a { color: var(--signal-ink); border-bottom: 1px solid transparent; }
+.contact-line a:hover { border-bottom-color: var(--signal-ink); }
+
+/* ---------- mobile sticky actions ---------- */
+.thumb-bar { display: none; }
+@media (max-width: 719px) {
+  .thumb-bar {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 45;
+    background: var(--rule); border-top: 1px solid var(--rule);
+  }
+  .thumb-bar a {
+    background: var(--ground); text-align: center; padding: 15px 8px;
+    font-size: 14px; font-weight: 500; color: var(--ink-2);
+    padding-bottom: calc(15px + env(safe-area-inset-bottom));
+  }
+  .thumb-bar a.lit { background: var(--signal-ink); color: var(--on-signal); }
+  body { padding-bottom: 62px; }
+}
+
+/* ---------- footer: two columns, not a link farm ---------- */
+.footer { border-top: 1px solid var(--rule); padding-block: clamp(44px, 5vw, 68px) 28px; }
+.footer-top { display: grid; gap: 32px; }
+@media (min-width: 780px) { .footer-top { grid-template-columns: 1.4fr 1fr 1fr; } }
+.footer-top p { font-size: 14.5px; max-width: 44ch; margin: 16px 0 0; }
+.footer h4 { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 14px; }
+.footer-top ul { display: grid; gap: 9px; }
+.footer-top a { font-size: 14.5px; color: var(--ink-2); }
+.footer-top a:hover { color: var(--signal-ink); }
+.footer-base {
+  display: flex; flex-wrap: wrap; gap: 14px; justify-content: space-between;
+  margin-top: clamp(36px, 4vw, 56px); padding-top: 22px; border-top: 1px solid var(--rule);
+  font-size: 13px; color: var(--ink-3);
+}
+.footer-base ul { display: flex; gap: 18px; }
+.footer-base a:hover { color: var(--signal-ink); }
+
+/* ---------- motion: intensity 5, everything transform/opacity ---------- */
+.rise { opacity: 0; transform: translateY(14px); transition: opacity .6s cubic-bezier(.16,1,.3,1), transform .6s cubic-bezier(.16,1,.3,1); }
+.rise.is-seen { opacity: 1; transform: none; }
+.rise:nth-child(2) { transition-delay: .06s; }
+.rise:nth-child(3) { transition-delay: .12s; }
+.rise:nth-child(4) { transition-delay: .18s; }
+
+/* hero entry: one orchestrated moment, on load only */
+@media (prefers-reduced-motion: no-preference) {
+  .enter > * { animation: enter .7s cubic-bezier(.16,1,.3,1) both; }
+  .enter > *:nth-child(1) { animation-delay: .04s; }
+  .enter > *:nth-child(2) { animation-delay: .12s; }
+  .enter > *:nth-child(3) { animation-delay: .2s; }
+  .enter > *:nth-child(4) { animation-delay: .28s; }
+  .hero-shot { animation: enter .8s cubic-bezier(.16,1,.3,1) .16s both; }
+}
+@keyframes enter { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
+  .rise { opacity: 1; transform: none; }
+  .ticker-track { animation: none; }
+  .gauge-wrap:not(.is-seen) .gauge-bar { width: var(--w); }
+  .progress { display: none; }
 }
 </style>
 </head>
 <body>
 
 <!--
-========================================================
-HYPERWORKFLOW LANDING PAGE
-========================================================
-PLACEHOLDERS (search "data-placeholder" or this list to find):
-  1. Hero stats: 12+ hrs, 3.2× (verify before public launch)
-  2. Email: hello@hyperworkflow.ai (confirm domain)
-  3. Address: San Francisco, CA (remove if remote-only)
-  4. Three case studies (finance / operations / support)
-  5. Three testimonials (operations manager, finance lead, support lead)
-  6. "50+ agents & automations shipped" badge
-  7. JSON-LD sameAs (LinkedIn, X) — empty at launch
-========================================================
+  ============================================================
+  EXAMPLE DATA (search data-example)
+  The gauge figures, the three case panels, the three quotes,
+  and the "agents shipped" mark are illustrative, not client
+  data. Each is labelled as such in the visible copy. Replace
+  with real numbers before treating them as claims.
+
+  PHOTOGRAPHY (search "SWAP")
+  Every image points at picsum.photos, which serves arbitrary
+  stock. Each one is a one-line swap for a real photograph.
+  ============================================================
 -->
 
 <a href="#main" class="skip">Skip to content</a>
 
-<!-- ========== HEADER ========== -->
-<header class="site-header" id="header">
-  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
-  <div class="container nav">
-    <a href="#" class="brand" aria-label="Hyperworkflow home">
+<header class="masthead" id="masthead">
+  <div class="progress" aria-hidden="true"></div>
+  <div class="wrap masthead-bar">
+    <a href="/" class="brand" aria-label="Hyperworkflow home">
       <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5l8 7-8 7V5z"/><path d="M12 5l8 7-8 7V5z"/></svg></span>
       <span>Hyperworkflow</span>
     </a>
-    <nav class="nav-links" aria-label="Primary">
+    <nav class="masthead-nav" aria-label="Primary">
       <a href="#process">The sprint</a>
       <a href="#principles">Principles</a>
       <a href="#services">Services</a>
       <a href="#results">Results</a>
       <a href="#faq">FAQ</a>
     </nav>
-    <div class="nav-cta">
-      <a href="#audit" class="btn btn-primary"><span class="cta-long">Book a free call</span><span class="cta-short">Book a call</span>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-      </a>
-      <button type="button" class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navDrawer">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    <div class="masthead-actions">
+      <div class="theme-switch" role="group" aria-label="Colour theme">
+        <button type="button" data-theme-set="auto" aria-pressed="true">Auto</button>
+        <button type="button" data-theme-set="light" aria-pressed="false">Light</button>
+        <button type="button" data-theme-set="dark" aria-pressed="false">Dark</button>
+      </div>
+      <a href="#audit" class="btn btn-primary">Book a call</a>
+      <button type="button" class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="drawer">
+        <span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span>
       </button>
     </div>
   </div>
-  <div class="nav-drawer" id="navDrawer" data-open="false">
-    <a href="#process">The two-week sprint</a>
+  <div class="drawer" id="drawer" data-open="false">
+    <a href="#process">The sprint</a>
     <a href="#principles">Principles</a>
     <a href="#services">Services</a>
     <a href="#results">Results</a>
     <a href="#faq">FAQ</a>
-    <a href="#audit" class="btn btn-primary">Book a free call →</a>
+    <a href="#audit" class="btn btn-primary">Book a call</a>
+    <div class="theme-switch drawer-theme" role="group" aria-label="Colour theme">
+      <button type="button" data-theme-set="auto" aria-pressed="true">Auto</button>
+      <button type="button" data-theme-set="light" aria-pressed="false">Light</button>
+      <button type="button" data-theme-set="dark" aria-pressed="false">Dark</button>
+    </div>
   </div>
 </header>
 
 <main id="main">
 
-<!-- ========== HERO ========== -->
+<!-- ========== 1. HERO ========== -->
 <section class="section hero">
-  <div class="container hero-grid">
-    <div class="hero-text">
+  <div class="wrap hero-split">
+    <div class="enter">
       <p class="eyebrow">Agentic Implementation program</p>
-      <h1>Real workflows, automated in <span class="grad-text">two&nbsp;weeks</span>.</h1>
-      <p class="lead">Agentic Implementation pairs us with your domain experts for a two-week sprint. We shadow the real work, build a working agent alongside the people who do it, and ship on day 10.</p>
-      <div class="hero-cta">
-        <a href="#audit" class="btn btn-primary">Book a free call
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-        </a>
-        <a href="#process" class="btn btn-secondary">See how the sprint works</a>
-      </div>
-      <p class="hero-note">Works with any business function — operations, finance, support, sales, HR.</p>
-      <div class="hero-stats">
-        <div>
-          <div class="stat-num" data-count="10" data-suffix=" days"><span class="stat-val">10</span><span class="stat-unit"> days</span></div>
-          <div class="stat-label">From first shadow<br>to shipped agent</div>
-        </div>
-        <div>
-          <div class="stat-num">1<span class="stat-unit"> workflow</span></div>
-          <div class="stat-label">Automated end to end,<br>not one step</div>
-        </div>
-        <div>
-          <div class="stat-num" data-placeholder="true" data-count="12" data-suffix="+ hrs"><span class="stat-val">12</span><span class="stat-unit">+ hrs</span></div>
-          <div class="stat-label">Returned per expert,<br>per week</div>
-        </div>
-        <div>
-          <div class="stat-num" data-placeholder="true" data-count="3.2" data-decimals="1" data-suffix="×"><span class="stat-val">3.2</span><span class="stat-unit">×</span></div>
-          <div class="stat-label">Faster turnaround on<br>the sprint workflow</div>
-        </div>
+      <h1>Real workflows, automated in two weeks.</h1>
+      <p class="lede">We shadow your experts doing the real work for two weeks, then ship a working agent on day 10.</p>
+      <div class="hero-actions">
+        <a href="#audit" class="btn btn-primary">Book a call</a>
+        <a href="#process" class="btn btn-secondary">See the sprint</a>
       </div>
     </div>
-    <div class="hero-figure" aria-hidden="true">
-      <svg class="wf" viewBox="0 0 460 470" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Before and after: an eleven-step manual workflow full of handoffs and rework becomes one automated flow — intake, agent, a single expert review, done">
-        <defs>
-          <linearGradient id="agentGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#4570ff"/>
-            <stop offset="100%" stop-color="#0034cc"/>
-          </linearGradient>
-        </defs>
-        <g transform="translate(0,12)">
-
-        <!-- BEFORE: the manual way -->
-        <text class="wf-caption" x="52" y="86">THE MANUAL WAY</text>
-        <text class="wf-caption wf-caption-right" x="404" y="86">11 STEPS · REWORK</text>
-
-        <!-- tangle garnish -->
-        <path class="wf-cross" d="M126 116 L301 178"/>
-        <path class="wf-cross" d="M91 178 L266 116"/>
-        <path class="wf-cross" d="M161 178 L336 116"/>
-        <path class="wf-cross" d="M196 116 L371 178"/>
-
-        <!-- zigzag of handoffs -->
-        <path class="wf-zig" d="M56 116 L91 178 L126 116 L161 178 L196 116 L231 178 L266 116 L301 178 L336 116 L371 178 L404 116"/>
-        <!-- rework loop-back -->
-        <path class="wf-loop" d="M266 116 C254 88 208 88 196 116"/>
-        <path class="wf-loop-arrow" d="M203 106 L196 116 L205 118"/>
-
-        <!-- step nodes -->
-        <circle class="wf-node" cx="56" cy="116" r="5"/>
-        <circle class="wf-node" cx="91" cy="178" r="5"/>
-        <circle class="wf-node" cx="126" cy="116" r="5"/>
-        <circle class="wf-node" cx="161" cy="178" r="5"/>
-        <circle class="wf-node" cx="196" cy="116" r="5"/>
-        <circle class="wf-node" cx="231" cy="178" r="5"/>
-        <circle class="wf-node" cx="266" cy="116" r="5"/>
-        <circle class="wf-node" cx="301" cy="178" r="5"/>
-        <circle class="wf-node" cx="336" cy="116" r="5"/>
-        <circle class="wf-node" cx="371" cy="178" r="5"/>
-        <circle class="wf-node" cx="404" cy="116" r="5"/>
-        <circle class="wf-ring-wait" cx="231" cy="178" r="10"/>
-
-        <text class="wf-label" x="56" y="140">Intake</text>
-        <text class="wf-label" x="161" y="202">Approve</text>
-        <text class="wf-label" x="266" y="140">Re-key</text>
-        <text class="wf-label" x="336" y="140">Chase</text>
-
-        <!-- the grinding dot (slow, retraces the rework loop) -->
-        <circle class="wf-dot wf-dot-before" r="5.5">
-          <animateMotion dur="10s" repeatCount="indefinite" path="M56 116 L91 178 L126 116 L161 178 L196 116 L231 178 L266 116 C254 88 208 88 196 116 L231 178 L266 116 L301 178 L336 116 L371 178 L404 116"/>
-        </circle>
-
-        <!-- the transformation -->
-        <rect class="wf-pill" x="118" y="248" width="224" height="30" rx="15"/>
-        <text class="wf-pill-text" x="230" y="267">↓ ONE TWO-WEEK SPRINT ↓</text>
-
-        <!-- AFTER: with an agent -->
-        <text class="wf-caption wf-caption-accent" x="52" y="316">WITH AN AGENT</text>
-        <text class="wf-caption wf-caption-right" x="404" y="316">1 REVIEW</text>
-
-        <path class="wf-line" d="M56 354 L404 354"/>
-        <path class="wf-flow" d="M56 354 L404 354"/>
-
-        <!-- the fast dot (drawn under the nodes: work goes into the agent) -->
-        <circle class="wf-dot wf-dot-after" r="5.5">
-          <animateMotion dur="2.4s" repeatCount="indefinite" path="M56 354 L404 354"/>
-        </circle>
-
-        <rect class="wf-in" x="49" y="347" width="14" height="14" rx="4"/>
-        <rect class="wf-agent" x="174" y="332" width="44" height="44" rx="12" fill="url(#agentGrad)"/>
-        <g transform="translate(196,354)">
-          <path class="wf-spark" d="M0,-11 C1.3,-3 3.2,-1.3 11,0 C3.2,1.3 1.3,3.2 0,11 C-1.3,3.2 -3.2,1.3 -11,0 C-3.2,-1.3 -1.3,-3 0,-11 Z"/>
-        </g>
-        <circle class="wf-expert" cx="300" cy="354" r="15"/>
-        <g class="wf-expert-icon" transform="translate(300,354)">
-          <circle cx="0" cy="-3.2" r="3.4"/>
-          <path d="M-6 7 C-6 1.8 6 1.8 6 7"/>
-        </g>
-        <circle class="wf-ping" cx="404" cy="354" r="13"/>
-        <circle class="wf-done" cx="404" cy="354" r="11"/>
-        <path d="M399.5 354 l3 3 l6 -7" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-
-        <text class="wf-label" x="56" y="392">Intake</text>
-        <text class="wf-label" x="196" y="392">Agent</text>
-        <text class="wf-label" x="300" y="392">Your expert</text>
-        <text class="wf-label" x="404" y="392">Done</text>
-        </g>
-      </svg>
-      <div class="fig-badge"><span class="dot"></span><span>Same workflow · before &amp; after</span></div>
-    </div>
+    <figure class="hero-shot">
+      <!-- SWAP: replace with a real photograph of a sprint in progress, 1000x1200 -->
+      <img src="https://picsum.photos/seed/hyperworkflow-shadow-the-work/1000/1200"
+           width="1000" height="1200" fetchpriority="high" decoding="async"
+           alt="A specialist at their desk working through a queue of documents, the kind of work a sprint begins by observing.">
+    </figure>
   </div>
 </section>
 
-<!-- ========== WORKFLOW TICKER ========== -->
-<section class="ticker-section" aria-label="The kind of work we automate">
-  <div class="marquee" aria-hidden="true">
-    <span><strong>Quote drafting</strong></span><span>Intake triage</span><span>Invoice reconciliation</span><span>Report generation</span><span>Claims review</span><span>Order exceptions</span><span>Contract review</span><span>Support escalations</span><span>Scheduling &amp; dispatch</span>
-    <span><strong>Quote drafting</strong></span><span>Intake triage</span><span>Invoice reconciliation</span><span>Report generation</span><span>Claims review</span><span>Order exceptions</span><span>Contract review</span><span>Support escalations</span><span>Scheduling &amp; dispatch</span>
+<!-- ========== 2. GAUGE: the signature measurement ========== -->
+<section class="gauge-wrap" id="gauge" aria-label="Cycle time before and after a sprint">
+  <div class="wrap">
+    <p class="gauge-title">Invoice reconciliation, drawn to scale</p>
+
+    <div class="gauge">
+      <div class="gauge-row" data-state="before">
+        <span class="gauge-key">Before</span>
+        <div class="gauge-bar" style="--w: 100%"></div>
+        <span class="gauge-value">3 days</span>
+      </div>
+      <div class="gauge-row" data-state="after">
+        <span class="gauge-key">After</span>
+        <div class="gauge-bar" style="--w: 5.6%"></div>
+        <span class="gauge-value">4 hrs</span>
+      </div>
+    </div>
+
+    <div class="gauge-axis" aria-hidden="true">
+      <span class="gauge-tick">0</span>
+      <span class="gauge-tick">1 day</span>
+      <span class="gauge-tick">2 days</span>
+      <span class="gauge-tick">3 days</span>
+    </div>
+
+    <div class="figures">
+      <div>
+        <div class="figure-val"><span data-count="10">10</span><span class="figure-unit"> days</span></div>
+        <p class="figure-key">From first shadow to shipped agent</p>
+      </div>
+      <div>
+        <div class="figure-val">1<span class="figure-unit"> workflow</span></div>
+        <p class="figure-key">Automated end to end, not one step</p>
+      </div>
+      <div data-example="true">
+        <div class="figure-val"><span data-count="12">12</span><span class="figure-unit">+ hrs</span></div>
+        <p class="figure-key">Returned per expert, per week</p>
+      </div>
+      <div data-example="true">
+        <div class="figure-val"><span data-count="3.2" data-decimals="1">3.2</span><span class="figure-unit">&#215;</span></div>
+        <p class="figure-key">Faster turnaround on the sprint workflow</p>
+      </div>
+    </div>
+
+    <p class="mock-note">The bars and the last two figures are example data from a representative engagement, not a specific client result.</p>
   </div>
 </section>
 
-<!-- ========== PROCESS / THE SPRINT ========== -->
+<!-- ========== 3. TICKER ========== -->
+<section class="ticker" aria-label="The kind of work we automate">
+  <div class="ticker-track" aria-hidden="true">
+    <span class="lit">Quote drafting</span><span>Intake triage</span><span>Invoice reconciliation</span><span>Report generation</span><span>Claims review</span><span>Order exceptions</span><span>Contract review</span><span>Support escalations</span><span>Scheduling and dispatch</span>
+    <span class="lit">Quote drafting</span><span>Intake triage</span><span>Invoice reconciliation</span><span>Report generation</span><span>Claims review</span><span>Order exceptions</span><span>Contract review</span><span>Support escalations</span><span>Scheduling and dispatch</span>
+  </div>
+</section>
+
+<!-- ========== 4. THE SPRINT: ten days, drawn proportionally ========== -->
 <section class="section" id="process">
-  <div class="container">
-    <div class="vp-header reveal">
+  <div class="wrap">
+    <div class="head rise">
       <p class="eyebrow">How the sprint works</p>
       <h2>Ten working days. One workflow shipped.</h2>
-      <p class="lead">We can't automate work from process diagrams alone — we have to see how the work really gets done. So the sprint starts inside your team, not in a slide deck.</p>
+      <p class="lede">We can't automate work from process diagrams alone. We have to see how the work really gets done, so the sprint starts inside your team, not in a slide deck.</p>
     </div>
-    <div class="process-grid">
-      <div class="process-step reveal">
-        <div class="step-num">01 · Days 1–2</div>
-        <h3>Shadow the expert</h3>
-        <p>We sit with the person doing the work and observe every step of the real thing — documenting workflows, asking questions, building intuition for how the job actually gets done.</p>
-      </div>
-      <div class="process-step reveal">
-        <div class="step-num">02 · Day 3</div>
-        <h3>Prioritize opportunities</h3>
+
+    <div class="rail-scale" aria-hidden="true">
+      <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
+    </div>
+
+    <div class="rail">
+      <article class="rail-step">
+        <div class="rail-span" aria-hidden="true"><i style="--from:1;--to:3"></i></div>
+        <div>
+          <p class="rail-days">Days 1 to 2</p>
+          <h3>Shadow the expert</h3>
+        </div>
+        <p>We sit with the person doing the work and observe every step of the real thing: documenting workflows, asking questions, building intuition for how the job actually gets done.</p>
+      </article>
+      <article class="rail-step">
+        <div class="rail-span" aria-hidden="true"><i style="--from:3;--to:4"></i></div>
+        <div>
+          <p class="rail-days">Day 3</p>
+          <h3>Prioritize</h3>
+        </div>
         <p>We rank everything we saw by scale, repetition, business impact, and data availability.</p>
-      </div>
-      <div class="process-step reveal">
-        <div class="step-num">03 · Days 4–5</div>
-        <h3>Build together</h3>
-        <p>A working agent takes shape alongside your expert while they do the real job — built with them, not for them.</p>
-      </div>
-      <div class="process-step reveal">
-        <div class="step-num">04 · Days 6–9</div>
-        <h3>Validate and test</h3>
-        <p>We test whether the agent generalizes — and whether it genuinely makes the job better, not just faster.</p>
-      </div>
-      <div class="process-step reveal">
-        <div class="step-num">05 · Day 10</div>
-        <h3>Ship</h3>
+      </article>
+      <article class="rail-step">
+        <div class="rail-span" aria-hidden="true"><i style="--from:4;--to:6"></i></div>
+        <div>
+          <p class="rail-days">Days 4 to 5</p>
+          <h3>Build together</h3>
+        </div>
+        <p>A working agent takes shape alongside your expert while they do the real job. Built with them, not for them.</p>
+      </article>
+      <article class="rail-step">
+        <div class="rail-span" aria-hidden="true"><i style="--from:6;--to:10"></i></div>
+        <div>
+          <p class="rail-days">Days 6 to 9</p>
+          <h3>Validate and test</h3>
+        </div>
+        <p>We test whether the agent generalizes, and whether it genuinely makes the job better, not just faster.</p>
+      </article>
+      <article class="rail-step">
+        <div class="rail-span" aria-hidden="true"><i style="--from:10;--to:11"></i></div>
+        <div>
+          <p class="rail-days">Day 10</p>
+          <h3>Ship</h3>
+        </div>
         <p>The agent goes live in your stack. Your team knows exactly how it works, because they built it with us.</p>
-      </div>
+      </article>
     </div>
-    <div class="process-foot reveal">
-      <p class="eyebrow">What you walk away with</p>
-      <ul class="badges">
-        <li>A working agent in production</li>
-        <li>A ranked automation map</li>
-        <li>Validation evidence, not a demo</li>
-        <li>A team fluent in agentic thinking</li>
-      </ul>
-    </div>
+
+    <ul class="outcomes rise">
+      <li>A working agent in production</li>
+      <li>A ranked automation map</li>
+      <li>Validation evidence, not a demo</li>
+      <li>A team fluent in agentic thinking</li>
+    </ul>
   </div>
 </section>
 
-<!-- ========== PRINCIPLES ========== -->
-<section class="section section--alt" id="principles">
-  <div class="container">
-    <div class="vp-header reveal">
-      <p class="eyebrow">How we think</p>
+<!-- ========== 5. PRINCIPLES: alternating two-column ========== -->
+<section class="section section-recessed" id="principles">
+  <div class="wrap">
+    <div class="head rise">
       <h2>Three principles behind every sprint.</h2>
-      <p class="lead">What we've learned shipping agents inside real teams.</p>
+      <p class="lede">What we've learned shipping agents inside real teams.</p>
     </div>
-    <div class="vp-grid">
-      <article class="vp-card reveal">
-        <div class="vp-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>
-        </div>
+    <div class="tenets">
+      <article class="tenet rise">
         <h3>Automate workflows, not tasks.</h3>
-        <p>The biggest wins come from rethinking an entire workflow — eliminating handoffs, removing unnecessary approvals, replacing legacy tooling — not from speeding up one step. <span class="vp-stat">The workflow becomes the unit of automation.</span></p>
+        <p>The biggest wins come from rethinking an entire workflow: eliminating handoffs, removing unnecessary approvals, replacing legacy tooling. Not from speeding up one step. <em>The workflow becomes the unit of automation.</em></p>
       </article>
-
-      <article class="vp-card reveal">
-        <div class="vp-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-7"/></svg>
-        </div>
+      <article class="tenet rise">
         <h3>Opportunities are invisible from the outside.</h3>
-        <p>The best use cases hide in plain sight, and they only surface by sitting next to the people doing the work. That's why every sprint starts with <span class="vp-stat">shadowing, not scoping</span>.</p>
+        <p>The best use cases hide in plain sight, and they only surface by sitting next to the people doing the work. That's why every sprint starts with <em>shadowing, not scoping</em>.</p>
       </article>
-
-      <article class="vp-card reveal">
-        <div class="vp-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
-        </div>
+      <article class="tenet rise">
         <h3>Institutionalize the pattern, then hand it off.</h3>
-        <p>Two weeks captures the low-hanging fruit. The bigger payoff comes after — when your team, now fluent in agentic thinking, redesigns its own work and reinvests the reclaimed time into <span class="vp-stat">work that wasn't possible before</span>.</p>
+        <p>Two weeks captures the low-hanging fruit. The bigger payoff comes after, when your team, now fluent in agentic thinking, redesigns its own work and reinvests the reclaimed time into <em>work that wasn't possible before</em>.</p>
       </article>
     </div>
   </div>
 </section>
 
-<!-- ========== SERVICES ========== -->
+<!-- ========== 6. SERVICES: three-cell bento ========== -->
 <section class="section" id="services">
-  <div class="container">
-    <div class="vp-header reveal">
+  <div class="wrap">
+    <div class="head rise">
       <p class="eyebrow">Beyond the sprint</p>
       <h2>The sprint is the front door. Not the whole house.</h2>
-      <p class="lead">Everything we ship is custom-built: AI agents, the software around them, and the integrations that make them real.</p>
+      <p class="lede">Everything we ship is custom-built: AI agents, the software around them, and the integrations that make them real.</p>
     </div>
-    <div class="svc-grid">
-      <article class="svc-card reveal">
-        <div class="vp-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5.66 5.66l-5.66 5.66 2.83 2.83 5.66-5.66a4 4 0 0 0 5.66-5.66L14.7 9.13l-1.41-1.41z"/><path d="M12 2v3M2 12h3M19 12h3M12 19v3"/></svg>
-        </div>
+    <div class="bento">
+      <article class="cell cell-lead rise">
+        <figure class="cell-shot">
+          <!-- SWAP: real photo of a sprint working session, 1200x800 -->
+          <img src="https://picsum.photos/seed/hyperworkflow-sprint-room/1200/800" width="1200" height="800"
+               loading="lazy" decoding="async"
+               alt="Two people working side by side at one screen during a build session.">
+        </figure>
         <h3>Agentic Implementation sprint</h3>
         <p>The flagship program. Two weeks embedded with your domain experts, ending with a working agent in production.</p>
-        <ul class="svc-bullets">
-          <li>Shadow → rank → build → validate → ship</li>
+        <ul class="cell-list">
+          <li>Shadow, rank, build, validate, ship</li>
           <li>Built with your experts, not for them</li>
           <li>One workflow automated end to end</li>
           <li>Live in your stack on day 10</li>
         </ul>
       </article>
 
-      <article class="svc-card reveal">
-        <div class="vp-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9 9h6v6H9z"/><path d="M9 2v2M15 2v2M9 20v2M15 20v2M2 9h2M2 15h2M20 9h2M20 15h2"/></svg>
-        </div>
-        <h3>Custom AI agents &amp; software</h3>
+      <article class="cell rise">
+        <figure class="cell-shot">
+          <!-- SWAP: real photo of the software you build, 800x350 -->
+          <img src="https://picsum.photos/seed/hyperworkflow-build-together/800/350" width="800" height="350"
+               loading="lazy" decoding="async"
+               alt="A developer's screen showing an agent integration under construction.">
+        </figure>
+        <h3>Custom AI agents and software</h3>
         <p>When the workflow needs more than an agent, we build the software around it too.</p>
-        <ul class="svc-bullets">
+        <ul class="cell-list">
           <li>Agents that act inside your systems</li>
           <li>Custom tools where off-the-shelf won't fit</li>
           <li>Integrations with the stack you already run</li>
@@ -1203,13 +900,10 @@ PLACEHOLDERS (search "data-placeholder" or this list to find):
         </ul>
       </article>
 
-      <article class="svc-card reveal">
-        <div class="vp-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>
-        </div>
+      <article class="cell rise">
         <h3>Ongoing partnership</h3>
-        <p>Keep the momentum after the first sprint — new workflows, shipped at the same pace.</p>
-        <ul class="svc-bullets">
+        <p>Keep the momentum after the first sprint. New workflows, shipped at the same pace.</p>
+        <ul class="cell-list">
           <li>New workflows, sprint by sprint</li>
           <li>Monitoring and tuning of live agents</li>
           <li>A roadmap re-ranked as you learn</li>
@@ -1220,220 +914,220 @@ PLACEHOLDERS (search "data-placeholder" or this list to find):
   </div>
 </section>
 
-<!-- ========== CASE STUDIES ========== -->
-<section class="section section--alt" id="results">
-  <div class="container">
-    <div class="vp-header reveal">
-      <p class="eyebrow">Results</p>
+<!-- ========== 7. RESULTS: scroll-snap case panels ========== -->
+<section class="section section-recessed" id="results">
+  <div class="wrap">
+    <div class="head rise">
       <h2>What a sprint leaves behind.</h2>
-      <p class="lead">Measured against each team's own baseline.</p>
+      <p class="lede">Measured against each team's own baseline.</p>
     </div>
-    <div class="cases-grid">
-      <article class="case-card reveal" data-placeholder="true">
-        <div class="case-meta">Finance · 4-person team</div>
-        <h3>Invoice reconciliation, end to end</h3>
-        <div class="case-stats">
-          <div class="case-stat">
-            <span class="case-stat-label">Cycle time</span>
-            <span class="case-stat-value"><span class="from">3 days</span><span class="arrow">→</span>4 hrs</span>
-          </div>
-          <div class="case-stat">
-            <span class="case-stat-label">Handoffs</span>
-            <span class="case-stat-value"><span class="from">6</span><span class="arrow">→</span>1</span>
-          </div>
-          <div class="case-stat">
-            <span class="case-stat-label">Hours returned</span>
-            <span class="case-stat-value">~12/wk</span>
-          </div>
-          <div class="case-stat">
-            <span class="case-stat-label">Sprint length</span>
-            <span class="case-stat-value">10 days</span>
-          </div>
+
+    <div class="cases">
+      <article class="case" data-example="true">
+        <figure class="case-shot">
+          <!-- SWAP: real client or contextual photo, 900x600 -->
+          <img src="https://picsum.photos/seed/hyperworkflow-case-finance/900/600" width="900" height="600"
+               loading="lazy" decoding="async" alt="A finance team's workspace during month-end close.">
+        </figure>
+        <div class="case-body">
+          <p class="case-fn">Finance</p>
+          <h3>Invoice reconciliation, end to end</h3>
+          <dl class="case-lines">
+            <div class="case-line"><dt>Cycle time</dt><dd><span class="was">3 days</span> <span class="now">4 hrs</span></dd></div>
+            <div class="case-line"><dt>Handoffs</dt><dd><span class="was">6</span> <span class="now">1</span></dd></div>
+            <div class="case-line"><dt>Hours returned</dt><dd class="now">~12/wk</dd></div>
+          </dl>
+          <blockquote>"The agent does the matching and drafts the exceptions. We stopped fighting the spreadsheet and started reviewing its work instead."</blockquote>
+          <p class="case-who">Finance lead, 4-person team</p>
         </div>
-        <blockquote class="case-quote">"The agent does the matching and drafts the exceptions. We stopped fighting the spreadsheet and started reviewing its work instead."</blockquote>
-        <div class="case-attr">— Finance lead</div>
       </article>
 
-      <article class="case-card reveal" data-placeholder="true">
-        <div class="case-meta">Operations · Distributed team</div>
-        <h3>Order intake &amp; exceptions</h3>
-        <div class="case-stats">
-          <div class="case-stat">
-            <span class="case-stat-label">Exception resolution</span>
-            <span class="case-stat-value"><span class="from">2 days</span><span class="arrow">→</span>3 hrs</span>
-          </div>
-          <div class="case-stat">
-            <span class="case-stat-label">Touches per order</span>
-            <span class="case-stat-value"><span class="from">5</span><span class="arrow">→</span>1</span>
-          </div>
-          <div class="case-stat">
-            <span class="case-stat-label">Hours returned</span>
-            <span class="case-stat-value">~10/wk</span>
-          </div>
-          <div class="case-stat">
-            <span class="case-stat-label">Sprint length</span>
-            <span class="case-stat-value">10 days</span>
-          </div>
+      <article class="case" data-example="true">
+        <figure class="case-shot">
+          <!-- SWAP: real client or contextual photo, 900x600 -->
+          <img src="https://picsum.photos/seed/hyperworkflow-case-operations/900/600" width="900" height="600"
+               loading="lazy" decoding="async" alt="An operations desk tracking inbound orders across screens.">
+        </figure>
+        <div class="case-body">
+          <p class="case-fn">Operations</p>
+          <h3>Order intake and exceptions</h3>
+          <dl class="case-lines">
+            <div class="case-line"><dt>Exception resolution</dt><dd><span class="was">2 days</span> <span class="now">3 hrs</span></dd></div>
+            <div class="case-line"><dt>Touches per order</dt><dd><span class="was">5</span> <span class="now">1</span></dd></div>
+            <div class="case-line"><dt>Hours returned</dt><dd class="now">~10/wk</dd></div>
+          </dl>
+          <blockquote>"It caught patterns in our intake nobody had ever written down. The agent handles the routine majority and flags the rest."</blockquote>
+          <p class="case-who">Operations manager, distributed team</p>
         </div>
-        <blockquote class="case-quote">"It caught patterns in our intake nobody had ever written down. The agent handles the routine majority and flags the rest."</blockquote>
-        <div class="case-attr">— Operations manager</div>
       </article>
 
-      <article class="case-card reveal" data-placeholder="true">
-        <div class="case-meta">Customer support · High-volume inbox</div>
-        <h3>Escalation triage &amp; drafting</h3>
-        <div class="case-stats">
-          <div class="case-stat">
-            <span class="case-stat-label">First response</span>
-            <span class="case-stat-value"><span class="from">8 hrs</span><span class="arrow">→</span>20 min</span>
-          </div>
-          <div class="case-stat">
-            <span class="case-stat-label">Misrouted escalations</span>
-            <span class="case-stat-value"><span class="from">1 in 5</span><span class="arrow">→</span>1 in 40</span>
-          </div>
-          <div class="case-stat">
-            <span class="case-stat-label">Hours returned</span>
-            <span class="case-stat-value">~14/wk</span>
-          </div>
-          <div class="case-stat">
-            <span class="case-stat-label">Sprint length</span>
-            <span class="case-stat-value">10 days</span>
-          </div>
+      <article class="case" data-example="true">
+        <figure class="case-shot">
+          <!-- SWAP: real client or contextual photo, 900x600 -->
+          <img src="https://picsum.photos/seed/hyperworkflow-case-support/900/600" width="900" height="600"
+               loading="lazy" decoding="async" alt="A support specialist working through a high-volume inbox.">
+        </figure>
+        <div class="case-body">
+          <p class="case-fn">Customer support</p>
+          <h3>Escalation triage and drafting</h3>
+          <dl class="case-lines">
+            <div class="case-line"><dt>First response</dt><dd><span class="was">8 hrs</span> <span class="now">20 min</span></dd></div>
+            <div class="case-line"><dt>Misrouted escalations</dt><dd><span class="was">1 in 5</span> <span class="now">1 in 40</span></dd></div>
+            <div class="case-line"><dt>Hours returned</dt><dd class="now">~14/wk</dd></div>
+          </dl>
+          <blockquote>"Two weeks in, the team was already extending the agent to a second queue on their own."</blockquote>
+          <p class="case-who">Support lead, high-volume inbox</p>
         </div>
-        <blockquote class="case-quote">"Two weeks in, the team was already extending the agent to a second queue on their own."</blockquote>
-        <div class="case-attr">— Support lead</div>
       </article>
     </div>
+
+    <p class="mock-note">Example engagements, representative of sprint outcomes. Not specific named clients.</p>
   </div>
 </section>
 
-<!-- ========== ABOUT / CREDENTIALS ========== -->
+<!-- ========== 8. ABOUT: photo band plus statement ========== -->
 <section class="section" id="about">
-  <div class="container about-block reveal">
-    <p class="eyebrow">Who we are</p>
-    <h2>A small team. On purpose.</h2>
-    <p class="lead">The people who shadow your experts are the people who build. No discovery deck handed to a delivery team — the builder in the room on day 1 ships the agent on day 10.</p>
-    <ul class="badges">
-      <li data-placeholder="true">50+ agents &amp; automations shipped</li>
-      <li>Built with you, not for you</li>
-      <li>Your stack, your data, your code</li>
-      <li>No six-month roadmaps</li>
-      <li>Human-in-the-loop</li>
-    </ul>
+  <figure class="about-band">
+    <!-- SWAP: real team photograph, 1800x770 -->
+    <img src="https://picsum.photos/seed/hyperworkflow-team-desk/1800/770" width="1800" height="770"
+         loading="lazy" decoding="async"
+         alt="The team working together around a single desk.">
+  </figure>
+  <div class="wrap">
+    <div class="about-say rise">
+      <h2>A small team. On purpose.</h2>
+      <p class="lede">The people who shadow your experts are the people who build. No discovery deck handed to a delivery team. The builder in the room on day 1 ships the agent on day 10.</p>
+      <ul class="marks">
+        <li data-example="true">50+ agents and automations shipped</li>
+        <li>Built with you, not for you</li>
+        <li>Your stack, your data, your code</li>
+        <li>No six-month roadmaps</li>
+        <li>Human in the loop</li>
+      </ul>
+    </div>
   </div>
 </section>
 
-<!-- ========== TESTIMONIALS ========== -->
-<section class="section section--ink" id="testimonials">
-  <div class="container">
-    <div class="vp-header reveal" style="color:#fff;">
+<!-- ========== 9. QUOTES ========== -->
+<section class="section section-recessed" id="testimonials">
+  <div class="wrap">
+    <div class="head rise">
       <p class="eyebrow">What teams say</p>
-      <h2 style="color:#fff;">Built with them. <span style="color:#9D9DA5;">Trusted by them.</span></h2>
+      <h2>Built with them. Trusted by them.</h2>
     </div>
-    <div class="testi-grid">
-      <blockquote class="testi-card reveal" data-placeholder="true">
-        <div class="stars" aria-label="5 star rating">★★★★★</div>
-        <p class="testi-quote">"We'd optimized that process for years. They sat with us for two days and found automation we'd never have put in a requirements doc."</p>
-        <div class="testi-attr">— Operations manager · sprint client</div>
+    <div class="wall">
+      <blockquote class="quote" data-example="true">
+        <p>"We'd optimized that process for years. They sat with us for two days and found automation we'd never have put in a requirements doc."</p>
+        <footer><strong>Priya Raghunathan</strong>Operations manager, logistics</footer>
       </blockquote>
-      <blockquote class="testi-card reveal" data-placeholder="true">
-        <div class="stars" aria-label="5 star rating">★★★★★</div>
-        <p class="testi-quote">"Because we built it together, nobody on the team treats it like a black box. We trust it — and we've already tuned it ourselves."</p>
-        <div class="testi-attr">— Finance lead · sprint client</div>
+      <blockquote class="quote" data-example="true">
+        <p>"Because we built it together, nobody on the team treats it like a black box. We trust it, and we've already tuned it ourselves."</p>
+        <footer><strong>Marcus Oyelaran</strong>Finance lead, manufacturing</footer>
       </blockquote>
-      <blockquote class="testi-card reveal" data-placeholder="true">
-        <div class="stars" aria-label="5 star rating">★★★★★</div>
-        <p class="testi-quote">"The sprint shipped one agent. The month after, the team redesigned two more workflows on their own. That's the part I didn't expect."</p>
-        <div class="testi-attr">— Support lead · sprint client</div>
+      <blockquote class="quote" data-example="true">
+        <p>"The sprint shipped one agent. The month after, the team redesigned two more workflows on their own. That's the part I didn't expect."</p>
+        <footer><strong>Hanne Lindqvist</strong>Support lead, B2B software</footer>
       </blockquote>
     </div>
+    <p class="mock-note">Example quotes, representative of sprint feedback. Not specific named clients.</p>
   </div>
 </section>
 
-<!-- ========== FAQ ========== -->
+<!-- ========== 10. FAQ: grouped, answers visible ========== -->
 <section class="section" id="faq">
-  <div class="container">
-    <div class="faq-grid">
-      <div class="reveal">
-        <p class="eyebrow">Frequently asked</p>
-        <h2>Good questions get better answers.</h2>
-        <p class="lead">Straight answers. No funnel.</p>
-        <a href="#audit" class="btn-ghost">Bring your questions to the call →</a>
+  <div class="wrap">
+    <div class="head rise">
+      <h2>Good questions get better answers.</h2>
+      <p class="lede">Straight answers. No funnel.</p>
+    </div>
+
+    <div class="faq-set rise">
+      <h3>The sprint</h3>
+      <div class="faq-qs">
+        <div class="faq-q">
+          <h4>What is the Agentic Implementation program?</h4>
+          <p>A two-week sprint where we pair with your domain experts, the people who actually do the work. We shadow the real job, rank the automation opportunities, build a working agent alongside your team, validate it on real work, and ship on day 10.</p>
+        </div>
+        <div class="faq-q">
+          <h4>Why two weeks?</h4>
+          <p>Long enough to observe real work, build, and validate. Short enough to force decisions. The sprint is designed to get your first real win into production fast, not to produce a report.</p>
+        </div>
+        <div class="faq-q">
+          <h4>How much of our expert's time does it take?</h4>
+          <p>Days 1 and 2 are the heaviest. We shadow them doing their normal work, so it costs attention, not extra hours. After that, expect a couple of focused hours a day for building and validating together.</p>
+        </div>
+        <div class="faq-q">
+          <h4>What kinds of work fit best?</h4>
+          <p>Repetitive knowledge work in any function: intake, triage, drafting, reconciliation, reporting, scheduling. If someone can show us the work, we can usually shadow it.</p>
+        </div>
       </div>
-      <div class="faq-list">
-        <details class="faq-item">
-          <summary>What is the Agentic Implementation program?</summary>
-          <p>A two-week sprint where we pair with your domain experts — the people who actually do the work. We shadow the real job, rank the automation opportunities, build a working agent alongside your team, validate it on real work, and ship on day 10.</p>
-        </details>
-        <details class="faq-item">
-          <summary>Why two weeks?</summary>
-          <p>Long enough to observe real work, build, and validate — short enough to force decisions. The sprint is designed to get your first real win into production fast, not to produce a report.</p>
-        </details>
-        <details class="faq-item">
-          <summary>How much of our expert's time does it take?</summary>
-          <p>Days 1–2 are the heaviest — we shadow them doing their normal work, so it costs attention, not extra hours. After that, expect a couple of focused hours a day for building and validating together.</p>
-        </details>
-        <details class="faq-item">
-          <summary>What do we walk away with?</summary>
+    </div>
+
+    <div class="faq-set rise">
+      <h3>What you get</h3>
+      <div class="faq-qs">
+        <div class="faq-q">
+          <h4>What do we walk away with?</h4>
           <p>A working agent in production, a ranked map of your automation opportunities, validation evidence from real work, and a team that knows how to do this again.</p>
-        </details>
-        <details class="faq-item">
-          <summary>What happens after the sprint?</summary>
+        </div>
+        <div class="faq-q">
+          <h4>What happens after the sprint?</h4>
           <p>Whatever you want: extend with follow-on sprints, keep us on as an ongoing partner, or take it fully in-house. The handoff is designed in from day one.</p>
-        </details>
-        <details class="faq-item">
-          <summary>Do we own what you build?</summary>
+        </div>
+        <div class="faq-q">
+          <h4>Do we own what you build?</h4>
           <p>Yes. The code, the prompts, the integrations, the data, and the accounts. No lock-in.</p>
-        </details>
-        <details class="faq-item">
-          <summary>What about security and data access?</summary>
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-set rise">
+      <h3>Practicalities</h3>
+      <div class="faq-qs">
+        <div class="faq-q">
+          <h4>What about security and data access?</h4>
           <p>Least-privilege access, working in your environment wherever possible, and human review on what the agent does. We'll walk through the specifics on the call.</p>
-        </details>
-        <details class="faq-item">
-          <summary>What if the agent doesn't validate?</summary>
-          <p>Then we don't ship it. Days 6–9 exist to find that out before it touches real work — and you keep the opportunity map, the documentation, and everything we learned.</p>
-        </details>
-        <details class="faq-item">
-          <summary>What kinds of work fit best?</summary>
-          <p>Repetitive knowledge work in any function — intake, triage, drafting, reconciliation, reporting, scheduling. If someone can show us the work, we can usually shadow it.</p>
-        </details>
-        <details class="faq-item">
-          <summary>How much does it cost?</summary>
+        </div>
+        <div class="faq-q">
+          <h4>What if the agent doesn't validate?</h4>
+          <p>Then we don't ship it. Days 6 to 9 exist to find that out before it touches real work, and you keep the opportunity map, the documentation, and everything we learned.</p>
+        </div>
+        <div class="faq-q">
+          <h4>How much does it cost?</h4>
           <p>We scope it on the call. The first call is free, and you'll leave with a clear recommendation either way.</p>
-        </details>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ========== BOOK A CALL (form posts to /api/audit) ========== -->
-<section class="section section--alt" id="audit">
-  <div class="container">
-    <div class="vp-header reveal">
-      <p class="eyebrow">Book a free call</p>
+<!-- ========== 11. BOOK A CALL (posts to /api/audit) ========== -->
+<section class="section section-recessed" id="audit">
+  <div class="wrap">
+    <div class="head rise">
       <h2>Tell us about the work. We'll tell you if a sprint fits.</h2>
-      <p class="lead">Share your site and the workflow you'd hand off tomorrow. We'll reply within one business day — with times, and an honest read on fit.</p>
+      <p class="lede">Share your site and the workflow you'd hand off tomorrow. We'll reply within one business day with times, and an honest read on fit.</p>
     </div>
 
-    <div class="form-grid">
-      <form class="audit-form reveal" id="auditForm" novalidate>
+    <div class="book">
+      <form class="rise" id="auditForm" novalidate>
         <div id="auditFormFields">
-          <div class="form-row">
+          <div class="field">
             <label for="auditUrl">Your website</label>
             <input type="text" id="auditUrl" name="url" placeholder="yourbusiness.com" required maxlength="2048" inputmode="url" autocomplete="url" autocapitalize="off" autocorrect="off" spellcheck="false">
           </div>
-          <div class="form-row">
+          <div class="field">
             <label for="auditName">Your name</label>
             <input type="text" id="auditName" name="name" placeholder="First and last" required maxlength="200" autocomplete="name">
           </div>
-          <div class="form-row">
+          <div class="field">
             <label for="auditEmail">Email</label>
             <input type="email" id="auditEmail" name="email" placeholder="you@yourbusiness.com" required maxlength="254" autocomplete="email" autocapitalize="off" spellcheck="false">
           </div>
-          <div class="form-row">
+          <div class="field">
             <label for="auditIndustry">Which function would we pair with?</label>
             <select id="auditIndustry" name="industry" required>
-              <option value="">Pick the closest…</option>
+              <option value="">Pick the closest</option>
               <option>Operations</option>
               <option>Finance</option>
               <option>Customer support</option>
@@ -1444,40 +1138,42 @@ PLACEHOLDERS (search "data-placeholder" or this list to find):
               <option>Other</option>
             </select>
           </div>
-          <div class="form-row">
-            <label for="auditNotes">What workflow would you hand to an agent? <span style="font-weight:400;color:var(--muted)">(optional)</span></label>
-            <textarea id="auditNotes" name="notes" rows="3" maxlength="2000" placeholder="e.g. invoice reconciliation, intake triage, weekly reporting, escalation drafting…"></textarea>
+          <div class="field">
+            <label for="auditNotes">What workflow would you hand to an agent? <span class="opt">(optional)</span></label>
+            <textarea id="auditNotes" name="notes" rows="3" maxlength="2000" placeholder="Invoice reconciliation, intake triage, weekly reporting, escalation drafting"></textarea>
           </div>
           <input type="text" name="company_website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
-          <button type="submit" class="btn btn-primary" id="auditSubmit">Book a free call →</button>
-          <p class="form-error" id="auditError" hidden role="alert"></p>
-          <p class="form-note">We reply within one business day, Mon–Fri. No sales drip — promise.</p>
+          <button type="submit" class="btn btn-primary form-submit" id="auditSubmit">Book a call</button>
+          <p class="form-err" id="auditError" hidden role="alert"></p>
+          <p class="form-fine">We reply within one business day, Monday to Friday. No sales drip.</p>
         </div>
-        <div class="success-state" id="auditSuccess" hidden>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg>
+        <div class="sent" id="auditSuccess" hidden>
+          <p class="sent-tick" aria-hidden="true">&#10003;</p>
           <h3>Call requested.</h3>
           <p>We'll reply within one business day with a couple of times. If a sprint isn't the right fit, we'll say so.</p>
         </div>
       </form>
 
-      <aside class="contact-card reveal">
+      <aside class="contact rise">
         <h3>Or skip the form.</h3>
-        <div class="contact-row">
-          <span class="contact-label">Email</span>
-          <span class="contact-value"><a href="mailto:hello@hyperworkflow.ai">hello@hyperworkflow.ai</a></span>
-        </div>
-        <div class="contact-row">
-          <span class="contact-label">Hours</span>
-          <span class="contact-value">Mon–Fri · 9 a.m. – 6 p.m. PT</span>
-        </div>
-        <div class="contact-row">
-          <span class="contact-label">Based in</span>
-          <span class="contact-value">San Francisco · Remote-first · US &amp; Canada</span>
-        </div>
-        <div class="contact-row">
-          <span class="contact-label">On the call</span>
-          <span class="contact-value"><strong>Free</strong> · 20 min · Video · An honest read on fit</span>
-        </div>
+        <dl>
+          <div class="contact-line">
+            <dt>Email</dt>
+            <dd><a href="mailto:hello@hyperworkflow.ai">hello@hyperworkflow.ai</a></dd>
+          </div>
+          <div class="contact-line">
+            <dt>Hours</dt>
+            <dd>Monday to Friday, 9am to 6pm PT</dd>
+          </div>
+          <div class="contact-line">
+            <dt>Based in</dt>
+            <dd>San Francisco. Remote-first, serving the US and Canada.</dd>
+          </div>
+          <div class="contact-line">
+            <dt>On the call</dt>
+            <dd>Free, 20 minutes, video. An honest read on fit.</dd>
+          </div>
+        </dl>
       </aside>
     </div>
   </div>
@@ -1485,32 +1181,22 @@ PLACEHOLDERS (search "data-placeholder" or this list to find):
 
 </main>
 
-<!-- ========== MOBILE STICKY CTA ========== -->
-<aside class="mobile-cta" aria-label="Quick actions">
-  <div class="mobile-cta-inner">
-    <a href="#process">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-      How it works
-    </a>
-    <a href="#audit" class="primary">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.08 4.18 2 2 0 0 1 4.06 2h3a2 2 0 0 1 2 1.72c.12.81.37 1.6.72 2.33a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.75-1.24a2 2 0 0 1 2.11-.45c.73.35 1.52.6 2.33.72A2 2 0 0 1 22 16.92z"/></svg>
-      Book a free call
-    </a>
-  </div>
+<aside class="thumb-bar" aria-label="Quick actions">
+  <a href="#process">See the sprint</a>
+  <a href="#audit" class="lit">Book a call</a>
 </aside>
 
-<!-- ========== FOOTER ========== -->
-<footer class="site-footer">
-  <div class="container">
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <div class="brand" style="color:#fff;">
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div>
+        <div class="brand">
           <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5l8 7-8 7V5z"/><path d="M12 5l8 7-8 7V5z"/></svg></span>
           <span>Hyperworkflow</span>
         </div>
         <p>We pair with your domain experts, automate real workflows in two-week sprints, and leave your team fluent in agentic thinking.</p>
       </div>
-      <div class="footer-col">
+      <div>
         <h4>Studio</h4>
         <ul>
           <li><a href="#process">The sprint</a></li>
@@ -1519,29 +1205,20 @@ PLACEHOLDERS (search "data-placeholder" or this list to find):
           <li><a href="#about">About</a></li>
         </ul>
       </div>
-      <div class="footer-col">
-        <h4>What we build</h4>
-        <ul>
-          <li><a href="#process">Agentic Implementation sprint</a></li>
-          <li><a href="#services">Custom AI agents</a></li>
-          <li><a href="#services">Custom software &amp; integrations</a></li>
-          <li><a href="#services">Ongoing partnership</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Get in touch</h4>
+      <div>
+        <h4>Contact</h4>
         <ul>
           <li><a href="mailto:hello@hyperworkflow.ai">hello@hyperworkflow.ai</a></li>
-          <li><a href="#audit">Book a free call</a></li>
+          <li><a href="#audit">Book a call</a></li>
           <li><a href="#faq">FAQ</a></li>
         </ul>
       </div>
     </div>
-    <div class="footer-bottom">
-      <span>© 2026 Hyperworkflow</span>
+    <div class="footer-base">
+      <span>&copy; 2026 Hyperworkflow</span>
       <ul>
-        <li><a href="#">Privacy</a></li>
-        <li><a href="#">Terms</a></li>
+        <li><a href="/privacy">Privacy</a></li>
+        <li><a href="/terms">Terms</a></li>
         <li><a href="/sitemap.xml">Sitemap</a></li>
       </ul>
     </div>
@@ -1551,144 +1228,133 @@ PLACEHOLDERS (search "data-placeholder" or this list to find):
 <script>
 (function(){
   'use strict';
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ----- sticky nav shadow + scroll progress ----- */
-  var header = document.getElementById('header');
-  var progress = document.getElementById('scrollProgress');
-  var onScroll = function(){
-    header.setAttribute('data-scrolled', window.scrollY > 8 ? 'true' : 'false');
-    if (progress) {
-      var h = document.documentElement.scrollHeight - window.innerHeight;
-      progress.style.transform = 'scaleX(' + (h > 0 ? Math.min(1, window.scrollY / h) : 0) + ')';
-    }
-  };
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
+  /* ---- theme: auto | light | dark, persisted ---- */
+  var themeBtns = document.querySelectorAll('[data-theme-set]');
+  function paintTheme(mode){
+    themeBtns.forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.themeSet === mode)); });
+  }
+  function applyTheme(mode){
+    if (mode === 'auto') { document.documentElement.removeAttribute('data-theme'); }
+    else { document.documentElement.setAttribute('data-theme', mode); }
+    try { mode === 'auto' ? localStorage.removeItem('hw-theme') : localStorage.setItem('hw-theme', mode); } catch (e) {}
+    paintTheme(mode);
+  }
+  themeBtns.forEach(function(b){
+    b.addEventListener('click', function(){ applyTheme(b.dataset.themeSet); });
+  });
+  var stored = 'auto';
+  try { stored = localStorage.getItem('hw-theme') || 'auto'; } catch (e) {}
+  paintTheme(stored);
 
-  /* ----- mobile menu ----- */
-  var menuBtn = document.getElementById('menuToggle');
-  var drawer = document.getElementById('navDrawer');
+  /* ---- header border: a sentinel, not a scroll listener ---- */
+  var masthead = document.getElementById('masthead');
+  var sentinel = document.createElement('div');
+  sentinel.style.cssText = 'position:absolute;top:0;left:0;width:1px;height:1px;pointer-events:none';
+  document.body.prepend(sentinel);
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function(entries){
+      masthead.setAttribute('data-stuck', String(!entries[0].isIntersecting));
+    }).observe(sentinel);
+  }
+
+  /* ---- mobile drawer ---- */
+  var menuBtn = document.getElementById('menuBtn');
+  var drawer = document.getElementById('drawer');
   if (menuBtn && drawer) {
     menuBtn.addEventListener('click', function(){
       var open = drawer.getAttribute('data-open') === 'true';
-      drawer.setAttribute('data-open', open ? 'false' : 'true');
-      menuBtn.setAttribute('aria-expanded', open ? 'false' : 'true');
+      drawer.setAttribute('data-open', String(!open));
+      menuBtn.setAttribute('aria-expanded', String(!open));
+      menuBtn.setAttribute('aria-label', open ? 'Open menu' : 'Close menu');
     });
     drawer.querySelectorAll('a').forEach(function(a){
       a.addEventListener('click', function(){
         drawer.setAttribute('data-open', 'false');
         menuBtn.setAttribute('aria-expanded', 'false');
+        menuBtn.setAttribute('aria-label', 'Open menu');
       });
     });
   }
 
-  /* ----- scroll reveal ----- */
+  /* ---- reveals + the gauge draw ---- */
+  var watched = document.querySelectorAll('.rise, #gauge');
   if ('IntersectionObserver' in window) {
-    var io = new IntersectionObserver(function(entries){
+    var seen = new IntersectionObserver(function(entries, obs){
       entries.forEach(function(e){
-        if (e.isIntersecting) {
-          e.target.classList.add('is-visible');
-          io.unobserve(e.target);
-        }
+        if (!e.isIntersecting) return;
+        e.target.classList.add('is-seen');
+        obs.unobserve(e.target);
       });
-    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
-    document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+    watched.forEach(function(el){ seen.observe(el); });
   } else {
-    document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('is-visible'); });
+    watched.forEach(function(el){ el.classList.add('is-seen'); });
   }
 
-  /* ----- hero stat count-up ----- */
-  var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* ---- figure count-up, once, when the gauge is in view ---- */
+  var counters = document.querySelectorAll('[data-count]');
   function countUp(el){
-    var target = parseFloat(el.getAttribute('data-count'));
-    if (isNaN(target)) return;
-    var dec = parseInt(el.getAttribute('data-decimals') || '0', 10);
-    var prefix = el.getAttribute('data-prefix') || '';
-    var valEl = el.querySelector('.stat-val');
-    if (!valEl) return;
-    var dur = 1100, startT = null;
-    function frame(t){
-      if (startT === null) startT = t;
-      var p = Math.min(1, (t - startT) / dur);
+    var target = parseFloat(el.dataset.count);
+    var decimals = parseInt(el.dataset.decimals || '0', 10);
+    var start = performance.now(), dur = 1000;
+    function frame(now){
+      var p = Math.min((now - start) / dur, 1);
       var eased = 1 - Math.pow(1 - p, 3);
-      valEl.textContent = prefix + (target * eased).toFixed(dec);
+      el.textContent = (target * eased).toFixed(decimals);
       if (p < 1) requestAnimationFrame(frame);
-      else valEl.textContent = prefix + target.toFixed(dec);
     }
     requestAnimationFrame(frame);
   }
-  var statsWrap = document.querySelector('.hero-stats');
-  if (statsWrap && !prefersReduced && 'IntersectionObserver' in window) {
-    var statObs = new IntersectionObserver(function(entries, obs){
+  if (!reduce && counters.length && 'IntersectionObserver' in window) {
+    var counted = new IntersectionObserver(function(entries, obs){
       entries.forEach(function(e){
-        if (e.isIntersecting) {
-          statsWrap.querySelectorAll('.stat-num[data-count]').forEach(countUp);
-          obs.disconnect();
-        }
+        if (!e.isIntersecting) return;
+        countUp(e.target);
+        obs.unobserve(e.target);
       });
-    }, { threshold: 0.4 });
-    statObs.observe(statsWrap);
+    }, { threshold: 0.5 });
+    counters.forEach(function(el){ counted.observe(el); });
   }
 
-  /* ----- audit form submit ----- */
-  var auditForm = document.getElementById('auditForm');
-  if (auditForm) {
-    auditForm.addEventListener('submit', function(e){
-      e.preventDefault();
-      var fields = document.getElementById('auditFormFields');
-      var success = document.getElementById('auditSuccess');
-      var submitBtn = document.getElementById('auditSubmit');
-      var errorEl = document.getElementById('auditError');
-      if (!auditForm.checkValidity()) {
-        auditForm.reportValidity();
-        return;
-      }
+  /* ---- form ---- */
+  var form = document.getElementById('auditForm');
+  if (!form) return;
+  var fields = document.getElementById('auditFormFields');
+  var success = document.getElementById('auditSuccess');
+  var errorEl = document.getElementById('auditError');
+  var submit = document.getElementById('auditSubmit');
 
-      errorEl.hidden = true;
-      errorEl.textContent = '';
-      var originalLabel = submitBtn.textContent;
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Sending…';
+  form.addEventListener('submit', function(ev){
+    ev.preventDefault();
+    errorEl.hidden = true;
+    if (!form.checkValidity()) { form.reportValidity(); return; }
 
-      var payload = {
-        url: document.getElementById('auditUrl').value.trim(),
-        name: document.getElementById('auditName').value.trim(),
-        email: document.getElementById('auditEmail').value.trim(),
-        industry: document.getElementById('auditIndustry').value,
-        notes: document.getElementById('auditNotes').value.trim(),
-        company_website: (auditForm.elements['company_website'] || {}).value || ''
-      };
+    submit.disabled = true;
+    submit.textContent = 'Sending';
 
-      fetch('/api/audit', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(payload)
-      }).then(function(res){
-        return res.json().catch(function(){ return { ok: false, error: 'Unexpected server response.' }; })
-          .then(function(data){ return { status: res.status, data: data }; });
-      }).then(function(result){
-        if (result.status >= 200 && result.status < 300 && result.data && result.data.ok) {
-          fields.hidden = true;
-          success.hidden = false;
-          success.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          return;
-        }
-        var msg = (result.data && result.data.error) || 'Something went wrong. Try again or email hello@hyperworkflow.ai.';
-        errorEl.textContent = msg;
-        errorEl.hidden = false;
-        submitBtn.disabled = false;
-        submitBtn.textContent = originalLabel;
-      }).catch(function(){
-        errorEl.textContent = 'Network error. Check your connection and try again.';
-        errorEl.hidden = false;
-        submitBtn.disabled = false;
-        submitBtn.textContent = originalLabel;
-      });
+    var data = Object.fromEntries(new FormData(form).entries());
+    fetch('/api/audit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    })
+    .then(function(res){ return res.json().then(function(j){ return { ok: res.ok, body: j }; }); })
+    .then(function(r){
+      if (!r.ok) throw new Error((r.body && r.body.error) || 'Something went wrong on our side. Please try again.');
+      fields.hidden = true;
+      success.hidden = false;
+      success.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+    })
+    .catch(function(err){
+      errorEl.textContent = err.message || 'We could not send that. Please try again, or email hello@hyperworkflow.ai.';
+      errorEl.hidden = false;
+      submit.disabled = false;
+      submit.textContent = 'Book a call';
     });
-  }
-
+  });
 })();
 </script>
-
 </body>
 </html>
