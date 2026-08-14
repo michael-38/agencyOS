@@ -1,0 +1,30 @@
+{
+  "email": "info@uvderm.com",
+  "hours": "",
+  "locations": [
+    {
+      "name": "Lehi",
+      "streetAddress": "123 S 100 W",
+      "city": "Lehi",
+      "state": "UT",
+      "zip": "84043",
+      "phone": "801-768-8800"
+    },
+    {
+      "name": "Saratoga Springs",
+      "streetAddress": "250 E 900 N Suite 200",
+      "city": "Saratoga Springs",
+      "state": "UT",
+      "zip": "84045",
+      "phone": ""
+    },
+    {
+      "name": "Provo",
+      "streetAddress": "100 W 2nd N",
+      "city": "Provo",
+      "state": "UT",
+      "zip": "84601",
+      "phone": ""
+    }
+  ]
+}

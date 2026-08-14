@@ -1,0 +1,1597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La Belle Vie Medical Care &amp; Aesthetics | Medical Spa in Draper, Utah</title>
+<meta name="description" content="A medical spa in Draper, Utah, run by Kelly Lance, MSN, APRN, FNP-C, a family nurse practitioner with more than 30 years in medicine. Injectables, lasers, Sculptra, Renuva, guided medical weight loss and intimate health. Free consultation.">
+<link rel="preload" href="fonts/archivo-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/atkinson-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+/* ============================================================
+   FACES. Self-hosted, latin block only.
+   Archivo  : variable grotesk, wdth 62-125 + wght 100-900.
+              The width axis is the instrument: engraved panel
+              labels run wide, the acuity chart runs wider still.
+   Atkinson Hyperlegible : body. Drawn by the Braille Institute
+              for readers with impaired vision. On a page built
+              from an eye exam it is the correct object, not a
+              subject-association.
+   ============================================================ */
+@font-face{
+  font-family:'Archivo';
+  font-style:normal;
+  font-weight:100 900;
+  font-stretch:62% 125%;
+  font-display:swap;
+  src:url(fonts/archivo-var-latin.woff2) format('woff2');
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face{
+  font-family:'Atkinson';
+  font-style:normal;
+  font-weight:400;
+  font-display:swap;
+  src:url(fonts/atkinson-400-latin.woff2) format('woff2');
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face{
+  font-family:'Atkinson';
+  font-style:normal;
+  font-weight:700;
+  font-display:swap;
+  src:url(fonts/atkinson-700-latin.woff2) format('woff2');
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+
+/* ============================================================
+   THE DUOCHROME. Every colour has a job in the instrument.
+   Contrast measured against --ground, not a lighter variant:
+   chalk 11.46:1 · sage 6.90:1 · sage-dim 5.60:1 · amber 7.88:1
+   ============================================================ */
+:root{
+  --ground:#06392C;
+  --ground-deep:#04281F;
+  --red:#6B1815;
+  --red-deep:#521310;
+  --amber:#F4C518;
+  --amber-deep:#D9AC08;
+  --amber-lit:#FFD630;
+  --chalk:#EEF3EC;
+  --sage:#A9C4B4;
+  --sage-dim:#8FB3A0;
+  --line:rgba(169,196,180,.24);
+  --line-firm:rgba(169,196,180,.42);
+  --ink:#052018;
+
+  /* Foreground ramp for the red half of the duochrome.
+     Measured on --red: label 6.76:1, copy 8.44:1. */
+  --red-label:#E7B9AE;
+  --red-copy:#F0D3CD;
+  --red-line:rgba(240,211,205,.3);
+  --red-line-firm:rgba(240,211,205,.4);
+
+  /* Structural washes. Tonal layering only, no shadows, no gradients. */
+  --wash:rgba(238,243,236,.06);
+  --inset:rgba(0,0,0,.13);
+  --seam:rgba(0,0,0,.35);
+
+  --container:1200px;
+  --gut:clamp(20px,4vw,48px);
+
+  /* Snellen acuity ramp. Fixed ratios, top row largest. */
+  --row-1:clamp(2.5rem,6.1vw,4.7rem);
+  --row-2:clamp(1.9rem,4.2vw,3.5rem);
+  --row-3:clamp(1.45rem,2.7vw,2.25rem);
+  --row-4:clamp(1.15rem,1.7vw,1.4rem);
+  --row-5:1.08rem;
+  --row-6:.9rem;
+
+  --panel:clamp(.72rem,.86vw,.8rem);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--ground);
+  color:var(--chalk);
+  font-family:'Atkinson',ui-sans-serif,system-ui,sans-serif;
+  font-size:clamp(1rem,.97rem + .18vw,1.115rem);
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+img{display:block;max-width:100%}
+a{color:inherit}
+h1,h2,h3,p,ul,ol,figure,dl,dd{margin:0}
+ul{padding:0;list-style:none}
+
+::selection{background:var(--amber);color:var(--ink)}
+
+:focus-visible{
+  outline:2px solid var(--amber);
+  outline-offset:3px;
+  border-radius:1px;
+}
+
+.wrap{
+  width:100%;
+  max-width:var(--container);
+  margin-inline:auto;
+  padding-inline:var(--gut);
+}
+
+/* ---- Display voice: wide engineered grotesk ---- */
+.disp{
+  font-family:'Archivo',ui-sans-serif,system-ui,sans-serif;
+  font-weight:600;
+  font-stretch:118%;
+  line-height:.98;
+  letter-spacing:-.028em;
+  text-wrap:balance;
+}
+.disp-1{font-size:var(--row-1)}
+.disp-2{font-size:var(--row-2)}
+.disp-3{font-size:var(--row-3);line-height:1.06;letter-spacing:-.02em}
+
+/* ---- Engraved instrument label. Never sits above a heading. ---- */
+.panel-label{
+  font-family:'Archivo',ui-sans-serif,system-ui,sans-serif;
+  font-weight:600;
+  font-stretch:125%;
+  font-size:var(--panel);
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--sage-dim);
+  line-height:1.5;
+}
+.tnum{font-variant-numeric:tabular-nums;letter-spacing:.01em}
+
+.lede{
+  font-size:clamp(1.06rem,1rem + .5vw,1.32rem);
+  line-height:1.55;
+  color:var(--chalk);
+  max-width:34ch;
+  text-wrap:pretty;
+}
+.body{max-width:68ch;color:var(--sage);text-wrap:pretty}
+.body strong{color:var(--chalk);font-weight:700}
+
+.quote{
+  font-family:'Archivo',ui-sans-serif,system-ui,sans-serif;
+  font-weight:500;
+  font-stretch:108%;
+  font-size:clamp(1.2rem,1.05rem + .8vw,1.72rem);
+  line-height:1.32;
+  letter-spacing:-.015em;
+  color:var(--chalk);
+  max-width:24ch;
+  text-wrap:balance;
+}
+
+/* ============================================================
+   TOP RAIL
+   ============================================================ */
+.top{
+  position:relative;
+  z-index:40;
+  border-bottom:1px solid var(--line);
+  background:var(--ground);
+}
+.top-in{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:24px;
+  min-height:76px;
+  padding-block:12px;
+}
+.mark{display:block;text-decoration:none;line-height:1}
+.mark b{
+  display:block;
+  font-family:'Archivo',ui-sans-serif,system-ui,sans-serif;
+  font-weight:700;
+  font-stretch:125%;
+  font-size:clamp(1rem,.94rem + .3vw,1.2rem);
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+.mark span{
+  display:block;
+  margin-top:5px;
+  white-space:nowrap;
+  font-family:'Archivo',ui-sans-serif,system-ui,sans-serif;
+  font-weight:500;
+  font-stretch:125%;
+  font-size:.63rem;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  color:var(--sage-dim);
+}
+.top-right{display:flex;align-items:center;gap:clamp(14px,2vw,28px)}
+.top-tel{
+  font-family:'Archivo',ui-sans-serif,system-ui,sans-serif;
+  font-weight:700;
+  font-stretch:112%;
+  font-size:clamp(1rem,.94rem + .32vw,1.22rem);
+  color:var(--amber);
+  text-decoration:none;
+  font-variant-numeric:tabular-nums;
+  letter-spacing:.005em;
+  white-space:nowrap;
+  border-bottom:2px solid transparent;
+  transition:border-color .18s ease;
+}
+.top-tel:hover{border-bottom-color:var(--amber)}
+.top-link{
+  font-size:.9rem;
+  color:var(--sage);
+  text-decoration:none;
+  border-bottom:1px solid var(--line-firm);
+  padding-bottom:2px;
+  transition:color .18s ease,border-color .18s ease;
+}
+.top-link:hover{color:var(--chalk);border-bottom-color:var(--chalk)}
+.hide-sm{display:inline}
+
+/* ============================================================
+   HERO. The chart, and the duochrome.
+   ============================================================ */
+.hero{position:relative;padding-block:clamp(48px,7vw,88px) 0}
+.hero-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1.72fr) minmax(0,1fr);
+  gap:clamp(32px,4vw,56px);
+  align-items:start;
+}
+.hero-h1{margin-bottom:24px}
+.hero-sub{margin-bottom:32px}
+.hero-acts{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+
+/* ---- Primary action: the lit dial reading ---- */
+.call{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  gap:14px;
+  background:var(--amber);
+  color:var(--ink);
+  text-decoration:none;
+  padding:15px 26px 15px 18px;
+  border-radius:2px;
+  font-family:'Archivo',ui-sans-serif,system-ui,sans-serif;
+  font-weight:700;
+  font-stretch:112%;
+  font-size:clamp(1.02rem,.96rem + .3vw,1.2rem);
+  letter-spacing:.01em;
+  font-variant-numeric:tabular-nums;
+  white-space:nowrap;
+  transition:background-color .18s ease,transform .18s cubic-bezier(.16,1,.3,1);
+}
+.call:hover{background:var(--amber-lit)}
+.call:active{transform:translateY(1px)}
+.call .ap{flex:0 0 auto;display:block}
+.call .ap circle,.call .ap path,.call .ap line{stroke:var(--ink)}
+@media (prefers-reduced-motion:no-preference){
+  .call .ap{transition:transform .5s cubic-bezier(.16,1,.3,1)}
+  .call:hover .ap{transform:rotate(60deg)}
+}
+.ghost{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:15px 22px;
+  border:1px solid var(--line-firm);
+  border-radius:2px;
+  text-decoration:none;
+  color:var(--chalk);
+  font-family:'Archivo',ui-sans-serif,system-ui,sans-serif;
+  font-weight:600;
+  font-stretch:112%;
+  font-size:clamp(.96rem,.92rem + .22vw,1.08rem);
+  transition:border-color .18s ease,background-color .18s ease;
+}
+.ghost:hover{border-color:var(--chalk);background:var(--wash)}
+
+.hero-fine{
+  margin-top:26px;
+  font-size:.88rem;
+  color:var(--sage-dim);
+  max-width:44ch;
+}
+
+/* ---- The duochrome comparator ---- */
+.duo{border-top:1px solid var(--chalk);border-bottom:1px solid var(--line-firm);overflow:hidden}
+.duo-head{
+  padding:18px 0 20px;
+  border-bottom:1px solid var(--line-firm);
+}
+.duo-head h2{
+  font-family:'Archivo',ui-sans-serif,system-ui,sans-serif;
+  font-weight:600;
+  font-stretch:120%;
+  font-size:clamp(.95rem,.9rem + .28vw,1.12rem);
+  letter-spacing:.02em;
+  line-height:1.25;
+}
+.duo-head p{margin-top:7px;font-size:.85rem;color:var(--sage-dim);line-height:1.45}
+.duo-field{position:relative;padding:24px 22px 26px}
+.duo-a{margin-top:1px}
+.duo-a{background:var(--ground-deep)}
+.duo-b{background:var(--red);border-top:1px solid var(--seam)}
+.duo-n{
+  font-family:'Archivo',ui-sans-serif,system-ui,sans-serif;
+  font-weight:700;
+  font-stretch:125%;
+  font-size:var(--panel);
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--sage-dim);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:12px;
+}
+.duo-b .duo-n{color:var(--red-label)}
+.duo-t{
+  font-family:'Archivo',ui-sans-serif,system-ui,sans-serif;
+  font-weight:600;
+  font-stretch:114%;
+  font-size:clamp(1.1rem,1rem + .5vw,1.42rem);
+  line-height:1.16;
+  letter-spacing:-.018em;
+  margin-bottom:10px;
+  text-wrap:balance;
+}
+.duo-q{font-size:.92rem;line-height:1.5;color:var(--sage)}
+.duo-b .duo-q{color:var(--red-copy)}
+.duo-mark{
+  position:absolute;
+  top:22px;
+  right:22px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.duo-mark span{
+  font-family:'Archivo',ui-sans-serif,system-ui,sans-serif;
+  font-weight:700;
+  font-stretch:125%;
+  font-size:.62rem;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--amber);
+}
+.duo-foot{
+  padding:14px 0 0;
+  border-top:1px solid var(--line);
+  font-size:.85rem;
+  color:var(--sage);
+  line-height:1.45;
+}
+
+/* ---- Hairline strip under the hero: the practice's fixed facts ---- */
+.strip{
+  margin-top:clamp(48px,6vw,80px);
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+}
+.strip-in{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:0;
+}
+.strip-cell{
+  padding:22px clamp(14px,2vw,28px) 24px;
+  border-left:1px solid var(--line);
+}
+.strip-cell:first-child{border-left:0;padding-left:0}
+.strip-cell dt{
+  font-family:'Archivo',ui-sans-serif,system-ui,sans-serif;
+  font-weight:600;
+  font-stretch:125%;
+  font-size:.63rem;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--sage-dim);
+  margin-bottom:8px;
+}
+.strip-cell dd{
+  font-family:'Archivo',ui-sans-serif,system-ui,sans-serif;
+  font-weight:600;
+  font-stretch:110%;
+  font-size:clamp(.94rem,.9rem + .24vw,1.08rem);
+  line-height:1.28;
+  letter-spacing:-.008em;
+}
+
+/* ============================================================
+   SECTION GRAMMAR. Label sits in the left margin at desktop and
+   BELOW the heading on small screens. It is never an eyebrow.
+   ============================================================ */
+.sec{padding-block:clamp(56px,8vw,110px)}
+.sec-deep{background:var(--ground-deep)}
+/* The other half of the duochrome, at page scale, on the one section that
+   answers the visitor's actual fear. */
+.sec-red{background:var(--red-deep)}
+.sec-red .panel-label,.sec-red .plate-cap{color:var(--red-label)}
+.sec-red .body,.sec-red .reg-d{color:var(--red-copy)}
+.sec-red .reg,.sec-red .reg li{border-color:var(--red-line)}
+.sec-red .disclaim{border-color:var(--red-line-firm)}
+/* The red field does NOT tint its photograph: a red-cast face reads as
+   irritation directly under "Is it going to hurt?", which fights the copy.
+   The plate keeps the green duotone; only the ground is the second lens. */
+.sec-red .plate{background:var(--ground-deep)}
+.sec-rule{border-top:1px solid var(--line)}
+
+.sec-head{
+  display:grid;
+  grid-template-columns:minmax(150px,190px) minmax(0,1fr);
+  gap:clamp(24px,4vw,56px);
+  align-items:start;
+  margin-bottom:clamp(32px,4.5vw,56px);
+}
+.sec-head .panel-label{padding-top:.55em}
+.sec-head-x{grid-column:2}
+.sec-head h2{margin-bottom:18px}
+.dev-shot{
+  position:relative;
+  margin:0 0 clamp(34px,4vw,52px) auto;
+  width:min(330px,52%);
+}
+.dev-shot .plate img{filter:grayscale(1) contrast(1.16) brightness(.3)}
+.dev-shot .plate::before{opacity:.68}
+@media (max-width:880px){.dev-shot{width:100%;margin-inline:0}}
+
+.sec-body{
+  display:grid;
+  grid-template-columns:minmax(150px,190px) minmax(0,1fr);
+  gap:clamp(24px,4vw,56px);
+}
+.sec-body>.col{grid-column:2}
+
+/* ---- Register: rows on hairlines. Not cards. ---- */
+.reg{border-top:1px solid var(--line-firm)}
+.reg li{
+  display:grid;
+  grid-template-columns:minmax(190px,268px) minmax(0,1fr);
+  gap:clamp(16px,2.4vw,40px);
+  padding:20px 0 22px;
+  border-bottom:1px solid var(--line);
+  align-items:start;
+}
+/* A register inside a half-width column has no room for two columns of
+   text, so its rows stack. The full-width registers keep the two-column
+   read, which is where the chart grammar actually works. */
+.reg-stack li{grid-template-columns:minmax(0,1fr);gap:7px}
+.reg-n{
+  font-family:'Archivo',ui-sans-serif,system-ui,sans-serif;
+  font-weight:600;
+  font-stretch:118%;
+  font-size:clamp(1rem,.95rem + .3vw,1.14rem);
+  line-height:1.2;
+  letter-spacing:-.012em;
+  color:var(--chalk);
+}
+.reg-d{font-size:.95rem;line-height:1.55;color:var(--sage);max-width:64ch}
+.reg-d em{font-style:normal;color:var(--chalk)}
+
+/* ---- Tick list ---- */
+.ticks{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0 clamp(20px,3vw,44px)}
+.ticks li{
+  display:flex;
+  align-items:baseline;
+  gap:12px;
+  padding:12px 0;
+  border-bottom:1px solid var(--line);
+  font-family:'Archivo',ui-sans-serif,system-ui,sans-serif;
+  font-weight:500;
+  font-stretch:112%;
+  font-size:1rem;
+  letter-spacing:-.005em;
+}
+.ticks li::before{
+  content:"";
+  flex:0 0 auto;
+  width:14px;
+  height:1px;
+  background:var(--amber);
+  transform:translateY(-.35em);
+}
+
+/* ============================================================
+   THE DIAL. Four stops on a phoropter rail.
+   ============================================================ */
+.dial{border-top:1px solid var(--line-firm);border-bottom:1px solid var(--line-firm);margin-bottom:8px}
+.dial fieldset{border:0;margin:0;padding:0}
+.dial legend{
+  padding:0;
+  font-family:'Archivo',ui-sans-serif,system-ui,sans-serif;
+  font-weight:600;
+  font-stretch:125%;
+  font-size:var(--panel);
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--sage-dim);
+  padding-top:20px;
+}
+.stops{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  margin-top:16px;
+  align-items:end;
+}
+.stop{position:relative}
+.stop input{
+  position:absolute;
+  opacity:0;
+  width:1px;height:1px;
+  margin:0;
+  pointer-events:none;
+}
+.stop label{
+  display:block;
+  cursor:pointer;
+  padding:0 0 20px;
+  border-top:1px solid var(--line);
+  padding-top:16px;
+  transition:border-color .22s ease;
+}
+.stop:first-child label{padding-left:0}
+.stop-tick{
+  display:block;
+  width:100%;
+  height:22px;
+  margin-bottom:12px;
+}
+.stop-tick line{stroke:var(--line-firm);stroke-width:1}
+.stop-tick .pin{stroke:var(--sage-dim);stroke-width:2}
+/* The four stops descend the acuity ramp, so the control itself reads as
+   the chart it came from: largest at the smallest intervention. */
+.stop-name{
+  display:flex;
+  align-items:flex-end;
+  min-height:2.5em;
+  font-family:'Archivo',ui-sans-serif,system-ui,sans-serif;
+  font-weight:600;
+  font-stretch:120%;
+  letter-spacing:.02em;
+  text-transform:uppercase;
+  line-height:1;
+  color:var(--sage-dim);
+  transition:color .22s ease;
+}
+.stop:nth-child(1) .stop-name{font-size:var(--row-3);letter-spacing:-.01em}
+.stop:nth-child(2) .stop-name{font-size:var(--row-4);letter-spacing:.02em}
+.stop:nth-child(3) .stop-name{font-size:var(--row-5);letter-spacing:.06em}
+.stop:nth-child(4) .stop-name{font-size:var(--row-6);letter-spacing:.1em}
+.stop-sub{
+  display:block;
+  margin-top:6px;
+  font-size:.82rem;
+  line-height:1.4;
+  color:var(--sage-dim);
+  opacity:.82;
+  padding-right:12px;
+}
+.stop input:checked+label{border-top-color:var(--amber)}
+.stop input:checked+label .stop-name{color:var(--amber)}
+.stop input:checked+label .pin{stroke:var(--amber)}
+.stop input:checked+label .stop-sub{color:var(--sage)}
+.stop label:hover .stop-name{color:var(--chalk)}
+.stop input:focus-visible+label{outline:2px solid var(--amber);outline-offset:2px}
+
+.reg[data-filter] li[data-stop]{display:none}
+.reg[data-filter="subtle"] li[data-stop~="subtle"],
+.reg[data-filter="moderate"] li[data-stop~="moderate"],
+.reg[data-filter="structural"] li[data-stop~="structural"],
+.reg[data-filter="resurfacing"] li[data-stop~="resurfacing"]{display:grid}
+
+/* ============================================================
+   PLATES. The client's own photographs, cropped past their
+   baked-in marketing text and duotoned into the duochrome.
+   ============================================================ */
+.plate{
+  position:relative;
+  overflow:hidden;
+  background:var(--ground-deep);
+  border-radius:2px;
+}
+.plate img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  /* Pulled well down so the photograph sits inside the drenched field
+     instead of floating on it as a bright rectangle. */
+  filter:grayscale(1) contrast(1.24) brightness(.42);
+}
+.plate::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:var(--ground);
+  mix-blend-mode:color;
+  pointer-events:none;
+}
+.plate::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:2;
+  background:var(--ground-deep);
+  mix-blend-mode:soft-light;
+  opacity:.5;
+  pointer-events:none;
+}
+/* Authored lens frame: registration marks in the world's own stroke weight. */
+.lensmark{
+  position:absolute;
+  inset:0;
+  z-index:3;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  color:var(--chalk);
+  opacity:.5;
+}
+.plate-fig{position:relative;margin:0}
+.plate-cap{
+  margin-top:12px;
+  font-size:.78rem;
+  line-height:1.45;
+  color:var(--sage-dim);
+  max-width:40ch;
+}
+
+/* ---- Provider nameplate. No photograph of Kelly Lance exists,
+        so the proof is set as an engraved instrument plate. ---- */
+/* The provider block is the page's only proof asset, so it is set as an
+   engraved instrument plate on hairline registers, not a filled card. */
+.plateplate{
+  border-top:1px solid var(--chalk);
+  border-bottom:1px solid var(--line-firm);
+  padding:clamp(22px,2.6vw,32px) 0;
+}
+.plateplate .nm{
+  font-family:'Archivo',ui-sans-serif,system-ui,sans-serif;
+  font-weight:700;
+  font-stretch:125%;
+  font-size:clamp(1.85rem,1.3rem + 2.6vw,3.15rem);
+  line-height:.96;
+  letter-spacing:-.02em;
+  text-transform:uppercase;
+  margin-bottom:16px;
+}
+.creds{display:flex;flex-wrap:wrap;gap:10px 0;margin-bottom:22px}
+.creds li{
+  font-family:'Archivo',ui-sans-serif,system-ui,sans-serif;
+  font-weight:600;
+  font-stretch:125%;
+  font-size:.68rem;
+  letter-spacing:.17em;
+  text-transform:uppercase;
+  color:var(--sage);
+  padding-right:14px;
+  margin-right:14px;
+  border-right:1px solid var(--line-firm);
+  line-height:1.4;
+}
+.creds li:last-child{border-right:0;margin-right:0;padding-right:0}
+.plateplate .role{color:var(--sage);font-size:.98rem;line-height:1.55}
+
+.stat{
+  display:block;
+  padding-top:16px;
+  margin-top:18px;
+  border-top:1px solid var(--line);
+  font-size:.95rem;
+  line-height:1.5;
+  color:var(--sage);
+}
+.stat b{
+  font-family:'Archivo',ui-sans-serif,system-ui,sans-serif;
+  font-weight:600;
+  font-stretch:118%;
+  font-size:1.06rem;
+  letter-spacing:.005em;
+  color:var(--chalk);
+  font-variant-numeric:tabular-nums;
+  white-space:nowrap;
+}
+
+/* ---- Two-column content splits ---- */
+.split{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(24px,3.4vw,52px)}
+.split-a{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:clamp(28px,4vw,64px);align-items:start}
+
+/* ---- Callout: a hairline block, never a card stack ---- */
+.note{
+  border-left:1px solid var(--line-firm);
+  padding:4px 0 4px 22px;
+  margin-block:26px;
+}
+.note p{color:var(--sage);font-size:.95rem;line-height:1.55}
+.note p+p{margin-top:10px}
+
+.disclaim{
+  border:1px solid var(--line-firm);
+  border-radius:2px;
+  padding:18px 20px;
+  margin-top:24px;
+  font-size:.88rem;
+  line-height:1.55;
+  color:var(--sage);
+  background:var(--inset);
+}
+.disclaim b{color:var(--chalk);font-weight:700}
+
+/* ---- Named-only roster ---- */
+.named{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.named li{
+  font-family:'Archivo',ui-sans-serif,system-ui,sans-serif;
+  font-weight:500;
+  font-stretch:114%;
+  font-size:.88rem;
+  letter-spacing:.01em;
+  color:var(--sage);
+  border:1px solid var(--line);
+  border-radius:2px;
+  padding:7px 13px;
+}
+
+/* ============================================================
+   VISIT + FOOTER
+   ============================================================ */
+.visit{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(24px,3.2vw,48px)}
+.visit h3{
+  font-family:'Archivo',ui-sans-serif,system-ui,sans-serif;
+  font-weight:600;
+  font-stretch:125%;
+  font-size:var(--panel);
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--sage-dim);
+  padding-bottom:14px;
+  margin-bottom:16px;
+  border-bottom:1px solid var(--line-firm);
+}
+.visit p,.visit li{font-size:.98rem;line-height:1.6;color:var(--sage)}
+.visit a{color:var(--chalk);text-decoration:none;border-bottom:1px solid var(--line-firm)}
+.visit a:hover{border-bottom-color:var(--amber);color:var(--amber)}
+.hours li{
+  display:flex;
+  justify-content:space-between;
+  gap:16px;
+  padding:9px 0;
+  border-bottom:1px solid var(--line);
+  font-variant-numeric:tabular-nums;
+}
+.hours li b{color:var(--chalk);font-weight:400}
+
+.foot{background:var(--ground-deep);border-top:1px solid var(--line-firm);padding-block:clamp(44px,6vw,72px)}
+.foot-top{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:clamp(28px,4vw,64px);align-items:end}
+.foot-mark{
+  font-family:'Archivo',ui-sans-serif,system-ui,sans-serif;
+  font-weight:700;
+  font-stretch:125%;
+  font-size:clamp(1.7rem,1.1rem + 2.8vw,3.4rem);
+  line-height:.94;
+  letter-spacing:-.022em;
+  text-transform:uppercase;
+}
+.foot-tag{
+  margin-top:14px;
+  font-family:'Archivo',ui-sans-serif,system-ui,sans-serif;
+  font-weight:500;
+  font-stretch:125%;
+  font-size:.72rem;
+  letter-spacing:.24em;
+  text-transform:uppercase;
+  color:var(--sage);
+}
+.foot-soc{display:flex;flex-wrap:wrap;gap:18px;justify-content:flex-end}
+.foot-soc a{
+  font-size:.88rem;
+  color:var(--sage);
+  text-decoration:none;
+  border-bottom:1px solid var(--line-firm);
+  padding-bottom:2px;
+}
+.foot-soc a:hover{color:var(--chalk);border-bottom-color:var(--chalk)}
+.foot-fine{
+  margin-top:clamp(32px,4vw,56px);
+  padding-top:24px;
+  border-top:1px solid var(--line);
+  display:grid;
+  grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);
+  gap:24px;
+  font-size:.82rem;
+  line-height:1.6;
+  color:var(--sage-dim);
+}
+.foot-fine a{color:var(--sage)}
+
+/* ---- Mobile call bar. Solid field, no backdrop-filter. ---- */
+.callbar{display:none}
+
+/* ============================================================
+   MOTION. One authored moment: the refraction settle.
+   Content is visible by default; the effect only exists when
+   scripting is on and the visitor has not asked for less motion.
+   ============================================================ */
+@media (prefers-reduced-motion:no-preference){
+  html.js .fx{
+    opacity:0;
+    filter:blur(12px);
+    transform:translateY(14px);
+    transition:opacity .82s cubic-bezier(.16,1,.3,1),
+               filter .82s cubic-bezier(.16,1,.3,1),
+               transform .82s cubic-bezier(.16,1,.3,1);
+  }
+  html.js .fx.lit{opacity:1;filter:blur(0);transform:none}
+  html.js .fx-2{transition-delay:.1s}
+  html.js .fx-3{transition-delay:.2s}
+  html.js .fx-4{transition-delay:.3s}
+
+  /* Below the fold the entrance is quieter and different:
+     the rule draws, the copy lifts. No blur. */
+  html.js .up{opacity:0;transform:translateY(18px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
+  html.js .up.lit{opacity:1;transform:none}
+  html.js .up-2{transition-delay:.09s}
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width:1040px){
+  .hero-grid{grid-template-columns:minmax(0,1fr)}
+  .duo{max-width:560px}
+  .split-a{grid-template-columns:minmax(0,1fr)}
+  .visit{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .foot-top{grid-template-columns:minmax(0,1fr);align-items:start}
+  .foot-soc{justify-content:flex-start}
+}
+@media (max-width:880px){
+  .sec-head,.sec-body{grid-template-columns:minmax(0,1fr);gap:0}
+  .sec-head-x,.sec-body>.col{grid-column:1}
+  .sec-head{margin-bottom:32px}
+  /* The engraved label moves BELOW the heading, never above it. */
+  .sec-head .panel-label{
+    order:2;
+    padding-top:0;
+    margin-top:4px;
+    padding-bottom:14px;
+    border-bottom:1px solid var(--line-firm);
+  }
+  .sec-head-x{order:1;margin-bottom:20px}
+  .sec-head{display:flex;flex-direction:column}
+  .strip-in{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .strip-cell{border-left:0;border-top:1px solid var(--line);padding-left:0}
+  .strip-cell:nth-child(-n+2){border-top:0}
+  .strip-cell:nth-child(2n){padding-left:clamp(14px,3vw,28px);border-left:1px solid var(--line)}
+  .split{grid-template-columns:minmax(0,1fr)}
+  .stops{grid-template-columns:repeat(2,minmax(0,1fr));gap:0 20px}
+  .reg li{grid-template-columns:minmax(0,1fr);gap:8px}
+  .foot-fine{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:720px){
+  .hide-sm{display:none}
+  .top-in{min-height:64px}
+  .visit{grid-template-columns:minmax(0,1fr)}
+  body{padding-bottom:76px}
+  .callbar{
+    display:block;
+    position:fixed;
+    left:0;right:0;bottom:0;
+    z-index:60;
+    background:var(--amber);
+    border-top:1px solid var(--amber-deep);
+  }
+  .callbar a{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+    min-height:60px;
+    color:var(--ink);
+    text-decoration:none;
+    font-family:'Archivo',ui-sans-serif,system-ui,sans-serif;
+    font-weight:700;
+    font-stretch:114%;
+    font-size:1.06rem;
+    font-variant-numeric:tabular-nums;
+    letter-spacing:.01em;
+  }
+  .callbar .ap circle,.callbar .ap path,.callbar .ap line{stroke:var(--ink)}
+  .hero-acts .call,.hero-acts .ghost{flex:1 1 100%;justify-content:center}
+}
+@media (max-width:420px){
+  .stops{grid-template-columns:minmax(0,1fr)}
+  .creds li{border-right:0;padding-right:0;margin-right:16px}
+}
+@media print{
+  .callbar{display:none}
+  body{background:#fff;color:#000}
+}
+</style>
+</head>
+<body>
+<!--
+  THESIS: A refraction exam, the one procedure where the patient chooses every
+  increment and it stops when it is right. Refuses the blush soft-focus med spa
+  page and its predictable opposite, white-chrome clinical minimalism.
+  OWN-WORLD: Drenched duochrome green ground, oxide-red counter-field, and the
+  client's own measured daisy yellow as the single lit indicator. Chalk text on a
+  Snellen acuity ramp set in wide Archivo. Authored SVG apertures, ticks and
+  rails. Hairline registers throughout, never cards, never gradients.
+  STORY: She fears coming out overfilled. She learns one named nurse practitioner
+  plans every increment herself, reads a roster ordered smallest-first, and calls
+  for a free consultation.
+  FIRST VIEWPORT: Full-bleed green. Left, Snellen row one, "Your face on its very
+  best day", a supporting line, then the amber call button ringed by an aperture.
+  Right, the duochrome comparator: two stacked fields carrying the practice's own
+  two positions, the second lens-marked in amber.
+  FORM: Ophthalmic refraction instrument. Candidate 4 of my 7 grounded
+  directions, assigned index 4. Seed key 8677423a.
+  FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md
+-->
+
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="#top">
+      <b>La Belle Vie</b>
+      <span>Medical Care &amp; Aesthetics<span class="hide-sm"> &middot; Draper, Utah</span></span>
+    </a>
+    <div class="top-right">
+      <a class="top-link hide-sm" href="https://booking.podium.com/medspa/019805bd-0a79-7949-8a5f-284144f5b4e0">Book online</a>
+      <a class="top-tel tnum" href="tel:8019878384">801 987 8384</a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ===================== HERO ===================== -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+
+      <div>
+        <h1 class="disp disp-1 hero-h1 fx">Your face on its<br>very best day.</h1>
+        <p class="lede hero-sub fx fx-2">A medical spa in Draper run by one nurse practitioner with more than thirty years in medicine. Kelly Lance plans your treatment herself, and it starts with a free consultation.</p>
+
+        <div class="hero-acts fx fx-3">
+          <a class="call" href="tel:8019878384">
+            <svg class="ap" width="26" height="26" viewBox="0 0 26 26" fill="none" aria-hidden="true">
+              <circle cx="13" cy="13" r="10.2" stroke-width="1.5"/>
+              <circle cx="13" cy="13" r="4.4" stroke-width="1.5"/>
+              <line x1="13" y1="2.8" x2="13" y2="8.6" stroke-width="1.5"/>
+              <line x1="21.8" y1="18.1" x2="16.8" y2="15.2" stroke-width="1.5"/>
+              <line x1="4.2" y1="18.1" x2="9.2" y2="15.2" stroke-width="1.5"/>
+            </svg>
+            Call 801 987 8384
+          </a>
+          <a class="ghost" href="https://labelleviemedicalcare.com/contact/">Free virtual consultation</a>
+        </div>
+
+        <p class="hero-fine fx fx-4">The consultation is free, in person or virtual. Individual results vary, and a consultation determines whether you are a candidate.</p>
+      </div>
+
+      <div class="duo fx fx-3">
+        <div class="duo-head">
+          <h2>Better one, or better two?</h2>
+          <p>An eye exam never decides for you. It offers two, and you say which is clearer. Aesthetic medicine should work the same way.</p>
+        </div>
+
+        <div class="duo-field duo-a">
+          <p class="duo-n">One</p>
+          <p class="duo-t">The overfilled look.</p>
+          <p class="duo-q">&ldquo;We&rsquo;ve all seen the &lsquo;overfilled&rsquo; look on social media, and honestly? We&rsquo;re not fans of it either.&rdquo;</p>
+        </div>
+
+        <div class="duo-field duo-b">
+          <div class="duo-mark">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <circle cx="10" cy="10" r="8" stroke="#F4C518" stroke-width="1.5"/>
+              <circle cx="10" cy="10" r="3.1" fill="#F4C518"/>
+            </svg>
+            <span>Marked</span>
+          </div>
+          <p class="duo-n">Two</p>
+          <p class="duo-t">Your own face, rested.</p>
+          <p class="duo-q">&ldquo;We aren&rsquo;t trying to give you a 20-year-old&rsquo;s face; we&rsquo;re trying to give you <em>your</em> face on its very best day.&rdquo;</p>
+        </div>
+
+        <p class="duo-foot">Kelly Lance, MSN, APRN, FNP-C, owner and provider.</p>
+      </div>
+
+    </div>
+
+    <div class="strip">
+      <div class="wrap">
+        <dl class="strip-in">
+          <div class="strip-cell">
+            <dt>Provider</dt>
+            <dd>Kelly Lance,<br>MSN, APRN, FNP-C</dd>
+          </div>
+          <div class="strip-cell">
+            <dt>Experience</dt>
+            <dd class="tnum">More than 30 years<br>in medicine</dd>
+          </div>
+          <div class="strip-cell">
+            <dt>Location</dt>
+            <dd>248 E 13800 S, Suite 3<br>Draper, Utah</dd>
+          </div>
+          <div class="strip-cell">
+            <dt>Consultation</dt>
+            <dd>Free, in person<br>or virtual</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== THE CONSULTATION ===================== -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="panel-label">The consultation</p>
+        <div class="sec-head-x">
+          <h2 class="disp disp-2 up">Nothing is decided<br>before you sit down.</h2>
+          <p class="body up up-2">The practice names the thing people are actually afraid of. <strong>&ldquo;One of the reasons people feel hesitant is the &lsquo;conveyor belt&rsquo; feel of some big med spa chains.&rdquo;</strong> What follows is what happens instead, in Kelly Lance&rsquo;s own published words.</p>
+        </div>
+      </div>
+
+      <div class="sec-body">
+        <div class="col split-a">
+          <ul class="reg reg-stack">
+            <li>
+              <p class="reg-n">The deep-dive consultation</p>
+              <p class="reg-d">&ldquo;We sit down, we talk about your life, your budget, and your fears. I want to know what <em>you</em> see when you look in the mirror.&rdquo;</p>
+            </li>
+            <li>
+              <p class="reg-n">A plan, not a package</p>
+              <p class="reg-d">&ldquo;We don&rsquo;t just sell &lsquo;packages.&rsquo; We create a roadmap that is specific to your face and your goals.&rdquo;</p>
+            </li>
+            <li>
+              <p class="reg-n">Medical oversight</p>
+              <p class="reg-d">&ldquo;Because I am a Nurse Practitioner, your safety and medical history are always the top priority.&rdquo;</p>
+            </li>
+            <li>
+              <p class="reg-n">Restraint, stated plainly</p>
+              <p class="reg-d">&ldquo;Our professional, trained and experienced staff are experts in the art of natural looking enhancements. We won&rsquo;t leave you over-plumped or frozen-faced.&rdquo;</p>
+            </li>
+          </ul>
+
+          <figure style="margin:0">
+            <div class="plate" style="aspect-ratio:3/4">
+              <img src="assets/pdo-threads-facelift-in-utah.jpg" alt="Close crop of a person's face turned toward the camera." loading="lazy" decoding="async" width="1400" height="673" style="object-position:76% 44%;transform:scale(1.02)">
+            <svg class="lensmark" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                <path d="M2 10 V2 H10" fill="none" stroke="currentColor" stroke-width=".5" vector-effect="non-scaling-stroke"/>
+                <path d="M90 2 H98 V10" fill="none" stroke="currentColor" stroke-width=".5" vector-effect="non-scaling-stroke"/>
+                <path d="M98 90 V98 H90" fill="none" stroke="currentColor" stroke-width=".5" vector-effect="non-scaling-stroke"/>
+                <path d="M10 98 H2 V90" fill="none" stroke="currentColor" stroke-width=".5" vector-effect="non-scaling-stroke"/>
+                <path d="M50 0 V5 M50 95 V100 M0 50 H5 M95 50 H100" fill="none" stroke="currentColor" stroke-width=".5" vector-effect="non-scaling-stroke"/>
+              </svg>
+            </div>
+            <figcaption class="plate-cap">Photography supplied by the practice.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== THE PROVIDER ===================== -->
+  <section class="sec sec-deep sec-rule">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="panel-label">The provider</p>
+        <div class="sec-head-x">
+          <h2 class="disp disp-2 up">One person is<br>responsible.</h2>
+        </div>
+      </div>
+
+      <div class="sec-body">
+        <div class="col split-a">
+          <div>
+            <div class="plateplate">
+              <p class="nm">Kelly Lance</p>
+              <ul class="creds">
+                <li>MSN</li>
+                <li>APRN</li>
+                <li>FNP-C</li>
+              </ul>
+              <p class="role">Owner and provider at La Belle Vie Medical Care &amp; Aesthetics. Certified as a Family Nurse Practitioner, with advanced aesthetic training in multiple procedures.</p>
+              <p class="stat"><b class="tnum">30+ years</b> of medical experience, brought to the practice every day.</p>
+            </div>
+
+            <div class="note">
+              <p>&ldquo;Hi, I&rsquo;m Kelly Lance. I&rsquo;m a Family Nurse Practitioner, the owner of La Belle Vie Medical Care &amp; Aesthetics in Draper, and, most importantly, someone who truly gets it.&rdquo;</p>
+              <p>&ldquo;You&rsquo;re not a &lsquo;patient number&rsquo;, you&rsquo;re a neighbor, and we&rsquo;re going to take care of you like one.&rdquo;</p>
+            </div>
+          </div>
+
+          <div>
+            <p class="quote up">&ldquo;My philosophy at La Belle Vie isn&rsquo;t about changing who you are; it&rsquo;s about Artistic Restoration.&rdquo;</p>
+            <p class="body up up-2" style="margin-top:20px">&ldquo;It&rsquo;s about looking in the mirror and finally seeing the person you feel like on the inside, vibrant, rested, and ready for whatever life throws at you.&rdquo;</p>
+            <p class="body up up-2" style="margin-top:16px">&ldquo;At the end of the day, we aren&rsquo;t in the business of needles and lasers, we&rsquo;re in the business of <strong>confidence</strong>.&rdquo;</p>
+
+            <figure style="margin:32px 0 0">
+              <div class="plate" style="aspect-ratio:16/10">
+                <img src="assets/The-Era-of-the-Refresh-Not-the-Redo.jpg" alt="Close crop of a shoulder and collarbone photographed against a plain backdrop." loading="lazy" decoding="async" width="992" height="600" style="transform:scale(1.08)">
+                <svg class="lensmark" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                  <path d="M2 10 V2 H10" fill="none" stroke="currentColor" stroke-width=".5" vector-effect="non-scaling-stroke"/>
+                  <path d="M90 2 H98 V10" fill="none" stroke="currentColor" stroke-width=".5" vector-effect="non-scaling-stroke"/>
+                  <path d="M98 90 V98 H90" fill="none" stroke="currentColor" stroke-width=".5" vector-effect="non-scaling-stroke"/>
+                  <path d="M10 98 H2 V90" fill="none" stroke="currentColor" stroke-width=".5" vector-effect="non-scaling-stroke"/>
+                  <path d="M50 0 V5 M50 95 V100 M0 50 H5 M95 50 H100" fill="none" stroke="currentColor" stroke-width=".5" vector-effect="non-scaling-stroke"/>
+                </svg>
+              </div>
+              <figcaption class="plate-cap">Photography supplied by the practice.</figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== THE DIAL + REGISTER ===================== -->
+  <section class="sec sec-rule">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="panel-label">Degree of intervention</p>
+        <div class="sec-head-x">
+          <h2 class="disp disp-2 up">Start with the smallest<br>thing that works.</h2>
+          <p class="body up up-2">Every treatment the practice publishes, ordered by how much it changes. Turn the dial to move up the scale. Nothing here commits you to anything: the consultation decides what, if any of it, suits you.</p>
+        </div>
+      </div>
+
+      <div class="sec-body">
+        <div class="col">
+
+          <div class="dial">
+            <fieldset>
+              <legend>Turn the dial</legend>
+              <div class="stops">
+                <div class="stop">
+                  <input type="radio" name="degree" id="d1" value="subtle" checked>
+                  <label for="d1">
+                    <svg class="stop-tick" viewBox="0 0 100 22" preserveAspectRatio="none" aria-hidden="true">
+                      <line x1="0" y1="21" x2="100" y2="21"/>
+                      <line class="pin" x1="1" y1="4" x2="1" y2="21"/>
+                    </svg>
+                    <span class="stop-name">Subtle</span>
+                    <span class="stop-sub">Barely a change. Prevention and upkeep.</span>
+                  </label>
+                </div>
+                <div class="stop">
+                  <input type="radio" name="degree" id="d2" value="moderate">
+                  <label for="d2">
+                    <svg class="stop-tick" viewBox="0 0 100 22" preserveAspectRatio="none" aria-hidden="true">
+                      <line x1="0" y1="21" x2="100" y2="21"/>
+                      <line class="pin" x1="1" y1="8" x2="1" y2="21"/>
+                    </svg>
+                    <span class="stop-name">Moderate</span>
+                    <span class="stop-sub">Softening lines, replacing lost volume.</span>
+                  </label>
+                </div>
+                <div class="stop">
+                  <input type="radio" name="degree" id="d3" value="structural">
+                  <label for="d3">
+                    <svg class="stop-tick" viewBox="0 0 100 22" preserveAspectRatio="none" aria-hidden="true">
+                      <line x1="0" y1="21" x2="100" y2="21"/>
+                      <line class="pin" x1="1" y1="8" x2="1" y2="21"/>
+                    </svg>
+                    <span class="stop-name">Structural</span>
+                    <span class="stop-sub">Collagen, contour and support over months.</span>
+                  </label>
+                </div>
+                <div class="stop">
+                  <input type="radio" name="degree" id="d4" value="resurfacing">
+                  <label for="d4">
+                    <svg class="stop-tick" viewBox="0 0 100 22" preserveAspectRatio="none" aria-hidden="true">
+                      <line x1="0" y1="21" x2="100" y2="21"/>
+                      <line class="pin" x1="1" y1="4" x2="1" y2="21"/>
+                    </svg>
+                    <span class="stop-name">Resurfacing</span>
+                    <span class="stop-sub">Texture and scarring. Real downtime.</span>
+                  </label>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+
+          <ul class="reg" id="register">
+            <!-- SUBTLE -->
+            <li data-stop="subtle"><p class="reg-n">Baby Botox</p><p class="reg-d">&ldquo;Using tiny amounts of toxin to prevent deep lines from forming.&rdquo;</p></li>
+            <li data-stop="subtle"><p class="reg-n">Lip Flip</p><p class="reg-d">&ldquo;Uses a tiny bit of Botox to relax the upper lip. It&rsquo;s subtle, affordable, and a great &lsquo;starter&rsquo; treatment.&rdquo;</p></li>
+            <li data-stop="subtle"><p class="reg-n">Chemical peel, light</p><p class="reg-d">A light &ldquo;lunchtime peel&rdquo;, or something deeper. Winter is the practice&rsquo;s preferred window, so you heal away from the intense Draper sun.</p></li>
+            <li data-stop="subtle"><p class="reg-n">IPL Photofacial</p><p class="reg-d">&ldquo;As the light penetrates the skin&rsquo;s surface, the collagen and blood vessels that lay below the surface will begin to constrict. This reduces and draws out red pigment in the skin as well as reduces the color of dark age spots.&rdquo;</p></li>
+            <li data-stop="subtle"><p class="reg-n">Hydrating facial</p><p class="reg-d">&ldquo;Our Utah air is brutal. Hydrating facials and IV therapy help replenish the moisture your skin needs to stay resilient.&rdquo;</p></li>
+            <li data-stop="subtle"><p class="reg-n">Under-eye brightening</p><p class="reg-d">&ldquo;Specialized fillers or PRP that fill in hollow &lsquo;tear troughs&rsquo;.&rdquo;</p></li>
+            <li data-stop="subtle"><p class="reg-n">Medical-grade skincare</p><p class="reg-d">&ldquo;The stuff you buy at the grocery store usually stays on the very top layer of your skin. The treatments we do go deeper, reaching the layers where collagen and elastin are actually made.&rdquo;</p></li>
+            <li data-stop="subtle"><p class="reg-n">IV hydration and B12</p><p class="reg-d">&ldquo;A direct boost of vitamins, minerals, and antioxidants.&rdquo; Offered alongside vitamin infusions for identified deficiencies.</p></li>
+
+            <!-- MODERATE -->
+            <li data-stop="moderate"><p class="reg-n">Botox, Dysport, Xeomin, Jeuveau</p><p class="reg-d">&ldquo;Think of this as a &lsquo;wrinkle relaxer&rsquo;. We use it to soften the lines that make you look tired or stressed, but we leave enough movement so you can still laugh, frown, and look like a human being.&rdquo;</p></li>
+            <li data-stop="moderate"><p class="reg-n">Dermal fillers</p><p class="reg-d">&ldquo;We use them to replace the volume that naturally disappears as we age. It&rsquo;s like putting the stuffing back into a pillow, it just looks smoother and more supported.&rdquo;</p></li>
+            <li data-stop="moderate"><p class="reg-n">Signature Cheeks</p><p class="reg-d">&ldquo;We don&rsquo;t want &lsquo;apple cheeks&rsquo; that look like golf balls. We want a subtle lift that helps pull up the skin around the mouth.&rdquo;</p></li>
+            <li data-stop="moderate"><p class="reg-n">Under-eye filler</p><p class="reg-d">&ldquo;A non-surgical treatment using hyaluronic acid to reduce dark circles, hollows, and fine lines&hellip; with minimal downtime.&rdquo;</p></li>
+            <li data-stop="moderate"><p class="reg-n">Microneedling</p><p class="reg-d">&ldquo;This is like a gym workout for your skin. It creates tiny &lsquo;micro-channels&rsquo; that tell your body to produce fresh, new skin cells.&rdquo;</p></li>
+            <li data-stop="moderate"><p class="reg-n">PRP facial</p><p class="reg-d">&ldquo;We use your body&rsquo;s own rich plasma to trigger collagen production. It&rsquo;s 100% you, just working a little harder.&rdquo;</p></li>
+            <li data-stop="moderate"><p class="reg-n">Hand rejuvenation</p><p class="reg-d">&ldquo;The most severe changes in the hands are typically due to loss of tissue volume over the years.&rdquo; Addressed with Renuva or traditional fillers.</p></li>
+            <li data-stop="moderate"><p class="reg-n">Sclerotherapy</p><p class="reg-d">&ldquo;An innovative procedure that does not require anesthesia and you can immediately resume normal activities&rdquo;, for spider veins.</p></li>
+
+            <!-- STRUCTURAL -->
+            <li data-stop="structural"><p class="reg-n">Sculptra&reg;</p><p class="reg-d">&ldquo;Injecting biocompatible poly-L-lactic acid (PLLA) into your skin&rsquo;s deep layers, triggering skin cells to produce more collagen.&rdquo; Improvements begin about four to six weeks after treatment.</p></li>
+            <li data-stop="structural"><p class="reg-n">Renuva</p><p class="reg-d">&ldquo;An FDA-regulated, purified adipose (fat) matrix&hellip; Renuva acts like a microscopic honeycomb scaffold&rdquo;, and then &ldquo;the Renuva matrix completely disappears, leaving behind only your own natural fat.&rdquo;</p></li>
+            <li data-stop="structural"><p class="reg-n">PDO thread lift</p><p class="reg-d">&ldquo;PDO threads placed strategically under the skin have been highly effective and a minimally invasive way to improve firmness of the skin.&rdquo;</p></li>
+            <li data-stop="structural"><p class="reg-n">CoolSculpting</p><p class="reg-d">&ldquo;For those stubborn pockets of fat that won&rsquo;t budge at the gym, we can literally freeze them away. No surgery, no needles, just cold science.&rdquo;</p></li>
+            <li data-stop="structural"><p class="reg-n">Jawline and chin definition</p><p class="reg-d">&ldquo;A little bit of support in the chin can completely transform a profile, making the neck look tighter and the jawline look sharper.&rdquo;</p></li>
+            <li data-stop="structural"><p class="reg-n">Age spot removal, Harmony&reg;XL</p><p class="reg-d">&ldquo;By exposing a pigmented lesion to short pulses of visible light, the temperature in the highly concentrated melanin can be raised sharply, enough to shatter the cells containing the melanin or blood.&rdquo;</p></li>
+            <li data-stop="structural"><p class="reg-n">Laser hair reduction, Hair-Free&trade;</p><p class="reg-d">Long-term hair reduction using the Hair-Free&trade; system. &ldquo;Nearly any part of the body can be treated&hellip; including your upper lip, chin, neck, back, and stomach.&rdquo;</p></li>
+            <li data-stop="structural"><p class="reg-n">Preventative skin tightening</p><p class="reg-d">&ldquo;Keeping your collagen &lsquo;tight&rsquo; now so you don&rsquo;t have to deal with significant sagging 10 years down the road.&rdquo;</p></li>
+
+            <!-- RESURFACING -->
+            <li data-stop="resurfacing"><p class="reg-n">CO2 laser</p><p class="reg-d">&ldquo;A laser treatment used on all range of skin colors and types to restore skin to its younger texture&hellip; smoother, has improved tone and textures, and smaller pores.&rdquo;</p></li>
+            <li data-stop="resurfacing"><p class="reg-n">CO2 Lite</p><p class="reg-d">&ldquo;Reduces fine lines, wrinkles, acne scars, and sun spots&hellip; with less downtime than regular CO2 laser treatments.&rdquo;</p></li>
+            <li data-stop="resurfacing"><p class="reg-n">Profound by Syneron</p><p class="reg-d">&ldquo;The Profound treatment combines micro-diameter needles to deliver focused RF energy deep into your dermis&hellip; with 3 to 5 days of downtime.&rdquo;</p></li>
+            <li data-stop="resurfacing"><p class="reg-n">Acne scar treatment</p><p class="reg-d">&ldquo;From our highly effective, minimally invasive, treatments to more aggressive treatments for acne and deeply scarred tissue, La Belle Vie determines the best strategy.&rdquo;</p></li>
+            <li data-stop="resurfacing"><p class="reg-n">Laser resurfacing</p><p class="reg-d">&ldquo;This is the gold standard for fixing texture and tone. Because your skin will be a little sensitive to light afterward, starting in January or February is a total pro-move.&rdquo;</p></li>
+            <li data-stop="resurfacing"><p class="reg-n">Stretch mark and scar treatment</p><p class="reg-d">&ldquo;We use microneedling and specialized serums to help blend scars and stretch marks back into your natural skin tone.&rdquo;</p></li>
+          </ul>
+
+          <div class="disclaim">
+            <b>Individual results vary.</b> Every treatment listed requires a consultation to determine whether you are a candidate. Timelines quoted are the practice&rsquo;s own published figures, not a promise.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== COMFORT ===================== -->
+  <section class="sec sec-red sec-rule">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="panel-label">Comfort</p>
+        <div class="sec-head-x">
+          <h2 class="disp disp-2 up">Is it going to hurt?</h2>
+        </div>
+      </div>
+
+      <div class="sec-body">
+        <div class="col split-a">
+          <div>
+            <p class="body up">&ldquo;We are big fans of &lsquo;comfort first.&rsquo; Between medical-grade numbing creams, cooling devices, and a very gentle touch, most of our clients are pleasantly surprised by how easy the process is.&rdquo;</p>
+
+            <h3 class="disp disp-3 up" style="margin-top:44px">Will everyone know I had work done?</h3>
+            <p class="body up up-2" style="margin-top:16px">&ldquo;Not if we have anything to say about it. Our goal is for people to notice you look great, but not be able to point to why. We aim for &lsquo;Gosh, you look rested&rsquo;, not &lsquo;Who did your filler?&rsquo;&rdquo;</p>
+          </div>
+
+          <figure style="margin:0">
+            <div class="plate" style="aspect-ratio:4/5">
+              <img src="assets/SkinRejuvenation-head.jpg" alt="Close crop of a person's face, lit evenly from the front." loading="lazy" decoding="async" width="1400" height="673" style="object-position:20% 42%;transform:scale(1.02)">
+            <svg class="lensmark" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                <path d="M2 10 V2 H10" fill="none" stroke="currentColor" stroke-width=".5" vector-effect="non-scaling-stroke"/>
+                <path d="M90 2 H98 V10" fill="none" stroke="currentColor" stroke-width=".5" vector-effect="non-scaling-stroke"/>
+                <path d="M98 90 V98 H90" fill="none" stroke="currentColor" stroke-width=".5" vector-effect="non-scaling-stroke"/>
+                <path d="M10 98 H2 V90" fill="none" stroke="currentColor" stroke-width=".5" vector-effect="non-scaling-stroke"/>
+                <path d="M50 0 V5 M50 95 V100 M0 50 H5 M95 50 H100" fill="none" stroke="currentColor" stroke-width=".5" vector-effect="non-scaling-stroke"/>
+              </svg>
+            </div>
+            <figcaption class="plate-cap">Photography supplied by the practice.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== DEVICES ===================== -->
+  <section class="sec sec-rule">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="panel-label">Devices</p>
+        <div class="sec-head-x">
+          <h2 class="disp disp-2 up">The equipment is named,<br>because the name is the specification.</h2>
+          <p class="body up up-2">Anyone can promise a result. Fewer will tell you which machine is doing the work, how it works, and how long you will be red afterwards. These are the systems the practice publishes by name.</p>
+        </div>
+      </div>
+
+      <div class="sec-body">
+        <div class="col">
+          <figure class="dev-shot">
+            <div class="plate" style="aspect-ratio:3/4">
+              <img src="assets/laser-device.jpg" alt="A laser treatment platform with a touchscreen console, an emergency stop and a handpiece resting in its cradle." loading="lazy" decoding="async" width="283" height="370">
+            <svg class="lensmark" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                <path d="M2 10 V2 H10" fill="none" stroke="currentColor" stroke-width=".5" vector-effect="non-scaling-stroke"/>
+                <path d="M90 2 H98 V10" fill="none" stroke="currentColor" stroke-width=".5" vector-effect="non-scaling-stroke"/>
+                <path d="M98 90 V98 H90" fill="none" stroke="currentColor" stroke-width=".5" vector-effect="non-scaling-stroke"/>
+                <path d="M10 98 H2 V90" fill="none" stroke="currentColor" stroke-width=".5" vector-effect="non-scaling-stroke"/>
+                <path d="M50 0 V5 M50 95 V100 M0 50 H5 M95 50 H100" fill="none" stroke="currentColor" stroke-width=".5" vector-effect="non-scaling-stroke"/>
+              </svg>
+            </div>
+            <figcaption class="plate-cap">Photography supplied by the practice.</figcaption>
+          </figure>
+
+          <div>
+            <ul class="reg">
+              <li><p class="reg-n">Harmony&reg;XL</p><p class="reg-d">Light treatment used for benign pigmented lesions of cosmetic concern. &ldquo;The body then replaces these cells with new cells generated by the surrounding untreated area.&rdquo;</p></li>
+              <li><p class="reg-n">Profound by Syneron</p><p class="reg-d">Radiofrequency microneedling for moderate to severe acne scars, using &ldquo;deep dermal heating&rdquo; to trigger collagen remodeling.</p></li>
+              <li><p class="reg-n">Hair-Free&trade;</p><p class="reg-d">The system used for long-term hair reduction, on the upper lip, chin, neck, back, stomach, legs, underarms and bikini area.</p></li>
+              <li><p class="reg-n">Sculptra&reg;</p><p class="reg-d">Poly-L-lactic acid. Treated areas the practice lists: face, jowls, temples, hips and buttocks. Results &ldquo;often exceed two years in lifespan&rdquo;, and it &ldquo;is not a permanent solution for deep wrinkles.&rdquo;</p></li>
+              <li><p class="reg-n">Renuva</p><p class="reg-d">Purified adipose matrix. Over three to six months the treated area gradually smooths. &ldquo;You might be a little bruised or swollen for a few days, but there is zero major downtime.&rdquo;</p></li>
+              <li><p class="reg-n">CO2 and CO2 Lite</p><p class="reg-d">Resurfacing for texture, tone, pore size, scars, lines and deep wrinkles, in two depths.</p></li>
+            </ul>
+
+            <div class="note">
+              <p>Aftercare the practice publishes for Sculptra: avoid strenuous activity for at least 24 hours, and expect &ldquo;minor bruising or swelling at the injection site, which typically subsides after a few days.&rdquo;</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== MEDICAL WEIGHT LOSS ===================== -->
+  <section class="sec sec-deep sec-rule">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="panel-label">Medical weight loss</p>
+        <div class="sec-head-x">
+          <h2 class="disp disp-2 up">&ldquo;At La Belle Vie,<br>we don&rsquo;t prescribe<br>Ozempic.&rdquo;</h2>
+          <p class="body up up-2">That is the practice&rsquo;s own sentence, published twice inside its own weight-loss content. What is offered instead is a guided programme, and support for patients already using medication prescribed elsewhere.</p>
+        </div>
+      </div>
+
+      <div class="sec-body">
+        <div class="col">
+          <p class="quote up">&ldquo;Ozempic is a tool, not a plan.&rdquo;</p>
+
+          <div class="split" style="margin-top:40px">
+            <div>
+              <h3 class="panel-label" style="padding-bottom:14px;margin-bottom:4px;border-bottom:1px solid var(--line-firm)">What gets assessed</h3>
+              <ul class="ticks" style="grid-template-columns:minmax(0,1fr)">
+                <li>Hormone balance</li>
+                <li>Metabolism</li>
+                <li>Muscle mass</li>
+                <li>Stress levels</li>
+                <li>Sleep quality</li>
+                <li>Nutrition habits</li>
+                <li>Past weight-loss attempts</li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 class="panel-label" style="padding-bottom:14px;margin-bottom:4px;border-bottom:1px solid var(--line-firm)">What the programme is built on</h3>
+              <ul class="reg" style="border-top:0">
+                <li style="grid-template-columns:minmax(0,1fr);gap:6px"><p class="reg-n">Education</p><p class="reg-d">&ldquo;Understanding what&rsquo;s happening in your body and why.&rdquo;</p></li>
+                <li style="grid-template-columns:minmax(0,1fr);gap:6px"><p class="reg-n">Accountability</p><p class="reg-d">&ldquo;Regular check-ins and support throughout your journey.&rdquo;</p></li>
+                <li style="grid-template-columns:minmax(0,1fr);gap:6px"><p class="reg-n">Long-term success</p><p class="reg-d">&ldquo;Building habits and health that last, not just losing weight quickly.&rdquo;</p></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="note">
+            <p>&ldquo;Medical weight loss is not dieting. It&rsquo;s not about willpower, restriction, or punishing yourself for existing in your body.&rdquo;</p>
+            <p>&ldquo;I don&rsquo;t believe in shame, trends, or one-size-fits-all solutions when it comes to weight loss.&rdquo;</p>
+          </div>
+
+          <div class="disclaim">
+            <b>Already on Ozempic?</b> The practice&rsquo;s published answer: &ldquo;Yes. Many patients come to us for education, nutrition guidance, and long-term planning while using medication prescribed elsewhere.&rdquo;
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== INTIMATE HEALTH ===================== -->
+  <section class="sec sec-rule">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="panel-label">Intimate health</p>
+        <div class="sec-head-x">
+          <h2 class="disp disp-2 up">Sexual wellness is<br>treated as health care.</h2>
+          <p class="body up up-2">&ldquo;Sexual wellness is a vital part of your overall health, confidence, and quality of life.&rdquo; The practice states that women&rsquo;s health is approached &ldquo;with expertise, compassion, and discretion&rdquo;, in &ldquo;a supportive, judgment-free environment&rdquo;. These services are listed here in the same register as everything else on this page.</p>
+        </div>
+      </div>
+
+      <div class="sec-body">
+        <div class="col">
+          <ul class="reg">
+            <li>
+              <p class="reg-n">Clitoxin&reg;</p>
+              <p class="reg-d">A sexual wellness treatment for women that uses &ldquo;BOTOX&reg; or other FDA-approved neurotoxins <em>off-label</em> to enhance clitoral function and orgasmic response.&rdquo; The practice describes the mechanism this way: &ldquo;The neurotoxin works by gently relaxing specific muscles around the clitoris, allowing for increased blood flow and heightened sensitivity.&rdquo; Developed by Dr. Charles Runels. Typically completed during a short office visit, usually in under one hour, with a topical anesthetic applied for comfort.</p>
+            </li>
+            <li>
+              <p class="reg-n">O-Shot</p>
+              <p class="reg-d">&ldquo;A PRP (platelet-rich plasma)-based injection treatment that uses growth factors from your own blood to rejuvenate vaginal and clitoral tissue. After a small blood draw, the platelet-rich plasma is separated and strategically injected into areas associated with sensation, lubrication, and sexual response.&rdquo; Described by the practice as &ldquo;a natural, hormone-free option for improving sexual health&rdquo;. A topical numbing cream is typically applied, and the appointment usually takes less than an hour.</p>
+            </li>
+            <li>
+              <p class="reg-n">Who the O-Shot is discussed for</p>
+              <p class="reg-d">The practice&rsquo;s published list: decreased libido; difficulty reaching orgasm; vaginal dryness; pain during intercourse; mild urinary leakage; decreased sensitivity after childbirth or menopause. Its published duration is 12 to 18 months, &ldquo;though individual results may vary&rdquo;.</p>
+            </li>
+          </ul>
+
+          <div class="disclaim">
+            <b>Clitoxin&reg; uses botulinum toxin off-label, and the practice says so.</b> Its own words, carried here in full: &ldquo;Keep in mind that results are not guaranteed with this therapy. While many women have experienced positive outcomes, it is important to have realistic expectations for this promising new use of botulinum toxin.&rdquo; It is not FDA-approved for this use.
+          </div>
+
+          <p class="body" style="margin-top:36px">Also published by name, without further detail. Ask about any of them at a consultation.</p>
+          <ul class="named">
+            <li>Vaginal rejuvenation (FemiLift)</li>
+            <li>Breast enhancement</li>
+            <li>P-Shot</li>
+            <li>Shockwave therapy</li>
+            <li>ED Trifecta</li>
+            <li>Hormone replacement</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== VISIT ===================== -->
+  <section class="sec sec-deep sec-rule">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="panel-label">Visit</p>
+        <div class="sec-head-x">
+          <h2 class="disp disp-2 up">One address,<br>in Draper.</h2>
+        </div>
+      </div>
+
+      <div class="sec-body">
+        <div class="col">
+          <div class="visit">
+            <div>
+              <h3>Where and how</h3>
+              <p>248 E 13800 S, Suite 3<br>Draper, UT 84020</p>
+              <p style="margin-top:18px"><a class="tnum" href="tel:8019878384">801 987 8384</a></p>
+              <p style="margin-top:8px"><a href="mailto:info@labelleviemedicalcare.com">info@labelleviemedicalcare.com</a></p>
+            </div>
+
+            <div>
+              <h3>Published hours</h3>
+              <ul class="hours">
+                <li><b>Monday</b><span>9:00 a.m. to 6:00 p.m.</span></li>
+                <li><b>Tuesday</b><span>9:00 a.m. to 5:00 p.m.</span></li>
+                <li><b>Wednesday</b><span>9:00 a.m. to 6:00 p.m.</span></li>
+                <li><b>Thursday</b><span>9:00 a.m. to 5:00 p.m.</span></li>
+                <li><b>Friday</b><span>9:00 a.m. to 3:00 p.m.</span></li>
+              </ul>
+            </div>
+
+            <div>
+              <h3>Booking</h3>
+              <p><a href="https://booking.podium.com/medspa/019805bd-0a79-7949-8a5f-284144f5b4e0">Book a new appointment</a><br>through the practice&rsquo;s online booking.</p>
+              <p style="margin-top:16px"><a href="https://blvd.app/@labelleviemedicalcareandaesthetics/login">Your appointments</a><br>is the portal for existing patients.</p>
+              <p style="margin-top:16px"><a href="https://labelleviemedicalcare.com/contact/">Free virtual consultation</a><br>if you would rather start from home.</p>
+            </div>
+          </div>
+
+          <div class="hero-acts" style="margin-top:44px">
+            <a class="call" href="tel:8019878384">
+              <svg class="ap" width="26" height="26" viewBox="0 0 26 26" fill="none" aria-hidden="true">
+                <circle cx="13" cy="13" r="10.2" stroke-width="1.5"/>
+                <circle cx="13" cy="13" r="4.4" stroke-width="1.5"/>
+                <line x1="13" y1="2.8" x2="13" y2="8.6" stroke-width="1.5"/>
+                <line x1="21.8" y1="18.1" x2="16.8" y2="15.2" stroke-width="1.5"/>
+                <line x1="4.2" y1="18.1" x2="9.2" y2="15.2" stroke-width="1.5"/>
+              </svg>
+              Call 801 987 8384
+            </a>
+            <a class="ghost" href="https://booking.podium.com/medspa/019805bd-0a79-7949-8a5f-284144f5b4e0">Book online</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-top">
+      <div>
+        <p class="foot-mark">La Belle Vie<br>Medical Care &amp; Aesthetics</p>
+        <p class="foot-tag">Rejuvenate &nbsp;/&nbsp; Restore &nbsp;/&nbsp; Maintain</p>
+      </div>
+      <div class="foot-soc">
+        <a href="https://www.facebook.com/labelleviemedicalcare">Facebook</a>
+        <a href="https://twitter.com/labellevieMC">X</a>
+        <a href="https://www.youtube.com/channel/UC-uyhGaOXlNAog40_OHIcRw">YouTube</a>
+      </div>
+    </div>
+
+    <div class="foot-fine">
+      <p>Individual results vary. All treatments require a consultation to determine whether you are a candidate. Clitoxin&reg; uses botulinum toxin off-label and results are not guaranteed with that therapy. La Belle Vie does not prescribe Ozempic. Kelly Lance, MSN, APRN, FNP-C, is a Family Nurse Practitioner and the practice&rsquo;s owner and provider.</p>
+      <p>248 E 13800 S, Suite 3, Draper, UT 84020<br><a class="tnum" href="tel:8019878384">801 987 8384</a></p>
+    </div>
+  </div>
+</footer>
+
+<div class="callbar">
+  <a href="tel:8019878384">
+    <svg class="ap" width="22" height="22" viewBox="0 0 26 26" fill="none" aria-hidden="true">
+      <circle cx="13" cy="13" r="10.2" stroke-width="1.6"/>
+      <circle cx="13" cy="13" r="4.4" stroke-width="1.6"/>
+      <line x1="13" y1="2.8" x2="13" y2="8.6" stroke-width="1.6"/>
+      <line x1="21.8" y1="18.1" x2="16.8" y2="15.2" stroke-width="1.6"/>
+      <line x1="4.2" y1="18.1" x2="9.2" y2="15.2" stroke-width="1.6"/>
+    </svg>
+    Call 801 987 8384
+  </a>
+</div>
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"MedicalBusiness",
+  "name":"La Belle Vie Medical Care & Aesthetics",
+  "url":"https://labelleviemedicalcare.com",
+  "telephone":"+1-801-987-8384",
+  "email":"info@labelleviemedicalcare.com",
+  "address":{
+    "@type":"PostalAddress",
+    "streetAddress":"248 E 13800 S, Suite 3",
+    "addressLocality":"Draper",
+    "addressRegion":"UT",
+    "postalCode":"84020",
+    "addressCountry":"US"
+  },
+  "openingHoursSpecification":[
+    {"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Wednesday"],"opens":"09:00","closes":"18:00"},
+    {"@type":"OpeningHoursSpecification","dayOfWeek":["Tuesday","Thursday"],"opens":"09:00","closes":"17:00"},
+    {"@type":"OpeningHoursSpecification","dayOfWeek":"Friday","opens":"09:00","closes":"15:00"}
+  ],
+  "employee":{
+    "@type":"Person",
+    "name":"Kelly Lance",
+    "honorificSuffix":"MSN, APRN, FNP-C",
+    "jobTitle":"Owner and Provider"
+  }
+}
+</script>
+
+<script>
+(function(){
+  var d=document, r=d.documentElement;
+  r.className+=' js';
+
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* The dial. Without script every row stays visible, which is the honest default. */
+  var reg = d.getElementById('register');
+  function setStop(v){ if(reg) reg.setAttribute('data-filter', v); }
+  var radios = d.querySelectorAll('input[name="degree"]');
+  for(var i=0;i<radios.length;i++){
+    radios[i].addEventListener('change', function(){ setStop(this.value); });
+    if(radios[i].checked) setStop(radios[i].value);
+  }
+
+  if(reduce || !('IntersectionObserver' in window)){
+    var all = d.querySelectorAll('.fx,.up');
+    for(var j=0;j<all.length;j++) all[j].classList.add('lit');
+    return;
+  }
+
+  /* The one authored moment: the hero settles into focus, the way a lens does. */
+  var hero = d.querySelectorAll('.fx');
+  requestAnimationFrame(function(){
+    requestAnimationFrame(function(){
+      for(var k=0;k<hero.length;k++) hero[k].classList.add('lit');
+    });
+  });
+
+  /* Below the fold the entrance is quieter and deliberately different. */
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('lit'); io.unobserve(e.target); }
+    });
+  }, {rootMargin:'0px 0px -12% 0px', threshold:0.08});
+
+  var later = d.querySelectorAll('.up');
+  for(var m=0;m<later.length;m++) io.observe(later[m]);
+})();
+</script>
+</body>
+</html>

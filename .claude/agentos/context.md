@@ -26,11 +26,13 @@ Next.js 16 + React 19 admin/client app for managing AI phone agents. Stack: Vapi
 
 ### Also
 - `hyperworkflow/` — the agency's marketing site (hyperworkflow.ai), deployed to Cloudflare Pages via GitHub Actions.
+- `clients/<slug>/` — real client builds from `/redesign-site`: seeded `DESIGN.md`/`PRODUCT.md`, `source-content/` (the crawl), `assets/` (harvested photos), `fact-sheet.md`, and `versions/{a,b,compare}/` where only the version dirs are ever deployed. Dir name == Cloudflare project == public URL.
+- `scripts/deploy-pages.sh` — one-command Cloudflare Pages deploy for any static dir.
 - `demo/utah-aesthetic-surgery/` — a real reference build.
 - `lead-gen-target-industries.md` — target verticals, lead sources, qualification signals, and ROI.
 
 ## Tech stack
-Node.js + TypeScript (`tsx`), Next.js 16 / React 19, Anthropic SDK (`@anthropic-ai/sdk`), Firecrawl, Playwright + Lighthouse, Cloudflare Pages + GitHub Actions, Supabase, Vapi, Twilio, Stripe, EJS.
+Node.js + TypeScript (`tsx`), Next.js 16 / React 19, Anthropic SDK (`@anthropic-ai/sdk`), Firecrawl (SDK in `audit/`/`cli/`, **and MCP** via `.mcp.json` for agent-driven crawls), Playwright + Lighthouse, Cloudflare Pages + GitHub Actions, Supabase, Vapi, Twilio, Stripe, EJS.
 
 ## Active projects (as of 2026-07)
 - Per-client AI concierge config (shared `serve.js` + prompt files).

@@ -1,0 +1,112 @@
+DIRECTION CONCEPT SEED (key: 8677423a; mode: persuade; source: api; approved pool: 94ff10ff20de; 281/531 human-approved; rerun with --scope direction --mode persuade --from 8677423a --candidate-count 7 to reproduce this roll against this catalog revision)
+ASSIGNED INDEX: 4
+  After ordering the grounded directions by resonance, build candidate
+  4 of your own grounded list; the assignment never points at a
+  challenger. The assignment is the roll, not a suggestion: your top-ranked
+  direction is what every run would ship, so the script decides which grounded
+  direction gets built. Each direction joins a durable visual system to a
+  concrete expression for the requested first surface, decided as one. It must
+  survive the current task plus navigation, quiet and dense content,
+  interaction and state, and a substantially different future surface. In an
+  attended run, present the assigned direction fully committed and offer
+  re-roll; never present a ranked lineup to choose from. Re-roll yourself only
+  on named factual grounds, when the assignment cannot carry the product's
+  truth or task; taste is never grounds.
+  The assignment exists to refuse the model's ranking rut, never to outrank
+  the user or the brief. Never expose assignment metadata in user-facing labels.
+CHALLENGERS:
+  1. a technical deep dive down a volcanic island wall, where one small diver leaves the turquoise surface, crosses a cold blue thermocline, and enters a mesophotic garden of black coral, glass sponges, and falling marine snow
+     SOURCE ID: rivers-tides-ocean-depths-mesophotic-deep-dive
+     CREATIVE SPARK: At forty meters the last warm red drains from the diver's gloves; a lamp clicks on, revealing black-coral branches and white particles falling past a wall with no visible floor.
+     SYSTEM GRAMMAR:
+       - Palette/material: abyssal ink blue deepening by dive stage as the ground, chalk-white marine snow as particle texture, one thermocline cyan band marking the active depth
+       - Type/composition: monospaced dive-computer digits for depth and gas beside quiet grotesk notes, one vertical depth axis ruling every line of copy
+       - Topology/navigation: Descend through surface, thermocline, reef ledge, mesophotic wall, turnaround depth, ascent stops, and the vertical route home.
+       - Controls/state: Descend, hover, illuminate, mark, turn, and ascend with daylight, cooling, dark, gas-limited, decompression, and surfaced states.
+       - Responsive/motion: Pair the vertical dive profile with selected close views; stop drift and bubbles under
+     WEB LEVERAGE: A synchronized depth-and-time scrub can change light, color, sound, species, and ascent obligations together, while any observation remains pinned to its exact depth and dive phase.
+     QUALITY BAR: board https://impeccable.style/worlds/cards/rivers-tides-ocean-depths-mesophotic-deep-dive.webp · hero https://impeccable.style/worlds/cards/rivers-tides-ocean-depths-mesophotic-deep-dive-hero.webp
+  2. a home sewing pattern envelope and its tissue, fashion figures in three lettered views on the front, yardage tables on the back, and inside a folded map of dashed cutting lines, notches, grain arrows, and place-on-fold brackets
+     SOURCE ID: fashion-folded-worlds-sewing-pattern-envelope
+     CREATIVE SPARK: You smooth the crackling tissue across the table, third size line from the edge, and pin piece 4 with its grain arrow dead parallel to the fold before the scissors commit you to view B.
+     SYSTEM GRAMMAR:
+       - Palette/material: manila tissue ground with black drafting marks, envelope figures in dry gouache pastels, one dressmaker red tracing the view and size you have committed to
+       - Type/composition: view letters A, B, and C rank the variants, circled piece numbers sit on every tissue shape, instructions run as numbered steps with thumbnail diagrams
+       - Topology/navigation: the envelope front indexes the views, the back holds size and yardage tables, and the cutting layout maps every numbered piece onto the folded yardage
+       - Controls/state: the chosen size renders its nested cut line solid while other sizes stay dashed, notches must meet to join pieces, and a placed piece pins flat and stops drifting
+       - Responsive/motion: the layout refolds to the fabric width at hand, pieces never rotating off grain; motion is tissue settling and a pin dropping home
+     WEB LEVERAGE: css outlines trace nested size grading while drag interaction snaps svg pieces onto a grain-locked layout grid
+     QUALITY BAR: board https://impeccable.style/worlds/cards/fashion-folded-worlds-sewing-pattern-envelope.webp · hero https://impeccable.style/worlds/cards/fashion-folded-worlds-sewing-pattern-envelope-hero.webp
+  3. a saul bass title sequence, cut-paper shapes and a single jittering line building meaning across timed cards on a flat color field
+     SOURCE ID: posters-covers-sleeves-saul-bass-title
+     CREATIVE SPARK: A black cut-paper arm reaches across a burnt-orange field while brass stabs, and in ninety seconds of jittering silhouettes an entire story is told without showing a single face.
+     SYSTEM GRAMMAR:
+       - Palette/material: one flat saturated field per card, burnt orange, ink black, and bone white, the field color swapping per act while silhouettes stay black
+       - Type/composition: skinny hand-set caps sitting slightly off baseline, one idea per card in hard asymmetry, credits ranked as timed cards rather than columns
+       - Topology/navigation: a timed sequence of full-bleed cards, one idea per card; jumping ahead scrubs the sequence rather than abandoning it
+       - Controls/state: everything is a cut-paper symbol, states change by swapping the silhouette rather than decorating it; a jittery hand-drawn line marks the live element
+       - Responsive/motion: shapes are flat and scale-free so cards recompose at any width; motion is staccato paper-cut jumps
+     WEB LEVERAGE: SVG shape morphs animate the paper-cut swaps, with scroll-driven animation timelines advancing each card.
+     QUALITY BAR: board https://impeccable.style/worlds/cards/posters-covers-sleeves-saul-bass-title.webp · hero https://impeccable.style/worlds/cards/posters-covers-sleeves-saul-bass-title-hero.webp
+  4. a saturday-morning cartoon title card, chunky outlined logotype on a starburst, the character lockup frozen mid-leap, taped-off-air VHS patina over theme-song energy
+     SOURCE ID: pop-culture-shelf-saturday-title-card
+     CREATIVE SPARK: You sit cross-legged on the carpet at 7 a.m., cereal going soft, when the starburst card slams in with the theme song and the tracking wobbles because this tape has been recorded over twice.
+     SYSTEM GRAMMAR:
+       - Palette/material: cel-paint primaries, sunshine yellow rays over sky cyan, thick black outlines as body ink, VHS chroma bleed softening the active card's edges
+       - Type/composition: a chunky outlined logotype bowed across the card's center, episode titles in brush caps on a lower third, everything locked to the starburst's hub
+       - Topology/navigation: one card per segment; bumper cards announce every transition, the starburst hub is where the eye lands and the next card wipes in from black
+       - Controls/state: play tracks like a VHS head, pausing tears the frame into static bands, the selected card leaps its character lockup one cel higher
+       - Responsive/motion: the starburst crops to a vertical wedge on phones with the logotype re-bowed; rays spin slowly behind the lockup
+     WEB LEVERAGE: svg starburst rays rotate with css animation; svg filters add VHS tracking noise, disabled under reduced motion
+     QUALITY BAR: board https://impeccable.style/worlds/cards/pop-culture-shelf-saturday-title-card.webp · hero https://impeccable.style/worlds/cards/pop-culture-shelf-saturday-title-card-hero.webp
+  5. a nixie-tube laboratory counter, where stacked digits glow orange inside glass envelopes and every count arrives as visible plasma
+     SOURCE ID: signals-instruments-nixie-laboratory-counter
+     CREATIVE SPARK: Inside each glass tube ten metal numerals nest; the lit one hovers orange, and a count change is a tiny change of physical depth.
+     SYSTEM GRAMMAR:
+       - Palette/material: neon orange digit glow inside clear glass envelopes, blackened steel chassis as ground, hairline anode mesh gray; the lit digit is the only warm accent
+       - Type/composition: stacked metal numerals of one engineered digit form, each tube a fixed decimal place; labels sit as engraved caps on the panel below the banks
+       - Topology/navigation: quantities are the interface; each metric owns a tube bank with fixed digit positions.
+       - Controls/state: value changes cross-fade between physical digit layers; overflow and reset are visible mechanical events.
+       - Responsive/motion: banks drop to essential digits on phones; digit transitions are single cross-fades under
+     WEB LEVERAGE: Layered DOM digits with depth-true cross-fades render tube physics in pure CSS.
+     QUALITY BAR: board https://impeccable.style/worlds/cards/signals-instruments-nixie-laboratory-counter.webp · hero https://impeccable.style/worlds/cards/signals-instruments-nixie-laboratory-counter-hero.webp
+  6. a hand-drawn technical zine on the web, where marker lettering, doodle arrows, and mascots teach a hard concept the way a friend sketches it on a napkin
+     SOURCE ID: hand-drawn-zine-explainer
+     CREATIVE SPARK: A cheerful marker headline sits above a doodled diagram, hand-drawn arrows looping from a wide-eyed mascot to a boxed code snippet, highlighter swipes marking the one line that matters as you step through the comic panels.
+     SYSTEM GRAMMAR:
+       - Palette/material: cream paper ground, black marker ink, two or three flat highlighter accents in yellow, pink, and teal
+       - Type/composition: a hand-lettered marker face for headings paired with a clean readable sans for body
+       - Topology/navigation: Move by stepping through numbered comic panels, by clicking mascot-guided call-outs, and by a sketched table-of-contents sidebar.
+       - Controls/state: Hovering a doodle reveals its explanation; highlighter swipes animate across the active line; a mascot changes expression to mark done, warning, and gotcha states.
+       - Responsive/motion: draw-on animation traces arrows in on scroll, and reduced-motion renders them already drawn.
+     WEB LEVERAGE: Author diagrams as inline SVG with hand-drawn paths and animate the doodle arrows via stroke-dashoffset draw-on tied to scroll position.
+     QUALITY BAR: board https://impeccable.style/worlds/cards/hand-drawn-zine-explainer.webp · hero https://impeccable.style/worlds/cards/hand-drawn-zine-explainer-hero.webp
+Fuse each challenger before judging it: the challenger supplies the form
+  and its system grammar, the product supplies every fact, and clarity wins
+  conflicts. Weigh the fused result against the assigned direction on exactly
+  two axes, audience identification and product clarity. Losing to strong
+  grounded material is a valid outcome; beating a thin or tool-monoculture
+  list is the point. A fused challenger that wins both axes becomes the build.
+When you can view images, open the QUALITY BAR board and hero for any
+challenger you weigh seriously and for the world you build. They exist as a
+craft bar, the finish level and commitment the build is expected to reach,
+never as a mockup to copy; your surface serves this product, not that render.
+PRODUCT.md and explicit incumbent brand commitments constrain every direction.
+The seed never chooses exact colors, fonts, tokens, or a user preference, and
+it never permits the world and first surface to be selected independently.
+The CREATIVE SPARK is a complete visual system, not a theme or decorative
+reference. Translate every supplied system rule into the product: palette and
+material, type and composition, topology, controls and states, and adaptation.
+Keep the source's visible character, scale, rhythm, and interaction instead of
+reducing vivid grammar to generic nouns. When the source is already a credible
+interface language, commit to it across navigation, content, controls, and
+states. Otherwise keep a literal carrier only when it becomes functional.
+Ambitious motion, spatial media, or interaction is welcome when it strengthens
+the product without weakening semantics, performance, or fallback behavior.
+TELEMETRY: if the resolved direction uses one of these challengers, rerun
+  this script once with --chosen <challenger-id> --from 8677423a --scope direction --mode persuade
+  after resolution. The ping is anonymous (chosen id only) and is skipped
+  automatically when DO_NOT_TRACK or IMPECCABLE_NO_TELEMETRY is set.
+A user- or brief-pinned decision beats the roll, always.
+ASSIGNED INDEX (restated for truncated readers): 4. Build candidate
+4 of your own grounded list; seed key 8677423a.

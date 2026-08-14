@@ -1,0 +1,205 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-13T00:00:00Z",
+  "title": "Design System: La Belle Vie Medical Care & Aesthetics — Version A",
+  "extensions": {
+    "colorMeta": {
+      "ground": { "role": "primary", "displayName": "Duochrome Green", "canonical": "#06392C", "tonalRamp": ["#074535", "#0D785D", "#12AB84", "#17DDAB", "#42EBC0", "#75F0D1", "#B1F7E5", "#E8FDF7"] },
+      "ground-deep": { "role": "primary", "displayName": "Duochrome Green Deep", "canonical": "#04281F", "tonalRamp": ["#074636", "#0C795D", "#11AC85", "#16DFAC", "#41ECC1", "#74F1D2", "#B0F7E5", "#E8FDF7"] },
+      "red": { "role": "secondary", "displayName": "Oxide Red", "canonical": "#6B1815", "tonalRamp": ["#400E0D", "#6F1916", "#9E231F", "#CD2E28", "#DD5550", "#E6837F", "#F1B9B7", "#FBEAEA"] },
+      "red-deep": { "role": "secondary", "displayName": "Oxide Red Deep", "canonical": "#521310", "tonalRamp": ["#400F0C", "#6F1A16", "#9E251F", "#CD2F28", "#DD5650", "#E6847F", "#F1B9B6", "#FBEAEA"] },
+      "amber": { "role": "tertiary", "displayName": "Daisy Amber", "canonical": "#F4C518", "tonalRamp": ["#493A03", "#7F6506", "#B48F09", "#EABA0B", "#F5CD37", "#F8DA6D", "#FBEAAC", "#FEF9E7"] },
+      "amber-lit": { "role": "tertiary", "displayName": "Daisy Amber Lit", "canonical": "#FFD630", "tonalRamp": ["#4D3D00", "#856A00", "#BD9700", "#F5C400", "#FFD62E", "#FFE166", "#FFEEA8", "#FFFAE5"] },
+      "amber-deep": { "role": "tertiary", "displayName": "Daisy Amber Deep", "canonical": "#D9AC08", "tonalRamp": ["#4A3A03", "#806505", "#B69007", "#ECBB09", "#F8CE35", "#FADB6B", "#FCEBAB", "#FEF9E6"] },
+      "chalk": { "role": "neutral", "displayName": "Chalk", "canonical": "#EEF3EC", "tonalRamp": ["#232F1E", "#3C5133", "#557449", "#6F965F", "#8CAE7F", "#ABC4A1", "#CFDDCA", "#F1F5EF"] },
+      "sage": { "role": "neutral", "displayName": "Sage", "canonical": "#A9C4B4", "tonalRamp": ["#1F2D25", "#364F40", "#4D705B", "#649176", "#83AA93", "#A4C1B0", "#CCDCD2", "#F0F5F2"] },
+      "sage-dim": { "role": "neutral", "displayName": "Sage Dim", "canonical": "#8FB3A0", "tonalRamp": ["#1F2E26", "#364F42", "#4C705D", "#639279", "#82AA95", "#A4C1B2", "#CBDCD3", "#F0F5F2"] },
+      "ink": { "role": "neutral", "displayName": "Ink", "canonical": "#052018", "tonalRamp": ["#0A4232", "#127356", "#19A37A", "#21D49F", "#4AE3B6", "#7BEAC9", "#B4F3E1", "#E9FCF6"] },
+      "red-label": { "role": "neutral", "displayName": "Red Field Label", "canonical": "#E7B9AE", "tonalRamp": ["#3B1911", "#662C1E", "#923F2B", "#BD5238", "#CF745E", "#DC9989", "#EBC5BC", "#F9EEEB"] },
+      "red-copy": { "role": "neutral", "displayName": "Red Field Copy", "canonical": "#F0D3CD", "tonalRamp": ["#3B1912", "#662B1F", "#913D2C", "#BC4F38", "#CF715E", "#DC9789", "#EBC4BC", "#F9EEEB"] }
+    },
+    "contrast": {
+      "note": "Measured against the actual grounds, not lighter variants. This is a drenched dark world; a ratio taken against a lifted variant is not a real ratio.",
+      "onGround": { "chalk": "11.46:1", "sage": "6.90:1", "sage-dim": "5.60:1", "amber": "7.88:1" },
+      "onGroundDeep": { "chalk": "14.05:1", "sage": "8.46:1", "sage-dim": "6.87:1", "amber": "9.67:1" },
+      "onRed": { "red-label": "6.76:1", "red-copy": "8.44:1" },
+      "onRedDeep": { "red-label": "8.19:1", "red-copy": "10.21:1" },
+      "onAmber": { "ink": "10.48:1" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Row One", "purpose": "The top row of the acuity chart. Hero H1 only, once per page." },
+      "headline": { "displayName": "Row Two", "purpose": "Every section H2." },
+      "title": { "displayName": "Row Three", "purpose": "Sub-headings within a section, and the dial's first stop." },
+      "nameplate": { "displayName": "Engraved Nameplate", "purpose": "The provider's name and the footer wordmark, set as stamped instrument lettering at wdth 125%." },
+      "quote": { "displayName": "Quoted Voice", "purpose": "The practitioner's verbatim sentences at display scale. Archivo's narrowest shipped width (108%) is what distinguishes a quote from a heading." },
+      "lede": { "displayName": "Lede", "purpose": "The single supporting line beneath row one. Capped at 34ch." },
+      "body": { "displayName": "Body", "purpose": "All running copy in Atkinson Hyperlegible. Capped at 68ch; register descriptions at 64ch." },
+      "label": { "displayName": "Engraved Label", "purpose": "Instrument panel label. Lives in the left margin at >=881px and below the heading at <=880px. Never an eyebrow." }
+    },
+    "fonts": [
+      { "family": "Archivo", "role": "display", "file": "fonts/archivo-var-latin.woff2", "axes": "wght 100-900, wdth 62-125", "shippedWidths": "108%, 110%, 112%, 114%, 118%, 120%, 125%", "note": "Variable. The width axis is the emphasis mechanism, replacing italics and a second family." },
+      { "family": "Atkinson Hyperlegible", "role": "body", "file": "fonts/atkinson-400-latin.woff2, fonts/atkinson-700-latin.woff2", "note": "Drawn by the Braille Institute for readers with impaired vision. On a page built from an eye exam this is the correct object, not a subject association." }
+    ],
+    "shadows": [],
+    "shadowPolicy": "None. The page ships zero box-shadow, text-shadow, drop-shadow and backdrop-filter. Depth is a darker ground, a hairline at one of two weights, and a low-alpha wash. Adding a shadow breaks the world.",
+    "motion": [
+      { "name": "lens-curve", "value": "cubic-bezier(.16, 1, .3, 1)", "purpose": "The only easing curve in the system. Every transition and reveal uses it." },
+      { "name": "refraction-settle", "value": "opacity 0->1, filter blur(12px)->0, transform translateY(14px)->0 over .82s; stagger .1s / .2s / .3s", "purpose": "The one authored moment. The hero resolves the way a lens does. Hero only, fires once on load." },
+      { "name": "below-fold-lift", "value": "opacity 0->1, transform translateY(18px)->0 over .7s; stagger .09s", "purpose": "The quieter echo below the fold, deliberately without blur so the authored moment stays singular. IntersectionObserver at threshold .08, rootMargin 0px 0px -12% 0px, unobserved after firing." },
+      { "name": "state-fast", "value": "180ms ease", "purpose": "Borders and fills on hover: buttons, links, the phone underline." },
+      { "name": "state-dial", "value": "220ms ease", "purpose": "The dial's colour and rule changes on selection." },
+      { "name": "aperture-rotate", "value": "transform rotate(60deg) over .5s", "purpose": "The call action's aperture ring on hover. Gated on prefers-reduced-motion." }
+    ],
+    "motionPolicy": "All content is visible by default. Reveals exist only when scripting is on (html.js) and prefers-reduced-motion is not requested; with either absent, every element is painted immediately. The dial filters with script but never gates: without JavaScript the full register stays visible.",
+    "breakpoints": [
+      { "name": "wide", "value": "1041px+", "note": "Full two-track grammar, asymmetric hero." },
+      { "name": "lg", "value": "1040px", "note": "Hero single-column, comparator caps at 560px, visit to 2 columns, footer stacks." },
+      { "name": "md", "value": "880px", "note": "Two-track collapses to one; engraved label reorders below its heading; fact strip to 2x2; dial to 2 stops per row; register rows stack." },
+      { "name": "sm", "value": "720px", "note": "Fixed amber call bar appears with 76px reserved body padding; visit single-column; secondary nav link hides." },
+      { "name": "xs", "value": "420px", "note": "Dial to one stop per row; credential rules drop their dividers." }
+    ],
+    "imageRecipe": {
+      "plate": "filter: grayscale(1) contrast(1.24) brightness(.42); ::after = ground with mix-blend-mode: color; ::before = ground-deep with mix-blend-mode: soft-light at .5 opacity",
+      "devicePlate": "filter: grayscale(1) contrast(1.16) brightness(.3); ::before opacity .68 — machinery carries more specular range than skin",
+      "rule": "The photograph sits inside the drenched field rather than floating on it as a bright rectangle. The red section does NOT tint its plate: a red-cast face reads as irritation under 'Is it going to hurt?'."
+    }
+  },
+  "components": [
+    {
+      "name": "Call Action (the lit dial reading)",
+      "kind": "button",
+      "refersTo": "call-primary",
+      "description": "The page's only filled action, and it is always the phone number. Amber field, ink label, authored aperture ring that rotates on hover.",
+      "html": "<a class=\"ds-call\" href=\"tel:8019878384\"><svg class=\"ds-ap\" width=\"26\" height=\"26\" viewBox=\"0 0 26 26\" fill=\"none\" aria-hidden=\"true\"><circle cx=\"13\" cy=\"13\" r=\"10.2\" stroke-width=\"1.5\"/><circle cx=\"13\" cy=\"13\" r=\"4.4\" stroke-width=\"1.5\"/><line x1=\"13\" y1=\"2.8\" x2=\"13\" y2=\"8.6\" stroke-width=\"1.5\"/><line x1=\"21.8\" y1=\"18.1\" x2=\"16.8\" y2=\"15.2\" stroke-width=\"1.5\"/><line x1=\"4.2\" y1=\"18.1\" x2=\"9.2\" y2=\"15.2\" stroke-width=\"1.5\"/></svg>Call 801 987 8384</a>",
+      "css": ".ds-call { position: relative; display: inline-flex; align-items: center; gap: 14px; background: #F4C518; color: #052018; text-decoration: none; padding: 15px 26px 15px 18px; border-radius: 2px; font-family: 'Archivo', ui-sans-serif, system-ui, sans-serif; font-weight: 700; font-stretch: 112%; font-size: clamp(1.02rem, .96rem + .3vw, 1.2rem); letter-spacing: .01em; font-variant-numeric: tabular-nums; white-space: nowrap; transition: background-color .18s ease, transform .18s cubic-bezier(.16,1,.3,1); } .ds-call:hover { background: #FFD630; } .ds-call:active { transform: translateY(1px); } .ds-call:focus-visible { outline: 2px solid #F4C518; outline-offset: 3px; border-radius: 1px; } .ds-call .ds-ap { flex: 0 0 auto; display: block; } .ds-call .ds-ap circle, .ds-call .ds-ap line { stroke: #052018; } @media (prefers-reduced-motion: no-preference) { .ds-call .ds-ap { transition: transform .5s cubic-bezier(.16,1,.3,1); } .ds-call:hover .ds-ap { transform: rotate(60deg); } }"
+    },
+    {
+      "name": "Ghost Action",
+      "kind": "button",
+      "refersTo": "ghost",
+      "description": "The secondary path (booking, virtual consultation). Hairline border, no fill at rest. Never carries the call.",
+      "html": "<a class=\"ds-ghost\" href=\"#\">Free virtual consultation</a>",
+      "css": ".ds-ghost { display: inline-flex; align-items: center; gap: 10px; padding: 15px 22px; border: 1px solid rgba(169,196,180,.42); border-radius: 2px; text-decoration: none; color: #EEF3EC; font-family: 'Archivo', ui-sans-serif, system-ui, sans-serif; font-weight: 600; font-stretch: 112%; font-size: clamp(.96rem, .92rem + .22vw, 1.08rem); transition: border-color .18s ease, background-color .18s ease; } .ds-ghost:hover { border-color: #EEF3EC; background: rgba(238,243,236,.06); } .ds-ghost:focus-visible { outline: 2px solid #F4C518; outline-offset: 3px; }"
+    },
+    {
+      "name": "Duochrome Comparator",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "The signature component. Two stacked fields carrying the practice's two positions, the second on oxide red and lens-marked in amber. States the thesis before a word of body copy.",
+      "html": "<div class=\"ds-duo\"><div class=\"ds-duo-head\"><h2>Better one, or better two?</h2><p>An eye exam never decides for you. It offers two, and you say which is clearer.</p></div><div class=\"ds-duo-field ds-duo-a\"><p class=\"ds-duo-n\">One</p><p class=\"ds-duo-t\">The overfilled look.</p><p class=\"ds-duo-q\">&ldquo;We&rsquo;ve all seen the &lsquo;overfilled&rsquo; look on social media, and honestly? We&rsquo;re not fans of it either.&rdquo;</p></div><div class=\"ds-duo-field ds-duo-b\"><div class=\"ds-duo-mark\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 20 20\" fill=\"none\" aria-hidden=\"true\"><circle cx=\"10\" cy=\"10\" r=\"8\" stroke=\"#F4C518\" stroke-width=\"1.5\"/><circle cx=\"10\" cy=\"10\" r=\"3.1\" fill=\"#F4C518\"/></svg><span>Marked</span></div><p class=\"ds-duo-n\">Two</p><p class=\"ds-duo-t\">Your own face, rested.</p><p class=\"ds-duo-q\">&ldquo;We&rsquo;re trying to give you your face on its very best day.&rdquo;</p></div></div>",
+      "css": ".ds-duo { border-top: 1px solid #EEF3EC; border-bottom: 1px solid rgba(169,196,180,.42); overflow: hidden; max-width: 560px; font-family: 'Atkinson', ui-sans-serif, system-ui, sans-serif; color: #EEF3EC; } .ds-duo-head { padding: 18px 0 20px; border-bottom: 1px solid rgba(169,196,180,.42); } .ds-duo-head h2 { margin: 0; font-family: 'Archivo', ui-sans-serif, system-ui, sans-serif; font-weight: 600; font-stretch: 120%; font-size: clamp(.95rem, .9rem + .28vw, 1.12rem); letter-spacing: .02em; line-height: 1.25; } .ds-duo-head p { margin: 7px 0 0; font-size: .85rem; color: #8FB3A0; line-height: 1.45; } .ds-duo-field { position: relative; padding: 24px 22px 26px; } .ds-duo-a { background: #04281F; margin-top: 1px; } .ds-duo-b { background: #6B1815; border-top: 1px solid rgba(0,0,0,.35); } .ds-duo-n { margin: 0 0 12px; font-family: 'Archivo', ui-sans-serif, system-ui, sans-serif; font-weight: 700; font-stretch: 125%; font-size: clamp(.72rem, .86vw, .8rem); letter-spacing: .18em; text-transform: uppercase; color: #8FB3A0; } .ds-duo-b .ds-duo-n { color: #E7B9AE; } .ds-duo-t { margin: 0 0 10px; font-family: 'Archivo', ui-sans-serif, system-ui, sans-serif; font-weight: 600; font-stretch: 114%; font-size: clamp(1.1rem, 1rem + .5vw, 1.42rem); line-height: 1.16; letter-spacing: -.018em; } .ds-duo-q { margin: 0; font-size: .92rem; line-height: 1.5; color: #A9C4B4; } .ds-duo-b .ds-duo-q { color: #F0D3CD; } .ds-duo-mark { position: absolute; top: 22px; right: 22px; display: flex; align-items: center; gap: 8px; } .ds-duo-mark span { font-family: 'Archivo', ui-sans-serif, system-ui, sans-serif; font-weight: 700; font-stretch: 125%; font-size: .62rem; letter-spacing: .18em; text-transform: uppercase; color: #F4C518; }"
+    },
+    {
+      "name": "Acuity Dial Stop",
+      "kind": "input",
+      "refersTo": "dial-stop",
+      "description": "Radio-driven filter on a phoropter tick rail. Four stops descend the acuity ramp so the largest type marks the smallest intervention. The input is visually hidden; the label is the control.",
+      "html": "<div class=\"ds-stops\"><div class=\"ds-stop\"><input type=\"radio\" name=\"ds-degree\" id=\"ds-d1\" value=\"subtle\" checked><label for=\"ds-d1\"><svg class=\"ds-stop-tick\" viewBox=\"0 0 100 22\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><line x1=\"0\" y1=\"21\" x2=\"100\" y2=\"21\"/><line class=\"ds-pin\" x1=\"1\" y1=\"4\" x2=\"1\" y2=\"21\"/></svg><span class=\"ds-stop-name\">Subtle</span><span class=\"ds-stop-sub\">Barely a change. Prevention and upkeep.</span></label></div><div class=\"ds-stop\"><input type=\"radio\" name=\"ds-degree\" id=\"ds-d2\" value=\"moderate\"><label for=\"ds-d2\"><svg class=\"ds-stop-tick\" viewBox=\"0 0 100 22\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><line x1=\"0\" y1=\"21\" x2=\"100\" y2=\"21\"/><line class=\"ds-pin\" x1=\"1\" y1=\"8\" x2=\"1\" y2=\"21\"/></svg><span class=\"ds-stop-name ds-r4\">Moderate</span><span class=\"ds-stop-sub\">Softening lines, replacing lost volume.</span></label></div></div>",
+      "css": ".ds-stops { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); align-items: end; border-top: 1px solid rgba(169,196,180,.42); border-bottom: 1px solid rgba(169,196,180,.42); } .ds-stop { position: relative; } .ds-stop input { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; pointer-events: none; } .ds-stop label { display: block; cursor: pointer; padding: 16px 0 20px; border-top: 1px solid rgba(169,196,180,.24); transition: border-color .22s ease; } .ds-stop-tick { display: block; width: 100%; height: 22px; margin-bottom: 12px; } .ds-stop-tick line { stroke: rgba(169,196,180,.42); stroke-width: 1; } .ds-stop-tick .ds-pin { stroke: #8FB3A0; stroke-width: 2; } .ds-stop-name { display: flex; align-items: flex-end; min-height: 2.5em; font-family: 'Archivo', ui-sans-serif, system-ui, sans-serif; font-weight: 600; font-stretch: 120%; font-size: clamp(1.45rem, 2.7vw, 2.25rem); letter-spacing: -.01em; text-transform: uppercase; line-height: 1; color: #8FB3A0; transition: color .22s ease; } .ds-stop-name.ds-r4 { font-size: clamp(1.15rem, 1.7vw, 1.4rem); letter-spacing: .02em; } .ds-stop-sub { display: block; margin-top: 6px; font-family: 'Atkinson', ui-sans-serif, system-ui, sans-serif; font-size: .82rem; line-height: 1.4; color: #8FB3A0; opacity: .82; padding-right: 12px; } .ds-stop input:checked + label { border-top-color: #F4C518; } .ds-stop input:checked + label .ds-stop-name { color: #F4C518; } .ds-stop input:checked + label .ds-pin { stroke: #F4C518; } .ds-stop input:checked + label .ds-stop-sub { color: #A9C4B4; } .ds-stop label:hover .ds-stop-name { color: #EEF3EC; } .ds-stop input:focus-visible + label { outline: 2px solid #F4C518; outline-offset: 2px; }"
+    },
+    {
+      "name": "Register",
+      "kind": "custom",
+      "refersTo": "register-row",
+      "description": "The page's primary content structure and the reason no cards exist. Rows on hairlines, name track against description track. The reg-stack variant drops to one column inside a half-width measure.",
+      "html": "<ul class=\"ds-reg\"><li><p class=\"ds-reg-n\">Sculptra&reg;</p><p class=\"ds-reg-d\">&ldquo;Injecting biocompatible poly-L-lactic acid into your skin&rsquo;s deep layers, triggering skin cells to produce more collagen.&rdquo; Improvements begin about four to six weeks after treatment.</p></li><li><p class=\"ds-reg-n\">Renuva</p><p class=\"ds-reg-d\">&ldquo;An FDA-regulated, purified adipose (fat) matrix&hellip; Renuva acts like a microscopic honeycomb scaffold.&rdquo;</p></li></ul>",
+      "css": ".ds-reg { border-top: 1px solid rgba(169,196,180,.42); margin: 0; padding: 0; list-style: none; } .ds-reg li { display: grid; grid-template-columns: minmax(190px, 268px) minmax(0,1fr); gap: clamp(16px, 2.4vw, 40px); padding: 20px 0 22px; border-bottom: 1px solid rgba(169,196,180,.24); align-items: start; } .ds-reg-n { margin: 0; font-family: 'Archivo', ui-sans-serif, system-ui, sans-serif; font-weight: 600; font-stretch: 118%; font-size: clamp(1rem, .95rem + .3vw, 1.14rem); line-height: 1.2; letter-spacing: -.012em; color: #EEF3EC; } .ds-reg-d { margin: 0; font-family: 'Atkinson', ui-sans-serif, system-ui, sans-serif; font-size: .95rem; line-height: 1.55; color: #A9C4B4; max-width: 64ch; } @media (max-width: 880px) { .ds-reg li { grid-template-columns: minmax(0,1fr); gap: 8px; } }"
+    },
+    {
+      "name": "Provider Nameplate",
+      "kind": "card",
+      "refersTo": null,
+      "description": "The page's only proof asset, set as an engraved instrument plate on hairline registers. Deliberately NOT a card: no photograph of the provider exists and none may be substituted.",
+      "html": "<div class=\"ds-plateplate\"><p class=\"ds-nm\">Kelly Lance</p><ul class=\"ds-creds\"><li>MSN</li><li>APRN</li><li>FNP-C</li></ul><p class=\"ds-role\">Owner and provider at La Belle Vie Medical Care &amp; Aesthetics. Certified as a Family Nurse Practitioner, with advanced aesthetic training in multiple procedures.</p><p class=\"ds-stat\"><b>30+ years</b> of medical experience, brought to the practice every day.</p></div>",
+      "css": ".ds-plateplate { border-top: 1px solid #EEF3EC; border-bottom: 1px solid rgba(169,196,180,.42); padding: clamp(22px, 2.6vw, 32px) 0; color: #EEF3EC; font-family: 'Atkinson', ui-sans-serif, system-ui, sans-serif; } .ds-nm { margin: 0 0 16px; font-family: 'Archivo', ui-sans-serif, system-ui, sans-serif; font-weight: 700; font-stretch: 125%; font-size: clamp(1.85rem, 1.3rem + 2.6vw, 3.15rem); line-height: .96; letter-spacing: -.02em; text-transform: uppercase; } .ds-creds { display: flex; flex-wrap: wrap; gap: 10px 0; margin: 0 0 22px; padding: 0; list-style: none; } .ds-creds li { font-family: 'Archivo', ui-sans-serif, system-ui, sans-serif; font-weight: 600; font-stretch: 125%; font-size: .68rem; letter-spacing: .17em; text-transform: uppercase; color: #A9C4B4; padding-right: 14px; margin-right: 14px; border-right: 1px solid rgba(169,196,180,.42); line-height: 1.4; } .ds-creds li:last-child { border-right: 0; margin-right: 0; padding-right: 0; } .ds-role { margin: 0; color: #A9C4B4; font-size: .98rem; line-height: 1.55; } .ds-stat { display: block; padding-top: 16px; margin: 18px 0 0; border-top: 1px solid rgba(169,196,180,.24); font-size: .95rem; line-height: 1.5; color: #A9C4B4; } .ds-stat b { font-family: 'Archivo', ui-sans-serif, system-ui, sans-serif; font-weight: 600; font-stretch: 118%; font-size: 1.06rem; letter-spacing: .005em; color: #EEF3EC; font-variant-numeric: tabular-nums; white-space: nowrap; }"
+    },
+    {
+      "name": "Photographic Plate",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "Client photography duotoned into the ground and framed by the authored lens mark, so the image sits inside the field rather than floating on it.",
+      "html": "<figure class=\"ds-plate-fig\"><div class=\"ds-plate\" style=\"aspect-ratio:4/5\"><img src=\"assets/SkinRejuvenation-head.jpg\" alt=\"Close crop of a person's face, lit evenly from the front.\" loading=\"lazy\" decoding=\"async\"><svg class=\"ds-lensmark\" viewBox=\"0 0 100 100\" preserveAspectRatio=\"none\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M2 10 V2 H10\" fill=\"none\" stroke=\"currentColor\" stroke-width=\".5\" vector-effect=\"non-scaling-stroke\"/><path d=\"M90 2 H98 V10\" fill=\"none\" stroke=\"currentColor\" stroke-width=\".5\" vector-effect=\"non-scaling-stroke\"/><path d=\"M98 90 V98 H90\" fill=\"none\" stroke=\"currentColor\" stroke-width=\".5\" vector-effect=\"non-scaling-stroke\"/><path d=\"M10 98 H2 V90\" fill=\"none\" stroke=\"currentColor\" stroke-width=\".5\" vector-effect=\"non-scaling-stroke\"/><path d=\"M50 0 V5 M50 95 V100 M0 50 H5 M95 50 H100\" fill=\"none\" stroke=\"currentColor\" stroke-width=\".5\" vector-effect=\"non-scaling-stroke\"/></svg></div><figcaption class=\"ds-plate-cap\">Photography supplied by the practice.</figcaption></figure>",
+      "css": ".ds-plate-fig { position: relative; margin: 0; } .ds-plate { position: relative; overflow: hidden; background: #04281F; border-radius: 2px; } .ds-plate img { display: block; width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.24) brightness(.42); } .ds-plate::after { content: \"\"; position: absolute; inset: 0; background: #06392C; mix-blend-mode: color; pointer-events: none; } .ds-plate::before { content: \"\"; position: absolute; inset: 0; z-index: 2; background: #04281F; mix-blend-mode: soft-light; opacity: .5; pointer-events: none; } .ds-lensmark { position: absolute; inset: 0; z-index: 3; width: 100%; height: 100%; pointer-events: none; color: #EEF3EC; opacity: .5; } .ds-plate-cap { margin-top: 12px; font-family: 'Atkinson', ui-sans-serif, system-ui, sans-serif; font-size: .78rem; line-height: 1.45; color: #8FB3A0; max-width: 40ch; }"
+    },
+    {
+      "name": "Top Rail",
+      "kind": "nav",
+      "refersTo": null,
+      "description": "A single hairline-bottomed rail. Wordmark left, amber phone number right with tabular figures. No menu, no dropdown, no mobile drawer.",
+      "html": "<header class=\"ds-top\"><div class=\"ds-top-in\"><a class=\"ds-mark\" href=\"#top\"><b>La Belle Vie</b><span>Medical Care &amp; Aesthetics &middot; Draper, Utah</span></a><div class=\"ds-top-right\"><a class=\"ds-top-link\" href=\"#\">Book online</a><a class=\"ds-top-tel\" href=\"tel:8019878384\">801 987 8384</a></div></div></header>",
+      "css": ".ds-top { border-bottom: 1px solid rgba(169,196,180,.24); background: #06392C; } .ds-top-in { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 76px; padding-block: 12px; } .ds-mark { display: block; text-decoration: none; line-height: 1; color: #EEF3EC; } .ds-mark b { display: block; font-family: 'Archivo', ui-sans-serif, system-ui, sans-serif; font-weight: 700; font-stretch: 125%; font-size: clamp(1rem, .94rem + .3vw, 1.2rem); letter-spacing: .06em; text-transform: uppercase; } .ds-mark span { display: block; margin-top: 5px; white-space: nowrap; font-family: 'Archivo', ui-sans-serif, system-ui, sans-serif; font-weight: 500; font-stretch: 125%; font-size: .63rem; letter-spacing: .2em; text-transform: uppercase; color: #8FB3A0; } .ds-top-right { display: flex; align-items: center; gap: clamp(14px, 2vw, 28px); } .ds-top-tel { font-family: 'Archivo', ui-sans-serif, system-ui, sans-serif; font-weight: 700; font-stretch: 112%; font-size: clamp(1rem, .94rem + .32vw, 1.22rem); color: #F4C518; text-decoration: none; font-variant-numeric: tabular-nums; letter-spacing: .005em; white-space: nowrap; border-bottom: 2px solid transparent; transition: border-color .18s ease; } .ds-top-tel:hover { border-bottom-color: #F4C518; } .ds-top-link { font-family: 'Atkinson', ui-sans-serif, system-ui, sans-serif; font-size: .9rem; color: #A9C4B4; text-decoration: none; border-bottom: 1px solid rgba(169,196,180,.42); padding-bottom: 2px; transition: color .18s ease, border-color .18s ease; } .ds-top-link:hover { color: #EEF3EC; border-bottom-color: #EEF3EC; } .ds-top-link:focus-visible, .ds-top-tel:focus-visible { outline: 2px solid #F4C518; outline-offset: 3px; }"
+    },
+    {
+      "name": "Disclaimer Panel",
+      "kind": "card",
+      "refersTo": "disclaimer",
+      "description": "One of only two bounded boxes in the system, and a notice rather than page structure. Carries the medical qualifier wherever treatments are listed.",
+      "html": "<div class=\"ds-disclaim\"><b>Individual results vary.</b> Every treatment listed requires a consultation to determine whether you are a candidate. Timelines quoted are the practice&rsquo;s own published figures, not a promise.</div>",
+      "css": ".ds-disclaim { border: 1px solid rgba(169,196,180,.42); border-radius: 2px; padding: 18px 20px; margin-top: 24px; font-family: 'Atkinson', ui-sans-serif, system-ui, sans-serif; font-size: .88rem; line-height: 1.55; color: #A9C4B4; background: rgba(0,0,0,.13); } .ds-disclaim b { color: #EEF3EC; font-weight: 700; }"
+    },
+    {
+      "name": "Named-Only Chip",
+      "kind": "chip",
+      "refersTo": "named-chip",
+      "description": "The roster of services published by name without further detail. Static by design: these are not filters and must not be given a selected state.",
+      "html": "<ul class=\"ds-named\"><li>Vaginal rejuvenation (FemiLift)</li><li>P-Shot</li><li>Shockwave therapy</li><li>Hormone replacement</li></ul>",
+      "css": ".ds-named { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0 0; padding: 0; list-style: none; } .ds-named li { font-family: 'Archivo', ui-sans-serif, system-ui, sans-serif; font-weight: 500; font-stretch: 114%; font-size: .88rem; letter-spacing: .01em; color: #A9C4B4; border: 1px solid rgba(169,196,180,.24); border-radius: 2px; padding: 7px 13px; }"
+    },
+    {
+      "name": "Mobile Call Bar",
+      "kind": "custom",
+      "refersTo": "callbar",
+      "description": "Fixed amber bar below 720px, with 76px of body padding reserved so it never covers content. Solid field, deliberately no backdrop-filter.",
+      "html": "<div class=\"ds-callbar\"><a href=\"tel:8019878384\"><svg class=\"ds-ap\" width=\"22\" height=\"22\" viewBox=\"0 0 26 26\" fill=\"none\" aria-hidden=\"true\"><circle cx=\"13\" cy=\"13\" r=\"10.2\" stroke-width=\"1.6\"/><circle cx=\"13\" cy=\"13\" r=\"4.4\" stroke-width=\"1.6\"/><line x1=\"13\" y1=\"2.8\" x2=\"13\" y2=\"8.6\" stroke-width=\"1.6\"/><line x1=\"21.8\" y1=\"18.1\" x2=\"16.8\" y2=\"15.2\" stroke-width=\"1.6\"/><line x1=\"4.2\" y1=\"18.1\" x2=\"9.2\" y2=\"15.2\" stroke-width=\"1.6\"/></svg>Call 801 987 8384</a></div>",
+      "css": ".ds-callbar { position: sticky; bottom: 0; background: #F4C518; border-top: 1px solid #D9AC08; } .ds-callbar a { display: flex; align-items: center; justify-content: center; gap: 12px; min-height: 60px; color: #052018; text-decoration: none; font-family: 'Archivo', ui-sans-serif, system-ui, sans-serif; font-weight: 700; font-stretch: 114%; font-size: 1.06rem; font-variant-numeric: tabular-nums; letter-spacing: .01em; } .ds-callbar .ds-ap circle, .ds-callbar .ds-ap line { stroke: #052018; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Refraction Instrument",
+    "overview": "The page is built as an ophthalmic refraction exam, the one medical ritual in which the patient decides every increment and it stops when it is right. That is not a theme laid over a med spa page; it is the argument. The visitor's stated fear is coming out overfilled, and the answer is a world where every quantity is small, named, and chosen by her. The surface behaves like a calibrated instrument: drenched fields of colour, engraved labels in the margin, countable authored geometry, and one lit indicator that only ever means 'this is the reading'.\n\nDensity is high and the page is honest about it. There are no reviews, no ratings, no before/afters, no prices, and no photograph of the provider, so credibility is carried by specificity: named devices, named mechanisms, published timelines, and the practitioner's own verbatim sentences set large. Nothing is padded to fill a grid. The two refusals the world was built against are the blush soft-focus med spa page and its predictable opposite, white-chrome clinical minimalism; both are absent, and neither may be reintroduced as a 'lighter' variant.\n\nMaterial behaviour is flat and tonal. Every plane is a solid field, every division is a hairline, and depth comes from stepping the ground darker rather than lifting anything off it. The page carries zero shadows and zero gradients, and its photographs are duotoned down into the ground so that no rectangle floats.",
+    "keyCharacteristics": [
+      "Drenched dark green ground with an oxide-red counter-field; no third ground colour.",
+      "A single accent (amber) rationed to states that genuinely indicate.",
+      "Six-step Snellen acuity ramp, fixed ratios, never interpolated.",
+      "Emphasis by variable-width axis, not by a second face.",
+      "Hairline registers as the only container; zero cards, zero shadows, zero gradients.",
+      "Authored inline SVG for every mark on the page; no icon set, no glyph font."
+    ],
+    "rules": [
+      { "name": "The Lit Indicator Rule", "body": "Amber appears only where something genuinely indicates: the call action, the marked lens, the live dial stop, the header phone number, the tick dash, the focus ring. It is never a heading colour, never a decorative underline, never a second brand accent, and never spent on more than one element in a viewport that is not the call.", "section": "colors" },
+      { "name": "The Two Lenses Rule", "body": "Green and red are the two positions of one instrument, not a palette. Red is spent on exactly two surfaces (the comparator's second field, and the comfort section) and must stay that rare. A third ground colour does not exist in this world.", "section": "colors" },
+      { "name": "The Measured Ground Rule", "body": "Every foreground ratio is measured against the ground it actually lands on, never a lighter variant. On green: chalk 11.46:1, sage 6.90:1, sage-dim 5.60:1, amber 7.88:1. On oxide red: red-label 6.76:1, red-copy 8.44:1. Ink on amber: 10.48:1. A new value ships only after it is measured the same way, against the real field.", "section": "colors" },
+      { "name": "The Unstained Face Rule", "body": "The red field does not tint its own photograph. Plates inside the red section keep the green matte, because a red-cast face reads as irritation directly under 'Is it going to hurt?' and fights the copy it illustrates. Only the ground is the second lens.", "section": "colors" },
+      { "name": "The Acuity Ramp Rule", "body": "Type sizes come from six fixed rows and nothing between them. Rows one through three carry the page's headings; rows three through six carry the dial's four stops, which descend the chart so the control reads as the eye test it came from, largest type on the smallest intervention. A new size is a new row, decided deliberately, not a value typed inline.", "section": "typography" },
+      { "name": "The Width Axis Rule", "body": "Emphasis is a width change, not a family change. Archivo ships at 108%, 110%, 112%, 114%, 118%, 120% and 125%, and the wider the setting the more it reads as engraved on the instrument. Italics are not used. A second display face does not exist in this world.", "section": "typography" },
+      { "name": "The Margin Label Rule", "body": "The engraved label never sits above a heading. At 881px and up it lives in a fixed left-margin track beside the heading; at 880px and below it moves below the heading and takes a rule under itself. There is no width at which it renders as an eyebrow or a kicker.", "section": "typography" },
+      { "name": "The Hairline Rule", "body": "A container is a line, not a box. If an element needs to be set apart, it gets a rule above it, a rule below it, or a rule down its left edge. It does not get a fill, a shadow, or a radius large enough to read as a tile.", "section": "elevation" },
+      { "name": "The Flat Field Rule", "body": "Every plane is one flat colour. No gradient of any kind ships, including on text, on overlays, and on the photographic plates, whose tinting is done with blend modes on solid fields rather than with a ramp.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do measure every new foreground against the real ground it lands on, and record the ratio. The floor already met on this page is 5.60:1 for the dimmest label and 11.46:1 for primary text.",
+      "Do reach for a hairline before reaching for a container. A rule above, below, or to the left is how this world separates things.",
+      "Do take new type sizes from the six-row acuity ramp, and add a row deliberately if none fits.",
+      "Do get emphasis from Archivo's width axis (108-125%) and from scale, not from a new family, an italic, or a colour.",
+      "Do author new marks as inline SVG in the existing stroke weights (1.5px for the aperture, 0.5px non-scaling for registration frames, 1px rails with 2px pins).",
+      "Do duotone every photograph into the ground with the plate recipe, and frame it with the lens mark.",
+      "Do keep tabular figures on every number a visitor might compare or dial: phone, years, hours.",
+      "Do ship content visible by default and treat motion as an enhancement gated on both scripting and prefers-reduced-motion.",
+      "Do state the medical qualifier wherever treatments are listed: individual results vary, and a consultation determines candidacy."
+    ],
+    "donts": [
+      "Don't add a shadow of any kind. This system has zero and its depth model does not need one.",
+      "Don't add a gradient of any kind, including on text, overlays, or plates.",
+      "Don't build a card. Rows, registers and fields only; the disclaimer panel and the chips are notices, not a licence for tiles.",
+      "Don't put an engraved label above a heading at any breakpoint. Left margin at >=881px, below the heading at <=880px.",
+      "Don't spend amber on anything that is not indicating a state. If it does not mean 'this is the reading', it is chalk, sage, or sage-dim.",
+      "Don't introduce a third ground colour, or reuse chalk and sage on the red field instead of its own four-value ramp.",
+      "Don't tint a photograph with the red field.",
+      "Don't use an icon font, an icon library, an emoji, or a glyph as a mark. Every mark on this page is authored geometry.",
+      "Don't ship any face other than Archivo and Atkinson Hyperlegible. Explicitly banned: Fraunces, Playfair Display, Cormorant, Lora, Crimson, Newsreader, Syne, Space Grotesk, Space Mono, IBM Plex, Inter, DM Sans, DM Serif, Outfit, Plus Jakarta Sans, Instrument Sans, Instrument Serif, and any system display face.",
+      "Don't use em dashes in visible text, number non-sequential sections, or set a kicker above a heading.",
+      "Don't invent proof. This practice has zero reviews, ratings, awards, testimonials, before/afters, prices, founding year, and no provider photograph. No component may be built that displays one, and no placeholder may stand in for one.",
+      "Don't ship a dollar figure, imply that the practice prescribes Ozempic, or present Clitoxin without the practice's own off-label and results-not-guaranteed language on the same screen."
+    ]
+  }
+}

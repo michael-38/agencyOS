@@ -1,0 +1,1609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La Belle Vie Medical Care &amp; Aesthetics | Medical Spa in Draper, Utah</title>
+<meta name="description" content="La Belle Vie is a client-focused medical spa in Draper, Utah for aesthetics and wellness. Injectables, lasers, signature services and guided medical weight loss, led by Kelly Lance, MSN, APRN, FNP-C. Free consultation. Call 801-987-8384.">
+<meta name="theme-color" content="#F0F2ED">
+<link rel="canonical" href="https://labelleviemedicalcare.com/">
+
+<!--
+===============================================================================
+ BUILD RECORD - Version B - run of /design-taste-frontend (SKILL.md, 1207 lines)
+ Client: La Belle Vie Medical Care & Aesthetics, Draper, Utah
+ Every fact on this page traces to clients/labellevie-medspa/fact-sheet.md.
+ Nothing marked [CONFIRM] in the fact sheet appears here.
+===============================================================================
+
+ SECTION 0 - DESIGN READ (0.B, exact format)
+ -----------------------------------------------------------------------------
+ Reading this as: redesign-overhaul of a single-location medical spa landing page
+ for hesitant prospective patients in Draper, Utah, with a quiet clinical-editorial
+ language, leaning toward the Editorial / magazine aesthetic family in native CSS.
+
+ 0.C: no clarifying question asked. The mode (overhaul), the ground (light), the
+ display class (editorial-serif) and the colour strategy (full palette) were all
+ supplied in the brief, so the read does not diverge.
+
+ 0.D anti-default check: no AI-purple, no centred hero over a mesh, no three equal
+ feature cards, no glassmorphism, no Inter, no infinite loops.
+
+ SECTION 1 - THE THREE DIALS (arithmetic shown, 1.A + 1.B + 11.A)
+ -----------------------------------------------------------------------------
+   step 1  1.B preset "Landing (Premium consumer)"        7 / 6 / 3
+   step 2  1.A "trust-first / regulated / accessibility-critical" pull.
+           0.A.6 makes this an OVERRIDE, not a preference: this is medical
+           aesthetics with a 13-item claims risk register, off-label botulinum
+           toxin content, and GLP-1 content. Band top = 4 / 3 / 5.
+           Blend preset with band top, round DOWN (restraint is the product):
+             VARIANCE (7+4)/2 = 5.5 -> 5
+             MOTION   (6+3)/2 = 4.5 -> 4
+             DENSITY  1.A says redesign-overhaul density = "match existing".
+                      Existing Elementor page reads ~5. Regulated band is 4-5. -> 5
+   step 3  11.A Redesign-Overhaul adjustment  +2 / +2 / match
+             VARIANCE 5 + 2 = 7
+             MOTION   4 + 2 = 6
+             DENSITY  5 (match existing, unchanged)
+
+   DESIGN_VARIANCE: 7      MOTION_INTENSITY: 6      VISUAL_DENSITY: 5
+
+   Band behaviour honoured:
+   - VARIANCE 7 (>4) fires 4.3 ANTI-CENTER BIAS. There is no centred hero and no
+     centred section header anywhere on this page. Hero is an asymmetric 7/5 split.
+     Band 4-7 "Offset": varied aspect ratios, negative-margin overlap on the hero
+     figure, left-aligned headers over asymmetric content columns.
+   - MOTION 6 (>3) makes prefers-reduced-motion MANDATORY (6.B). Every animation and
+     transition on this page is inside @media (prefers-reduced-motion: no-preference)
+     or is cancelled by the reduce block at the end of the stylesheet.
+     MOTION 6 (>4) also means motion claimed = motion shown (5). It is shown.
+     Band 4-7 "Fluid CSS": transitions, animation-delay cascade, transform/opacity
+     only. No cinematic choreography, which would be wrong for this audience.
+   - 5.D HARD BAN: addEventListener('scroll') is not used. This page ships ZERO
+     JavaScript. Scroll reveals use CSS scroll-driven animations
+     (animation-timeline: view()), progressive-enhanced behind @supports.
+   - DENSITY 5 "Daily App" band: section rhythm clamp(72px, 8vw, 112px).
+
+ SECTION 2 - DESIGN SYSTEM MAP
+ -----------------------------------------------------------------------------
+ 2.A: no official design system applies. This is not Microsoft, Google, IBM,
+ Shopify, Atlassian, GitHub, GOV.UK or USWDS surface area, and the house rules for
+ this job require one self-contained vanilla HTML file with no build step, which
+ rules out Tailwind, shadcn/ui and Radix Themes.
+ 2.B: the direction is an AESTHETIC, not a system. Family chosen:
+   *** EDITORIAL / MAGAZINE - "Serif type, asymmetric grid, generous whitespace.
+       No library." (SKILL.md 2.B table) ***
+ HONESTY NOTE, per 2.B: everything below is hand-written native CSS taking BORROWED
+ INSPIRATION from print editorial layout. No part of it is an official package, a
+ vendored design system, or a licensed magazine grid. It is an approximation.
+
+ SECTION 11 - REDESIGN PROTOCOL
+ -----------------------------------------------------------------------------
+ 11.A mode: REDESIGN - OVERHAUL. New visual language, content and IA preserved.
+ 11.B audit of the CURRENT live site, reconstructed from source-content/ (10 crawled
+ pages + nap.json). This is an audit of the client's own site. It is not an audit of
+ any other build.
+
+   Brand tokens observed  script "La Belle Vie" wordmark with a daisy glyph over the
+                          "i" (legible inside what-is-the-o-shot-draper-utah.jpeg:
+                          slate-blue script, white petals, yellow-gold centre).
+                          Promotional artwork palette is black / white / saturated
+                          yellow. Photographic treatment is desaturated to near
+                          monochrome with a single yellow element left in colour
+                          (LaserHairRemoval.jpg, Varicose-Spider-Veins-head.jpg).
+                          No logo file was harvested. No type stack is inferable.
+                          Per 11.C the brand accent is EXTRACTED, not replaced: the
+                          yellow survives into this build as the Daisy signal role.
+   Information architecture  home + signature-services + laser-treatments +
+                          aesthetic-treatments + med-spa-events + 5 treatment/blog
+                          pages. Two live booking systems at once (Podium for new
+                          bookings, Boulevard for existing appointments) plus a
+                          contact page. IA is PRESERVED: every published route this
+                          landing page touches keeps its slug and its own label.
+   Content doing work     Kelly Lance's first-person writing; the named device and
+                          product roster; the free consultation; the published FAQ
+                          answers; the NAP block.
+   Content that is filler  the nine service blurbs are printed THREE TIMES on the
+                          home page (source-content/home.md lines 33-107). Retired.
+   Patterns preserved     phone-first CTA, the free consultation offer, the
+                          "REJUVENATE | RESTORE | MAINTAIN" idea of three verbs,
+                          the practice's own section name "the la belle vie
+                          difference", both booking systems named separately.
+   Patterns retired       the tripled service grid; the unedited Elementor
+                          placeholder heading "Add Your Heading Text Here" shipping
+                          live above the tagline; the baked-in marketing text burned
+                          into every treatment header image; stock model photography
+                          asked to carry the page; and the 13 flagged claims in the
+                          fact sheet's risk register.
+   Defects worth naming in hand-off  (a) the Elementor placeholder heading is live on
+                          the home page; (b) the Sculptra page's booking link is
+                          broken, published as http://ooking.podium.com/ with the "b"
+                          missing; (c) the same offer is published as both $50 off
+                          and $100 off within forty lines on the same page.
+   Dial reading of the existing site  DESIGN_VARIANCE ~2 (symmetric Elementor
+                          columns), MOTION_INTENSITY ~1 (static WordPress),
+                          VISUAL_DENSITY ~5. That reading is the input to step 2/3
+                          above, which is why DENSITY matches at 5.
+   SEO baseline / migration risk  the live H1 is "La Belle Vie - Client-Focused
+                          Medical Spa in Utah for Aesthetics & Wellness". This build
+                          replaces it with the practice's own stronger line, so the
+                          keyword string is carried in <title>, meta description, and
+                          verbatim in the hero subtext and the Visit heading
+                          ("medical spa", "Draper, Utah", "aesthetics", "wellness").
+                          tel:8019878384 is preserved exactly as the site's own href.
+   11.F untouched         no route slug, no form field, no legal copy, no wordmark
+                          was altered.
+
+ SECTION 4.7 - SECTION -> LAYOUT FAMILY MAP (each family appears AT MOST ONCE)
+ -----------------------------------------------------------------------------
+   masthead   Sticky single-line bar                 (utility, 72px desktop)
+   hero       Asymmetric Split Hero                  (10, Hero Paradigms)
+   #statement Full-width single-statement band       (10, Typography - editorial
+                                                      manifesto register)
+   #treatments Disclosure roster                     (10, Cards & Containers -
+                                                      Morphing Modal register,
+                                                      native <details>)
+   #signature Horizontal scroll-snap media gallery   (10, Galleries & Media -
+                                                      Accordion Image Slider family)
+   #kelly     Long-form prose spread with drop cap   (editorial, single column)
+   #weight    Sticky split-screen                    (10, Layout - Split-Screen
+                                                      Scroll)
+   #questions Two-column definition / Q&A list       (editorial)
+   #visit     Asymmetric data block (definition list)(editorial)
+   footer     Hairline footer
+   9 content sections, 9 distinct families. Zero repeats. Zero zigzag: exactly ONE
+   image-plus-text split exists on the page (the hero), so the 2-in-a-row cap and
+   the 3-in-a-row Pre-Flight Fail are both untouched.
+
+ HOUSE OVERRIDES APPLIED OVER THIS SKILL'S OWN DEFAULTS
+ -----------------------------------------------------------------------------
+ - 3.A React/Next/Tailwind/Motion default does not apply. Vanilla HTML5, one file,
+   inline <style>, no build step, no framework, zero JavaScript.
+ - 3.A fonts: self-hosted woff2 in ./fonts/. No CDN <link>, no external origin.
+ - 4.8 tier 2 (picsum.photos) is FORBIDDEN here. Every image is a real client
+   photograph from the crawl of the client's own WordPress uploads.
+ - 4.7 eyebrow cap tightened from ceil(sections/3) to ZERO. There are no eyebrows.
+ - 9.G em-dash ban, plus a house ban on em dashes in visible text: zero.
+ - 6.C dark mode: light-locked by explicit instruction (this version's ground is
+   assigned light so it cannot converge with the dark sibling build).
+   color-scheme: light is declared so the UA cannot auto-invert form controls.
+ - Banned faces (union of both skills): Fraunces, Playfair Display, Cormorant, Lora,
+   Crimson, Newsreader, Syne, Space Grotesk, Space Mono, IBM Plex, Inter, DM Sans,
+   DM Serif, Outfit, Plus Jakarta Sans, Instrument Sans, Instrument Serif. None used.
+
+ TYPE - 4.1 SERIF DISCIPLINE, justified rather than reached for
+ -----------------------------------------------------------------------------
+ EB GARAMOND (display, roman only) is drawn from SKILL.md 4.1's sanctioned rotation
+ pool and is neither of the two specifically banned display serifs. Why THIS serif
+ for THIS brand: the practice's name is French, its wordmark is a script, its whole
+ pitch is restraint ("we aren't trying to give you a 20-year-old's face"), and its
+ audience is explicitly afraid of looking overdone. An old-style Garamond reads as a
+ book, not as a billboard. A high-contrast Didone display serif would have argued
+ the opposite case. NO ITALIC IS SHIPPED: only the roman latin variable file is
+ self-hosted, so no synthesised obliques exist, and 4.1's italic-descender hazard
+ cannot occur.
+ PUBLIC SANS (body, UI, numerals) is the neutral, accessibility-first companion. It
+ carries the phone number in tabular numerals, which PRODUCT.md requires because the
+ phone is the primary conversion path.
+
+ COLOUR - 4.2, full palette, FOUR NAMED ROLES, each with a locked usage rule
+ -----------------------------------------------------------------------------
+   PORCELAIN  #F0F2ED  the ground. Cool, faintly green. Deliberately NOT the warm
+                       cream family: the seeded med-spa world's cream + terracotta
+                       is a named banned cluster for this job, and 4.2's
+                       PREMIUM-CONSUMER PALETTE BAN bans #f5f1ea / #f7f5f1 /
+                       #fbf8f1 / #efeae0 / #ece6db / #faf7f1 / #e8dfcb outright.
+                       None of those hexes appear below.
+   INK        #18211C  all structure and body text. Off-black, never #000000 (9.A).
+   VERDURE    #2C5A42  THE accent. Locked: every interactive element and every
+                       emphasis on the page is Verdure and nothing else is. No
+                       second accent appears on any button, link, rule or focus
+                       ring anywhere on the page.
+   DAISY      #E4B21C  the brand signal, extracted from the client's own artwork per
+                       11.C. Rationed. It appears on exactly five selectors and
+                       nowhere else, audited by parsing the stylesheet:
+                         .brand b        the rule under the wordmark
+                         .statement-rail the statement band's field
+                         .weight-flag    the rule beside the Ozempic sentence
+                         .caveat         the Clitoxin disclaimer field (daisy-soft)
+                         ::selection     text-selection highlight (daisy-soft)
+                       It is never a button fill, never a link colour, never a hover
+                       or focus or active state, and never a focus ring, so it cannot
+                       compete with Verdure for meaning. Verdure remains the sole
+                       interactive accent on the page.
+   Derived neutrals stay inside the same cool-green family (4.2 one-palette rule):
+   --paper #FAFBF8, --line #D2D8CE, --muted #4E5A53, --mist #E3E7DE.
+   Measured WCAG contrast, computed not assumed (see 6/8.B):
+     ink on porcelain      14.63:1 AAA        muted on porcelain   6.40:1 AA
+     ink on paper          15.88:1 AAA        muted on paper       6.95:1 AA
+     verdure on porcelain   7.03:1 AAA        verdure on paper     7.63:1 AAA
+     porcelain on verdure   7.03:1 AAA        paper on verdure     7.63:1 AAA
+     ink on daisy           8.39:1 AAA        ink on daisy-soft   13.62:1 AAA
+     ink2 on daisy-soft    10.10:1 AAA        verdure on daisysft  6.55:1 AA
+
+ SHAPE - 4.4 SHAPE CONSISTENCY LOCK
+ -----------------------------------------------------------------------------
+ One documented rule, applied everywhere: RADIUS 0. All-sharp. Buttons, images,
+ disclosure rows, focus outlines. Measured: zero border-radius declarations exist
+ in the stylesheet.
+ No cards: grouping is done with hairlines, tonal fields and negative space (4.4),
+ which is also required because "cards as page structure" is banned for this job.
+
+ MOTION - every animation justified in one sentence (5, MOTION MUST BE MOTIVATED)
+ -----------------------------------------------------------------------------
+   hero cascade      hierarchy: the hero arrives in reading order, headline first.
+   scroll reveal     storytelling: each section resolves as the reader reaches it.
+   CTA hover/active  feedback: acknowledges the pointer and the press.
+   details marker    state transition: shows that a row opened.
+   scroll-snap       feedback: the gallery settles on a service instead of drifting.
+ Zero marquees (cap is one). Zero parallax. Zero infinite loops. Zero scroll-hijack.
+
+ IMAGES - 4.8, real photography only
+ -----------------------------------------------------------------------------
+ Seven real client photographs, all from the client's own WordPress uploads. No
+ generated imagery exists for this client and no image-generation tool was available,
+ so tier 1 is unavailable and tier 2 (picsum.photos) is forbidden here: tier 0, the
+ client's real assets, is what shipped.
+ ART DIRECTION CONSTRAINT FOUND IN THE AUDIT: every 1400x673 treatment header has
+ marketing copy BURNED INTO one half of the JPEG ("REDUCE WRINKLES. INCREASE
+ SELF-ESTEEM.", "BEING POUTY IS TRENDY", "NATURAL SUPPORT FOR A NATURAL LIFT").
+ Every image below is therefore cropped hard to the subject half with object-position,
+ which removes the baked-in text entirely. Two of the 992x600 blog headers carry a
+ baked-in yellow border; the one used here is scaled 1.06 inside an overflow clip to
+ eat it.
+ DELIBERATELY NOT USED: What-Medical-Weight-Loss-Looks-Like-at-La-Belle-Vie.jpg is a
+ measuring tape around a waist. PRODUCT.md requires that weight copy must not shame,
+ so the weight-loss section ships with no photograph rather than that one.
+ NOT SHIPPED: the August 2026 specials artwork, because its offers are baked into the
+ JPEG as dollar figures and no dollar figure may ship on this build. The published
+ /monthly-specials/ route is linked instead, which is the fact sheet's own named safe
+ treatment.
+
+ PROOF - what this page may NOT contain, and does not
+ -----------------------------------------------------------------------------
+ Zero reviews, zero testimonials, zero star ratings, zero review counts, zero awards,
+ zero badges, zero press, zero before/after images, zero prices, zero dollar figures,
+ zero financing, zero memberships, zero founding year, zero "11 years", zero second
+ provider, zero physician, zero patient-volume numbers, zero second location, zero
+ weekend hours, zero "Closed" rows. None of these exist in the source; inventing one
+ would be a fabrication. The proof this page spends instead is Kelly Lance by name
+ and credential, her own writing quoted at length, the named device and product
+ roster, and the free consultation.
+ The practice does NOT prescribe Ozempic and says so twice. Nothing on this page
+ implies otherwise; the sentence is quoted directly.
+ Clitoxin is described with the practice's own "off-label" wording and ships with the
+ practice's own "results are not guaranteed" disclaimer on the same screen.
+
+ SECTION 14 - FINAL PRE-FLIGHT CHECK, all 62 boxes run literally
+ -----------------------------------------------------------------------------
+ Result: 58/62 PASS (52 outright + 6 vacuous where the feature is absent),
+ 3 N/A-with-substitute (11, 55, 59), 1 explicit override (52).
+ Evidence is a grep, a computed value, or a named screenshot region in
+ .impeccable/screens/. "parsed" = the stylesheet was parsed with comments stripped.
+
+  1 PASS  0.B one-liner present above, in the required format.
+  2 PASS  7 / 6 / 5, arithmetic shown from the 1.B preset through the regulated
+          pull and the 11.A overhaul adjustment. Baseline not used silently.
+  3 PASS  2.A: none applies. 2.B: Editorial / magazine, labelled in code as
+          BORROWED INSPIRATION and explicitly not an official package.
+  4 PASS  Mode = Redesign-Overhaul. 11.B audit above covers brand tokens, IA,
+          content, retire list, dial reading of the old site, SEO baseline, and
+          three named live defects.
+  5 PASS  Rendered innerText scan: 0 em-dashes, 0 en-dashes. Also 0 "$", 0 ".".
+  6 PASS  One light theme. color-scheme: light. Footer stays light. Parsed:
+          0 prefers-color-scheme blocks, so no section can invert.
+  7 PASS  Verdure #2C5A42 is the sole interactive accent. Parsed: --daisy appears
+          on exactly 5 selectors, all non-interactive; 0 interactive selectors.
+  8 PASS  Radius 0 everywhere. Parsed: 0 border-radius declarations. Live DOM:
+          0 elements with a computed radius other than 0px.
+  9 PASS  Solid CTA 7.63:1, ghost CTA 7.03:1. Live sweep of 186 rendered text
+          nodes against their real backgrounds: 0 failures, minimum 6.40:1.
+ 10 PASS  Range-measured at 1440: all 5 CTAs render on 1 text line.
+ 11 N/A   No form ships. The practice publishes no form endpoint, and inventing
+    +SUB  one would fabricate. SUBSTITUTE, auditing what this box protects:
+          field labels (--muted on --paper) 6.95:1, helper text 6.40:1 minimum,
+          focus ring 2px #2C5A42 = 7.03:1 against the ground, far above the 3:1
+          non-text floor. Focus ring verified live by keyboard Tab, captured in
+          b-desktop-1440x900-focus-ring.png.
+ 12 PASS  EB Garamond. Not Fraunces, not Instrument Serif, and not on this job's
+          17-face banned union. Drawn from 4.1's own rotation pool, with the
+          brand justification written out in the TYPE note above.
+ 13 PASS  0 of the 16 banned premium-consumer hexes appear. Ground is a cool
+          green-grey, not warm cream. No brass, clay, oxblood or ochre.
+ 14 PASS  Vacuous and by design: parsed 0 font-style:italic, 0 <em>, 0 <i>. Only
+          the roman EB Garamond file is self-hosted, so no synthetic oblique can
+          be produced and the descender hazard cannot occur.
+ 15 PASS  Measured at 1440: H1 = 2 lines, subtext = 20 words and 3 lines, CTA row
+          bottom at y=706 against a 900px viewport.
+ 16 PASS  Computed hero padding-top = 68px, under the 96px cap.
+ 17 PASS  4 text elements, at the cap: headline, subtext, CTA row, and the
+          figure's caption. Zero eyebrows. The caption is attached to the image
+          on the opposite grid column, not a tagline sitting under the CTAs.
+ 18 PASS  House cap is ZERO, tighter than ceil(sections/3). Mechanical: parsed
+          0 text-transform:uppercase and 0 letter-spacing >= 0.1em.
+ 19 PASS  No section header is a big headline with a small explainer floating in
+          the corner. The two 2-column sections (#kelly, #weight) put the entire
+          section body in the wide column, which is 4.7's stated exemption.
+ 20 PASS  Exactly ONE image-plus-text split exists on the page (the hero), so
+          neither the 2-in-a-row cap nor the 3-in-a-row fail can be reached.
+ 21 PASS  Three intents, one label each: "Call 801-987-8384" (x3, identical),
+          "Book online" (Podium, x2, identical), "Your appointments" (Boulevard,
+          x1). The two booking systems are labelled separately as required.
+ 22 PASS  Vacuous: no logo wall. Zero third-party logos exist in the source.
+ 23 PASS  Vacuous: no bento. Live DOM: 0 equal-3-column grids.
+ 24 PASS  Vacuous: no trust wall. Zero social proof of any kind exists.
+ 25 PASS  All 996 visible words re-read. Six strings rewritten: one sentence
+          fragment, one noun-phrase fragment, two over-claims, one line that
+          implied physician oversight, one that read as LLM-clever.
+ 26 PASS  Five animations, each with its one-sentence reason recorded in the
+          MOTION note above.
+ 27 PASS  0 marquees.
+ 28 PASS  Masthead height 73px. All 5 nav links share top=19px, so one row.
+ 29 PASS  8 content sections plus footer, 9 distinct layout families, map above.
+          The rule asks for 4 across 8.
+ 30 PASS  Vacuous: no bento, so no empty cell can exist.
+ 31 PASS  7 categories -> disclosure roster. 6 signature services -> scroll-snap
+          gallery. 7 assessed factors -> 2-column grouped split. 3 pillars ->
+          definition list. 3 questions -> 2-column definition list. No default
+          bulleted list over five items anywhere.
+ 32 PASS  7 real client photographs. 0 <svg>, 0 div-based fake screenshots,
+          0 picsum. Every image cropped hard to strip its baked-in JPEG text.
+ 33 PASS  0 pills or labels overlaid on any image.
+ 34 PASS  One functional caption (the free-consultation line). No decorative
+          photo credits.
+ 35 PASS  0 version footers.
+ 36 PASS  0 micro-meta-sentences. There are no eyebrows to sit under.
+ 37 PASS  0 decoration strips at the hero bottom.
+ 38 PASS  0 floating corner sub-text.
+ 39 PASS  0 progress bars or filled comparison tracks.
+ 40 PASS  The address appears twice as real NAP, which the rule allows. There is
+          no atmospheric locale, time or weather strip.
+ 41 PASS  0 scroll cues.
+ 42 PASS  0 version labels.
+ 43 PASS  0 section-number eyebrows. Also banned by this job's negative floor.
+ 44 PASS  0 elements with a computed border-radius, so no round dots, and
+          0 bullet glyphs in the rendered text.
+ 45 PASS  Every list row carries a bottom border only, with a single top rule on
+          the group. The elements that have both borders are 4 buttons and 2
+          boxed containers, none of which is a list row.
+ 46 PASS  Section sub-paragraphs measure 20 / 17 / 15 / 8 words, all under 25.
+          No data table. No invented precision: every figure on the page is
+          sourced (30 years, 12-18 months, 3-6 months, 4-6 weeks, 3-5 days,
+          under one hour, the five published days, the phone number).
+ 47 PASS  Statement band measured at 3 lines at 1440. Attribution is name plus
+          role, with no em dash.
+ 48 PASS  MOTION 6 > 4 and the page actually moves: hero cascade, scroll-driven
+          reveals, hover and active feedback, disclosure transition, scroll-snap.
+          All verified live.
+ 49 PASS  Vacuous: no GSAP, no sticky-stack, no horizontal scroll-hijack. The one
+          sticky element is CSS position:sticky with nothing pinned by script.
+ 50 PASS  0 occurrences of addEventListener anywhere in the file, 0 <script>
+          tags, 0 JS files. The page ships zero JavaScript. Scroll reveals use
+          CSS animation-timeline: view() behind an @supports guard.
+ 51 PASS  Parsed: all 12 animation and transition declarations sit inside
+          @media (prefers-reduced-motion: no-preference). The only 3 outside it
+          are the cancels in the reduce and print blocks. scroll-behavior:smooth
+          never appears outside the no-preference block.
+ 52 OVER- Light-locked. 6.C's own clause allows a single mode "with explicit user
+    RIDE  instruction", and the ground for this build is assigned light so it
+          cannot converge with the dark sibling build. color-scheme: light ships
+          so the UA cannot auto-invert controls, and all tokens live in one
+          :root block so a dark set is a single-block addition. Not tested in
+          dark, because dark is not shipped. Stated plainly rather than ticked.
+ 53 PASS  Two explicit breakpoints (900, 560) declare the single-column fallback
+          per section. Measured 0 horizontal overflow at 390, 768 and 1440.
+ 54 PASS  min-height: calc(100dvh - ...). Parsed 0 declarations using 100vh or
+          h-screen; the only textual hits are inside these CSS comments.
+ 55 N/A   No React. SUBSTITUTE: zero JavaScript means there are no listeners,
+    +SUB  timers or observers to leak. Every animation is declarative CSS that
+          the user agent tears down with its element.
+ 56 PASS  Loading: every image frame carries an explicit aspect-ratio and a
+          --mist fill, so a correctly shaped placeholder holds the space before
+          the JPEG paints, plus font-display: swap. Empty to populated: the 7
+          disclosures ship closed and have a distinct open state. Error: there is
+          no client-side failure surface (no JS, no form, no fetch), and the two
+          off-site booking routes are labelled so a visitor knows which system
+          they are about to enter.
+ 57 PASS  No card grid is used as page structure. Grouping is hairlines, tonal
+          fields and negative space. The single boxed element is the contact
+          block, where the box is real containment for the conversion path.
+ 58 PASS  0 icons and 0 <svg> elements, so no hand-rolled icon paths exist. The
+          only affordance mark is the disclosure plus/minus, drawn as two CSS
+          pseudo-element bars, which is geometry rather than an icon.
+ 59 N/A   No React. SUBSTITUTE: motion is isolated in one stylesheet block behind
+    +SUB  a single media query. There is no component boundary to cross, no
+          client bundle and no hydration cost.
+ 60 PASS  No Inter, no AI-purple, no three-equal-card row (0 measured), no
+          invented people (Kelly Lance and Dr. Charles Runels are both sourced),
+          no "Acme", no "Quietly in use at", no pure #000 or #fff, no glow,
+          0 gradient() declarations, no custom cursor.
+ 61 PASS  Initial payload 259 KB: 64 KB HTML, 71 KB self-hosted fonts, 129 KB LCP
+          image. The LCP image is the only eager one and carries
+          fetchpriority="high"; the other 6 are loading="lazy". INP: no
+          JavaScript at all. CLS: all 7 images carry intrinsic width and height
+          AND their frames carry aspect-ratio, both verified true in the live
+          DOM. 10 requests, all same-origin, 0 external. 0 console messages.
+ 62 PASS  One system: the hand-written editorial CSS in this file. No framework,
+          no component library, nothing mixed.
+-->
+
+
+<style>
+/* ---------------------------------------------------------------------------
+   1. SELF-HOSTED FONTS - latin block only, downloaded from Google Fonts CSS2
+      with a desktop Chrome UA. No external origin is contacted at runtime.
+   --------------------------------------------------------------------------- */
+@font-face{
+  font-family:'EB Garamond';
+  font-style:normal;
+  font-weight:400 600;
+  font-display:swap;
+  src:url('fonts/ebgaramond-latin-var.woff2') format('woff2');
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face{
+  font-family:'Public Sans';
+  font-style:normal;
+  font-weight:400 700;
+  font-display:swap;
+  src:url('fonts/publicsans-latin-var.woff2') format('woff2');
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+
+/* ---------------------------------------------------------------------------
+   2. TOKENS - four named colour roles plus derived neutrals in one family.
+      Page theme is LIGHT and locked (4.11). No section inverts.
+   --------------------------------------------------------------------------- */
+:root{
+  color-scheme:light;
+
+  --porcelain:#F0F2ED;      /* role 1: ground                                */
+  --ink:#18211C;            /* role 2: structure and body text               */
+  --verdure:#2C5A42;        /* role 3: THE accent, interactive + emphasis    */
+  --daisy:#E4B21C;          /* role 4: brand signal, non-interactive only    */
+
+  --verdure-deep:#1F4230;
+  --daisy-soft:#F7E9BC;
+  --paper:#FAFBF8;
+  --mist:#E3E7DE;
+  --line:#D2D8CE;
+  --ink-2:#2C3831;
+  --muted:#4E5A53;
+
+  --serif:'EB Garamond',Georgia,'Times New Roman',serif;
+  --sans:'Public Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
+
+  --shell:1240px;
+  --gutter:clamp(20px,4vw,48px);
+  --rhythm:clamp(72px,8vw,112px);   /* VISUAL_DENSITY 5, band 4-7            */
+  --nav-h:72px;
+
+  /* z-index scale, documented (6.F). Three steps, nothing arbitrary. */
+  --z-base:0;
+  --z-sticky:10;
+  --z-skip:20;
+
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+
+/* ---------------------------------------------------------------------------
+   3. RESET AND BASE
+   --------------------------------------------------------------------------- */
+*,*::before,*::after{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{
+  margin:0;
+  background:var(--porcelain);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:17px;
+  line-height:1.62;
+  font-weight:400;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+img{display:block;max-width:100%;}
+a{color:var(--verdure);text-underline-offset:3px;text-decoration-thickness:1px;}
+a:hover{color:var(--verdure-deep);}
+h1,h2,h3,h4,p,ul,ol,dl,dd,figure,blockquote{margin:0;}
+ul{padding:0;list-style:none;}
+
+:focus-visible{
+  outline:2px solid var(--verdure);
+  outline-offset:3px;
+}
+
+::selection{background:var(--daisy-soft);color:var(--ink);}
+
+.shell{
+  width:100%;
+  max-width:var(--shell);
+  margin-inline:auto;
+  padding-inline:var(--gutter);
+}
+
+.skip{
+  position:absolute;left:-9999px;top:0;
+  z-index:var(--z-skip);
+  background:var(--ink);color:var(--paper);
+  padding:12px 18px;font-size:15px;font-weight:600;
+}
+.skip:focus{left:0;}
+
+/* Type primitives ---------------------------------------------------------- */
+.display{
+  font-family:var(--serif);
+  font-weight:500;
+  line-height:1.03;
+  letter-spacing:-.015em;
+  font-size:clamp(2.9rem,6vw,4.9rem);
+}
+.h2{
+  font-family:var(--serif);
+  font-weight:500;
+  line-height:1.06;
+  letter-spacing:-.012em;
+  font-size:clamp(2.1rem,3.7vw,3.15rem);
+}
+.h3{
+  font-family:var(--serif);
+  font-weight:500;
+  line-height:1.15;
+  font-size:clamp(1.35rem,1.9vw,1.7rem);
+  letter-spacing:-.005em;
+}
+.lede{
+  font-size:clamp(1.06rem,1.35vw,1.2rem);
+  line-height:1.6;
+  color:var(--ink-2);
+  max-width:56ch;
+}
+.body{max-width:65ch;color:var(--ink-2);}
+.small{font-size:.94rem;line-height:1.55;color:var(--muted);}
+.tnum{font-variant-numeric:tabular-nums;}
+
+.section{padding-block:var(--rhythm);}
+.section + .section{border-top:1px solid var(--line);}
+/* Anchor targets must clear the sticky masthead. */
+[id]{scroll-margin-top:calc(var(--nav-h) + 24px);}
+
+/* ---------------------------------------------------------------------------
+   4. MASTHEAD - one line at desktop, 72px. No backdrop-filter: a filtered
+      sticky bar becomes a containing block for fixed descendants, which breaks
+      overlays. Solid ground avoids the whole class of bug.
+   --------------------------------------------------------------------------- */
+.masthead{
+  position:sticky;top:0;
+  z-index:var(--z-sticky);
+  background:var(--porcelain);
+  border-bottom:1px solid var(--line);
+}
+.masthead .shell{
+  height:var(--nav-h);
+  display:flex;align-items:center;gap:24px;
+}
+.brand{
+  display:flex;flex-direction:column;align-items:flex-start;gap:1px;
+  width:max-content;max-width:100%;
+  text-decoration:none;color:var(--ink);
+  margin-right:auto;
+}
+.brand b{
+  font-family:var(--serif);
+  font-weight:500;
+  font-size:1.5rem;
+  line-height:1;
+  letter-spacing:.004em;
+  border-bottom:2px solid var(--daisy);
+  padding-bottom:2px;
+}
+.brand span{
+  font-size:.72rem;
+  letter-spacing:.02em;
+  color:var(--muted);
+}
+.navlinks{display:flex;align-items:center;gap:26px;}
+.navlinks a{
+  font-size:.95rem;
+  color:var(--ink-2);
+  text-decoration:none;
+  padding-block:4px;
+  border-bottom:1px solid transparent;
+}
+.navlinks a:hover{color:var(--verdure);border-bottom-color:var(--verdure);}
+
+/* Buttons: one shape (radius 0), one accent (Verdure), AA-measured both ways. */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  white-space:nowrap;
+  font-family:var(--sans);
+  font-size:1rem;font-weight:600;
+  letter-spacing:.002em;
+  padding:14px 24px;
+  border:1px solid var(--verdure);
+  text-decoration:none;
+}
+.btn--solid{background:var(--verdure);color:var(--paper);}   /* 7.63:1 */
+.btn--solid:hover{background:var(--verdure-deep);border-color:var(--verdure-deep);color:var(--paper);}
+.btn--ghost{background:transparent;color:var(--verdure);}     /* 7.03:1 */
+.btn--ghost:hover{background:var(--mist);color:var(--verdure-deep);}
+.btn--sm{padding:10px 18px;font-size:.95rem;}
+
+/* ---------------------------------------------------------------------------
+   5. HERO - Asymmetric Split Hero. Anti-center bias (VARIANCE 7 > 4).
+      dvh, never vh, never h-screen (3.E viewport stability).
+   --------------------------------------------------------------------------- */
+.hero{
+  padding-top:clamp(36px,5vw,68px);   /* well under the pt-24 / 96px cap      */
+  padding-bottom:var(--rhythm);
+  overflow:hidden;
+}
+.hero .shell{
+  display:grid;
+  grid-template-columns:7fr 5fr;      /* asymmetric, not 50/50                */
+  gap:clamp(32px,5vw,72px);
+  align-items:center;
+  min-height:calc(100dvh - var(--nav-h) - 68px);
+}
+.hero-copy{min-width:0;}
+.hero h1{margin-bottom:26px;}
+.hero .lede{max-width:44ch;margin-bottom:34px;}
+.hero-ctas{display:flex;flex-wrap:wrap;gap:14px;}
+
+/* Figure overlaps the grid gutter and bleeds right: VARIANCE band 4-7 offset. */
+.hero-figure{
+  position:relative;
+  margin-right:calc(var(--gutter) * -1);
+  margin-top:-2rem;
+}
+.frame{
+  position:relative;
+  overflow:hidden;
+  background:var(--mist);            /* shaped placeholder = loading state   */
+}
+.frame img{
+  width:100%;height:100%;
+  object-fit:cover;
+}
+.hero-figure .frame{aspect-ratio:4/5;}
+/* Wrinkles-head.jpg: subject occupies the RIGHT half, baked-in marketing copy
+   occupies the LEFT half. Cropping to 74% removes the burned-in text. */
+.hero-figure img{object-position:74% 42%;}
+
+.hero-note{
+  margin-top:20px;
+  padding-top:14px;
+  border-top:1px solid var(--line);
+  max-width:34ch;
+}
+
+/* ---------------------------------------------------------------------------
+   6. STATEMENT BAND - full width, one message, the owner's own sentence.
+      Not a testimonial: none exist. This is the practice's own published voice.
+   --------------------------------------------------------------------------- */
+.statement{
+  background:var(--paper);
+  border-block:1px solid var(--line);
+  padding-block:clamp(64px,7vw,104px);
+}
+.statement .shell{
+  display:grid;
+  grid-template-columns:1fr 11fr;    /* asymmetric rail, not centred          */
+  gap:clamp(20px,3vw,40px);
+}
+.statement-rail{
+  background:var(--daisy);           /* Daisy: field, never an interactive     */
+  width:6px;
+  min-height:100%;
+}
+.statement p{
+  font-family:var(--serif);
+  font-weight:400;
+  font-size:clamp(1.9rem,4vw,3.1rem);
+  line-height:1.14;
+  letter-spacing:-.012em;
+  max-width:27ch;      /* 4.10 caps quoted body at 3 lines. Measured: 3 at 1440. */
+}
+.statement footer{
+  margin-top:28px;
+  font-size:.98rem;
+  color:var(--muted);
+  line-height:1.5;
+}
+.statement footer b{color:var(--ink-2);font-weight:600;}
+
+/* ---------------------------------------------------------------------------
+   7. TREATMENT ROSTER - disclosure rows. Chosen over a <ul> because 4.9 bans a
+      default bulleted list for more than five items, and over a card grid
+      because cards may not be page structure here.
+   --------------------------------------------------------------------------- */
+.roster{border-top:1px solid var(--ink);margin-top:44px;}
+.rost{border-bottom:1px solid var(--line);}
+.rost > summary{
+  list-style:none;
+  cursor:pointer;
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-items:center;
+  gap:20px;
+  padding-block:22px;
+}
+.rost > summary::-webkit-details-marker{display:none;}
+.rost > summary:hover .rost-name{color:var(--verdure);}
+.rost > summary:focus-visible{outline:2px solid var(--verdure);outline-offset:3px;}
+.rost-name{
+  font-family:var(--serif);
+  font-size:clamp(1.35rem,2.1vw,1.85rem);
+  font-weight:500;
+  line-height:1.2;
+}
+/* Marker is CSS geometry, not a hand-rolled SVG path and not an icon library. */
+.rost-mark{position:relative;width:18px;height:18px;flex:none;}
+.rost-mark::before,.rost-mark::after{
+  content:"";position:absolute;left:0;top:8px;
+  width:18px;height:1.5px;background:var(--ink-2);
+}
+.rost-mark::after{transform:rotate(90deg);}
+.rost[open] .rost-mark::after{transform:rotate(0deg);}
+.rost[open] .rost-name{color:var(--verdure);}
+.rost-body{padding-bottom:30px;max-width:70ch;}
+.rost-body p + p{margin-top:14px;}
+.rost-body .body{color:var(--ink-2);}
+.named{
+  margin-top:18px;
+  display:flex;flex-wrap:wrap;gap:8px 10px;
+}
+.named li{
+  font-size:.9rem;
+  color:var(--ink-2);
+  background:var(--mist);
+  padding:5px 11px;
+}
+.caveat{
+  margin-top:18px;
+  padding:14px 16px;
+  background:var(--daisy-soft);      /* Daisy family: emphasis field, no link  */
+  font-size:.94rem;
+  line-height:1.55;
+  color:var(--ink-2);
+  max-width:62ch;
+}
+.caveat b{color:var(--ink);}
+
+/* ---------------------------------------------------------------------------
+   8. SIGNATURE GALLERY - horizontal scroll-snap media strip.
+      Keyboard reachable (tabindex on the scroll container) per WCAG 2.1.1.
+   --------------------------------------------------------------------------- */
+/* Full-bleed scroller. Its inline padding is computed so the first tile lines up
+   with the section gutter at every width, which means no negative margins and
+   therefore no horizontal document overflow at 390px. */
+.gallery-wrap{width:100%;}
+.gallery{
+  margin-top:44px;
+  display:grid;
+  grid-auto-flow:column;
+  grid-auto-columns:minmax(248px,30vw);
+  gap:clamp(20px,2.6vw,36px);
+  overflow-x:auto;
+  scroll-snap-type:x mandatory;
+  padding-bottom:14px;
+  padding-inline:max(var(--gutter), calc((100% - var(--shell)) / 2 + var(--gutter)));
+  scroll-padding-inline:max(var(--gutter), calc((100% - var(--shell)) / 2 + var(--gutter)));
+  scrollbar-color:var(--verdure) var(--mist);
+}
+.gallery:focus-visible{outline:2px solid var(--verdure);outline-offset:4px;}
+.gcard{scroll-snap-align:start;}
+.gcard .frame{aspect-ratio:3/4;margin-bottom:16px;}
+.gcard h3{margin-bottom:8px;}
+.gcard p{font-size:.96rem;line-height:1.55;color:var(--ink-2);}
+/* Per-image crop away from the burned-in marketing copy in each source JPEG. */
+.g-pdo img{object-position:80% 40%;}
+.g-scl img{object-position:22% 60%;}
+.g-chk img{object-position:52% 46%;transform:scale(1.06);} /* eats yellow border */
+.g-lip img{object-position:24% 42%;}
+.g-eye img{object-position:26% 44%;}
+.g-hnd img{object-position:24% 50%;}
+
+/* ---------------------------------------------------------------------------
+   9. KELLY LANCE - long-form prose spread with a drop cap.
+      No photograph exists in the source and none is substituted (4.8 / 9.D).
+   --------------------------------------------------------------------------- */
+.kelly .shell{
+  display:grid;
+  grid-template-columns:5fr 7fr;
+  gap:clamp(28px,5vw,80px);
+  align-items:start;
+}
+.kelly-id .h2{margin-bottom:16px;}
+.kelly-cred{
+  border-top:1px solid var(--line);
+  padding-top:18px;
+  max-width:38ch;
+}
+.prose p{max-width:62ch;color:var(--ink-2);}
+.prose p + p{margin-top:18px;}
+.prose .lead::first-letter{
+  font-family:var(--serif);
+  font-weight:500;
+  float:left;
+  font-size:4.05em;
+  line-height:.82;
+  padding-right:.08em;
+  margin-top:.04em;
+  color:var(--verdure);
+}
+.prose .closing{
+  margin-top:26px;
+  padding-top:20px;
+  border-top:1px solid var(--line);
+  font-family:var(--serif);
+  font-size:clamp(1.3rem,2vw,1.65rem);
+  line-height:1.28;
+  color:var(--ink);
+  max-width:30ch;
+}
+
+/* ---------------------------------------------------------------------------
+   10. MEDICAL WEIGHT LOSS - sticky split-screen. position: sticky only,
+       no scroll listener, no scroll hijack, nothing pinned by script.
+   --------------------------------------------------------------------------- */
+.weight .shell{
+  display:grid;
+  grid-template-columns:5fr 7fr;
+  gap:clamp(28px,5vw,80px);
+  align-items:start;
+}
+.weight-aside{
+  position:sticky;
+  top:calc(var(--nav-h) + 36px);
+}
+.weight-aside .h2{margin-bottom:20px;}
+.weight-flag{
+  border-left:1px solid var(--daisy);  /* 1px: craft-floor bans a coloured side border above 1px */
+  padding:4px 0 4px 18px;
+  font-family:var(--serif);
+  font-size:clamp(1.25rem,1.9vw,1.55rem);
+  line-height:1.3;
+  color:var(--ink);
+  max-width:26ch;
+}
+.weight-body p{max-width:62ch;color:var(--ink-2);}
+.weight-body p + p{margin-top:16px;}
+.subhead{
+  font-family:var(--serif);
+  font-size:1.28rem;
+  font-weight:500;
+  margin-top:38px;
+  margin-bottom:14px;
+}
+/* Seven items: 4.9 requires a grouped 2-column split, not a bulleted list.    */
+.factors{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:0 clamp(18px,3vw,44px);
+  border-top:1px solid var(--line);
+  max-width:56ch;
+}
+.factors li{
+  padding-block:11px;
+  font-family:var(--serif);
+  font-size:1.12rem;
+  color:var(--ink);
+}
+.pillars{max-width:60ch;}
+.pillars dt{
+  font-family:var(--serif);
+  font-size:1.18rem;
+  color:var(--verdure);
+  margin-top:16px;
+}
+.pillars dd{margin:2px 0 0;color:var(--ink-2);}
+
+/* ---------------------------------------------------------------------------
+   11. QUESTIONS - two-column definition / Q&A list. Open, not an accordion:
+       the roster already owns the disclosure family (4.7 repetition ban).
+   --------------------------------------------------------------------------- */
+.qa{margin-top:40px;border-top:1px solid var(--ink);}
+.qa-row{
+  display:grid;
+  grid-template-columns:5fr 7fr;
+  gap:clamp(18px,4vw,64px);
+  padding-block:30px;
+  border-bottom:1px solid var(--line);
+}
+.qa-row dt{
+  font-family:var(--serif);
+  font-size:clamp(1.28rem,2vw,1.6rem);
+  font-weight:500;
+  line-height:1.2;
+}
+.qa-row dd{margin:0;color:var(--ink-2);max-width:58ch;}
+
+/* ---------------------------------------------------------------------------
+   12. VISIT - asymmetric data block. Address and hours are selectable,
+       machine-readable text, never baked into an image.
+   --------------------------------------------------------------------------- */
+.visit .shell{
+  display:grid;
+  grid-template-columns:7fr 5fr;
+  gap:clamp(32px,5vw,72px);
+  align-items:start;
+}
+.visit .h2{margin-bottom:24px;}
+.hours{
+  border-top:1px solid var(--line);
+  max-width:34rem;
+  margin-top:26px;
+}
+.hours div{
+  display:flex;justify-content:space-between;gap:20px;
+  padding-block:9px;
+  border-bottom:1px solid var(--line);
+  font-size:1rem;
+}
+.hours dt{color:var(--ink);}
+.hours dd{margin:0;color:var(--muted);}
+.contact{
+  background:var(--paper);
+  border:1px solid var(--line);
+  padding:clamp(24px,3vw,34px);
+}
+.contact .h3{margin-bottom:6px;}
+.contact-line{
+  display:block;
+  font-family:var(--serif);
+  font-size:clamp(1.7rem,2.5vw,2.15rem);
+  color:var(--verdure);
+  text-decoration:none;
+  letter-spacing:.004em;
+  margin-bottom:4px;
+}
+.contact-line:hover{color:var(--verdure-deep);text-decoration:underline;}
+.route{
+  border-top:1px solid var(--line);
+  margin-top:22px;
+  padding-top:18px;
+}
+.route + .route{margin-top:0;}
+.route .label{
+  display:block;
+  font-size:.86rem;
+  color:var(--muted);
+  margin-bottom:4px;
+}
+.addr{font-style:normal;color:var(--ink-2);}
+
+/* ---------------------------------------------------------------------------
+   13. FOOTER - stays light. Page Theme Lock (4.11): the page never inverts.
+   --------------------------------------------------------------------------- */
+.foot{
+  border-top:1px solid var(--ink);
+  padding-block:44px 56px;
+  background:var(--paper);
+}
+.foot .shell{
+  display:grid;
+  grid-template-columns:5fr 7fr;
+  gap:clamp(24px,4vw,64px);
+  align-items:start;
+}
+.footnav{display:flex;flex-wrap:wrap;gap:10px 24px;margin-bottom:20px;}
+.footnav a{font-size:.96rem;color:var(--ink-2);text-decoration:none;}
+.footnav a:hover{color:var(--verdure);text-decoration:underline;}
+.disclaimer{
+  border-top:1px solid var(--line);
+  padding-top:16px;
+  max-width:62ch;
+}
+
+/* ---------------------------------------------------------------------------
+   14. MOBILE - explicit collapse per section (3.E / 4.7 mandatory).
+       VARIANCE 4-10 requires asymmetric layouts to collapse to strict single
+       column below 768px.
+   --------------------------------------------------------------------------- */
+@media (max-width:900px){
+  .navlinks{display:none;}          /* condense, keep the nav on ONE line     */
+  .hero .shell{grid-template-columns:1fr;min-height:0;}
+  .hero-copy{max-width:none;}
+  .hero-figure{margin-top:8px;margin-left:calc(var(--gutter) * -1);}
+  /* 6/5 is not decorative. The source is 1400x673 and object-fit: cover always
+     scales it by height here, so a 6/5 frame shows exactly the right-hand
+     673 x 1.2 = 808px of the original at EVERY width, i.e. from x=592 rightward.
+     The JPEG's baked-in "REDUCE WRINKLES. INCREASE SELF-ESTEEM." ends near x=480,
+     so it can never re-enter the frame between 561px and 900px. */
+  .hero-figure .frame{aspect-ratio:6/5;}
+  .hero-figure img{object-position:100% 42%;}
+  .statement .shell{grid-template-columns:1fr;}
+  .statement-rail{width:100%;height:6px;min-height:0;}
+  .statement p{max-width:none;}
+  .kelly .shell,
+  .weight .shell,
+  .visit .shell,
+  .foot .shell{grid-template-columns:1fr;}
+  .weight-aside{position:static;}
+  .qa-row{grid-template-columns:1fr;gap:10px;}
+  .gallery{grid-auto-columns:minmax(228px,74vw);}
+}
+@media (max-width:560px){
+  :root{--nav-h:64px;}
+  body{font-size:16.5px;}
+  .factors{grid-template-columns:1fr;}
+  /* Full-width CTAs are for the hero and the contact block only. Applying it to
+     the masthead CTA would squeeze the wordmark onto two lines. */
+  .hero-ctas .btn{width:100%;}
+  .hero-ctas{flex-direction:column;align-items:stretch;}
+  .masthead .shell{gap:12px;}
+  .masthead .btn{padding:9px 13px;font-size:.9rem;}
+  .brand b{font-size:1.34rem;}
+  .brand span{display:none;}
+}
+
+/* ---------------------------------------------------------------------------
+   15. MOTION - MOTION_INTENSITY 6, band 4-7 "Fluid CSS".
+       Everything lives inside prefers-reduced-motion: no-preference, so the
+       reduce case is the DEFAULT state of the document, not a repair of it.
+       Only transform and opacity animate (6.A). No scroll listener exists.
+   --------------------------------------------------------------------------- */
+@keyframes rise{
+  from{opacity:0;transform:translateY(20px);}
+  to{opacity:1;transform:none;}
+}
+@keyframes reveal{
+  from{opacity:0;transform:translateY(18px);}
+  to{opacity:1;transform:none;}
+}
+@keyframes wipe{
+  from{opacity:0;transform:scale(1.03);}
+  to{opacity:1;transform:none;}
+}
+
+@media (prefers-reduced-motion: no-preference){
+  html{scroll-behavior:smooth;}
+  .gallery{scroll-behavior:smooth;}
+
+  /* hero cascade - hierarchy: the hero arrives in reading order */
+  .r1,.r2,.r3,.r4{animation:rise .78s var(--ease) backwards;}
+  .r1{animation-delay:.04s;}
+  .r2{animation-delay:.14s;}
+  .r3{animation-delay:.24s;}
+  .r4{animation:wipe .9s var(--ease) backwards;animation-delay:.1s;}
+
+  /* feedback on every interactive surface */
+  .btn,.navlinks a,.rost-name,.rost-mark::after,.contact-line,.footnav a,.named li{
+    transition:background-color .28s var(--ease),color .28s var(--ease),
+               border-color .28s var(--ease),transform .18s var(--ease);
+  }
+  .btn:active{transform:translateY(1px);}
+  .contact-line:active{transform:translateY(1px);}
+  .rost[open] .rost-body{animation:reveal .42s var(--ease) both;}
+
+  /* scroll reveal - storytelling. CSS scroll-driven animation, progressive:
+     without @supports the element is simply already visible. */
+  @supports (animation-timeline: view()){
+    .reveal{
+      animation:reveal linear both;
+      animation-timeline:view();
+      animation-range:entry 4% cover 26%;
+    }
+  }
+}
+
+/* Explicit belt-and-braces cancel for the reduce case (6.B). */
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto;}
+  *,*::before,*::after{
+    animation:none !important;
+    transition:none !important;
+    scroll-behavior:auto !important;
+  }
+}
+
+/* Print has no scroll timeline, so a scroll-driven reveal would print blank.
+   Force every revealed element to its finished state. */
+@media print{
+  .masthead{position:static;}
+  .reveal{animation:none !important;opacity:1 !important;transform:none !important;}
+}
+</style>
+</head>
+
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<!-- MASTHEAD -------------------------------------------------------------- -->
+<header class="masthead">
+  <div class="shell">
+    <a class="brand" href="#top">
+      <b>La Belle Vie</b>
+      <span>Medical Care &amp; Aesthetics</span>
+    </a>
+    <nav class="navlinks" aria-label="Sections">
+      <a href="#treatments">Treatments</a>
+      <a href="#signature">Signature services</a>
+      <a href="#kelly">Kelly Lance</a>
+      <a href="#weight">Weight loss</a>
+      <a href="#visit">Visit</a>
+    </nav>
+    <a class="btn btn--solid btn--sm tnum" href="tel:8019878384">Call 801-987-8384</a>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- HERO - Asymmetric Split Hero ------------------------------------------ -->
+<section class="hero" id="top">
+  <div class="shell">
+    <div class="hero-copy">
+      <h1 class="display r1">Your face on its very best day.</h1>
+      <p class="lede r2">Aesthetic and wellness treatments in Draper, Utah, led by a nurse
+        practitioner with more than thirty years of medical experience.</p>
+      <div class="hero-ctas r3">
+        <a class="btn btn--solid tnum" href="tel:8019878384">Call 801-987-8384</a>
+        <a class="btn btn--ghost" href="https://booking.podium.com/medspa/019805bd-0a79-7949-8a5f-284144f5b4e0">Book online</a>
+      </div>
+    </div>
+    <figure class="hero-figure r4">
+      <div class="frame">
+        <img src="assets/Wrinkles-head.jpg" width="1400" height="673" fetchpriority="high" decoding="async"
+             alt="A woman seated outdoors on a wooden bench, turned toward the camera, with a blurred park behind her.">
+      </div>
+      <figcaption class="hero-note small">Consultations are free. A free virtual consultation is
+        available if you would rather start from home.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- STATEMENT BAND -------------------------------------------------------- -->
+<section class="statement">
+  <div class="shell">
+    <div class="statement-rail" aria-hidden="true"></div>
+    <div class="reveal">
+      <p>You&rsquo;re not a &lsquo;patient number.&rsquo; You&rsquo;re a neighbor, and we&rsquo;re
+        going to take care of you like one.</p>
+      <footer>
+        <b>Kelly Lance, MSN, APRN, FNP-C</b><br>
+        Owner and provider, La Belle Vie Medical Care &amp; Aesthetics
+      </footer>
+    </div>
+  </div>
+</section>
+
+<!-- TREATMENTS - disclosure roster ---------------------------------------- -->
+<section class="section" id="treatments">
+  <div class="shell">
+    <h2 class="h2 reveal">Treatments</h2>
+
+    <div class="roster">
+
+      <details class="rost">
+        <summary>
+          <span class="rost-name">Injectable neurotoxins</span>
+          <span class="rost-mark" aria-hidden="true"></span>
+        </summary>
+        <div class="rost-body">
+          <p class="body">Look years younger and smooth out facial wrinkles with our injectable
+            neurotoxins. Feel confident in your skin again with our help.</p>
+          <ul class="named">
+            <li>Botox</li><li>Dysport</li><li>Xeomin</li><li>Jeuveau</li>
+            <li>Baby Botox</li><li>Lip Flip</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="rost">
+        <summary>
+          <span class="rost-name">Injectables and fillers</span>
+          <span class="rost-mark" aria-hidden="true"></span>
+        </summary>
+        <div class="rost-body">
+          <p class="body">Keep your skin feeling plump and wrinkle-free with La Belle Vie&rsquo;s
+            injectable services in Utah.</p>
+          <p class="body">Sculptra works differently from a filler. It is injected as biocompatible
+            poly-L-lactic acid into the skin&rsquo;s deep layers, triggering skin cells to produce
+            more collagen. Improvements appear gradually, about four to six weeks after treatment,
+            and can last up to two years. Sculptra is not a permanent solution for deep wrinkles.</p>
+          <p class="body">Renuva uses an FDA-regulated, purified adipose matrix that acts like a
+            microscopic honeycomb scaffold. Over the following three to six months the matrix
+            disappears, leaving behind only your own natural fat.</p>
+          <ul class="named">
+            <li>Sculptra</li><li>Renuva</li><li>Under-eye filler</li><li>Cheek support</li>
+            <li>Jawline and chin definition</li><li>Face, jowls and temples</li>
+            <li>Hips and buttocks</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="rost">
+        <summary>
+          <span class="rost-name">Women&rsquo;s and sexual health</span>
+          <span class="rost-mark" aria-hidden="true"></span>
+        </summary>
+        <div class="rost-body">
+          <p class="body">Sexual wellness is a vital part of your overall health, confidence, and
+            quality of life. Women&rsquo;s health here is approached with expertise, compassion, and
+            discretion, in a supportive, judgment-free environment.</p>
+          <p class="body"><b>Clitoxin.</b> A non-surgical treatment developed by Dr. Charles Runels
+            that uses BOTOX or other FDA-approved neurotoxins off-label to enhance clitoral function
+            and orgasmic response. The neurotoxin works by gently relaxing specific muscles around
+            the clitoris, allowing for increased blood flow and heightened sensitivity. The
+            appointment is usually completed in under one hour, and a topical anesthetic is applied
+            for comfort.</p>
+          <p class="caveat"><b>The practice&rsquo;s own note on Clitoxin.</b> Keep in mind that
+            results are not guaranteed with this therapy. While many women have experienced positive
+            outcomes, it is important to have realistic expectations for this promising new use of
+            botulinum toxin.</p>
+          <p class="body"><b>O-Shot.</b> A PRP injection treatment that uses growth factors from your
+            own blood to rejuvenate vaginal and clitoral tissue. After a small blood draw, the
+            platelet-rich plasma is separated and injected into areas associated with sensation,
+            lubrication, and sexual response. It is a hormone-free option. Results typically last 12
+            to 18 months, though individual results may vary. A topical numbing cream is applied
+            beforehand and the appointment usually takes less than an hour.</p>
+          <p class="body">Women come to us about decreased libido, difficulty reaching orgasm,
+            vaginal dryness, pain during intercourse, mild urinary leakage, and decreased sensitivity
+            after childbirth or menopause.</p>
+          <ul class="named">
+            <li>Clitoxin</li><li>O-Shot</li><li>Vaginal rejuvenation</li><li>FemiLift</li>
+            <li>Breast enhancement</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="rost">
+        <summary>
+          <span class="rost-name">Laser treatments</span>
+          <span class="rost-mark" aria-hidden="true"></span>
+        </summary>
+        <div class="rost-body">
+          <p class="body">Acne laser treatments, age spot removal, CO2 laser treatments and IPL
+            photofacials, tailored to your skin.</p>
+          <p class="body"><b>Acne scars.</b> Multiple strategies, from minimally invasive treatments
+            through to more aggressive work for deeply scarred tissue. Profound by Syneron combines
+            micro-diameter needles with focused RF energy delivered deep into the dermis to trigger
+            new collagen, with three to five days of downtime.</p>
+          <p class="body"><b>Age spots.</b> Most benign pigmented lesions of cosmetic concern can be
+            treated with the Harmony XL light treatment. Short pulses of visible light raise the
+            temperature in concentrated melanin enough to shatter the cells containing it, and the
+            body replaces them with new cells from the surrounding untreated area.</p>
+          <p class="body"><b>CO2 and CO2 Lite.</b> Laser resurfacing for a smoother texture, improved
+            tone, smaller pores and the appearance of scars, lines and deep wrinkles. CO2 Lite covers
+            fine lines, acne scars and sun spots with less downtime than the full CO2 treatment.</p>
+          <p class="body"><b>IPL photofacial.</b> Light penetrates the skin&rsquo;s surface, collagen
+            and blood vessels below constrict, red pigment and dark age spots are drawn out, and the
+            light stimulates collagen production.</p>
+          <p class="body"><b>Laser hair removal.</b> Long-term hair reduction for legs, underarms,
+            bikini area, upper lip, chin, neck, back and stomach. Comfort measures are used
+            throughout, and your provider will tell you what to expect before you book a course.</p>
+          <ul class="named">
+            <li>Harmony XL</li><li>Profound by Syneron</li><li>CO2</li><li>CO2 Lite</li>
+            <li>IPL photofacial</li><li>Laser resurfacing</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="rost">
+        <summary>
+          <span class="rost-name">Aesthetic treatments</span>
+          <span class="rost-mark" aria-hidden="true"></span>
+        </summary>
+        <div class="rost-body">
+          <p class="body">From our signature non-surgical facelifts to revitalizing facials, La Belle
+            Vie is your one-stop destination for aesthetic treatments.</p>
+          <p class="body">PRP facials use your body&rsquo;s own rich plasma to trigger collagen
+            production. Microneedling is, as Kelly puts it, like a gym workout for your skin. Chemical
+            peels run from a light lunchtime peel through to deeper work.</p>
+          <ul class="named">
+            <li>PRP facials</li><li>Microneedling</li><li>Chemical peels</li><li>Hydrating facials</li>
+            <li>CoolSculpting</li><li>Stretch mark and scar treatments</li>
+            <li>Preventative skin tightening</li><li>Under-eye brightening</li>
+            <li>Medical-grade skincare</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="rost">
+        <summary>
+          <span class="rost-name">IV therapy and vitamins</span>
+          <span class="rost-mark" aria-hidden="true"></span>
+        </summary>
+        <div class="rost-body">
+          <p class="body">When you feel your best, it shows in every way. With Vitamin B12 shots and
+            IV therapy designed to restore energy and hydration, you&rsquo;ll feel radiant,
+            revitalized, and balanced from the inside out.</p>
+          <ul class="named">
+            <li>Vitamin B12 shots</li><li>IV hydration</li><li>Vitamin infusions</li>
+            <li>Hormone optimization</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="rost">
+        <summary>
+          <span class="rost-name">Men&rsquo;s health</span>
+          <span class="rost-mark" aria-hidden="true"></span>
+        </summary>
+        <div class="rost-body">
+          <p class="body">Men&rsquo;s health services are available by consultation. These are
+            prescription and device-based treatments, so whether one is right for you is
+            determined at your appointment.</p>
+          <ul class="named">
+            <li>Hormone replacement</li><li>P-Shot</li><li>Shockwave therapy</li>
+            <li>ED Trifecta</li>
+          </ul>
+        </div>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+<!-- SIGNATURE SERVICES - scroll-snap media gallery ------------------------- -->
+<section class="section" id="signature">
+  <div class="shell">
+    <h2 class="h2 reveal">Signature services</h2>
+    <p class="lede" style="margin-top:16px;">A few of our most popular services, the ones patients
+      return to us for again and again.</p>
+  </div>
+  <div class="gallery-wrap">
+    <div class="gallery" tabindex="0" role="region" aria-label="Signature services gallery">
+
+      <article class="gcard g-pdo">
+        <div class="frame">
+          <img src="assets/pdo-threads-facelift-in-utah.jpg" width="1400" height="673" loading="lazy" decoding="async"
+               alt="A woman with shoulder-length hair, one hand raised near her cheek.">
+        </div>
+        <h3 class="h3">PDO thread lifts</h3>
+        <p>A non-surgical option if you like the idea of a facelift but want something less
+          invasive. Threads placed strategically under the skin improve the firmness of the
+          skin.</p>
+      </article>
+
+      <article class="gcard g-scl">
+        <div class="frame">
+          <img src="assets/Varicose-Spider-Veins-head.jpg" width="1400" height="673" loading="lazy" decoding="async"
+               alt="A person seated on a pale sofa, resting one hand against their lower leg.">
+        </div>
+        <h3 class="h3">Sclerotherapy for spider veins</h3>
+        <p>An innovative procedure that does not require anesthesia. You can resume normal activities
+          immediately, without surgery or downtime.</p>
+      </article>
+
+      <article class="gcard g-chk">
+        <div class="frame">
+          <img src="assets/Boosting-Confidence-Through-Facial-Balancing.jpg" width="992" height="600" loading="lazy" decoding="async"
+               alt="A clinician wearing gloves assessing a patient&rsquo;s cheek and jawline.">
+        </div>
+        <h3 class="h3">Signature cheeks</h3>
+        <p>Cosmetic injectables and fillers lift and smooth lines. Our trained and experienced
+          staff are experts in the art of natural looking enhancements. We won&rsquo;t leave you
+          over-plumped or frozen-faced.</p>
+      </article>
+
+      <article class="gcard g-lip">
+        <div class="frame">
+          <img src="assets/LIPPOP2-2.jpg" width="1400" height="673" loading="lazy" decoding="async"
+               alt="A close portrait of a woman with both hands framing her face.">
+        </div>
+        <h3 class="h3">Signature lips</h3>
+        <p>Lip work here ranges from filler through to the Lip Flip, which uses a tiny bit of Botox to
+          relax the upper lip.</p>
+      </article>
+
+      <article class="gcard g-eye">
+        <div class="frame">
+          <img src="assets/SkinRejuvenation-head.jpg" width="1400" height="673" loading="lazy" decoding="async"
+               alt="A close portrait of a woman&rsquo;s face against a plain grey background.">
+        </div>
+        <h3 class="h3">Under-eye filler</h3>
+        <p>A non-surgical treatment using hyaluronic acid to reduce dark circles, hollows and fine
+          lines. It restores volume and smooths the under-eye area, with minimal downtime.</p>
+      </article>
+
+      <article class="gcard g-hnd">
+        <div class="frame">
+          <img src="assets/HandRejuvenation-LaBelleVie.jpg" width="1400" height="673" loading="lazy" decoding="async"
+               alt="Two hands raised and resting against each other in front of a pale grey background.">
+        </div>
+        <h3 class="h3">Hand rejuvenation</h3>
+        <p>Hands go through a lifetime of sun, water and daily wear. The most severe changes are
+          typically due to loss of tissue volume over the years.</p>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- KELLY LANCE - prose spread with drop cap ------------------------------ -->
+<section class="section kelly" id="kelly">
+  <div class="shell">
+    <div class="kelly-id reveal">
+      <h2 class="h2">Kelly Lance, MSN, APRN, FNP-C</h2>
+      <p class="lede">Owner and provider at La Belle Vie. The words on this page are her
+        own.</p>
+      <p class="kelly-cred small">With over 30 years of experience, Kelly brings her lifetime of
+        medical background to La Belle Vie every day. Kelly is certified as a Family Nurse
+        Practitioner and has advanced aesthetic training in multiple procedures.</p>
+    </div>
+    <div class="prose">
+      <p class="lead">My philosophy at La Belle Vie isn&rsquo;t about changing who you are; it&rsquo;s
+        about Artistic Restoration. It&rsquo;s about looking in the mirror and finally seeing the
+        person you feel like on the inside: vibrant, rested, and ready for whatever life throws at
+        you.</p>
+      <p>We&rsquo;ve all seen the &lsquo;overfilled&rsquo; look on social media, and honestly?
+        We&rsquo;re not fans of it either. We aren&rsquo;t trying to give you a 20-year-old&rsquo;s
+        face; we&rsquo;re trying to give you your face on its very best day.</p>
+      <p>One of the reasons people feel hesitant is the &lsquo;conveyor belt&rsquo; feel of some big
+        med spa chains. At La Belle Vie, we do things differently. We don&rsquo;t just sell
+        &lsquo;packages.&rsquo; We create a roadmap that is specific to your face and your goals.</p>
+      <p>Because I am a Nurse Practitioner, your safety and medical history are always the top
+        priority. We understand your health and wellness concerns can be some of the most emotionally
+        intimate topics you&rsquo;ll ever discuss with a medical provider, and the team listens to
+        your needs before recommending any treatment.</p>
+      <p class="closing">At the end of the day, we aren&rsquo;t in the business of needles and lasers.
+        We&rsquo;re in the business of confidence.</p>
+    </div>
+  </div>
+</section>
+
+<!-- MEDICAL WEIGHT LOSS - sticky split ------------------------------------ -->
+<section class="section weight" id="weight">
+  <div class="shell">
+    <aside class="weight-aside reveal">
+      <h2 class="h2">Medical weight loss</h2>
+      <p class="weight-flag">At La Belle Vie, we don&rsquo;t prescribe Ozempic. Ozempic is a tool, not
+        a plan.</p>
+    </aside>
+    <div class="weight-body">
+      <p>Medical weight loss is not dieting. It&rsquo;s not about willpower, restriction, or punishing
+        yourself for existing in your body. We&rsquo;re not here to sell you a quick fix or make you
+        feel bad about yourself.</p>
+      <p>While we don&rsquo;t prescribe Ozempic at La Belle Vie, we proudly support patients who are
+        using it. What we offer is guided medical weight loss and education alongside medication
+        prescribed elsewhere.</p>
+
+      <h3 class="subhead">What we look at</h3>
+      <ul class="factors">
+        <li>Hormone balance</li>
+        <li>Metabolism</li>
+        <li>Muscle mass</li>
+        <li>Stress levels</li>
+        <li>Sleep quality</li>
+        <li>Nutrition habits</li>
+        <li>Past weight-loss attempts</li>
+      </ul>
+
+      <h3 class="subhead">What the program is built on</h3>
+      <dl class="pillars">
+        <dt>Education</dt>
+        <dd>Understanding what&rsquo;s happening in your body and why.</dd>
+        <dt>Accountability</dt>
+        <dd>Regular check-ins and support throughout your journey.</dd>
+        <dt>Long-term success</dt>
+        <dd>Building habits and health that last, not just losing weight quickly.</dd>
+      </dl>
+
+      <p style="margin-top:26px;">I don&rsquo;t believe in shame, trends, or one-size-fits-all
+        solutions when it comes to weight loss.</p>
+    </div>
+  </div>
+</section>
+
+<!-- QUESTIONS - two-column Q&A -------------------------------------------- -->
+<section class="section" id="questions">
+  <div class="shell">
+    <h2 class="h2 reveal">Questions we get asked</h2>
+    <dl class="qa">
+      <div class="qa-row">
+        <dt>Is it going to hurt?</dt>
+        <dd>We are big fans of &lsquo;comfort first.&rsquo; Between medical-grade numbing creams,
+          cooling devices, and a very gentle touch, most of our clients are pleasantly surprised by
+          how easy the process is.</dd>
+      </div>
+      <div class="qa-row">
+        <dt>Will everyone know I had work done?</dt>
+        <dd>Not if we have anything to say about it. Our goal is for people to notice you look great,
+          but not be able to point to why. We aim for &lsquo;Gosh, you look rested,&rsquo; not
+          &lsquo;Who did your filler?&rsquo;</dd>
+      </div>
+      <div class="qa-row">
+        <dt>Can I work with La Belle Vie if I&rsquo;m already on Ozempic?</dt>
+        <dd>Yes. Many patients come to us for education, nutrition guidance, and long-term planning
+          while using medication prescribed elsewhere.</dd>
+      </div>
+    </dl>
+  </div>
+</section>
+
+<!-- VISIT - NAP data block ------------------------------------------------ -->
+<section class="section visit" id="visit">
+  <div class="shell">
+    <div class="reveal">
+      <h2 class="h2">Visit the medical spa in Draper</h2>
+      <address class="addr lede">248 E 13800 S, Suite 3<br>Draper, UT 84020</address>
+      <dl class="hours tnum">
+        <div><dt>Monday</dt><dd>9:00 a.m. to 6:00 p.m.</dd></div>
+        <div><dt>Tuesday</dt><dd>9:00 a.m. to 5:00 p.m.</dd></div>
+        <div><dt>Wednesday</dt><dd>9:00 a.m. to 6:00 p.m.</dd></div>
+        <div><dt>Thursday</dt><dd>9:00 a.m. to 5:00 p.m.</dd></div>
+        <div><dt>Friday</dt><dd>9:00 a.m. to 3:00 p.m.</dd></div>
+      </dl>
+      <p class="small" style="margin-top:18px;max-width:46ch;">These are the hours the practice
+        publishes. Call to check availability outside them.</p>
+    </div>
+
+    <div class="contact">
+      <h3 class="h3">Book a free consultation</h3>
+      <a class="contact-line tnum" href="tel:8019878384">801-987-8384</a>
+      <p class="small">The fastest way to reach us.</p>
+
+      <div class="route">
+        <span class="label">New bookings, through Podium</span>
+        <a class="btn btn--solid" style="width:100%;" href="https://booking.podium.com/medspa/019805bd-0a79-7949-8a5f-284144f5b4e0">Book online</a>
+      </div>
+      <div class="route">
+        <span class="label">Existing patients, through Boulevard</span>
+        <a href="https://blvd.app/@labelleviemedicalcareandaesthetics/login">Your appointments</a>
+      </div>
+      <div class="route">
+        <span class="label">Email</span>
+        <a href="mailto:info@labelleviemedicalcare.com">info@labelleviemedicalcare.com</a>
+      </div>
+      <div class="route">
+        <span class="label">This month at the practice</span>
+        <a href="https://labelleviemedicalcare.com/monthly-specials/">See this month&rsquo;s specials</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- FOOTER ---------------------------------------------------------------- -->
+<footer class="foot">
+  <div class="shell">
+    <div>
+      <a class="brand" href="#top" style="margin-bottom:14px;">
+        <b>La Belle Vie</b>
+        <span>Medical Care &amp; Aesthetics</span>
+      </a>
+      <p class="small">Rejuvenate. Restore. Maintain.<br>248 E 13800 S, Suite 3, Draper, UT 84020</p>
+    </div>
+    <div>
+      <nav class="footnav" aria-label="Footer">
+        <a href="#treatments">Treatments</a>
+        <a href="#signature">Signature services</a>
+        <a href="#kelly">Kelly Lance</a>
+        <a href="#weight">Weight loss</a>
+        <a href="#questions">Questions</a>
+        <a href="#visit">Visit</a>
+        <a class="tnum" href="tel:8019878384">Call 801-987-8384</a>
+      </nav>
+      <p class="disclaimer small">Individual results vary. All treatments require a consultation to
+        determine whether you are a candidate. La Belle Vie does not prescribe Ozempic. Monthly
+        specials cannot be combined with any other offer, and birthday discounts are not eligible on
+        special offers.</p>
+      <p class="small" style="margin-top:14px;">&copy; 2026 La Belle Vie Medical Care &amp;
+        Aesthetics, Draper, Utah.</p>
+    </div>
+  </div>
+</footer>
+
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"MedicalBusiness",
+  "name":"La Belle Vie Medical Care & Aesthetics",
+  "url":"https://labellevie-medspa.pages.dev/",
+  "telephone":"+1-801-987-8384",
+  "email":"info@labelleviemedicalcare.com",
+  "address":{"@type":"PostalAddress","streetAddress":"248 E 13800 S, Suite 3","addressLocality":"Draper","addressRegion":"UT","postalCode":"84020","addressCountry":"US"},
+  "openingHoursSpecification":[
+    {"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Wednesday"],"opens":"09:00","closes":"18:00"},
+    {"@type":"OpeningHoursSpecification","dayOfWeek":["Tuesday","Thursday"],"opens":"09:00","closes":"17:00"},
+    {"@type":"OpeningHoursSpecification","dayOfWeek":["Friday"],"opens":"09:00","closes":"15:00"}
+  ],
+  "employee":{"@type":"Person","name":"Kelly Lance","jobTitle":"MSN, APRN, FNP-C"}
+}
+</script>
+</body>
+</html>

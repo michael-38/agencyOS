@@ -1,0 +1,16 @@
+{
+  "businessName": "La Belle Vie Medical Care & Aesthetics",
+  "phone": "801-987-8384",
+  "email": "info@labelleviemedicalcare.com",
+  "hours": "Monday & Wednesday 9:00 a.m. to 6:00 p.m., Tuesday & Thursday 9:00 a.m. to 5:00 p.m., Friday 9:00 a.m. to 3:00 p.m.",
+  "locations": [
+    {
+      "name": "La Belle Vie Medical Care & Aesthetics",
+      "streetAddress": "248 E 13800 S, Suite 3",
+      "city": "Draper",
+      "state": "UT",
+      "zip": "84020",
+      "phone": "801-987-8384"
+    }
+  ]
+}

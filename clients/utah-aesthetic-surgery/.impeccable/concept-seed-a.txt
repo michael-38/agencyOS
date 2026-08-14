@@ -1,0 +1,112 @@
+DIRECTION CONCEPT SEED (key: 509f9326; mode: persuade; source: api; approved pool: 94ff10ff20de; 281/531 human-approved; rerun with --scope direction --mode persuade --from 509f9326 --candidate-count 7 to reproduce this roll against this catalog revision)
+ASSIGNED INDEX: 7
+  After ordering the grounded directions by resonance, build candidate
+  7 of your own grounded list; the assignment never points at a
+  challenger. The assignment is the roll, not a suggestion: your top-ranked
+  direction is what every run would ship, so the script decides which grounded
+  direction gets built. Each direction joins a durable visual system to a
+  concrete expression for the requested first surface, decided as one. It must
+  survive the current task plus navigation, quiet and dense content,
+  interaction and state, and a substantially different future surface. In an
+  attended run, present the assigned direction fully committed and offer
+  re-roll; never present a ranked lineup to choose from. Re-roll yourself only
+  on named factual grounds, when the assignment cannot carry the product's
+  truth or task; taste is never grounds.
+  The assignment exists to refuse the model's ranking rut, never to outrank
+  the user or the brief. Never expose assignment metadata in user-facing labels.
+CHALLENGERS:
+  1. a devoted single-subject fan page, a tiled background behind a centered table layout, animated dividers between every section and a hit counter, guestbook link and last-updated date stacked at the very bottom
+     SOURCE ID: digital-design-canon-fansite-shrine-page
+     CREATIVE SPARK: A seamless tile of stars behind the whole thing, a centered table, seven animated dividers, and at the bottom a counter insisting you are visitor 4,182.
+     SYSTEM GRAMMAR:
+       - Palette/material: a small seamless tile repeating behind everything, saturated web-safe colors, and animated rules separating each section
+       - Type/composition: a centered fixed-width table, headings as image banners, and every section closed by an animated divider bar
+       - Topology/navigation: the page is one long devoted column, so navigation scrolls through somebody's entire enthusiasm in their chosen order
+       - Controls/state: controls are section links, the active one gains a marching border, and visited ones change to a second link color
+       - Responsive/motion: the fixed-width table refuses to adapt gracefully, and motion is a looping divider and a blinking update notice
+     WEB LEVERAGE: a seamless css background tile, looping divider animation, and visit-count state persisted local
+     QUALITY BAR: board https://impeccable.style/worlds/cards/digital-design-canon-fansite-shrine-page.webp · hero https://impeccable.style/worlds/cards/digital-design-canon-fansite-shrine-page-hero.webp
+  2. a white gallery hung with black-and-white wave canvases, flat paint that flexes and strobes as visitors change their viewing distance
+     SOURCE ID: design-canon-riley-moire-gallery
+     CREATIVE SPARK: The paintings hold perfectly still and yet the floor seems to tip, black lines swelling like a sea you can hear somewhere behind your own eyes.
+     SYSTEM GRAMMAR:
+       - Palette/material: flat matte black and gallery white only, no mixed grays, contrast generated optically by line frequency, the tightest interval acting as the accent
+       - Type/composition: a sparse neutral grotesk held clear of the waves in white margins, one caption per canvas, the composition itself a ruled monochrome field
+       - Topology/navigation: the room is a sequence of vantage distances; each canvas holds a near, mid, and far reading and rewards deliberate approach
+       - Controls/state: state rides the pattern itself; line frequency tightens toward points that want attention and relaxes wherever nothing is asked
+       - Responsive/motion: wave frequency recalculates against device pixel density so the shimmer survives every screen
+     WEB LEVERAGE: SVG patterns modulated by scroll position and IntersectionObserver let a flat page flex as if the retina were being played
+     QUALITY BAR: board https://impeccable.style/worlds/cards/design-canon-riley-moire-gallery.webp · hero https://impeccable.style/worlds/cards/design-canon-riley-moire-gallery-hero.webp
+  3. a printing darkroom under amber safelight, where enlarger beams, timed baths, and drying lines stage photographs into slow deliberate existence
+     SOURCE ID: signals-instruments-darkroom-safelight-bay
+     CREATIVE SPARK: In the developer tray, gray ghosts gather into a face; the timer ticks, and pulling the print too early is a real loss.
+     SYSTEM GRAMMAR:
+       - Palette/material: amber safelight washing every surface as the ground, wet-print silver grays deepening to black as the image ink, enamel tray white at the edges
+       - Type/composition: grease-pencil notes and printed timer digits under amber, labels sparse on bottles and trays; test strips band the field into stepped exposures
+       - Topology/navigation: work moves through fixed stations in order: compose, expose, develop, fix, wash, dry.
+       - Controls/state: progress is chemical and irreversible past marked points; test strips preview before committing.
+       - Responsive/motion: stations linearize on phones; the develop reveal is one continuous emergence, shown statically under
+     WEB LEVERAGE: Canvas-simulated development curves let previews emerge in real time before an action commits.
+     QUALITY BAR: board https://impeccable.style/worlds/cards/signals-instruments-darkroom-safelight-bay.webp · hero https://impeccable.style/worlds/cards/signals-instruments-darkroom-safelight-bay-hero.webp
+  4. a dial-up bulletin board at 2 a.m., where ANSI title screens in sixteen colors, block-character art, and one phone line make a neighborhood out of text
+     SOURCE ID: medium-native-ansi-bbs-nightboard
+     CREATIVE SPARK: The title screen pours in line by line at modem speed, cyan on black, and being the only caller connected feels like owning the night.
+     SYSTEM GRAMMAR:
+       - Palette/material: sixteen ANSI colors on terminal black, cyan and magenta block art as chrome, blinking white on blue reserved for new mail and live presence
+       - Type/composition: CP437 block glyphs and box-drawing rules composing all chrome on an 80 by 25 cell grid, centered title art over numbered menu lines
+       - Topology/navigation: everything is a text screen with numbered exits; the character grid is the only geometry.
+       - Controls/state: presence is scarce and precious; who is online, new posts, and mail land as textmode events.
+       - Responsive/motion: the grid rescales by character cell; the pour-in reveal respects
+     WEB LEVERAGE: A true character-grid renderer with line-by-line streamed arrival and complete keyboard operation.
+     QUALITY BAR: board https://impeccable.style/worlds/cards/medium-native-ansi-bbs-nightboard.webp · hero https://impeccable.style/worlds/cards/medium-native-ansi-bbs-nightboard-hero.webp
+  5. an indoor weather sun, a monofrequency semicircle doubled to a full disc by a mirrored ceiling, mist haze filling a vast hall where crowds lie inside their own silhouettes
+     SOURCE ID: light-shadow-caustics-indoor-weather-sun
+     CREATIVE SPARK: You lie on the concrete floor of a vast hall, haze thick with amber; far above, the mirrored ceiling shows your tiny silhouette waving back beside a hundred strangers, and the half sun on the wall completes itself into a disc.
+     SYSTEM GRAMMAR:
+       - Palette/material: monofrequency sodium amber flattening every color, hazed amber as ground, silhouette black for body ink, the mirror's doubled sun as the accent
+       - Type/composition: silhouette-black grotesk set low against a long horizon line, one vast horizontal band, captions small and scattered like lying figures
+       - Topology/navigation: one hall with a half sun at its far wall, the mirrored ceiling doubling everything; you navigate by walking the long axis toward the light
+       - Controls/state: your pointer is a silhouette, hover deepens a figure to full black, selection appears twice, once on the floor and once in the ceiling mirror
+       - Responsive/motion: the semicircle scales with the wall and its mirror half collapses first on short screens; motion is drifting mist
+     WEB LEVERAGE: backdrop-filter haze over a css scaleY(-1) reflection building the mirrored ceiling, blend mode flattening all color to amber duotone
+     QUALITY BAR: board https://impeccable.style/worlds/cards/light-shadow-caustics-indoor-weather-sun.webp · hero https://impeccable.style/worlds/cards/light-shadow-caustics-indoor-weather-sun-hero.webp
+  6. an industrial streetwear grammar, ordinary words set in straight quotation marks, zip-tie tags left on, diagonal hazard stripes crossing white cotton and black nylon
+     SOURCE ID: textiles-weave-drape-fashion-industrial-quote-grammar
+     CREATIVE SPARK: You lift a jacket and the zip-tie tag clacks against the hanger; across the back, giant caps in straight quotes name the obvious, and a hazard stripe runs diagonally under the fluorescent light of the stockroom.
+     SYSTEM GRAMMAR:
+       - Palette/material: stockroom white cotton and black nylon as ground and ink, black-on-white hazard diagonals for structure, safety orange zip-tie tags as the accent
+       - Type/composition: bold industrial caps inside straight quotation marks naming the obvious, label plates set square on the grid like stenciled crates
+       - Topology/navigation: every zone is labeled with its literal quoted name, wayfinding is reading, and the hazard stripe runs diagonally under whatever matters
+       - Controls/state: the active item keeps its orange zip tie on, toggles read "ON" and "OFF" in quotes, disabled things take the diagonal stripe across them
+       - Responsive/motion: stripes hold 45 degrees at every width while label plates stack; motion is a tag swinging once on selection
+     WEB LEVERAGE: css repeating-linear-gradient hazard stripes at 45deg, generated content wrapping every label in straight quotes via ::before and ::after
+     QUALITY BAR: board https://impeccable.style/worlds/cards/textiles-weave-drape-fashion-industrial-quote-grammar.webp · hero https://impeccable.style/worlds/cards/textiles-weave-drape-fashion-industrial-quote-grammar-hero.webp
+Fuse each challenger before judging it: the challenger supplies the form
+  and its system grammar, the product supplies every fact, and clarity wins
+  conflicts. Weigh the fused result against the assigned direction on exactly
+  two axes, audience identification and product clarity. Losing to strong
+  grounded material is a valid outcome; beating a thin or tool-monoculture
+  list is the point. A fused challenger that wins both axes becomes the build.
+When you can view images, open the QUALITY BAR board and hero for any
+challenger you weigh seriously and for the world you build. They exist as a
+craft bar, the finish level and commitment the build is expected to reach,
+never as a mockup to copy; your surface serves this product, not that render.
+PRODUCT.md and explicit incumbent brand commitments constrain every direction.
+The seed never chooses exact colors, fonts, tokens, or a user preference, and
+it never permits the world and first surface to be selected independently.
+The CREATIVE SPARK is a complete visual system, not a theme or decorative
+reference. Translate every supplied system rule into the product: palette and
+material, type and composition, topology, controls and states, and adaptation.
+Keep the source's visible character, scale, rhythm, and interaction instead of
+reducing vivid grammar to generic nouns. When the source is already a credible
+interface language, commit to it across navigation, content, controls, and
+states. Otherwise keep a literal carrier only when it becomes functional.
+Ambitious motion, spatial media, or interaction is welcome when it strengthens
+the product without weakening semantics, performance, or fallback behavior.
+TELEMETRY: if the resolved direction uses one of these challengers, rerun
+  this script once with --chosen <challenger-id> --from 509f9326 --scope direction --mode persuade
+  after resolution. The ping is anonymous (chosen id only) and is skipped
+  automatically when DO_NOT_TRACK or IMPECCABLE_NO_TELEMETRY is set.
+A user- or brief-pinned decision beats the roll, always.
+ASSIGNED INDEX (restated for truncated readers): 7. Build candidate
+7 of your own grounded list; seed key 509f9326.

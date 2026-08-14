@@ -1,0 +1,76 @@
+{
+  "slug": "labellevie-medspa",
+  "sourceUrl": "http://labelleviemedicalcare.com/top-med-spa-to-visit-in-utah/",
+  "preparedAt": "2026-08-13",
+  "archetype": "med-spa",
+  "archetypeScores": {
+    "med-spa": 245,
+    "roofing": 0,
+    "plumbing": 2,
+    "hvac": 2
+  },
+  "pages": [
+    "source-content/home.md",
+    "source-content/all-about-the-o-shot-draper-utah.md",
+    "source-content/goodbye-breast-implant-rippling-renuva-is-the-new-secret-for.md",
+    "source-content/laser-treatments.md",
+    "source-content/clitoxin-sexual-wellness-treatment.md",
+    "source-content/signature-services.md",
+    "source-content/sculptra-treatment-in-utah.md",
+    "source-content/med-spa-events.md",
+    "source-content/aesthetic-treatments.md",
+    "source-content/ozempic-vs-medical-weight-loss-programs-at-a-medical-spa.md"
+  ],
+  "imagesKept": 32,
+  "napPhone": "801-987-8384",
+  "audienceRewriteRequired": true,
+  "divergence": {
+    "sharedNegativeFloor": {
+      "bannedFaces": [
+        "Fraunces",
+        "Playfair Display",
+        "Cormorant",
+        "Lora",
+        "Crimson",
+        "Newsreader",
+        "Syne",
+        "Space Grotesk",
+        "Space Mono",
+        "IBM Plex",
+        "Inter",
+        "DM Sans",
+        "DM Serif",
+        "Outfit",
+        "Plus Jakarta Sans",
+        "Instrument Sans",
+        "Instrument Serif"
+      ],
+      "bannedClusters": [
+        "warm cream ground + high-contrast serif display + terracotta/signal-red accent",
+        "near-black + one neon accent + glowing edges",
+        "broadsheet hairlines + italic display serif + tracked mono labels"
+      ],
+      "alwaysBanned": [
+        "eyebrows/kickers above headings",
+        "em dashes in visible text",
+        "section numbers on non-sequential content",
+        "cards as page structure"
+      ]
+    },
+    "a": {
+      "ground": "dark",
+      "faceClass": "wide-engineered-grotesk",
+      "colorStrategy": "Drenched"
+    },
+    "b": {
+      "ground": "light",
+      "faceClass": "editorial-serif",
+      "colorStrategy": "Full palette"
+    }
+  },
+  "deployRoots": [
+    "versions/a",
+    "versions/b",
+    "versions/compare"
+  ]
+}

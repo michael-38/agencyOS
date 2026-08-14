@@ -58,13 +58,13 @@ The AgencyOS toolkit (full detail in `.claude/agentos/context.md`):
 | Industry world | `templates/<industry>/DESIGN.md` | Palette, mode, proof model, urgency, CTA model. |
 | Industry record | `templates/<industry>/PRODUCT.md` | That vertical's customer, economics, and claim limits. |
 | Token detail | `templates/<industry>/<industry>-design.md` | Full tables. Unchanged, still authoritative for exact values. |
-| Client build | `demo/<client>/PRODUCT.md` + `DESIGN.md` | Seeded from the industry, then brand-token overrides. |
+| Client build | `clients/<slug>/` (real client work) or `demo/<client>/` (reference builds) — `PRODUCT.md` + `DESIGN.md` | Seeded from the industry, then brand-token overrides. |
 
 Two mechanics that are easy to get wrong:
 
 1. **Impeccable resolves two levels only, per file** — `<activeProject>/` then `<repoRoot>/`. No intermediate chain. An industry `DESIGN.md` overrides the root one **whole-file**, which is why each industry world opens with an explicit `EXTENDS /DESIGN.md` directive. Honor it.
 2. **A client directory inherits the *agency* record, not its industry.** Always seed:
-   `node .impeccable/seed-client.mjs <industry> demo/<client>` — then replace every `[CLIENT]` marker with verified facts.
+   `node .impeccable/seed-client.mjs <industry> clients/<slug>` (or `demo/<client>`) — then replace every `[CLIENT]` marker with verified facts.
 
 Project boundaries are declared in `.impeccable/config.json`.
 
@@ -72,4 +72,4 @@ Project boundaries are declared in `.impeccable/config.json`.
 
 Default to `/impeccable`; most taste skills were written for greenfield Tailwind work and conflict with a conversion-optimized static template (`high-end-visual-design` bans Inter; `gpt-taste` mandates GSAP and forbids layout repetition). **Per-skill routing, verdicts, and the exact conflicts: `.claude/agentos/design-skills.md` — read it before invoking one.**
 
-Skills available now: `/audit-prospect` · `/refresh-site` · `/build-landing-page` · `/configure-concierge` · `/provision-voice-agent` · `/prospect-leads` · `/impeccable`.
+Skills available now: `/audit-prospect` · `/refresh-site` · `/redesign-site` · `/build-landing-page` · `/configure-concierge` · `/provision-voice-agent` · `/prospect-leads` · `/impeccable`.

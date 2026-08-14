@@ -1,0 +1,11 @@
+{
+  "url": "https://utah-aesthetic-surgery.com/",
+  "crawledAt": "2026-08-11",
+  "tool": "firecrawl v2 REST API (map + scrape). NOTE: the firecrawl MCP server disconnected mid-session; the HTTP API is the same service and key.",
+  "pagesMapped": 12,
+  "pagesScraped": 10,
+  "boilerplateStripped": "GTranslate 100-language list, date picker, age gate, skip-links (~40-60% of raw markdown)",
+  "napSource": "contact-us with onlyMainContent:false + json schema (footer data)",
+  "imagesKept": 63,
+  "imageFilter": ">=600px wide; icons/flags/favicons/thumbnails excluded; browser UA + referer required (site 403s bare curl)"
+}

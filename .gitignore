@@ -11,7 +11,17 @@ build/
 !.claude/agentos/
 !.claude/skills/
 !.claude/hooks/
+!.claude/agents/
 !.claude/settings.json
+
+# Client build artifacts that do not belong in history.
+# screens/  — iteration screenshots from the build and finish-review loops (52MB, 218 files
+#             on one client). Pure working artifacts; regenerated on any rebuild.
+# assets/   — the harvested image pool. Third-party copyright, and `prepare-client.mjs`
+#             regenerates it from the live site in one command. The images a page actually
+#             ships live in versions/<x>/images/ and ARE tracked.
+**/.impeccable/screens/
+clients/*/assets/
 .context/
 audit/output/
 audit/node_modules/

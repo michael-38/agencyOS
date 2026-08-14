@@ -14,7 +14,9 @@ case "$file" in
   */.claude/hooks/*|*.env|*.env.*|.env|*.example) exit 0 ;;
 esac
 
-secret_re='sk-ant-[A-Za-z0-9_-]{12,}|AKIA[0-9A-Z]{16}|xox[baprs]-[A-Za-z0-9-]{10,}|ghp_[A-Za-z0-9]{20,}|-----BEGIN [A-Z ]*PRIVATE KEY-----'
+# fc- is Firecrawl (fc- + 32 alphanumerics). Anchored to 32+ with no hyphens in the
+# body so it can't fire on hyphenated CSS class names that happen to start with "fc-".
+secret_re='sk-ant-[A-Za-z0-9_-]{12,}|AKIA[0-9A-Z]{16}|xox[baprs]-[A-Za-z0-9-]{10,}|ghp_[A-Za-z0-9]{20,}|fc-[A-Za-z0-9]{32,}|-----BEGIN [A-Z ]*PRIVATE KEY-----'
 
 if printf '%s' "$content" | grep -Eq "$secret_re"; then
   jq -n --arg f "$file" '{

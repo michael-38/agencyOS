@@ -1,4 +1,11 @@
 {
+  "permissions": {
+    "allow": [
+      "Bash(node scripts/prepare-client.mjs:*)",
+      "Bash(node scripts/finish-client.mjs:*)",
+      "Bash(node .impeccable/seed-client.mjs:*)"
+    ]
+  },
   "hooks": {
     "PreToolUse": [
       {

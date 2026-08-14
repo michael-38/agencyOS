@@ -1,0 +1,53 @@
+{
+  "title": "Choose the visual world",
+  "question": "The roll assigned The Set Tray. Keep it, take an alternate, or re-roll.",
+  "options": [
+    {
+      "id": "assigned",
+      "label": "The Set Tray",
+      "kicker": "THE ROLL",
+      "lineage": "the sterile field: surgical drape, set instrument tray, the count before and after",
+      "thesis": "Everything in its exact place, on the one ground surgeons chose so the eye can rest.",
+      "palette": ["#1a3d38", "#c8ced1", "#5b8fb0", "#f2f4f3"],
+      "materials": ["surgical drape cloth", "instrument steel", "sterile wrap"],
+      "viewport": "The before and after work laid out at scale on deep drape green, placed with a set tray's exactness, nothing decorative and nothing floating.",
+      "risk": "Placement this strict reads clinical and cold if the photographs are not given enough room to breathe."
+    },
+    {
+      "id": "challenger-darkroom",
+      "label": "Darkroom Safelight Bay",
+      "lineage": "printing darkroom under amber safelight",
+      "thesis": "Photographs staged into slow deliberate existence through fixed stations.",
+      "case": "Fuses poorly: the world's core metaphor is controlled image manipulation, which quietly undermines an unretouched before and after gallery, and its amber ground sits next to the warm default this rebuild exists to escape.",
+      "hero": "https://impeccable.style/worlds/cards/signals-instruments-darkroom-safelight-bay-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/signals-instruments-darkroom-safelight-bay.webp"
+    },
+    {
+      "id": "challenger-riley",
+      "label": "Riley Moire Gallery",
+      "lineage": "white gallery hung with black and white wave canvases",
+      "thesis": "Flat paint that flexes and strobes as the viewer changes distance.",
+      "case": "Fuses poorly: its mechanism is optical deception, and pairing illusion with photographs of real bodies contradicts a practice whose whole claim is honest, natural results.",
+      "hero": "https://impeccable.style/worlds/cards/design-canon-riley-moire-gallery-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/design-canon-riley-moire-gallery.webp"
+    },
+    {
+      "id": "challenger-weather-sun",
+      "label": "Indoor Weather Sun",
+      "lineage": "monofrequency sodium sun doubled by a mirrored ceiling",
+      "thesis": "One vast hazed hall where visitors lie inside their own silhouettes.",
+      "case": "Fuses poorly: monofrequency amber flattens every colour, which would destroy the before and after photographs that must lead this page, though the mirror as a way of seeing yourself is the strongest idea in the hand.",
+      "hero": "https://impeccable.style/worlds/cards/light-shadow-caustics-indoor-weather-sun-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/light-shadow-caustics-indoor-weather-sun.webp"
+    }
+  ],
+  "reroll": true,
+  "steer": true,
+  "canon": true,
+  "canonCard": {
+    "label": "The category standard",
+    "thesis": "The editorial clinic page, executed impeccably: warm ground, high contrast serif, one warm accent.",
+    "viewport": "A soft hero portrait, a serif promise over it, then services, then testimonials.",
+    "risk": "It is what this category always ships, and what the previous build already shipped."
+  }
+}

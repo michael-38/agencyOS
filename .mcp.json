@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "firecrawl": {
+      "command": "bash",
+      "args": [
+        "-c",
+        "set -a; . ./.env 2>/dev/null || . \"$CLAUDE_PROJECT_DIR/.env\" 2>/dev/null || true; set +a; exec npx -y firecrawl-mcp"
+      ]
+    }
+  }
+}

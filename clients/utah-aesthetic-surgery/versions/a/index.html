@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Utah Aesthetic Surgery | Robert Rodrigues, MD | South Jordan, Utah</title>
+<meta name="description" content="Plastic and reconstructive surgery in South Jordan, Utah. Trained at Case Western, Michigan and Mayo Clinic, with over two decades of surgical experience. Call 801-810-0761.">
+<link rel="canonical" href="https://utahaestheticsurgery.pages.dev/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Utah Aesthetic Surgery | Robert Rodrigues, MD">
+<meta property="og:description" content="Plastic and reconstructive surgery in South Jordan, Utah.">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="geo.region" content="US-UT">
+<meta name="geo.placename" content="South Jordan">
+<link rel="preload" href="fonts/archivo.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/onest.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:'Archivo';font-style:normal;font-weight:400 700;font-stretch:62% 125%;font-display:swap;src:url(fonts/archivo.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Onest';font-style:normal;font-weight:400 700;font-display:swap;src:url(fonts/onest.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+
+:root{
+  /* The sterile field. Drenched: the drape IS the surface. */
+  --drape:#12332e;
+  --drape-deep:#0c2420;
+  --drape-lift:#1a4038;
+  --steel:#c4cbce;
+  --steel-edge:#8d989c;
+  /* what the field casts under a placed instrument; darker than the drape itself */
+  --cast:#061411;
+  --wrap:#6d9fbf;
+  --gauze:#eef1ef;
+  /* Secondary text tints from the drape hue. Never gray. */
+  --quiet:#8fada4;
+  --quieter:#93b0a7; /* >=4.5:1 on BOTH --drape and --drape-deep; prior values measured one ground only */
+  --rule:#2a5148;
+  --display:'Archivo',system-ui,sans-serif;
+  --text:'Onest',system-ui,-apple-system,sans-serif;
+  --gut:clamp(20px,5vw,64px);
+  --s2:8px; --s3:16px; --s4:24px; --s5:32px; --s6:48px; --s7:72px; --s8:104px; --s9:148px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--drape);color:var(--gauze);font-family:var(--text);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+img{max-width:100%;height:auto;display:block}
+a{color:inherit}
+h1,h2,h3{margin:0;font-family:var(--display);font-weight:600;font-stretch:125%;line-height:1.02;letter-spacing:-0.03em;text-transform:uppercase}
+h1{font-size:clamp(2.6rem,7.4vw,5.4rem)}
+h2{font-size:clamp(1.7rem,3.8vw,2.9rem)}
+h3{font-size:1.02rem;letter-spacing:0.01em;font-stretch:100%}
+p{margin:0}
+.pad{padding-left:var(--gut);padding-right:var(--gut)}
+.measure{max-width:68ch}
+.tel{font-variant-numeric:tabular-nums}
+:focus-visible{outline:2px solid var(--wrap);outline-offset:3px}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:var(--s3);top:var(--s3);z-index:100;background:var(--gauze);color:var(--drape-deep);padding:var(--s2) var(--s3)}
+
+/* the steel plate: the world physically works the CTA */
+.plate{display:inline-flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--display);font-stretch:112%;font-weight:600;letter-spacing:0.02em;text-transform:uppercase;font-size:.94rem;color:var(--drape-deep);
+  background:var(--steel);padding:15px 24px;border:1px solid var(--gauze);box-shadow:0 2px 0 var(--steel-edge),0 10px 24px color-mix(in srgb,var(--cast) 45%,transparent);transition:background .16s ease,transform .16s ease}
+.plate:hover{background:var(--gauze);transform:translateY(-1px)}
+.plate:active{transform:translateY(0);box-shadow:0 1px 0 var(--steel-edge),0 6px 14px color-mix(in srgb,var(--cast) 40%,transparent)}
+.plate[aria-disabled="true"]{background:var(--steel-edge);color:var(--drape);box-shadow:none;pointer-events:none}
+.plate svg{width:17px;height:17px;flex:none}
+
+header{display:flex;align-items:center;justify-content:space-between;gap:var(--s4);padding-top:var(--s4);padding-bottom:var(--s4);border-bottom:1px solid var(--rule)}
+.mark{font-family:var(--display);font-stretch:125%;font-weight:600;text-transform:uppercase;letter-spacing:-0.01em;font-size:1rem;text-decoration:none;line-height:1.1}
+.mark b{display:block;font-family:var(--text);font-stretch:100%;font-weight:400;text-transform:none;letter-spacing:0;font-size:.78rem;color:var(--quiet);margin-top:3px}
+.navtel{font-family:var(--display);font-stretch:112%;font-weight:600;text-transform:uppercase;font-size:.88rem;letter-spacing:.02em;text-decoration:none;color:var(--steel)}
+.navtel:hover{color:var(--gauze)}
+@media(max-width:620px){.navtel{display:none}}
+
+/* FIRST VIEWPORT: the set, laid out on the field */
+.field{padding-top:var(--s7);padding-bottom:var(--s8)}
+.set{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:var(--s7)}
+.set figure{margin:0;position:relative}
+.set img{width:100%;aspect-ratio:4/5;object-fit:cover;border:1px solid var(--rule)}
+@media(max-width:900px){.set{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:520px){.set{grid-template-columns:repeat(2,1fr)}}
+.thesis{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr);gap:var(--s7);align-items:end}
+.thesis p{color:var(--steel);font-size:1.12rem;max-width:46ch}
+.thesis .act{display:flex;flex-direction:column;gap:var(--s3);align-items:flex-start}
+.thesis .hours{font-size:.86rem;color:var(--quiet)}
+@media(max-width:820px){.thesis{grid-template-columns:1fr;gap:var(--s5)}}
+
+/* placed rows: rules, never cards */
+.band{border-top:1px solid var(--rule);padding-top:var(--s7);padding-bottom:var(--s7)}
+.band-deep{background:var(--drape-deep)}
+.row{display:grid;grid-template-columns:minmax(0,.34fr) minmax(0,1fr);gap:var(--s4) var(--s6);padding:var(--s4) 0;border-top:1px solid var(--rule)}
+.row:first-of-type{border-top:0}
+.row p{color:var(--steel)}
+@media(max-width:760px){.row{grid-template-columns:1fr;gap:var(--s2)}}
+
+.train{display:flex;flex-wrap:wrap;gap:var(--s3) var(--s6);margin-top:var(--s5);padding:0;list-style:none}
+.train li{font-family:var(--display);font-stretch:112%;font-size:.98rem;text-transform:uppercase;letter-spacing:.01em;color:var(--gauze);display:flex;align-items:baseline;gap:10px}
+.train li::before{content:"";width:16px;height:1px;background:var(--wrap);flex:none;transform:translateY(-4px)}
+.train-note{margin-top:var(--s4);color:var(--quiet);font-size:.92rem}
+
+.proc{list-style:none;margin:var(--s5) 0 0;padding:0}
+.proc li{display:grid;grid-template-columns:minmax(0,.3fr) minmax(0,1fr);gap:var(--s4);padding:var(--s4) 0;border-top:1px solid var(--rule)}
+.proc b{font-family:var(--display);font-stretch:112%;font-weight:600;text-transform:uppercase;font-size:.94rem;letter-spacing:.02em}
+.proc span{color:var(--steel)}
+@media(max-width:760px){.proc li{grid-template-columns:1fr;gap:6px}}
+
+.said{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--s6) var(--s7);margin-top:var(--s6)}
+.said figure{margin:0}
+.said blockquote{margin:0 0 var(--s3);font-size:1.06rem;color:var(--gauze)}
+.said .lead blockquote{font-family:var(--display);font-stretch:100%;font-weight:400;text-transform:none;letter-spacing:-0.02em;font-size:clamp(1.4rem,2.7vw,2rem);line-height:1.22}
+.said .lead{grid-column:1/-1;padding-bottom:var(--s5);border-bottom:1px solid var(--rule)}
+.said figcaption{font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--quieter)}
+@media(max-width:760px){.said{grid-template-columns:1fr}}
+
+.contact{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--s7)}
+.dl{margin:var(--s5) 0 0;display:grid;grid-template-columns:auto 1fr;gap:var(--s3) var(--s5)}
+.dl dt{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--quieter);padding-top:5px}
+.dl dd{margin:0;color:var(--gauze)}
+.dl a{text-decoration-color:var(--rule);text-underline-offset:3px}
+.dl a:hover{text-decoration-color:var(--wrap)}
+@media(max-width:820px){.contact{grid-template-columns:1fr;gap:var(--s5)}}
+
+.note{margin-top:var(--s5);color:var(--quieter);font-size:.86rem;max-width:66ch}
+footer{border-top:1px solid var(--rule);padding-top:var(--s5);padding-bottom:var(--s5);display:flex;flex-wrap:wrap;gap:var(--s3);justify-content:space-between;color:var(--quiet);font-size:.84rem}
+
+.callbar{display:none}
+@media(max-width:620px){
+  .callbar{display:block;position:fixed;left:0;right:0;bottom:0;z-index:60;background:var(--steel);border-top:1px solid var(--gauze)}
+  .callbar a{display:flex;align-items:center;justify-content:center;gap:10px;padding:15px;color:var(--drape-deep);text-decoration:none;font-family:var(--display);font-stretch:112%;font-weight:600;text-transform:uppercase;letter-spacing:.02em}
+  body{padding-bottom:56px}
+}
+
+/* ONE authored moment: the set is laid onto the field, once, on load.
+   Content is visible by default; only position settles. Exponential ease-out. */
+@keyframes lay{from{transform:translateY(14px) scale(.985)}to{transform:none}}
+.set figure{animation:lay .72s cubic-bezier(.16,1,.3,1) backwards}
+.set figure:nth-child(1){animation-delay:.02s}
+.set figure:nth-child(2){animation-delay:.08s}
+.set figure:nth-child(3){animation-delay:.14s}
+.set figure:nth-child(4){animation-delay:.2s}
+.set figure:nth-child(5){animation-delay:.26s}
+.set figure:nth-child(6){animation-delay:.32s}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  .set figure{animation:none}
+}
+</style>
+</head>
+<body>
+<!--
+THESIS: This surgeon's judgment came from rebuilding bodies after trauma and cancer, which is why
+he will decline an operation; the page refuses the warm editorial clinic arrangement that makes
+every practice in this category look identical.
+OWN-WORLD: The sterile field. Deep surgical drape green drenching the whole surface, instrument
+steel, sterile-wrap blue, gauze white. Archivo wide for display, Onest for text. Nothing floats;
+every element is placed, and secondary text tints from the drape.
+STORY: She sees the work itself first, at scale; learns he trained where the hard cases go; reads
+patients saying he talked them out of surgery; calls.
+FIRST VIEWPORT: Six before-and-after plates laid across the full width of the drape, the thesis
+line beneath them at left, the steel phone plate at right.
+FORM: The Set Tray, candidate 7 of 7, seed 509f9326.
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md
+-->
+<a class="skip" href="#main">Skip to main content</a>
+
+<header class="pad">
+  <a class="mark" href="#main">Utah Aesthetic Surgery<b>Robert Rodrigues, MD &middot; South Jordan, Utah</b></a>
+  <a class="navtel tel" href="tel:8018100761">801 810 0761</a>
+</header>
+
+<main id="main">
+
+<section class="field pad">
+  <div class="set">
+    <figure><img src="images/1000021113.jpg" width="987" height="1278" alt="Surgical result photographed at Utah Aesthetic Surgery."></figure>
+    <figure><img src="images/1000021114.jpg" width="976" height="1274" alt="Surgical result photographed at Utah Aesthetic Surgery."></figure>
+    <figure><img src="images/1000021115.jpg" width="1026" height="967" alt="Surgical result photographed at Utah Aesthetic Surgery."></figure>
+    <figure><img src="images/1000021118.jpg" width="1029" height="912" alt="Surgical result photographed at Utah Aesthetic Surgery."></figure>
+    <figure><img src="images/1000021119.jpg" width="926" height="842" alt="Surgical result photographed at Utah Aesthetic Surgery."></figure>
+    <figure><img src="images/1000020839.jpg" width="1024" height="1024" alt="Dr. Robert Rodrigues, plastic surgeon at Utah Aesthetic Surgery."></figure>
+  </div>
+
+  <div class="thesis">
+    <div>
+      <h1>He will tell you not to have the surgery.</h1>
+      <p class="measure" style="margin-top:var(--s4)">Robert Rodrigues spent the first part of his career rebuilding bodies after trauma and cancer. That is where the judgment comes from, and it is why patients keep writing that he talked them out of the bigger operation.</p>
+    </div>
+    <div class="act">
+      <a class="plate" href="tel:8018100761">
+        <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M222.37,158.46l-47.11-21.11-.13-.06a16,16,0,0,0-15.17,1.4,8.12,8.12,0,0,0-.75.56L134.87,160c-15.42-7.49-31.34-23.29-38.83-38.51l20.78-24.71c.19-.23.37-.46.54-.7a16,16,0,0,0,1.32-15.06l0-.12L97.54,33.64a16,16,0,0,0-16.62-9.52A56.26,56.26,0,0,0,32,80c0,79.4,64.6,144,144,144a56.26,56.26,0,0,0,55.88-48.92A16,16,0,0,0,222.37,158.46Z"/></svg>
+        <span class="tel">801 810 0761</span>
+      </a>
+      <p class="hours">Monday to Friday, 8:00 to 5:00. Consultations by phone first.</p>
+    </div>
+  </div>
+</section>
+
+<section class="band pad">
+  <h2>Trained where the hard cases go.</h2>
+  <ul class="train">
+    <li>Carroll College</li>
+    <li>University of Colorado Health Sciences Center</li>
+    <li>Case Western Reserve University</li>
+    <li>University of Michigan</li>
+    <li>Mayo Clinic</li>
+  </ul>
+  <p class="train-note measure">Undergraduate, medical degree, integrated plastic surgery training, advanced fellowship. Over two decades of surgical experience.</p>
+</section>
+
+<section class="band band-deep pad">
+  <h2>Reconstructive first.</h2>
+  <div style="margin-top:var(--s6)">
+    <div class="row">
+      <h3>Where the judgment comes from</h3>
+      <p class="measure">Breast reconstruction, complex wound reconstruction, advanced hand and wrist surgery. Those operations carry greater surgical complexity and demand a deep understanding of anatomy, tissue healing and precision.</p>
+    </div>
+    <div class="row">
+      <h3>Why it matters for revisions</h3>
+      <p class="measure">Where a previous procedure has altered anatomy or created a problem, a reconstructive perspective is often what makes it possible to restore balance and natural form.</p>
+    </div>
+    <div class="row">
+      <h3>Science and art, together</h3>
+      <p class="measure">A childhood spent drawing, painting and sculpting sat alongside a pull toward physics, chemistry and biology. Plastic surgery is one of the few specialties that asks for both at once.</p>
+    </div>
+  </div>
+</section>
+
+<section class="band pad">
+  <h2>Procedures</h2>
+  <ul class="proc">
+    <li><b>Body</b><span>Brazilian butt lift. Tummy tuck, removing excess skin and fat and tightening abdominal muscles. Liposuction.</span></li>
+    <li><b>Breast</b><span>Breast augmentation, augmentation mastopexy, inverted nipple repair.</span></li>
+    <li><b>Face and neck</b><span>Facelift and neck. Rhinoplasty. Blepharoplasty, upper and lower.</span></li>
+    <li><b>Skin</b><span>Morpheus8 skin tightening.</span></li>
+  </ul>
+  <p class="note">Individual results vary. The photographs above are of actual patients of this practice and are not a prediction of any individual outcome.</p>
+</section>
+
+<section class="band band-deep pad">
+  <h2>What patients write.</h2>
+  <div class="said">
+    <figure class="lead">
+      <blockquote>&ldquo;He didn't push toward one option or the other. He even discouraged me from the procedure that would have made him more money. It wasn't the right thing for me.&rdquo;</blockquote>
+      <figcaption>Danny, December 2019</figcaption>
+    </figure>
+    <figure>
+      <blockquote>&ldquo;He never pressured me into choosing a more expensive option and genuinely cared about what was right for me.&rdquo;</blockquote>
+      <figcaption>Lisa, January 2020</figcaption>
+    </figure>
+    <figure>
+      <blockquote>&ldquo;I'm 6 weeks post op from an extended tummy tuck and breast augmentation and I am loving my results! He listened to what I wanted and the results I wanted to achieve.&rdquo;</blockquote>
+      <figcaption>Sue, March 2019</figcaption>
+    </figure>
+    <figure>
+      <blockquote>&ldquo;Very knowledgeable and took time to listen to me as well as explain procedures and set realistic expectations. He is an excellent surgeon.&rdquo;</blockquote>
+      <figcaption>Rashelle, October 2019</figcaption>
+    </figure>
+    <figure>
+      <blockquote>&ldquo;Very great bedside manners, makes you feel safe and he listened to my concerns. I have referred him 3 times and will continue to refer him.&rdquo;</blockquote>
+      <figcaption>Silvia, February 2020</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="band pad" id="consult">
+  <div class="contact">
+    <div>
+      <h2>Start with a phone call.</h2>
+      <p class="measure" style="margin-top:var(--s4);color:var(--steel)">There is no booking form and no online scheduler. The practice answers its own phone during clinic hours.</p>
+      <div style="margin-top:var(--s5)">
+        <a class="plate" href="tel:8018100761">
+          <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M222.37,158.46l-47.11-21.11-.13-.06a16,16,0,0,0-15.17,1.4,8.12,8.12,0,0,0-.75.56L134.87,160c-15.42-7.49-31.34-23.29-38.83-38.51l20.78-24.71c.19-.23.37-.46.54-.7a16,16,0,0,0,1.32-15.06l0-.12L97.54,33.64a16,16,0,0,0-16.62-9.52A56.26,56.26,0,0,0,32,80c0,79.4,64.6,144,144,144a56.26,56.26,0,0,0,55.88-48.92A16,16,0,0,0,222.37,158.46Z"/></svg>
+          <span class="tel">801 810 0761</span>
+        </a>
+      </div>
+    </div>
+    <div>
+      <dl class="dl">
+        <dt>Address</dt><dd>10382 S. Jordan Gateway, Suite 100<br>South Jordan, UT 84095</dd>
+        <dt>Phone</dt><dd><a class="tel" href="tel:8018100761">801 810 0761</a></dd>
+        <dt>Email</dt><dd><a href="mailto:info@utah-aesthetic-surgery.com">info@utah-aesthetic-surgery.com</a></dd>
+        <dt>Hours</dt><dd>Monday to Friday, 8:00 AM to 5:00 PM<br>Saturday and Sunday, closed</dd>
+      </dl>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="pad">
+  <span>Utah Aesthetic Surgery. Robert Rodrigues, MD.</span>
+  <span><a class="tel" href="tel:8018100761">801 810 0761</a>, South Jordan, Utah</span>
+</footer>
+
+<div class="callbar">
+  <a href="tel:8018100761">
+    <svg viewBox="0 0 256 256" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M222.37,158.46l-47.11-21.11-.13-.06a16,16,0,0,0-15.17,1.4,8.12,8.12,0,0,0-.75.56L134.87,160c-15.42-7.49-31.34-23.29-38.83-38.51l20.78-24.71c.19-.23.37-.46.54-.7a16,16,0,0,0,1.32-15.06l0-.12L97.54,33.64a16,16,0,0,0-16.62-9.52A56.26,56.26,0,0,0,32,80c0,79.4,64.6,144,144,144a56.26,56.26,0,0,0,55.88-48.92A16,16,0,0,0,222.37,158.46Z"/></svg>
+    <span class="tel">Call 801 810 0761</span>
+  </a>
+</div>
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"MedicalBusiness",
+  "name":"Utah Aesthetic Surgery",
+  "url":"https://utahaestheticsurgery.pages.dev/",
+  "telephone":"+1-801-810-0761",
+  "email":"info@utah-aesthetic-surgery.com",
+  "address":{"@type":"PostalAddress","streetAddress":"10382 S. Jordan Gateway, Suite 100","addressLocality":"South Jordan","addressRegion":"UT","postalCode":"84095","addressCountry":"US"},
+  "openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens":"08:00","closes":"17:00"}],
+  "employee":{"@type":"Physician","name":"Robert Rodrigues, MD","medicalSpecialty":"PlasticSurgery"}
+}
+</script>
+</body>
+</html>

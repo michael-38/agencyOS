@@ -1,0 +1,112 @@
+DIRECTION CONCEPT SEED (key: 8182871f; mode: persuade; source: api; approved pool: 94ff10ff20de; 281/531 human-approved; rerun with --scope direction --mode persuade --from 8182871f --candidate-count 7 to reproduce this roll against this catalog revision)
+ASSIGNED INDEX: 3
+  After ordering the grounded directions by resonance, build candidate
+  3 of your own grounded list; the assignment never points at a
+  challenger. The assignment is the roll, not a suggestion: your top-ranked
+  direction is what every run would ship, so the script decides which grounded
+  direction gets built. Each direction joins a durable visual system to a
+  concrete expression for the requested first surface, decided as one. It must
+  survive the current task plus navigation, quiet and dense content,
+  interaction and state, and a substantially different future surface. In an
+  attended run, present the assigned direction fully committed and offer
+  re-roll; never present a ranked lineup to choose from. Re-roll yourself only
+  on named factual grounds, when the assignment cannot carry the product's
+  truth or task; taste is never grounds.
+  The assignment exists to refuse the model's ranking rut, never to outrank
+  the user or the brief. Never expose assignment metadata in user-facing labels.
+CHALLENGERS:
+  1. a data-sublime field, where dense barcode columns and sine lattices strobe in pure black and white
+     SOURCE ID: ikeda-datamatics
+     CREATIVE SPARK: A wall of hairline vertical bars, some black, some white, holds like a frozen barcode. Dense monospace numbers pack the margin. A single sine curve traces the lattice, and for one frame the whole field snaps to its negative.
+     SYSTEM GRAMMAR:
+       - Palette/material: Pure black and pure white only, no grey and no color; flat pixel-crisp bars, hairline rules, and monospace numerics; the occasional full-frame inversion.
+       - Type/composition: One monospace face at data density, set in tight tabular columns; barcode bar-fields and sine curves structure the page
+       - Topology/navigation: Move by data column, by frequency band, and by frame index.
+       - Controls/state: Scan, sample, and invert; selecting a column pulls its numbers into focus while the surrounding field drops to a faint bar pattern.
+       - Responsive/motion: Columns thin and drop from the edges as width shrinks; reduced-motion disables all strobing and holds a single high-contrast still.
+     WEB LEVERAGE: Render the barcode and sine lattice on canvas from a seeded sequence, stepping frames on requestAnimationFrame that halts entirely under prefers-reduced-motion.
+     QUALITY BAR: board https://impeccable.style/worlds/cards/ikeda-datamatics.webp · hero https://impeccable.style/worlds/cards/ikeda-datamatics-hero.webp
+  2. a rail concourse split-flap board at rush hour, where cascading letter flaps, platform columns, and departure rhythm hold a thousand travelers in one gaze
+     SOURCE ID: signals-instruments-split-flap-concourse
+     CREATIVE SPARK: A ripple of clacks runs the board, Milan becomes Marseille, and every head in the concourse lifts at the same half-second.
+     SYSTEM GRAMMAR:
+       - Palette/material: matte black flap faces with white paint letters, brushed steel board frame as ground, amber row lamps for delay; cancelled rows drop to dim red type
+       - Type/composition: one condensed white sans on every flap, characters in fixed cells, destinations in caps; the board's ruled rows and columns are the entire composition
+       - Topology/navigation: rows are live entities ranked by time; columns never move, only their flaps.
+       - Controls/state: changes cascade character by character; delayed and cancelled states restyle the row without breaking the grid.
+       - Responsive/motion: the board narrows column priority on phones; the cascade collapses to a single update under
+     WEB LEVERAGE: WebSocket-fed rows animate per-character flips while remaining a semantic, sortable table underneath.
+     QUALITY BAR: board https://impeccable.style/worlds/cards/signals-instruments-split-flap-concourse.webp · hero https://impeccable.style/worlds/cards/signals-instruments-split-flap-concourse-hero.webp
+  3. a ligne claire adventure album page, every object drawn with the same unvarying line weight and filled with flat unshadowed color, the brussels clear-line discipline making a harbor crane as legible as a teacup
+     SOURCE ID: pop-culture-shelf-ligne-claire-album
+     CREATIVE SPARK: You flatten the album under the lamp and the moon rocket stands in checkerboard red and white, drawn with the same calm line as the professor's teacup, every rivet exactly as important as it should be.
+     SYSTEM GRAMMAR:
+       - Palette/material: flat unmodulated fills held by one even black line, daylight blue and sand ochre midtones, no gradients or cast shadows, red saved for the object the story needs
+       - Type/composition: hand-lettered upright caps in white speech balloons, narration in yellow caption boxes, panels ranked in the album's strict four-tier waffle grid
+       - Topology/navigation: pages read tier by tier; a wide establishing panel opens each scene, and section changes are page turns, never dissolves inside a panel
+       - Controls/state: the active panel keeps full color while the rest of its tier rests one tone paler, selection is the same black line drawn heavier, alarm arrives as speed lines only
+       - Responsive/motion: tiers stack one panel at a time on phones in reading order; motion is a clean cut from panel to panel with no easing flourish
+     WEB LEVERAGE: svg shapes with a single stroke width scale losslessly, and css flat fills swap per state without any shading pipeline
+     QUALITY BAR: board https://impeccable.style/worlds/cards/pop-culture-shelf-ligne-claire-album.webp · hero https://impeccable.style/worlds/cards/pop-culture-shelf-ligne-claire-album-hero.webp
+  4. a devoted single-subject fan page, a tiled background behind a centered table layout, animated dividers between every section and a hit counter, guestbook link and last-updated date stacked at the very bottom
+     SOURCE ID: digital-design-canon-fansite-shrine-page
+     CREATIVE SPARK: A seamless tile of stars behind the whole thing, a centered table, seven animated dividers, and at the bottom a counter insisting you are visitor 4,182.
+     SYSTEM GRAMMAR:
+       - Palette/material: a small seamless tile repeating behind everything, saturated web-safe colors, and animated rules separating each section
+       - Type/composition: a centered fixed-width table, headings as image banners, and every section closed by an animated divider bar
+       - Topology/navigation: the page is one long devoted column, so navigation scrolls through somebody's entire enthusiasm in their chosen order
+       - Controls/state: controls are section links, the active one gains a marching border, and visited ones change to a second link color
+       - Responsive/motion: the fixed-width table refuses to adapt gracefully, and motion is a looping divider and a blinking update notice
+     WEB LEVERAGE: a seamless css background tile, looping divider animation, and visit-count state persisted local
+     QUALITY BAR: board https://impeccable.style/worlds/cards/digital-design-canon-fansite-shrine-page.webp · hero https://impeccable.style/worlds/cards/digital-design-canon-fansite-shrine-page-hero.webp
+  5. a pickling brine calendar, where salt, acidity, spice, vegetable, vessel, temperature, and crunch mature through bright seasonal jars
+     SOURCE ID: food-fermentation-culinary-theater-pickling-brine-calendar
+     CREATIVE SPARK: Spring radishes tint one jar coral, summer cucumbers cloud another with dill, and a winter cabbage crock slowly turns ruby as bubbles climb its stone weight.
+     SYSTEM GRAMMAR:
+       - Palette/material: clear jar glass and pale brine haze as ground, radish coral and cabbage ruby as seasonal accents, dill green for fresh states, labels in kraft brown
+       - Type/composition: hand-lettered jar-label script over stamped date caps, jars ranked on shelf lines, each label banded with harvest, brine, and day count
+       - Topology/navigation: Browse jars by harvest, brine, fermentation stage, sensory change, and safe storage.
+       - Controls/state: Mix a brine, log a taste, vent or chill a vessel, and compare batches over days.
+       - Responsive/motion: Arrange jars as a vertical seasonal shelf on phones with safety thresholds stated in text.
+     WEB LEVERAGE: Batch timers, optional pH and temperature input, and photo comparison connect daily observation to safe, sensory maturation.
+     QUALITY BAR: board https://impeccable.style/worlds/cards/food-fermentation-culinary-theater-pickling-brine-calendar.webp · hero https://impeccable.style/worlds/cards/food-fermentation-culinary-theater-pickling-brine-calendar-hero.webp
+  6. an indoor weather sun, a monofrequency semicircle doubled to a full disc by a mirrored ceiling, mist haze filling a vast hall where crowds lie inside their own silhouettes
+     SOURCE ID: light-shadow-caustics-indoor-weather-sun
+     CREATIVE SPARK: You lie on the concrete floor of a vast hall, haze thick with amber; far above, the mirrored ceiling shows your tiny silhouette waving back beside a hundred strangers, and the half sun on the wall completes itself into a disc.
+     SYSTEM GRAMMAR:
+       - Palette/material: monofrequency sodium amber flattening every color, hazed amber as ground, silhouette black for body ink, the mirror's doubled sun as the accent
+       - Type/composition: silhouette-black grotesk set low against a long horizon line, one vast horizontal band, captions small and scattered like lying figures
+       - Topology/navigation: one hall with a half sun at its far wall, the mirrored ceiling doubling everything; you navigate by walking the long axis toward the light
+       - Controls/state: your pointer is a silhouette, hover deepens a figure to full black, selection appears twice, once on the floor and once in the ceiling mirror
+       - Responsive/motion: the semicircle scales with the wall and its mirror half collapses first on short screens; motion is drifting mist
+     WEB LEVERAGE: backdrop-filter haze over a css scaleY(-1) reflection building the mirrored ceiling, blend mode flattening all color to amber duotone
+     QUALITY BAR: board https://impeccable.style/worlds/cards/light-shadow-caustics-indoor-weather-sun.webp · hero https://impeccable.style/worlds/cards/light-shadow-caustics-indoor-weather-sun-hero.webp
+Fuse each challenger before judging it: the challenger supplies the form
+  and its system grammar, the product supplies every fact, and clarity wins
+  conflicts. Weigh the fused result against the assigned direction on exactly
+  two axes, audience identification and product clarity. Losing to strong
+  grounded material is a valid outcome; beating a thin or tool-monoculture
+  list is the point. A fused challenger that wins both axes becomes the build.
+When you can view images, open the QUALITY BAR board and hero for any
+challenger you weigh seriously and for the world you build. They exist as a
+craft bar, the finish level and commitment the build is expected to reach,
+never as a mockup to copy; your surface serves this product, not that render.
+PRODUCT.md and explicit incumbent brand commitments constrain every direction.
+The seed never chooses exact colors, fonts, tokens, or a user preference, and
+it never permits the world and first surface to be selected independently.
+The CREATIVE SPARK is a complete visual system, not a theme or decorative
+reference. Translate every supplied system rule into the product: palette and
+material, type and composition, topology, controls and states, and adaptation.
+Keep the source's visible character, scale, rhythm, and interaction instead of
+reducing vivid grammar to generic nouns. When the source is already a credible
+interface language, commit to it across navigation, content, controls, and
+states. Otherwise keep a literal carrier only when it becomes functional.
+Ambitious motion, spatial media, or interaction is welcome when it strengthens
+the product without weakening semantics, performance, or fallback behavior.
+TELEMETRY: if the resolved direction uses one of these challengers, rerun
+  this script once with --chosen <challenger-id> --from 8182871f --scope direction --mode persuade
+  after resolution. The ping is anonymous (chosen id only) and is skipped
+  automatically when DO_NOT_TRACK or IMPECCABLE_NO_TELEMETRY is set.
+A user- or brief-pinned decision beats the roll, always.
+ASSIGNED INDEX (restated for truncated readers): 3. Build candidate
+3 of your own grounded list; seed key 8182871f.

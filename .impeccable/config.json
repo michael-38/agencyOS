@@ -2,6 +2,7 @@
   "projectRoots": [
     "templates/*",
     "demo/*",
+    "clients/*",
     "hyperworkflow"
   ]
 }

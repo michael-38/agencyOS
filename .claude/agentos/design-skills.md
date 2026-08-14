@@ -46,6 +46,29 @@ Run `node .claude/skills/impeccable/scripts/context.mjs` once per session from t
 
 Reach for a taste skill only when `/impeccable` has been tried and the work specifically needs that skill's lens, per the table above.
 
+### The one sanctioned two-pack pattern: `/redesign-site` A/B
+
+`/redesign-site` deliberately runs **both** packs on the same client, producing two versions
+the client chooses between: **A** from `/impeccable` (on-floor, conversion-first, the
+guaranteed-shippable one) and **B** from `/design-taste-frontend` (anti-slop, freer on
+composition). This is not a contradiction of the precedence rule above — both build from the
+same seeded industry world and the same verified `fact-sheet.md`; only the design lens differs.
+
+Two conditions make it safe, and neither is optional:
+
+1. **Version B runs only with a written brief** at `clients/<slug>/briefs/taste-brief.md`
+   carrying eight explicit overrides. `design-taste-frontend` defaults to React/Next +
+   Tailwind, discourages Inter, bans `<link>`-loaded Google Fonts, bans hand-rolled SVG
+   icons, bans Fraunces, and requires real images — every one of which collides with the
+   house floor or the templates. The exact table lives in
+   `.claude/skills/redesign-site/SKILL.md` §5b.
+2. **Three of its bans are allowed to win on B** — no 3-column equal feature cards, the
+   layout-repetition ban, and the zigzag cap. That is the entire point of having a B; a B
+   that obeys every house habit is not a second option.
+
+Version A must not read Version B's output or vice versa — cross-reading anchors the second
+design and collapses the comparison into two variants of one idea.
+
 ---
 
 ## Operational notes

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Utah Valley Medical Spa | Dr. David Myers, Expert Injector | Lehi, Utah</title>
+<meta name="description" content="Medical grade skincare in Lehi, Utah. Botox and fillers by a physician Expert Injector, Morpheus8, microneedling and peels by Master Aestheticians. Free consultation. Text or call 801-768-8800.">
+<link rel="canonical" href="https://uvderm-medical-spa.pages.dev/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Utah Valley Medical Spa | Lehi, Utah">
+<meta property="og:description" content="Medical grade skincare inside a dermatology practice.">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="geo.region" content="US-UT">
+<meta name="geo.placename" content="Lehi">
+<link rel="preload" href="fonts/bigshoulders.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/chivo.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:'BigShoulders';font-style:normal;font-weight:400 800;font-display:swap;src:url(fonts/bigshoulders.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Chivo';font-style:normal;font-weight:400 700;font-display:swap;src:url(fonts/chivo.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+
+:root{
+  /* The compounding counter. Committed: amber glass owns whole regions. */
+  --counter:#1c1a17;
+  --counter-deep:#131210;
+  --amber:#c2701f;
+  --amber-deep:#9a5615;
+  --brass:#a8874e;
+  --bone:#ece7e0;
+  /* secondary text tints from the counter hue, never gray */
+  --quiet:#a09889;
+  --rule:#38332c;
+  --cast:#080706;
+  --bone-lift:#f7f4f0;
+  --display:'BigShoulders',system-ui,sans-serif;
+  --text:'Chivo',system-ui,-apple-system,sans-serif;
+  --gut:clamp(20px,5vw,64px);
+  --s2:8px; --s3:16px; --s4:24px; --s5:32px; --s6:48px; --s7:72px; --s8:104px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--counter);color:var(--bone);font-family:var(--text);font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased}
+img{max-width:100%;height:auto;display:block}
+a{color:inherit}
+h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;line-height:.94;letter-spacing:-0.015em;text-transform:uppercase}
+h1{font-size:clamp(3rem,9vw,6rem)}
+h2{font-size:clamp(2rem,4.4vw,3.2rem)}
+h3{font-size:1.16rem;letter-spacing:.02em;line-height:1.1}
+p{margin:0}
+.pad{padding-left:var(--gut);padding-right:var(--gut)}
+.measure{max-width:68ch}
+.tel{font-variant-numeric:tabular-nums}
+:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:var(--s3);top:var(--s3);z-index:100;background:var(--bone);color:var(--counter-deep);padding:var(--s2) var(--s3)}
+
+/* the label plate: every prepared thing on this counter is labelled, the CTA included */
+.label{display:inline-flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--display);font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:1.06rem;
+  color:var(--counter-deep);background:var(--bone);padding:14px 22px;border-top:1px solid var(--brass);border-bottom:1px solid var(--brass);
+  box-shadow:0 8px 22px color-mix(in srgb,var(--cast) 55%,transparent);transition:background .16s ease,transform .16s ease}
+.label:hover{background:var(--bone-lift);transform:translateY(-1px)}
+.label:active{transform:none;box-shadow:0 4px 12px color-mix(in srgb,var(--cast) 45%,transparent)}
+.label svg{width:17px;height:17px;flex:none}
+.label-2{background:transparent;color:var(--bone);border-top:1px solid var(--brass);border-bottom:1px solid var(--brass);box-shadow:none}
+.label-2:hover{background:var(--counter-deep);transform:translateY(-1px)}
+
+header{display:flex;align-items:center;justify-content:space-between;gap:var(--s4);padding-top:var(--s4);padding-bottom:var(--s4);border-bottom:1px solid var(--rule)}
+.mark{font-family:var(--display);font-weight:700;text-transform:uppercase;letter-spacing:.01em;font-size:1.2rem;text-decoration:none;line-height:1}
+.mark b{display:block;font-family:var(--text);font-weight:400;text-transform:none;letter-spacing:0;font-size:.76rem;color:var(--quiet);margin-top:5px}
+.navtel{font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:1.02rem;letter-spacing:.05em;text-decoration:none;color:var(--amber)}
+.navtel:hover{color:var(--bone)}
+@media(max-width:620px){.navtel{display:none}}
+
+.open{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,.7fr);gap:var(--s7);align-items:end;padding-top:var(--s7);padding-bottom:var(--s8)}
+.open h1{margin-bottom:var(--s5)}
+.open h1 i{font-style:normal;color:var(--amber)}
+.open .sub{font-size:1.16rem;color:var(--quiet);max-width:44ch;margin-bottom:var(--s6)}
+.acts{display:flex;flex-wrap:wrap;gap:var(--s3)}
+.portrait{width:100%;aspect-ratio:3/4;object-fit:cover;border-bottom:2px solid var(--brass)}
+.portrait-cap{margin-top:var(--s3);font-size:.82rem;color:var(--quiet)}
+@media(max-width:880px){.open{grid-template-columns:1fr;gap:var(--s5);padding-top:var(--s6)}}
+
+.band{border-top:1px solid var(--rule);padding-top:var(--s7);padding-bottom:var(--s7)}
+.band h2{margin-bottom:var(--s6)}
+
+/* the shelf: treatments as labelled preparations, not a services grid */
+.shelf{list-style:none;margin:0;padding:0}
+.shelf li{display:grid;grid-template-columns:minmax(0,.34fr) minmax(0,1fr);gap:var(--s4) var(--s6);padding:var(--s5) 0;border-top:1px solid var(--rule)}
+.shelf li:last-child{border-bottom:1px solid var(--rule)}
+.shelf h3{color:var(--amber)}
+.shelf p{color:var(--bone)}
+.shelf .who{display:block;margin-top:6px;font-family:var(--text);font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--quiet)}
+@media(max-width:760px){.shelf li{grid-template-columns:1fr;gap:var(--s2)}}
+
+/* amber owns this whole region, not an accent on it */
+.offer{background:var(--amber);color:var(--counter-deep);padding-top:var(--s8);padding-bottom:var(--s8)}
+.offer h2{color:var(--counter-deep);max-width:16ch}
+.offer p{color:var(--counter-deep);max-width:54ch;margin-top:var(--s4);font-size:1.1rem}
+.offer .acts{margin-top:var(--s6)}
+.offer .label{background:var(--counter-deep);color:var(--bone);border-color:var(--counter-deep)}
+.offer .label:hover{background:var(--cast)}
+
+.team{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s5)}
+.team figure{margin:0}
+.team img{width:100%;aspect-ratio:3/4;object-fit:cover;border-bottom:2px solid var(--brass)}
+.team figcaption{margin-top:var(--s3)}
+.team b{display:block;font-family:var(--display);font-weight:700;text-transform:uppercase;letter-spacing:.02em;font-size:1.1rem}
+.team span{font-size:.86rem;color:var(--quiet)}
+@media(max-width:760px){.team{grid-template-columns:1fr;gap:var(--s6)}}
+
+.said{columns:2;column-gap:var(--s7);margin-top:var(--s4)}
+.said figure{margin:0 0 var(--s6);break-inside:avoid;border-top:1px solid var(--rule);padding-top:var(--s4)}
+.said blockquote{margin:0 0 var(--s3);font-size:1.02rem;color:var(--bone)}
+.said figcaption{font-family:var(--display);font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:.94rem;color:var(--amber)}
+@media(max-width:760px){.said{columns:1}}
+
+.where{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s5)}
+.where div{border-top:1px solid var(--rule);padding-top:var(--s4)}
+.where b{display:block;font-family:var(--display);font-weight:700;text-transform:uppercase;letter-spacing:.04em;font-size:1.14rem;margin-bottom:6px}
+.where p{color:var(--quiet);font-size:.95rem}
+@media(max-width:760px){.where{grid-template-columns:1fr;gap:var(--s4)}}
+.note{margin-top:var(--s6);color:var(--quiet);font-size:.86rem;max-width:66ch}
+
+footer{border-top:1px solid var(--rule);padding-top:var(--s5);padding-bottom:var(--s5);display:flex;flex-wrap:wrap;gap:var(--s3);justify-content:space-between;color:var(--quiet);font-size:.85rem}
+
+.callbar{display:none}
+@media(max-width:620px){
+  .callbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:60}
+  .callbar a{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:15px;text-decoration:none;font-family:var(--display);font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+  .callbar a:first-child{background:var(--amber);color:var(--counter-deep)}
+  .callbar a:last-child{background:var(--bone);color:var(--counter-deep)}
+  body{padding-bottom:54px}
+}
+
+/* ONE authored moment: the labels settle onto the counter once, on load. */
+@keyframes settle{from{transform:translateY(10px)}to{transform:none}}
+.shelf li{animation:settle .6s cubic-bezier(.16,1,.3,1) backwards}
+.shelf li:nth-child(2){animation-delay:.06s}
+.shelf li:nth-child(3){animation-delay:.12s}
+.shelf li:nth-child(4){animation-delay:.18s}
+.shelf li:nth-child(5){animation-delay:.24s}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .shelf li{animation:none}
+}
+</style>
+</head>
+<body>
+<!--
+THESIS: A dermatology practice that also does the spa work, not a spa that borrowed a doctor;
+the page refuses both category defaults, the blush soft-focus med spa page and the white-chrome
+clinical one.
+OWN-WORLD: The compounding counter. Dark graphite counter, amber apothecary glass owning whole
+regions rather than accenting them, oxidised brass rules, bone label ink. Big Shoulders condensed
+caps set every claim as a label; Chivo carries the reading.
+STORY: She learns a physician Expert Injector does the injecting, reads the preparations on the
+shelf, sees who prepares them, and books the free consultation.
+FIRST VIEWPORT: The thesis at label scale on the counter, Dr. Myers at right, the two labelled
+actions beneath, book and text.
+FORM: The Compounding Counter, candidate 3 of 7, seed 8182871f.
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md
+-->
+<a class="skip" href="#main">Skip to main content</a>
+
+<header class="pad">
+  <a class="mark" href="#main">Utah Valley Medical Spa<b>Inside Utah Valley Dermatology &middot; Lehi, Utah</b></a>
+  <a class="navtel tel" href="tel:8017688800">801 768 8800</a>
+</header>
+
+<main id="main">
+
+<section class="open pad">
+  <div>
+    <h1>A doctor does the <i>injecting</i>.</h1>
+    <p class="sub">Utah Valley Medical Spa sits inside a dermatology practice. Dr. David Myers is a certified Expert Injector, and the skin work is done by Master Aestheticians.</p>
+    <div class="acts">
+      <a class="label" href="https://l.klara.com/YrDQnWz9cighdPwT">
+        <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM72,48v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V80H48V48Z"/></svg>
+        Book a free consultation
+      </a>
+      <a class="label label-2" href="sms:8017688800">
+        <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M128,24A104,104,0,0,0,36.18,176.88L24.83,210.93a16,16,0,0,0,20.24,20.24l34.05-11.35A104,104,0,1,0,128,24Z"/></svg>
+        Text 801 768 8800
+      </a>
+    </div>
+  </div>
+  <div>
+    <img class="portrait" src="images/HTP_8021-scaled-e1749761199128.jpg" width="768" height="1004" alt="Dr. David Myers, Expert Injector at Utah Valley Medical Spa in Lehi, Utah.">
+    <p class="portrait-cap">Dr. David Myers, certified Expert Injector</p>
+  </div>
+</section>
+
+<section class="band pad">
+  <h2>What is prepared here</h2>
+  <ul class="shelf">
+    <li><h3>Botox<span class="who">Dr. David Myers</span></h3><p>An injection that reduces the appearance of fine lines and wrinkles. Patients see visible improvement in 10 to 14 days.</p></li>
+    <li><h3>Dermal fillers<span class="who">Dr. David Myers</span></h3><p>Injectable contouring. Dr. Myers has helped hundreds of patients with injections of Botox and fillers.</p></li>
+    <li><h3>Morpheus8<span class="who">Master Aestheticians</span></h3><p>A minimally invasive treatment combining microneedling with radiofrequency energy to rejuvenate the skin.</p></li>
+    <li><h3>Microneedling<span class="who">Master Aestheticians</span></h3><p>A device with microneedles penetrates the skin surface to reduce the appearance of fine lines, wrinkles, acne scars and texture.</p></li>
+    <li><h3>Peels, HydraFacial and laser<span class="who">Master Aestheticians</span></h3><p>Chemical peels, advanced facials and laser treatment, alongside medical grade skincare products.</p></li>
+  </ul>
+</section>
+
+<section class="offer pad">
+  <h2>The consultation is free.</h2>
+  <p>Utah Valley Medical Spa offers free consultations with its Master Aestheticians to guide you through your options before you commit to anything.</p>
+  <div class="acts">
+    <a class="label" href="https://l.klara.com/YrDQnWz9cighdPwT">Book a free consultation</a>
+    <a class="label label-2" style="color:var(--counter-deep);border-color:var(--counter-deep)" href="tel:8017688800"><span class="tel">Call 801 768 8800</span></a>
+  </div>
+</section>
+
+<section class="band pad">
+  <h2>Who prepares it</h2>
+  <div class="team">
+    <figure>
+      <img src="images/HTP_8021-scaled-e1749761199128.jpg" width="768" height="1004" alt="Portrait of Dr. David Myers.">
+      <figcaption><b>Dr. David Myers</b><span>Expert Injector. Leads the medical spa.</span></figcaption>
+    </figure>
+    <figure>
+      <img src="images/HTP_7591-scaled-e1761594743313.jpg" width="768" height="1011" alt="Portrait of Mariah Webber, Lead Master Aesthetician.">
+      <figcaption><b>Mariah Webber</b><span>Lead Master Aesthetician</span></figcaption>
+    </figure>
+    <figure>
+      <img src="images/IMG_0622-Large-e1761594703449.jpeg" width="768" height="1016" alt="Portrait of Grace Barney, Master Aesthetician.">
+      <figcaption><b>Grace Barney</b><span>Master Aesthetician</span></figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="band pad">
+  <h2>What patients write</h2>
+  <div class="said">
+    <figure><blockquote>&ldquo;Dr. Myers and staff are just the BEST! He's a great Botox and filler guy, best I've ever had and I've been at this for 15 years and had many different injectors, all Advanced injectors, he's in a class by itself.&rdquo;</blockquote><figcaption>Margaret</figcaption></figure>
+    <figure><blockquote>&ldquo;When I hit 40 I found my home care routine was not enough to stop the signs of aging like dark spots and wrinkles. I needed just that extra boost that a dermatologist and spa treatments can give.&rdquo;</blockquote><figcaption>Crystal</figcaption></figure>
+    <figure><blockquote>&ldquo;I had micro-needling done on my face here! Hailee was my aesthetician. She was professional, friendly, and gave good instructions on aftercare. My appointment lasted about an hour. Procedure was pain free with the numbing cream!&rdquo;</blockquote><figcaption>Lexi</figcaption></figure>
+    <figure><blockquote>&ldquo;I had fillers done do to my face on Wednesday &amp; they offered laser at no extra cost the following day to help with any bruising. I'm so pleased with the results of the fillers &amp; the extra help I was given the following day with the laser.&rdquo;</blockquote><figcaption>Hannah</figcaption></figure>
+    <figure><blockquote>&ldquo;Dr. Myers and his team are amazing!!! Thank you Hailee and Jason for your help!!! If you want the best and your not seeing Dr. Myers, your not getting the best results.&rdquo;</blockquote><figcaption>Dawnetta</figcaption></figure>
+    <figure><blockquote>&ldquo;Did a chemical peel and bought some products. The girls were so nice and I can't wait to see my face after. Such a great place for all your skin care needs!&rdquo;</blockquote><figcaption>Jamie</figcaption></figure>
+  </div>
+  <p class="note">Reviews are published by the practice and appear here as written, including the writers' own spelling. Individual results vary.</p>
+</section>
+
+<section class="band pad">
+  <h2>Where to find us</h2>
+  <div class="where">
+    <div><b>Lehi</b><p>123 S 100 W<br>Lehi, UT 84043<br><a class="tel" href="tel:8017688800">801 768 8800</a></p></div>
+    <div><b>Saratoga Springs</b><p>250 E 900 N Suite 200<br>Saratoga Springs, UT 84045</p></div>
+    <div><b>Provo</b><p>100 W 2nd N<br>Provo, UT 84601</p></div>
+  </div>
+  <p class="note">The medical spa is described by the practice as being in Lehi. Email <a href="mailto:info@uvderm.com">info@uvderm.com</a>.</p>
+</section>
+
+</main>
+
+<footer class="pad">
+  <span>Utah Valley Medical Spa, inside Utah Valley Dermatology.</span>
+  <span><a class="tel" href="tel:8017688800">801 768 8800</a>, Lehi, Utah</span>
+</footer>
+
+<div class="callbar">
+  <a href="https://l.klara.com/YrDQnWz9cighdPwT">Book free</a>
+  <a class="tel" href="tel:8017688800">Call</a>
+</div>
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"MedicalBusiness",
+  "name":"Utah Valley Medical Spa",
+  "parentOrganization":{"@type":"Organization","name":"Utah Valley Dermatology"},
+  "url":"https://uvderm-medical-spa.pages.dev/",
+  "telephone":"+1-801-768-8800",
+  "email":"info@uvderm.com",
+  "address":{"@type":"PostalAddress","streetAddress":"123 S 100 W","addressLocality":"Lehi","addressRegion":"UT","postalCode":"84043","addressCountry":"US"},
+  "employee":{"@type":"Physician","name":"David Myers, MD"}
+}
+</script>
+</body>
+</html>
