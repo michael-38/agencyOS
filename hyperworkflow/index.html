@@ -28,11 +28,10 @@
 <meta name="twitter:image" content="https://hyperworkflow.ai/og.png">
 
 <link rel="preload" as="font" type="font/woff2" href="/fonts/geist-latin.woff2" crossorigin>
-<!-- Photography is served by picsum, which 302s to a second origin. Warm both,
-     and without crossorigin: <img> loads are not CORS requests, so a CORS
-     connection would sit unused. -->
-<link rel="preconnect" href="https://picsum.photos">
-<link rel="preconnect" href="https://fastly.picsum.photos">
+<!-- No preconnect for picsum any more. The hero is now an inline diagram, so
+     nothing on the critical path is third-party. The single remaining photo
+     is below the fold and lazy, and warming a connection it will not use for
+     several seconds costs more than it saves. -->
 
 <!-- Theme resolution before first paint, so the page never flashes the wrong mode. -->
 <script>(function(){try{var t=localStorage.getItem('hw-theme');if(t==='light'||t==='dark'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();</script>
@@ -355,9 +354,106 @@ input, select, textarea { font: inherit; color: inherit; }
 .hero h1 { margin-bottom: 20px; max-width: 24ch; }
 .hero .lede { max-width: 46ch; margin-bottom: 30px; }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
-.hero-shot { position: relative; }
-.hero-shot img { width: 100%; aspect-ratio: 5 / 6; object-fit: cover; border-radius: var(--r-panel); }
-@media (min-width: 900px) { .hero-shot img { aspect-ratio: 4 / 5; } }
+.hero-shot { position: relative; margin: 0; }
+
+/* ============================================================
+   DIAGRAM VOCABULARY
+   One language shared by every graphic on the page, so the hero,
+   the gauge and the case schematics read as one system:
+     node    a step someone performs
+     path    the flow between steps
+     agent   the brand mark: work the agent absorbs
+     expert  a ringed node: the one human review that remains
+     done    a filled node
+     wait    a hollow ring: work parked, waiting on a person
+   Every colour is a token, so dark mode needs no extra rules.
+   ============================================================ */
+.dg { width: 100%; height: auto; display: block; overflow: visible; }
+.dg-path { fill: none; stroke: var(--ink-3); stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+.dg-path-faint { fill: none; stroke: var(--rule); stroke-width: 1.2; }
+.dg-path-lit { fill: none; stroke: var(--signal); stroke-width: 1.9; stroke-linecap: round; }
+.dg-node { fill: var(--ink-3); }
+.dg-node-lit { fill: var(--signal); }
+.dg-wait { fill: none; stroke: var(--signal); stroke-width: 1.5; opacity: .55; }
+.dg-expert { fill: var(--ground); stroke: var(--ink); stroke-width: 1.5; }
+.dg-expert-mark { fill: none; stroke: var(--ink); stroke-width: 1.4; stroke-linecap: round; }
+.dg-agent { fill: var(--signal); }
+.dg-agent-mark { fill: var(--on-signal); }
+.dg-done { fill: var(--ink); }
+.dg-done-mark { fill: none; stroke: var(--ground); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.dg-rule { stroke: var(--rule); stroke-width: 1; }
+/* The runners carry no cx/cy: offset-path alone places them. So they must be
+   hidden by default, or a browser without offset-path (and any reduced-motion
+   visitor) gets two stray dots parked at the SVG origin. Only the animation
+   below, which requires both, reveals them. */
+.wf-runner { opacity: 0; }
+/* SVG text scales with the viewBox, so a shared px size renders at a
+   different size in every diagram. Sizes are em-relative to a per-diagram
+   base, chosen so all of them land at 11-12px on screen. */
+.dg { font-size: 12px; }
+.hero-dg { font-size: 13.5px; }
+.dg-case { font-size: 10.5px; }
+.dg-flow { font-size: 9px; }
+.dg-label { font-family: var(--mono); font-size: 1em; fill: var(--ink-3); letter-spacing: .04em; }
+.dg-cap { font-family: var(--mono); font-size: .92em; fill: var(--ink-3); letter-spacing: .12em; text-transform: uppercase; }
+.dg-cap-lit { fill: var(--signal-ink); }
+.dg-fig { font-family: var(--mono); font-size: 13px; font-weight: 500; fill: var(--ink); }
+.dg-fig-lit { fill: var(--signal-ink); }
+.dg-fig-was { fill: var(--ink-3); }
+
+/* Draw-in. pathLength="1" normalises every path, so one rule drives them
+   all regardless of real geometry.
+   The hidden start state is scoped to the diagrams that actually animate,
+   and sits inside the no-preference query. Otherwise a path marked dg-draw
+   in a diagram with no matching animation would stay invisible forever,
+   and reduced-motion users would see nothing at all. */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-dg .dg-draw, .dg-scroll .dg-draw { stroke-dasharray: 1; stroke-dashoffset: 1; }
+  .hero-dg .dg-fade, .dg-scroll .dg-fade { opacity: 0; }
+
+  /* below-fold diagrams draw when they are scrolled into view */
+  .dg-scroll.is-seen .dg-draw { animation: dg-draw .85s cubic-bezier(.16,1,.3,1) both; }
+  .dg-scroll.is-seen .dg-fade { animation: dg-fade .45s ease .35s both; }
+}
+
+/* ---- hero: plays once on load ---------------------------------
+   The hero sits above the fold, so this is entry choreography, not
+   scroll-linked: a scroll timeline would leave it half-drawn on
+   arrival. Below-fold graphics are the ones tied to scroll. */
+@media (prefers-reduced-motion: no-preference) {
+  /* The whole sequence lands inside ~1.4s. This is an above-the-fold hero:
+     the "after" row IS the value proposition, so it cannot sit invisible
+     while a long choreography plays out. */
+  .hero-dg .dg-draw { animation: dg-draw .8s cubic-bezier(.16,1,.3,1) both; }
+  .hero-dg .dg-fade { animation: dg-fade .4s ease both; }
+  .hero-dg .wf-before .dg-draw { animation-delay: .1s; }
+  .hero-dg .wf-before .dg-fade { animation-delay: .5s; }
+  .hero-dg .wf-tangle    { animation-delay: .45s; }
+  .hero-dg .wf-loop      { animation-delay: .6s; }
+  .hero-dg .wf-mid       { animation-delay: .75s; }
+  .hero-dg .wf-after .dg-draw { animation-delay: .85s; animation-duration: .55s; }
+  .hero-dg .wf-after .dg-fade { animation-delay: 1.05s; }
+
+  /* The two travelling dots are the argument: same journey, different
+     cadence. The manual dot also retraces the rework loop.
+     Gated on offset-path support, because the fade would otherwise reveal
+     a dot stranded at the origin. */
+  @supports (offset-path: path("M0 0 L1 1")) {
+    .wf-runner { offset-rotate: 0deg; }
+    .wf-runner-slow {
+      offset-path: path("M40 92 L74 148 L108 92 L142 148 L176 92 L210 148 L244 92 C230 58 190 58 176 92 L210 148 L244 92 L278 148 L312 92 L346 148 L380 92");
+      animation: dg-run 9s linear 1.3s infinite, dg-fade .4s ease 1.3s both;
+    }
+    .wf-runner-fast {
+      /* stops short of the Done node so it never covers the check */
+      offset-path: path("M40 352 L366 352");
+      animation: dg-run 2.2s cubic-bezier(.5,0,.5,1) 1.5s infinite, dg-fade .4s ease 1.5s both;
+    }
+  }
+}
+@keyframes dg-draw { to { stroke-dashoffset: 0; } }
+@keyframes dg-fade { to { opacity: 1; } }
+@keyframes dg-run  { from { offset-distance: 0%; } to { offset-distance: 100%; } }
 
 /* ============================================================
    2. GAUGE - the signature. One measurement, drawn to scale.
@@ -372,7 +468,10 @@ input, select, textarea { font: inherit; color: inherit; }
 .gauge-row { display: grid; grid-template-columns: 72px 1fr 88px; align-items: center; gap: 14px; }
 .gauge-key { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); }
 .gauge-bar {
-  height: 22px; min-width: 6px;
+  /* No min-width. A floor would make the 5.6% bar render wider than 5.6%
+     on narrow viewports, quietly breaking the "drawn to scale" claim.
+     At the narrowest track 5.6% is still ~20px, so nothing is needed. */
+  height: 22px;
   width: var(--w);
   transition: width .9s cubic-bezier(.16,1,.3,1);
 }
@@ -390,10 +489,24 @@ input, select, textarea { font: inherit; color: inherit; }
   .gauge-value { grid-area: val; }
 }
 
-.gauge-axis { display: flex; margin: 8px 102px 0 86px; border-top: 1px solid var(--rule); }
-@media (max-width: 560px) { .gauge-axis { margin-left: 0; margin-right: 88px; } }
-.gauge-tick { flex: 1; font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); padding-top: 7px; border-left: 1px solid var(--rule); padding-left: 6px; }
+/* Ticks mark day 0 through day 3 across a three-day track, so they belong at
+   exact thirds. The previous flex:1 row put four equal cells side by side,
+   which placed the "3 days" tick at 75% of a bar that means three days. */
+.gauge-axis { position: relative; height: 26px; margin: 8px 102px 0 86px; border-top: 1px solid var(--rule); }
+@media (max-width: 560px) {
+  .gauge-axis { margin-left: 0; margin-right: 88px; }
+  /* the track is too short here for four labels: "2 days" and "3 days"
+     collide, so the intermediate marks drop and the endpoints carry it */
+  .gauge-tick:nth-child(2), .gauge-tick:nth-child(3) { display: none; }
+}
+.gauge-tick {
+  position: absolute; top: 0; padding-top: 7px; padding-left: 6px;
+  border-left: 1px solid var(--rule); white-space: nowrap;
+  font-family: var(--mono); font-size: 10.5px; color: var(--ink-3);
+}
 .gauge-tick:first-child { border-left: 0; padding-left: 0; }
+/* the last tick hangs its label to the left so the mark lands exactly on 100% */
+.gauge-tick:last-child { border-left: 0; border-right: 1px solid var(--rule); padding-left: 0; padding-right: 6px; transform: translateX(-100%); }
 
 .figures { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px 20px; margin-top: clamp(40px, 5vw, 64px); padding-top: clamp(32px, 4vw, 44px); border-top: 1px solid var(--rule); }
 @media (min-width: 780px) { .figures { grid-template-columns: repeat(4, 1fr); } }
@@ -424,7 +537,12 @@ input, select, textarea { font: inherit; color: inherit; }
 .rail-step { padding: 24px 0 28px; border-bottom: 1px solid var(--rule); display: grid; gap: 8px 32px; }
 @media (min-width: 820px) { .rail-step { grid-template-columns: 250px 1fr; align-items: start; } }
 .rail-span { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(10, 1fr); height: 5px; margin-bottom: 18px; }
-.rail-span i { background: var(--signal); grid-column: var(--from) / var(--to); }
+.rail-span i { background: var(--signal); grid-column: var(--from) / var(--to); transform-origin: left center; }
+/* each span draws across its own days as the row is scrolled into view */
+@media (prefers-reduced-motion: no-preference) {
+  .rail-step .rail-span i { transform: scaleX(0); transition: transform .7s cubic-bezier(.16,1,.3,1); }
+  .rail-step.is-seen .rail-span i { transform: scaleX(1); }
+}
 .rail-days { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--signal-ink); margin: 0 0 6px; }
 .rail-step h3 { margin: 0; }
 .rail-step p { font-size: 15px; margin: 0; max-width: 62ch; }
@@ -455,15 +573,15 @@ input, select, textarea { font: inherit; color: inherit; }
 @media (min-width: 900px) { .bento { grid-template-columns: 1.25fr 1fr; grid-template-rows: auto auto; } }
 .cell { background: var(--ground); padding: clamp(24px, 3vw, 36px); display: flex; flex-direction: column; }
 @media (min-width: 900px) { .cell-lead { grid-row: span 2; } }
-.cell-shot { margin: 0 0 22px; overflow: hidden; }
-.cell-shot img { width: 100%; object-fit: cover; aspect-ratio: 16 / 7; }
-/* the lead cell spans two rows, so its photo absorbs the surplus height
-   rather than leaving a hole above the list */
+.cell-shot { margin: 0 0 26px; }
+.cell-shot .dg { width: 100%; }
+/* the lead cell spans two rows; its vertical flow diagram takes up the
+   slack that used to leave a hole above the list */
+.cell-shot-lead .dg { max-width: 380px; margin-inline: auto; }
 @media (min-width: 900px) {
-  .cell-lead .cell-shot { flex: 1 1 auto; min-height: 300px; }
-  .cell-lead .cell-shot img { height: 100%; aspect-ratio: auto; }
+  .cell-shot-lead { flex: 1 1 auto; display: flex; align-items: center; margin-bottom: 30px; }
+  .cell-shot-lead .dg { margin-block: auto; }
 }
-@media (max-width: 899px) { .cell-lead .cell-shot img { aspect-ratio: 16 / 9; } }
 .cell h3 { margin-bottom: 10px; }
 .cell > p { font-size: 15px; margin-bottom: 18px; }
 .cell-list { margin-top: auto; display: grid; gap: 9px; }
@@ -479,7 +597,9 @@ input, select, textarea { font: inherit; color: inherit; }
   overscroll-behavior-x: contain; padding-bottom: 14px;
 }
 .case { scroll-snap-align: start; border: 1px solid var(--rule); display: flex; flex-direction: column; }
-.case-shot img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
+/* a diagram needs margin where a full-bleed photo did not */
+.case-shot { margin: 0; padding: 22px 22px 0; border-bottom: 1px solid var(--rule); }
+.case-shot .dg { width: 100%; }
 .case-body { padding: 22px; display: flex; flex-direction: column; flex: 1; }
 .case-fn { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--signal-ink); margin-bottom: 10px; }
 .case h3 { font-size: 19px; margin-bottom: 18px; }
@@ -641,8 +761,9 @@ input, select, textarea { font: inherit; color: inherit; }
   with real numbers before treating them as claims.
 
   PHOTOGRAPHY (search "SWAP")
-  Every image points at picsum.photos, which serves arbitrary
-  stock. Each one is a one-line swap for a real photograph.
+  One photograph remains, the team band in the About section. It
+  still points at picsum.photos and is a one-line swap for a real
+  team photo. Everything else is now a purpose-built diagram.
   ============================================================
 -->
 
@@ -704,10 +825,97 @@ input, select, textarea { font: inherit; color: inherit; }
       </div>
     </div>
     <figure class="hero-shot">
-      <!-- SWAP: replace with a real photograph of a sprint in progress, 1000x1200 -->
-      <img src="https://picsum.photos/seed/hyperworkflow-shadow-the-work/1000/1200"
-           width="1000" height="1200" fetchpriority="high" decoding="async"
-           alt="A specialist at their desk working through a queue of documents, the kind of work a sprint begins by observing.">
+      <svg class="dg hero-dg" viewBox="0 0 420 420" role="img" aria-labelledby="wfT wfD" style="aspect-ratio: 420 / 420">
+        <title id="wfT">The same workflow, before and after a sprint</title>
+        <desc id="wfD">Before: eleven manual steps zigzagging between people, with crossing handoffs, one step parked waiting on a person, and a loop back for rework. After: one straight flow. Intake goes to the agent, your expert reviews once, and the work is done.</desc>
+
+        <!-- ---------- BEFORE: the manual way ---------- -->
+        <g class="wf-before">
+          <text class="dg-cap" x="40" y="30">The manual way</text>
+          <text class="dg-cap" x="380" y="30" text-anchor="end">11 steps</text>
+
+          <!-- the tangle: handoffs that cross each other -->
+          <g class="wf-tangle dg-fade">
+            <path class="dg-path-faint" d="M108 92 L278 148"/>
+            <path class="dg-path-faint" d="M74 148 L244 92"/>
+            <path class="dg-path-faint" d="M142 148 L312 92"/>
+            <path class="dg-path-faint" d="M176 92 L346 148"/>
+          </g>
+
+          <!-- the zigzag of handoffs -->
+          <path class="dg-path dg-draw" pathLength="1"
+                d="M40 92 L74 148 L108 92 L142 148 L176 92 L210 148 L244 92 L278 148 L312 92 L346 148 L380 92"/>
+
+          <!-- rework: the work comes back. The arc carries its own label, so
+               it never has to compete with a step label for the same space. -->
+          <g class="wf-loop dg-fade">
+            <path class="dg-path" d="M244 92 C230 58 190 58 176 92" stroke-dasharray="3 3"/>
+            <path class="dg-path" d="M183 82 L176 92 L185 94"/>
+            <text class="dg-label" x="210" y="52" text-anchor="middle">Rework</text>
+          </g>
+
+          <!-- the eleven steps -->
+          <g class="dg-node">
+            <circle cx="40" cy="92" r="4"/><circle cx="74" cy="148" r="4"/><circle cx="108" cy="92" r="4"/>
+            <circle cx="142" cy="148" r="4"/><circle cx="176" cy="92" r="4"/><circle cx="210" cy="148" r="4"/>
+            <circle cx="244" cy="92" r="4"/><circle cx="278" cy="148" r="4"/><circle cx="312" cy="92" r="4"/>
+            <circle cx="346" cy="148" r="4"/><circle cx="380" cy="92" r="4"/>
+          </g>
+          <!-- one step parked, waiting on a person -->
+          <circle class="dg-wait" cx="210" cy="148" r="9"/>
+
+          <g class="dg-label wf-before-labels dg-fade">
+            <text x="40" y="74">Intake</text>
+            <text x="142" y="172" text-anchor="middle">Approve</text>
+            <text x="210" y="188" text-anchor="middle">Waiting</text>
+            <text x="316" y="74" text-anchor="middle">Chase</text>
+          </g>
+
+          <circle class="wf-runner wf-runner-slow dg-node-lit" r="4.5"/>
+        </g>
+
+        <!-- ---------- the sprint ---------- -->
+        <g class="wf-mid dg-fade">
+          <line class="dg-rule" x1="40" y1="218" x2="380" y2="218"/>
+          <text class="dg-cap dg-cap-lit" x="210" y="246" text-anchor="middle">One two-week sprint</text>
+          <line class="dg-rule" x1="40" y1="266" x2="380" y2="266"/>
+        </g>
+
+        <!-- ---------- AFTER: with an agent ---------- -->
+        <g class="wf-after">
+          <text class="dg-cap dg-cap-lit" x="40" y="316">With an agent</text>
+          <text class="dg-cap" x="380" y="316" text-anchor="end">1 review</text>
+
+          <path class="dg-path-lit dg-draw" pathLength="1" d="M40 352 L380 352"/>
+
+          <circle class="dg-node" cx="40" cy="352" r="4"/>
+
+          <!-- the agent absorbs the middle of the workflow -->
+          <rect class="dg-agent" x="150" y="332" width="40" height="40" rx="4"/>
+          <g class="dg-agent-mark" transform="translate(160,342)">
+            <path d="M2 3l6 7-6 7V3z"/><path d="M9 3l6 7-6 7V3z" opacity=".6"/>
+          </g>
+
+          <!-- the one human review that remains -->
+          <circle class="dg-expert" cx="280" cy="352" r="12"/>
+          <g class="dg-expert-mark" transform="translate(280,352)">
+            <circle cx="0" cy="-2.5" r="2.6" fill="none"/>
+            <path d="M-5 6 C-5 1.5 5 1.5 5 6"/>
+          </g>
+
+          <circle class="dg-done" cx="380" cy="352" r="9"/>
+          <path class="dg-done-mark" d="M375.5 352 l3 3 l6 -6.5"/>
+
+          <g class="dg-label dg-fade">
+            <text x="40" y="392">Intake</text>
+            <text x="170" y="392" text-anchor="middle">Agent</text>
+            <text x="280" y="392" text-anchor="middle">Your expert</text>
+            <text x="380" y="392" text-anchor="end">Done</text>
+          </g>
+
+          <circle class="wf-runner wf-runner-fast dg-node-lit" r="4.5"/>
+        </g>
+      </svg>
     </figure>
   </div>
 </section>
@@ -731,10 +939,10 @@ input, select, textarea { font: inherit; color: inherit; }
     </div>
 
     <div class="gauge-axis" aria-hidden="true">
-      <span class="gauge-tick">0</span>
-      <span class="gauge-tick">1 day</span>
-      <span class="gauge-tick">2 days</span>
-      <span class="gauge-tick">3 days</span>
+      <span class="gauge-tick" style="left:0%">0</span>
+      <span class="gauge-tick" style="left:33.333%">1 day</span>
+      <span class="gauge-tick" style="left:66.667%">2 days</span>
+      <span class="gauge-tick" style="left:100%">3 days</span>
     </div>
 
     <div class="figures">
@@ -867,11 +1075,25 @@ input, select, textarea { font: inherit; color: inherit; }
     </div>
     <div class="bento">
       <article class="cell cell-lead rise">
-        <figure class="cell-shot">
-          <!-- SWAP: real photo of a sprint working session, 1200x800 -->
-          <img src="https://picsum.photos/seed/hyperworkflow-sprint-room/1200/800" width="1200" height="800"
-               loading="lazy" decoding="async"
-               alt="Two people working side by side at one screen during a build session.">
+        <figure class="cell-shot cell-shot-lead">
+          <svg class="dg dg-flow dg-scroll" viewBox="0 0 300 268" role="img" aria-labelledby="bsT bsD">
+            <title id="bsT">The five stages of a sprint</title>
+            <desc id="bsD">Shadow, rank, build, validate, ship. Each stage runs alongside your expert, and the last one puts a working agent into production.</desc>
+            <path class="dg-path dg-draw" pathLength="1" d="M20 18 L20 248"/>
+            <g class="dg-node">
+              <circle cx="20" cy="18" r="5"/><circle cx="20" cy="75" r="5"/>
+              <circle cx="20" cy="132" r="5"/><circle cx="20" cy="189" r="5"/>
+            </g>
+            <circle class="dg-done" cx="20" cy="248" r="9"/>
+            <path class="dg-done-mark" d="M15.5 248 l3 3 l6 -6.5"/>
+            <g class="dg-label">
+              <text x="44" y="22">Shadow the expert</text>
+              <text x="44" y="79">Rank the opportunities</text>
+              <text x="44" y="136">Build alongside them</text>
+              <text x="44" y="193">Validate on real work</text>
+            </g>
+            <text class="dg-label dg-fig-lit" x="44" y="252">Ship to production</text>
+          </svg>
         </figure>
         <h3>Agentic Implementation sprint</h3>
         <p>The flagship program. Two weeks embedded with your domain experts, ending with a working agent in production.</p>
@@ -885,10 +1107,35 @@ input, select, textarea { font: inherit; color: inherit; }
 
       <article class="cell rise">
         <figure class="cell-shot">
-          <!-- SWAP: real photo of the software you build, 800x350 -->
-          <img src="https://picsum.photos/seed/hyperworkflow-build-together/800/350" width="800" height="350"
-               loading="lazy" decoding="async"
-               alt="A developer's screen showing an agent integration under construction.">
+          <svg class="dg dg-scroll" viewBox="0 0 400 175" role="img" aria-labelledby="biT biD">
+            <title id="biT">An agent wired into the systems you already run</title>
+            <desc id="biD">The agent sits at the centre, connected to your CRM, inbox, database and billing, with a human review step on the way out.</desc>
+            <!-- connectors stop on the agent's edges: left 186, right 214 -->
+            <g class="dg-path">
+              <path d="M96 40 L186 76"/><path d="M96 135 L186 100"/>
+              <path d="M304 40 L214 76"/><path d="M304 135 L214 100"/>
+            </g>
+            <rect class="dg-agent" x="186" y="74" width="28" height="28" rx="3"/>
+            <g class="dg-agent-mark" transform="translate(194,81)">
+              <path d="M1 2l4 5-4 5V2z"/><path d="M6 2l4 5-4 5V2z" opacity=".6"/>
+            </g>
+            <g class="dg-node">
+              <circle cx="92" cy="38" r="4"/><circle cx="92" cy="137" r="4"/>
+              <circle cx="308" cy="38" r="4"/><circle cx="308" cy="137" r="4"/>
+            </g>
+            <g class="dg-label">
+              <text x="82" y="42" text-anchor="end">CRM</text>
+              <text x="82" y="141" text-anchor="end">Inbox</text>
+              <text x="318" y="42">Records</text>
+              <text x="318" y="141">Billing</text>
+            </g>
+            <path class="dg-path-lit" d="M200 102 L200 144"/>
+            <circle class="dg-expert" cx="200" cy="154" r="10"/>
+            <g class="dg-expert-mark" transform="translate(200,154)">
+              <circle cx="0" cy="-2" r="2.2" fill="none"/><path d="M-4.2 5 C-4.2 1.2 4.2 1.2 4.2 5"/>
+            </g>
+            <text class="dg-label" x="216" y="158">Human review</text>
+          </svg>
         </figure>
         <h3>Custom AI agents and software</h3>
         <p>When the workflow needs more than an agent, we build the software around it too.</p>
@@ -925,9 +1172,33 @@ input, select, textarea { font: inherit; color: inherit; }
     <div class="cases">
       <article class="case" data-example="true">
         <figure class="case-shot">
-          <!-- SWAP: real client or contextual photo, 900x600 -->
-          <img src="https://picsum.photos/seed/hyperworkflow-case-finance/900/600" width="900" height="600"
-               loading="lazy" decoding="async" alt="A finance team's workspace during month-end close.">
+          <svg class="dg dg-case dg-scroll" viewBox="0 0 300 200" role="img" aria-labelledby="cfT cfD">
+            <title id="cfT">Invoice reconciliation, before and after</title>
+            <desc id="cfD">Before: six handoffs in a chain, one of them parked waiting, with work looping back for rework. After: intake goes to the agent, one expert review, done.</desc>
+            <text class="dg-cap" x="0" y="16">6 handoffs</text>
+            <path class="dg-path dg-draw" pathLength="1" d="M10 56 L280 56"/>
+            <path class="dg-path" d="M172 56 C158 24 78 24 64 56" stroke-dasharray="3 3"/>
+            <path class="dg-path" d="M71 47 L64 56 L73 58"/>
+            <g class="dg-node">
+              <circle cx="10" cy="56" r="4"/><circle cx="64" cy="56" r="4"/><circle cx="118" cy="56" r="4"/>
+              <circle cx="172" cy="56" r="4"/><circle cx="226" cy="56" r="4"/><circle cx="280" cy="56" r="4"/>
+            </g>
+            <circle class="dg-wait" cx="118" cy="56" r="9"/>
+            <line class="dg-rule" x1="0" y1="102" x2="300" y2="102"/>
+            <text class="dg-cap dg-cap-lit" x="0" y="134">1 review</text>
+            <path class="dg-path-lit dg-draw" pathLength="1" d="M10 164 L280 164"/>
+            <circle class="dg-node" cx="10" cy="164" r="4"/>
+            <rect class="dg-agent" x="96" y="150" width="28" height="28" rx="3"/>
+            <g class="dg-agent-mark" transform="translate(103,157)">
+              <path d="M1 2l4 5-4 5V2z"/><path d="M6 2l4 5-4 5V2z" opacity=".6"/>
+            </g>
+            <circle class="dg-expert" cx="196" cy="164" r="10"/>
+            <g class="dg-expert-mark" transform="translate(196,164)">
+              <circle cx="0" cy="-2" r="2.2" fill="none"/><path d="M-4.2 5 C-4.2 1.2 4.2 1.2 4.2 5"/>
+            </g>
+            <circle class="dg-done" cx="280" cy="164" r="8"/>
+            <path class="dg-done-mark" d="M276 164 l2.7 2.7 l5.3 -5.8"/>
+          </svg>
         </figure>
         <div class="case-body">
           <p class="case-fn">Finance</p>
@@ -944,9 +1215,34 @@ input, select, textarea { font: inherit; color: inherit; }
 
       <article class="case" data-example="true">
         <figure class="case-shot">
-          <!-- SWAP: real client or contextual photo, 900x600 -->
-          <img src="https://picsum.photos/seed/hyperworkflow-case-operations/900/600" width="900" height="600"
-               loading="lazy" decoding="async" alt="An operations desk tracking inbound orders across screens.">
+          <svg class="dg dg-case dg-scroll" viewBox="0 0 300 200" role="img" aria-labelledby="coT coD">
+            <title id="coT">Order intake and exceptions, before and after</title>
+            <desc id="coD">Before: every order is touched five times by a person. After: the agent takes each order straight through, and only exceptions branch up to your expert before completing.</desc>
+            <text class="dg-cap" x="0" y="16">5 touches, every order</text>
+            <path class="dg-path dg-draw" pathLength="1" d="M10 42 L64 70 L118 42 L172 70 L226 42 L280 70"/>
+            <g class="dg-node">
+              <circle cx="10" cy="42" r="4"/><circle cx="64" cy="70" r="4"/><circle cx="118" cy="42" r="4"/>
+              <circle cx="172" cy="70" r="4"/><circle cx="226" cy="42" r="4"/><circle cx="280" cy="70" r="4"/>
+            </g>
+            <circle class="dg-wait" cx="172" cy="70" r="9"/>
+            <line class="dg-rule" x1="0" y1="102" x2="300" y2="102"/>
+            <text class="dg-cap dg-cap-lit" x="0" y="134">Exceptions only</text>
+            <path class="dg-path-lit dg-draw" pathLength="1" d="M10 172 L280 172"/>
+            <!-- the exception branch: up to a person, then back to the line -->
+            <path class="dg-path" d="M124 172 C150 172 156 148 182 148" stroke-dasharray="3 3"/>
+            <path class="dg-path" d="M212 148 C240 148 248 172 268 172" stroke-dasharray="3 3"/>
+            <circle class="dg-node" cx="10" cy="172" r="4"/>
+            <rect class="dg-agent" x="82" y="158" width="28" height="28" rx="3"/>
+            <g class="dg-agent-mark" transform="translate(89,165)">
+              <path d="M1 2l4 5-4 5V2z"/><path d="M6 2l4 5-4 5V2z" opacity=".6"/>
+            </g>
+            <circle class="dg-expert" cx="197" cy="148" r="10"/>
+            <g class="dg-expert-mark" transform="translate(197,148)">
+              <circle cx="0" cy="-2" r="2.2" fill="none"/><path d="M-4.2 5 C-4.2 1.2 4.2 1.2 4.2 5"/>
+            </g>
+            <circle class="dg-done" cx="280" cy="172" r="8"/>
+            <path class="dg-done-mark" d="M276 172 l2.7 2.7 l5.3 -5.8"/>
+          </svg>
         </figure>
         <div class="case-body">
           <p class="case-fn">Operations</p>
@@ -963,9 +1259,34 @@ input, select, textarea { font: inherit; color: inherit; }
 
       <article class="case" data-example="true">
         <figure class="case-shot">
-          <!-- SWAP: real client or contextual photo, 900x600 -->
-          <img src="https://picsum.photos/seed/hyperworkflow-case-support/900/600" width="900" height="600"
-               loading="lazy" decoding="async" alt="A support specialist working through a high-volume inbox.">
+          <svg class="dg dg-case dg-scroll" viewBox="0 0 300 200" role="img" aria-labelledby="csT csD">
+            <title id="csT">Escalation triage, before and after</title>
+            <desc id="csD">Before: escalations fan out to four queues by hand and one in five lands in the wrong place. After: the agent routes and drafts, an expert reviews, and misroutes fall to one in forty.</desc>
+            <text class="dg-cap" x="0" y="16">1 in 5 misrouted</text>
+            <circle class="dg-node" cx="16" cy="58" r="4"/>
+            <g class="dg-path">
+              <path d="M20 58 L150 26"/><path d="M20 58 L150 47"/><path d="M20 58 L150 69"/><path d="M20 58 L150 90"/>
+            </g>
+            <g class="dg-node">
+              <circle cx="154" cy="26" r="4"/><circle cx="154" cy="47" r="4"/><circle cx="154" cy="69" r="4"/><circle cx="154" cy="90" r="4"/>
+            </g>
+            <circle class="dg-wait" cx="154" cy="90" r="9"/>
+            <text class="dg-label" x="172" y="94">Wrong queue</text>
+            <line class="dg-rule" x1="0" y1="112" x2="300" y2="112"/>
+            <text class="dg-cap dg-cap-lit" x="0" y="140">1 in 40</text>
+            <path class="dg-path-lit dg-draw" pathLength="1" d="M10 172 L280 172"/>
+            <circle class="dg-node" cx="10" cy="172" r="4"/>
+            <rect class="dg-agent" x="82" y="158" width="28" height="28" rx="3"/>
+            <g class="dg-agent-mark" transform="translate(89,165)">
+              <path d="M1 2l4 5-4 5V2z"/><path d="M6 2l4 5-4 5V2z" opacity=".6"/>
+            </g>
+            <circle class="dg-expert" cx="196" cy="172" r="10"/>
+            <g class="dg-expert-mark" transform="translate(196,172)">
+              <circle cx="0" cy="-2" r="2.2" fill="none"/><path d="M-4.2 5 C-4.2 1.2 4.2 1.2 4.2 5"/>
+            </g>
+            <circle class="dg-done" cx="280" cy="172" r="8"/>
+            <path class="dg-done-mark" d="M276 172 l2.7 2.7 l5.3 -5.8"/>
+          </svg>
         </figure>
         <div class="case-body">
           <p class="case-fn">Customer support</p>
@@ -1279,7 +1600,7 @@ input, select, textarea { font: inherit; color: inherit; }
   }
 
   /* ---- reveals + the gauge draw ---- */
-  var watched = document.querySelectorAll('.rise, #gauge');
+  var watched = document.querySelectorAll('.rise, #gauge, .rail-step, .dg-scroll');
   if ('IntersectionObserver' in window) {
     var seen = new IntersectionObserver(function(entries, obs){
       entries.forEach(function(e){
