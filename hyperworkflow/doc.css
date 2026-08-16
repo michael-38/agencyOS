@@ -18,6 +18,7 @@
 }
 
 :root {
+  color-scheme: light;
   --ground: #FAFAF9;
   --ink: #14161A;
   --ink-2: #3E434B;
@@ -30,15 +31,12 @@
   --font: 'Geist', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
+/* Dark is opt-in only, carried over from the visitor's choice on the
+   homepage. The OS preference is deliberately not consulted. */
 :root[data-theme="dark"] {
+  color-scheme: dark;
   --ground: #131417; --ink: #F2F2F0; --ink-2: #B9BCC2; --ink-3: #878C94;
   --rule: #2A2D33; --signal: #FF6B3D; --signal-ink: #FF6B3D; --on-signal: #17110D;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --ground: #131417; --ink: #F2F2F0; --ink-2: #B9BCC2; --ink-3: #878C94;
-    --rule: #2A2D33; --signal: #FF6B3D; --signal-ink: #FF6B3D; --on-signal: #17110D;
-  }
 }
 
 *, *::before, *::after { box-sizing: border-box; }

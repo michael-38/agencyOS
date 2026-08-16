@@ -3,28 +3,29 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="color-scheme" content="light dark">
-<meta name="theme-color" content="#FAFAF9" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#131417" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light">
+<!-- Light is the default. The theme-color is kept in step with the user's
+     choice by applyTheme(), not by a prefers-color-scheme media query. -->
+<meta name="theme-color" content="#FAFAF9" id="themeColor">
 <meta name="robots" content="index,follow,max-image-preview:large">
-<title>Hyperworkflow: real workflows, automated in two weeks</title>
-<meta name="description" content="Agentic Implementation is a two-week sprint. We shadow your domain experts doing the real work, build a working AI agent alongside them, and ship on day 10.">
+<title>Hyperworkflow: hours or days of work, now done in minutes</title>
+<meta name="description" content="We build AI agents that run all your time-consuming work. In two weeks we watch your team do the real job, build the agent with them, and ship on day 10.">
 <link rel="canonical" href="https://hyperworkflow.ai/">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://hyperworkflow.ai/">
 <meta property="og:site_name" content="Hyperworkflow">
-<meta property="og:title" content="Hyperworkflow: real workflows, automated in two weeks">
-<meta property="og:description" content="A two-week sprint with your domain experts. We shadow the real work, build a working AI agent together, and ship on day 10.">
+<meta property="og:title" content="Hyperworkflow: hours or days of work, now done in minutes">
+<meta property="og:description" content="We build AI agents that run all your time-consuming work. We watch the real job, build the agent with your team, and ship on day 10.">
 <meta property="og:image" content="https://hyperworkflow.ai/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Hyperworkflow. Real workflows, automated in two weeks.">
 
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Hyperworkflow: real workflows, automated in two weeks">
-<meta name="twitter:description" content="A two-week sprint with your domain experts. A working AI agent shipped by day 10.">
+<meta name="twitter:title" content="Hyperworkflow: hours or days of work, now done in minutes">
+<meta name="twitter:description" content="We build AI agents that run all your time-consuming work. Shipped by day 10.">
 <meta name="twitter:image" content="https://hyperworkflow.ai/og.png">
 
 <link rel="preload" as="font" type="font/woff2" href="/fonts/geist-latin.woff2" crossorigin>
@@ -34,7 +35,7 @@
      several seconds costs more than it saves. -->
 
 <!-- Theme resolution before first paint, so the page never flashes the wrong mode. -->
-<script>(function(){try{var t=localStorage.getItem('hw-theme');if(t==='light'||t==='dark'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();</script>
+<script>(function(){try{if(localStorage.getItem('hw-theme')==='dark'){document.documentElement.setAttribute('data-theme','dark');}}catch(e){}})();</script>
 
 <script type="application/ld+json">
 {
@@ -44,7 +45,7 @@
   "name": "Hyperworkflow",
   "url": "https://hyperworkflow.ai/",
   "logo": "https://hyperworkflow.ai/favicon.svg",
-  "description": "AI engineering studio running Agentic Implementation sprints. Two weeks paired with a client's domain experts to shadow real work, build a working AI agent alongside the team, and ship on day 10. Custom AI agents and software, built with you.",
+  "description": "AI engineering studio running two-week Agentic Implementation sprints. We watch a client's experts do the real work, build a working AI agent alongside them, and ship on day 10. Custom AI agents and software, built with you.",
   "email": "hello@hyperworkflow.ai",
   "contactPoint": {
     "@type": "ContactPoint",
@@ -82,16 +83,16 @@
   "@type": "FAQPage",
   "@id": "https://hyperworkflow.ai/#faq",
   "mainEntity": [
-    {"@type":"Question","name":"What is the Agentic Implementation program?","acceptedAnswer":{"@type":"Answer","text":"A two-week sprint where we pair with your domain experts, the people who actually do the work. We shadow the real job, rank the automation opportunities, build a working agent alongside your team, validate it on real work, and ship on day 10."}},
-    {"@type":"Question","name":"Why two weeks?","acceptedAnswer":{"@type":"Answer","text":"Long enough to observe real work, build, and validate. Short enough to force decisions. The sprint is designed to get your first real win into production fast, not to produce a report."}},
-    {"@type":"Question","name":"How much of our expert's time does it take?","acceptedAnswer":{"@type":"Answer","text":"Days 1 and 2 are the heaviest. We shadow them doing their normal work, so it costs attention, not extra hours. After that, expect a couple of focused hours a day for building and validating together."}},
-    {"@type":"Question","name":"What kinds of work fit best?","acceptedAnswer":{"@type":"Answer","text":"Repetitive knowledge work in any function: intake, triage, drafting, reconciliation, reporting, scheduling. If someone can show us the work, we can usually shadow it."}},
-    {"@type":"Question","name":"What do we walk away with?","acceptedAnswer":{"@type":"Answer","text":"A working agent in production, a ranked map of your automation opportunities, validation evidence from real work, and a team that knows how to do this again."}},
-    {"@type":"Question","name":"What happens after the sprint?","acceptedAnswer":{"@type":"Answer","text":"Whatever you want: extend with follow-on sprints, keep us on as an ongoing partner, or take it fully in-house. The handoff is designed in from day one."}},
+    {"@type":"Question","name":"Our work is too complicated to automate. Can you still help?","acceptedAnswer":{"@type":"Answer","text":"We invest the time to observe how your team works, and we build agents that take most (if not all) of the work off your hands."}},
+    {"@type":"Question","name":"My team is too busy for this. How much of their time does it take?","acceptedAnswer":{"@type":"Answer","text":"We come to them. The first two days we watch them do their normal work, so it costs attention, not extra hours. After that, plan on about two hours a day."}},
+    {"@type":"Question","name":"What if the agent gets it wrong?","acceptedAnswer":{"@type":"Answer","text":"We include a human in the loop to ensure the work of our agents is reviewed by you. Our agents also learn to self-improve, so they become experts over time."}},
+    {"@type":"Question","name":"What is the Agentic Implementation program?","acceptedAnswer":{"@type":"Answer","text":"A two-week sprint with the people who actually do the work. We watch the real job, rank what's worth automating, build the agent with your team, and ship on day 10."}},
+    {"@type":"Question","name":"Why two weeks?","acceptedAnswer":{"@type":"Answer","text":"Long enough to watch, build, and test. Short enough to force decisions. The point is to get a real win live, not to write a report."}},
+    {"@type":"Question","name":"What do we walk away with?","acceptedAnswer":{"@type":"Answer","text":"A working agent, live. A ranked list of what to automate next. Proof it works on real work. And a team that can do it again."}},
+    {"@type":"Question","name":"What happens after the sprint?","acceptedAnswer":{"@type":"Answer","text":"Whatever you want. Run another sprint, keep us on, or take it in-house. We plan the handoff from day one."}},
     {"@type":"Question","name":"Do we own what you build?","acceptedAnswer":{"@type":"Answer","text":"Yes. The code, the prompts, the integrations, the data, and the accounts. No lock-in."}},
-    {"@type":"Question","name":"What about security and data access?","acceptedAnswer":{"@type":"Answer","text":"Least-privilege access, working in your environment wherever possible, and human review on what the agent does. We'll walk through the specifics on the call."}},
-    {"@type":"Question","name":"What if the agent doesn't validate?","acceptedAnswer":{"@type":"Answer","text":"Then we don't ship it. Days 6 to 9 exist to find that out before it touches real work, and you keep the opportunity map, the documentation, and everything we learned."}},
-    {"@type":"Question","name":"How much does it cost?","acceptedAnswer":{"@type":"Answer","text":"We scope it on the call. The first call is free, and you'll leave with a clear recommendation either way."}}
+    {"@type":"Question","name":"What about security and data access?","acceptedAnswer":{"@type":"Answer","text":"We take the least access we need, work inside your environment where we can, and keep a human reviewing what the agent does. We'll go through the details on the call."}},
+    {"@type":"Question","name":"How much does it cost?","acceptedAnswer":{"@type":"Answer","text":"We scope it on the call. The first call is free, and you'll leave with a straight answer either way."}}
   ]
 }
 </script>
@@ -143,13 +144,19 @@
   --r-control: 4px;
   --r-panel: 0px;
 
+  color-scheme: light;
+
   --container: 1200px;
   --pad: clamp(20px, 4vw, 56px);
   --font: 'Geist', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
+/* Dark is opt-in only. The page does not follow prefers-color-scheme:
+   light is the default for everyone, and dark applies solely when the
+   visitor picks it and we set data-theme on the root. */
 :root[data-theme="dark"] {
+  color-scheme: dark;
   --ground: #131417;
   --ground-2: #1B1D21;
   --ink: #F2F2F0;
@@ -162,23 +169,6 @@
   --signal-wash: #2A1710;
   --on-signal: #17110D;
   --shade: 0 0 0;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --ground: #131417;
-    --ground-2: #1B1D21;
-    --ink: #F2F2F0;
-    --ink-2: #B9BCC2;
-    --ink-3: #878C94;
-    --rule: #2A2D33;
-    --signal: #FF6B3D;
-    --signal-ink: #FF6B3D;
-    --signal-deep: #FF8A63;
-    --signal-wash: #2A1710;
-    --on-signal: #17110D;
-    --shade: 0 0 0;
-  }
 }
 
 /* ---------- reset ---------- */
@@ -524,6 +514,26 @@ input, select, textarea { font: inherit; color: inherit; }
 @keyframes slide { to { transform: translateX(-50%); } }
 
 /* ============================================================
+   3b. OBJECTIONS - the three doubts, ranked, answered flat.
+   Same two-column anatomy as the tenets, but never alternating:
+   the question stays left every time so the three read as a list.
+   ============================================================ */
+.objections { display: grid; gap: 1px; background: var(--rule); border-block: 1px solid var(--rule); }
+.objection { background: var(--ground); display: grid; gap: 14px; padding: clamp(28px, 3.4vw, 44px) 0; }
+@media (min-width: 820px) {
+  .objection {
+    grid-template-columns: 0.9fr 1.1fr; gap: clamp(28px, 4vw, 64px);
+    align-items: start; padding-inline: clamp(20px, 3vw, 40px);
+  }
+}
+.objection-no {
+  font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.1em;
+  color: var(--signal-ink); margin: 0 0 8px;
+}
+.objection h3 { margin: 0; max-width: 22ch; }
+.objection p { margin: 0; font-size: 15.5px; }
+
+/* ============================================================
    4. RAIL - the ten days, drawn proportionally.
    Column width IS the number of days.
    ============================================================ */
@@ -785,8 +795,7 @@ input, select, textarea { font: inherit; color: inherit; }
     </nav>
     <div class="masthead-actions">
       <div class="theme-switch" role="group" aria-label="Colour theme">
-        <button type="button" data-theme-set="auto" aria-pressed="true">Auto</button>
-        <button type="button" data-theme-set="light" aria-pressed="false">Light</button>
+        <button type="button" data-theme-set="light" aria-pressed="true">Light</button>
         <button type="button" data-theme-set="dark" aria-pressed="false">Dark</button>
       </div>
       <a href="#audit" class="btn btn-primary">Book a call</a>
@@ -803,8 +812,7 @@ input, select, textarea { font: inherit; color: inherit; }
     <a href="#faq">FAQ</a>
     <a href="#audit" class="btn btn-primary">Book a call</a>
     <div class="theme-switch drawer-theme" role="group" aria-label="Colour theme">
-      <button type="button" data-theme-set="auto" aria-pressed="true">Auto</button>
-      <button type="button" data-theme-set="light" aria-pressed="false">Light</button>
+      <button type="button" data-theme-set="light" aria-pressed="true">Light</button>
       <button type="button" data-theme-set="dark" aria-pressed="false">Dark</button>
     </div>
   </div>
@@ -817,8 +825,8 @@ input, select, textarea { font: inherit; color: inherit; }
   <div class="wrap hero-split">
     <div class="enter">
       <p class="eyebrow">Agentic Implementation program</p>
-      <h1>Real workflows, automated in two weeks.</h1>
-      <p class="lede">We shadow your experts doing the real work for two weeks, then ship a working agent on day 10.</p>
+      <h1>Work that takes hours or days, now done in minutes.</h1>
+      <p class="lede">We build AI agents that run all your time-consuming work.</p>
       <div class="hero-actions">
         <a href="#audit" class="btn btn-primary">Book a call</a>
         <a href="#process" class="btn btn-secondary">See the sprint</a>
@@ -948,23 +956,23 @@ input, select, textarea { font: inherit; color: inherit; }
     <div class="figures">
       <div>
         <div class="figure-val"><span data-count="10">10</span><span class="figure-unit"> days</span></div>
-        <p class="figure-key">From first shadow to shipped agent</p>
+        <p class="figure-key">From first day to working agent</p>
       </div>
       <div>
         <div class="figure-val">1<span class="figure-unit"> workflow</span></div>
-        <p class="figure-key">Automated end to end, not one step</p>
+        <p class="figure-key">Done end to end, not one step</p>
       </div>
       <div data-example="true">
         <div class="figure-val"><span data-count="12">12</span><span class="figure-unit">+ hrs</span></div>
-        <p class="figure-key">Returned per expert, per week</p>
+        <p class="figure-key">Given back to each expert, every week</p>
       </div>
       <div data-example="true">
         <div class="figure-val"><span data-count="3.2" data-decimals="1">3.2</span><span class="figure-unit">&#215;</span></div>
-        <p class="figure-key">Faster turnaround on the sprint workflow</p>
+        <p class="figure-key">Faster from start to finish</p>
       </div>
     </div>
 
-    <p class="mock-note">The bars and the last two figures are example data from a representative engagement, not a specific client result.</p>
+    <p class="mock-note">The bars and the last two numbers are examples, not a specific client result.</p>
   </div>
 </section>
 
@@ -976,13 +984,49 @@ input, select, textarea { font: inherit; color: inherit; }
   </div>
 </section>
 
+<!-- ========== 3b. OBJECTIONS: the three doubts, most common first ========== -->
+<section class="section section-recessed" id="objections">
+  <div class="wrap">
+    <div class="head rise">
+      <p class="eyebrow">Before you book</p>
+      <h2>The three doubts we hear most.</h2>
+    </div>
+
+    <div class="objections">
+      <article class="objection rise">
+        <div>
+          <p class="objection-no">01</p>
+          <h3>&#8220;Our work is too complicated to automate.&#8221;</h3>
+        </div>
+        <p>We invest the time to observe how your team works, and we build agents that take most (if not all) of the work off your hands.</p>
+      </article>
+
+      <article class="objection rise">
+        <div>
+          <p class="objection-no">02</p>
+          <h3>&#8220;My team is too busy for this.&#8221;</h3>
+        </div>
+        <p>We come to them. The first two days we watch them do their normal work, so it costs attention, not extra hours. After that, plan on about two hours a day.</p>
+      </article>
+
+      <article class="objection rise">
+        <div>
+          <p class="objection-no">03</p>
+          <h3>&#8220;What if the agent gets it wrong?&#8221;</h3>
+        </div>
+        <p>We include a human in the loop to ensure the work of our agents is reviewed by you. Our agents also learn to self-improve, so they become experts over time.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
 <!-- ========== 4. THE SPRINT: ten days, drawn proportionally ========== -->
 <section class="section" id="process">
   <div class="wrap">
     <div class="head rise">
       <p class="eyebrow">How the sprint works</p>
       <h2>Ten working days. One workflow shipped.</h2>
-      <p class="lede">We can't automate work from process diagrams alone. We have to see how the work really gets done, so the sprint starts inside your team, not in a slide deck.</p>
+      <p class="lede">Process diagrams don't show how the work really gets done. So we start next to your team, not in a slide deck.</p>
     </div>
 
     <div class="rail-scale" aria-hidden="true">
@@ -994,17 +1038,17 @@ input, select, textarea { font: inherit; color: inherit; }
         <div class="rail-span" aria-hidden="true"><i style="--from:1;--to:3"></i></div>
         <div>
           <p class="rail-days">Days 1 to 2</p>
-          <h3>Shadow the expert</h3>
+          <h3>Watch the work</h3>
         </div>
-        <p>We sit with the person doing the work and observe every step of the real thing: documenting workflows, asking questions, building intuition for how the job actually gets done.</p>
+        <p>We sit with the person doing the work and watch every step. We ask questions and write down how the job really gets done.</p>
       </article>
       <article class="rail-step">
         <div class="rail-span" aria-hidden="true"><i style="--from:3;--to:4"></i></div>
         <div>
           <p class="rail-days">Day 3</p>
-          <h3>Prioritize</h3>
+          <h3>Rank what matters</h3>
         </div>
-        <p>We rank everything we saw by scale, repetition, business impact, and data availability.</p>
+        <p>We rank what we saw by how often it happens, how much it costs you, and how clean the data is.</p>
       </article>
       <article class="rail-step">
         <div class="rail-span" aria-hidden="true"><i style="--from:4;--to:6"></i></div>
@@ -1012,15 +1056,15 @@ input, select, textarea { font: inherit; color: inherit; }
           <p class="rail-days">Days 4 to 5</p>
           <h3>Build together</h3>
         </div>
-        <p>A working agent takes shape alongside your expert while they do the real job. Built with them, not for them.</p>
+        <p>We build the agent next to your expert while they work. Built with them, not for them.</p>
       </article>
       <article class="rail-step">
         <div class="rail-span" aria-hidden="true"><i style="--from:6;--to:10"></i></div>
         <div>
           <p class="rail-days">Days 6 to 9</p>
-          <h3>Validate and test</h3>
+          <h3>Test it on real work</h3>
         </div>
-        <p>We test whether the agent generalizes, and whether it genuinely makes the job better, not just faster.</p>
+        <p>We run it on real cases it hasn't seen. Faster isn't enough. It has to be better.</p>
       </article>
       <article class="rail-step">
         <div class="rail-span" aria-hidden="true"><i style="--from:10;--to:11"></i></div>
@@ -1028,15 +1072,15 @@ input, select, textarea { font: inherit; color: inherit; }
           <p class="rail-days">Day 10</p>
           <h3>Ship</h3>
         </div>
-        <p>The agent goes live in your stack. Your team knows exactly how it works, because they built it with us.</p>
+        <p>The agent goes live in your systems. Your team knows how it works, because they helped build it.</p>
       </article>
     </div>
 
     <ul class="outcomes rise">
-      <li>A working agent in production</li>
-      <li>A ranked automation map</li>
-      <li>Validation evidence, not a demo</li>
-      <li>A team fluent in agentic thinking</li>
+      <li>A working agent, live</li>
+      <li>A ranked list of what to automate next</li>
+      <li>Proof it works on real work</li>
+      <li>A team that can do it again</li>
     </ul>
   </div>
 </section>
@@ -1051,15 +1095,15 @@ input, select, textarea { font: inherit; color: inherit; }
     <div class="tenets">
       <article class="tenet rise">
         <h3>Automate workflows, not tasks.</h3>
-        <p>The biggest wins come from rethinking an entire workflow: eliminating handoffs, removing unnecessary approvals, replacing legacy tooling. Not from speeding up one step. <em>The workflow becomes the unit of automation.</em></p>
+        <p>The big wins come from fixing the whole workflow: cutting handoffs, dropping approvals nobody reads, replacing old tools. Speeding up one step barely moves anything. <em>The workflow is the unit of automation.</em></p>
       </article>
       <article class="tenet rise">
-        <h3>Opportunities are invisible from the outside.</h3>
-        <p>The best use cases hide in plain sight, and they only surface by sitting next to the people doing the work. That's why every sprint starts with <em>shadowing, not scoping</em>.</p>
+        <h3>You can't see the best ideas from outside.</h3>
+        <p>The best things to automate never make it into a requirements doc. They only show up when you sit next to the person doing the work. So every sprint starts by <em>watching, not scoping</em>.</p>
       </article>
       <article class="tenet rise">
-        <h3>Institutionalize the pattern, then hand it off.</h3>
-        <p>Two weeks captures the low-hanging fruit. The bigger payoff comes after, when your team, now fluent in agentic thinking, redesigns its own work and reinvests the reclaimed time into <em>work that wasn't possible before</em>.</p>
+        <h3>Teach the pattern, then hand it over.</h3>
+        <p>Two weeks gets you the first win. The bigger payoff comes later, when your team redesigns its own work and spends the saved hours on <em>things it could never get to before</em>.</p>
       </article>
     </div>
   </div>
@@ -1071,14 +1115,14 @@ input, select, textarea { font: inherit; color: inherit; }
     <div class="head rise">
       <p class="eyebrow">Beyond the sprint</p>
       <h2>The sprint is the front door. Not the whole house.</h2>
-      <p class="lede">Everything we ship is custom-built: AI agents, the software around them, and the integrations that make them real.</p>
+      <p class="lede">Everything we build is custom: the agents, the software around them, and the hookups to your systems.</p>
     </div>
     <div class="bento">
       <article class="cell cell-lead rise">
         <figure class="cell-shot cell-shot-lead">
           <svg class="dg dg-flow dg-scroll" viewBox="0 0 300 268" role="img" aria-labelledby="bsT bsD">
             <title id="bsT">The five stages of a sprint</title>
-            <desc id="bsD">Shadow, rank, build, validate, ship. Each stage runs alongside your expert, and the last one puts a working agent into production.</desc>
+            <desc id="bsD">Watch, rank, build, test, ship. Each stage runs alongside your expert, and the last one puts a working agent live in your systems.</desc>
             <path class="dg-path dg-draw" pathLength="1" d="M20 18 L20 248"/>
             <g class="dg-node">
               <circle cx="20" cy="18" r="5"/><circle cx="20" cy="75" r="5"/>
@@ -1087,21 +1131,21 @@ input, select, textarea { font: inherit; color: inherit; }
             <circle class="dg-done" cx="20" cy="248" r="9"/>
             <path class="dg-done-mark" d="M15.5 248 l3 3 l6 -6.5"/>
             <g class="dg-label">
-              <text x="44" y="22">Shadow the expert</text>
-              <text x="44" y="79">Rank the opportunities</text>
-              <text x="44" y="136">Build alongside them</text>
-              <text x="44" y="193">Validate on real work</text>
+              <text x="44" y="22">Watch the work</text>
+              <text x="44" y="79">Rank what matters</text>
+              <text x="44" y="136">Build with your team</text>
+              <text x="44" y="193">Test on real work</text>
             </g>
-            <text class="dg-label dg-fig-lit" x="44" y="252">Ship to production</text>
+            <text class="dg-label dg-fig-lit" x="44" y="252">Ship it live</text>
           </svg>
         </figure>
         <h3>Agentic Implementation sprint</h3>
-        <p>The flagship program. Two weeks embedded with your domain experts, ending with a working agent in production.</p>
+        <p>Our main program. Two weeks with your experts, ending with a working agent live in your systems.</p>
         <ul class="cell-list">
-          <li>Shadow, rank, build, validate, ship</li>
+          <li>Watch, rank, build, test, ship</li>
           <li>Built with your experts, not for them</li>
           <li>One workflow automated end to end</li>
-          <li>Live in your stack on day 10</li>
+          <li>Live in your systems on day 10</li>
         </ul>
       </article>
 
@@ -1141,19 +1185,19 @@ input, select, textarea { font: inherit; color: inherit; }
         <p>When the workflow needs more than an agent, we build the software around it too.</p>
         <ul class="cell-list">
           <li>Agents that act inside your systems</li>
-          <li>Custom tools where off-the-shelf won't fit</li>
-          <li>Integrations with the stack you already run</li>
-          <li>Human review built into every loop</li>
+          <li>Custom tools when off-the-shelf won't do</li>
+          <li>Hookups to the systems you already run</li>
+          <li>A human reviews what goes out</li>
         </ul>
       </article>
 
       <article class="cell rise">
         <h3>Ongoing partnership</h3>
-        <p>Keep the momentum after the first sprint. New workflows, shipped at the same pace.</p>
+        <p>Keep going after the first sprint. New workflows, shipped at the same pace.</p>
         <ul class="cell-list">
           <li>New workflows, sprint by sprint</li>
-          <li>Monitoring and tuning of live agents</li>
-          <li>A roadmap re-ranked as you learn</li>
+          <li>We watch and tune your live agents</li>
+          <li>A plan we re-rank as you learn</li>
           <li>You own everything, always</li>
         </ul>
       </article>
@@ -1166,7 +1210,7 @@ input, select, textarea { font: inherit; color: inherit; }
   <div class="wrap">
     <div class="head rise">
       <h2>What a sprint leaves behind.</h2>
-      <p class="lede">Measured against each team's own baseline.</p>
+      <p class="lede">Every number is measured against that team's own starting point.</p>
     </div>
 
     <div class="cases">
@@ -1302,7 +1346,7 @@ input, select, textarea { font: inherit; color: inherit; }
       </article>
     </div>
 
-    <p class="mock-note">Example engagements, representative of sprint outcomes. Not specific named clients.</p>
+    <p class="mock-note">Example projects, not named clients.</p>
   </div>
 </section>
 
@@ -1317,13 +1361,13 @@ input, select, textarea { font: inherit; color: inherit; }
   <div class="wrap">
     <div class="about-say rise">
       <h2>A small team. On purpose.</h2>
-      <p class="lede">The people who shadow your experts are the people who build. No discovery deck handed to a delivery team. The builder in the room on day 1 ships the agent on day 10.</p>
+      <p class="lede">The people who watch your team are the people who build. Nothing gets handed off to a delivery team. Whoever is in the room on day 1 ships the agent on day 10.</p>
       <ul class="marks">
         <li data-example="true">50+ agents and automations shipped</li>
         <li>Built with you, not for you</li>
-        <li>Your stack, your data, your code</li>
+        <li>Your systems, your data, your code</li>
         <li>No six-month roadmaps</li>
-        <li>Human in the loop</li>
+        <li>A human always reviews</li>
       </ul>
     </div>
   </div>
@@ -1350,7 +1394,7 @@ input, select, textarea { font: inherit; color: inherit; }
         <footer><strong>Hanne Lindqvist</strong>Support lead, B2B software</footer>
       </blockquote>
     </div>
-    <p class="mock-note">Example quotes, representative of sprint feedback. Not specific named clients.</p>
+    <p class="mock-note">Example quotes, not named clients.</p>
   </div>
 </section>
 
@@ -1358,8 +1402,8 @@ input, select, textarea { font: inherit; color: inherit; }
 <section class="section" id="faq">
   <div class="wrap">
     <div class="head rise">
-      <h2>Good questions get better answers.</h2>
-      <p class="lede">Straight answers. No funnel.</p>
+      <h2>Questions we get a lot.</h2>
+      <p class="lede">Everything else people ask before a sprint.</p>
     </div>
 
     <div class="faq-set rise">
@@ -1367,19 +1411,11 @@ input, select, textarea { font: inherit; color: inherit; }
       <div class="faq-qs">
         <div class="faq-q">
           <h4>What is the Agentic Implementation program?</h4>
-          <p>A two-week sprint where we pair with your domain experts, the people who actually do the work. We shadow the real job, rank the automation opportunities, build a working agent alongside your team, validate it on real work, and ship on day 10.</p>
+          <p>A two-week sprint with the people who actually do the work. We watch the real job, rank what's worth automating, build the agent with your team, and ship on day 10.</p>
         </div>
         <div class="faq-q">
           <h4>Why two weeks?</h4>
-          <p>Long enough to observe real work, build, and validate. Short enough to force decisions. The sprint is designed to get your first real win into production fast, not to produce a report.</p>
-        </div>
-        <div class="faq-q">
-          <h4>How much of our expert's time does it take?</h4>
-          <p>Days 1 and 2 are the heaviest. We shadow them doing their normal work, so it costs attention, not extra hours. After that, expect a couple of focused hours a day for building and validating together.</p>
-        </div>
-        <div class="faq-q">
-          <h4>What kinds of work fit best?</h4>
-          <p>Repetitive knowledge work in any function: intake, triage, drafting, reconciliation, reporting, scheduling. If someone can show us the work, we can usually shadow it.</p>
+          <p>Long enough to watch, build, and test. Short enough to force decisions. The point is to get a real win live, not to write a report.</p>
         </div>
       </div>
     </div>
@@ -1389,11 +1425,11 @@ input, select, textarea { font: inherit; color: inherit; }
       <div class="faq-qs">
         <div class="faq-q">
           <h4>What do we walk away with?</h4>
-          <p>A working agent in production, a ranked map of your automation opportunities, validation evidence from real work, and a team that knows how to do this again.</p>
+          <p>A working agent, live. A ranked list of what to automate next. Proof it works on real work. And a team that can do it again.</p>
         </div>
         <div class="faq-q">
           <h4>What happens after the sprint?</h4>
-          <p>Whatever you want: extend with follow-on sprints, keep us on as an ongoing partner, or take it fully in-house. The handoff is designed in from day one.</p>
+          <p>Whatever you want. Run another sprint, keep us on, or take it in-house. We plan the handoff from day one.</p>
         </div>
         <div class="faq-q">
           <h4>Do we own what you build?</h4>
@@ -1407,15 +1443,11 @@ input, select, textarea { font: inherit; color: inherit; }
       <div class="faq-qs">
         <div class="faq-q">
           <h4>What about security and data access?</h4>
-          <p>Least-privilege access, working in your environment wherever possible, and human review on what the agent does. We'll walk through the specifics on the call.</p>
-        </div>
-        <div class="faq-q">
-          <h4>What if the agent doesn't validate?</h4>
-          <p>Then we don't ship it. Days 6 to 9 exist to find that out before it touches real work, and you keep the opportunity map, the documentation, and everything we learned.</p>
+          <p>We take the least access we need, work inside your environment where we can, and keep a human reviewing what the agent does. We'll go through the details on the call.</p>
         </div>
         <div class="faq-q">
           <h4>How much does it cost?</h4>
-          <p>We scope it on the call. The first call is free, and you'll leave with a clear recommendation either way.</p>
+          <p>We scope it on the call. The first call is free, and you'll leave with a straight answer either way.</p>
         </div>
       </div>
     </div>
@@ -1427,7 +1459,7 @@ input, select, textarea { font: inherit; color: inherit; }
   <div class="wrap">
     <div class="head rise">
       <h2>Tell us about the work. We'll tell you if a sprint fits.</h2>
-      <p class="lede">Share your site and the workflow you'd hand off tomorrow. We'll reply within one business day with times, and an honest read on fit.</p>
+      <p class="lede">Tell us the one workflow you'd hand off tomorrow. We'll reply in one business day with times, and an honest read on fit.</p>
     </div>
 
     <div class="book">
@@ -1466,12 +1498,12 @@ input, select, textarea { font: inherit; color: inherit; }
           <input type="text" name="company_website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
           <button type="submit" class="btn btn-primary form-submit" id="auditSubmit">Book a call</button>
           <p class="form-err" id="auditError" hidden role="alert"></p>
-          <p class="form-fine">We reply within one business day, Monday to Friday. No sales drip.</p>
+          <p class="form-fine">We reply in one business day, Monday to Friday. No sales emails after that.</p>
         </div>
         <div class="sent" id="auditSuccess" hidden>
           <p class="sent-tick" aria-hidden="true">&#10003;</p>
           <h3>Call requested.</h3>
-          <p>We'll reply within one business day with a couple of times. If a sprint isn't the right fit, we'll say so.</p>
+          <p>We'll reply in one business day with a couple of times. If a sprint isn't the right fit, we'll say so.</p>
         </div>
       </form>
 
@@ -1515,7 +1547,7 @@ input, select, textarea { font: inherit; color: inherit; }
           <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5l8 7-8 7V5z"/><path d="M12 5l8 7-8 7V5z"/></svg></span>
           <span>Hyperworkflow</span>
         </div>
-        <p>We pair with your domain experts, automate real workflows in two-week sprints, and leave your team fluent in agentic thinking.</p>
+        <p>We sit with your experts, automate one real workflow in two weeks, and leave your team able to do it again.</p>
       </div>
       <div>
         <h4>Studio</h4>
@@ -1551,22 +1583,25 @@ input, select, textarea { font: inherit; color: inherit; }
   'use strict';
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ---- theme: auto | light | dark, persisted ---- */
+  /* ---- theme: light | dark, persisted. Light is the default; the OS
+         preference is deliberately not consulted. ---- */
   var themeBtns = document.querySelectorAll('[data-theme-set]');
+  var themeColor = document.getElementById('themeColor');
   function paintTheme(mode){
     themeBtns.forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.themeSet === mode)); });
+    if (themeColor) { themeColor.setAttribute('content', mode === 'dark' ? '#131417' : '#FAFAF9'); }
   }
   function applyTheme(mode){
-    if (mode === 'auto') { document.documentElement.removeAttribute('data-theme'); }
-    else { document.documentElement.setAttribute('data-theme', mode); }
-    try { mode === 'auto' ? localStorage.removeItem('hw-theme') : localStorage.setItem('hw-theme', mode); } catch (e) {}
+    if (mode !== 'dark') { mode = 'light'; }
+    document.documentElement.setAttribute('data-theme', mode);
+    try { localStorage.setItem('hw-theme', mode); } catch (e) {}
     paintTheme(mode);
   }
   themeBtns.forEach(function(b){
     b.addEventListener('click', function(){ applyTheme(b.dataset.themeSet); });
   });
-  var stored = 'auto';
-  try { stored = localStorage.getItem('hw-theme') || 'auto'; } catch (e) {}
+  var stored = 'light';
+  try { if (localStorage.getItem('hw-theme') === 'dark') { stored = 'dark'; } } catch (e) {}
   paintTheme(stored);
 
   /* ---- header border: a sentinel, not a scroll listener ---- */
