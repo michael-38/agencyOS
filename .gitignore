@@ -13,7 +13,10 @@ build/
 !.claude/hooks/
 !.claude/settings.json
 .context/
-audit/output/
-audit/node_modules/
 .gstack/
 .wrangler/
+
+# website-audit run artifacts and eval caches
+runs/
+evals/cache/
+website-audit/dist/

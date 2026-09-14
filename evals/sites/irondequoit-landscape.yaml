@@ -1,0 +1,9 @@
+# Landscaping #2 — Rochester NY company with a dedicated /estimate page (subpath contact-form test).
+url: irondequoitlandscape.com
+expected_industry: landscaping
+expected_home_rule: root-2xx
+skip_items: []
+expected_items:
+  # TODO (label after the first run)
+  contact-form: { verdict: pass, satisfied_at_url: https://irondequoitlandscape.com/estimate }
+notes: Chosen for the separate estimate page; verify the selector nominates /estimate.

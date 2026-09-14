@@ -1,0 +1,14 @@
+# Copy to <name>.yaml. Files starting with "_" are ignored by the runner.
+url: example.com                      # any page on the site; scheme optional
+expected_industry: landscaping        # slug from config/industries.yaml ("generic" when nothing should match)
+expected_resolved_origin: https://www.example.com   # optional
+expected_home_url: https://www.example.com/         # optional
+expected_home_rule: root-2xx          # optional: root-2xx | root-non-2xx | splash-detected | host-mismatch | input-page-fallback
+# industry_override: landscaping      # optional: skip classification for this site
+# modules: { desktop: false }         # optional: module overrides for this site
+skip_items: []                        # checklist ids to leave unevaluated
+expected_items:                       # one entry per labeled checklist id
+  tel-link-above-fold: { verdict: pass }
+  LS-project-gallery: { verdict: pass, satisfied_at_url: https://www.example.com/gallery }
+  faq-present: { verdict: fail }
+notes: why this site is in the set and anything odd about it

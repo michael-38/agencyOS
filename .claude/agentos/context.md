@@ -5,10 +5,11 @@ AgencyOS is a lead-generation and AI-automation agency for **local service busin
 
 ## The toolkit (what's in this repo)
 
-### `audit/` — website audit CLI (`medspa-audit`)
-Ingests a URL or a batch and runs 9 independent modules → a self-contained, shareable HTML dashboard.
-Modules: `lighthouse`, `seo-onpage`, `seo-ranking`, `traffic-metrics`, `llm-copy-aeo`, `llm-discoverability`, `copy-conversion`, `design-review`\*, `ux-medspa`\* (\*disabled by default; enable with `--enable design-review,ux-medspa`).
-Run: `cd audit && npm install && npx tsx src/index.ts <url> --open`. Reports → `audit/output/`. Batch → add `--batch <file.csv> --index`.
+### `website-audit/` — URL → industry persona audit → gap report
+Resolves any URL, maps the site (Firecrawl `/map`), scrapes the home page (markdown + raw HTML + mobile/desktop full-page screenshots + an in-browser layout probe), classifies the industry (Haiku 4.5, structured output, `< 0.8 → generic`), loads `personas/<slug>.md` + `personas/_common.md` by slug, runs deterministic checks in code and judgment items through Opus 5 vision, searches candidate pages for unmet `scope: subpath` items, and writes `report.json` + `report.md` (gaps only, ranked). Every external call is cached under the run dir; `--from-cache <runDir> --offline` replays for free.
+Run: `cd website-audit && npm install && npx tsx src/index.ts audit <url>`; UI: `npm run ui`. Also: `validate-personas`, `list-checks`, `list-modules`, `eval`, `check-html`, `site:scaffold|validate|preview` (v2). Modules (all toggleable): classify, common-checklist, persona-checklist, deterministic, judgment, subpath, desktop, facts, lighthouse (reserved).
+Industry knowledge is data only: `config/industries.yaml` (slugs, aliases, archetypes + JSON-LD types), `config/detectors.yaml` (booking/review/chat/form vendor patterns, schema.org subtypes), `personas/*.md`. `website-audit/src` contains no vertical names (enforced by `test/no-industry-terms.test.ts`).
+Replaced the former `audit/` (medspa-audit, med-spa-hardwired 9-module dashboard), deleted 2026-09-14 in its own commit (`git log --diff-filter=D --oneline -- audit/` finds it); its Lighthouse worker (`audit/src/modules/lighthouse-worker.mjs`) is recoverable from that commit's parent when the `lighthouse` module is built.
 
 ### `cli/` — SiteRefresh
 Scrapes an outdated contractor site → extracts business data → rewrites copy with Claude → generates a modern landing page. Industry populators in `src/populators/` (plumbing, roofing, shared); rewrite prompts in `src/prompts/`.
@@ -28,9 +29,10 @@ Next.js 16 + React 19 admin/client app for managing AI phone agents. Stack: Vapi
 - `lead-gen-target-industries.md` — target verticals, lead sources, qualification signals, and ROI.
 
 ## Tech stack
-Node.js + TypeScript (`tsx`), Next.js 16 / React 19, Anthropic SDK (`@anthropic-ai/sdk`), Firecrawl, Playwright + Lighthouse, Cloudflare Pages + GitHub Actions, Supabase, Vapi, Twilio, Stripe, EJS.
+Node.js 22 + TypeScript (`tsx`), Next.js 16 / React 19, Anthropic SDK (`@anthropic-ai/sdk` 0.125, structured outputs via `messages.parse`), Firecrawl v2 SDK (`firecrawl` 4.x; `/map` + `/scrape` only), sharp, cheerio, zod 4, Cloudflare Pages + GitHub Actions, Supabase, Vapi, Twilio, Stripe.
 
-## Active projects (as of 2026-07)
+## Active projects (as of 2026-09)
+- `website-audit` M1 shipped (pipeline + local UI + evals scaffold); M2 = author persona files per vertical; M3 = v2 builder via `/build-industry-site`.
 - Per-client AI concierge config (shared `serve.js` + prompt files).
 - Med-spa template refinement; the Utah Aesthetic Surgery demo build.
 - Hyperworkflow landing-page copy.

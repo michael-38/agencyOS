@@ -1,0 +1,17 @@
+{
+  "probe_version": 1,
+  "viewport": { "width": 390, "height": 844 },
+  "dpr": 2,
+  "scrollHeight": 700,
+  "telLinks": [],
+  "ctas": [
+    { "tag": "a", "text": "About", "href": "/about", "top": 420 },
+    { "tag": "a", "text": "Contact", "href": "/contact", "top": 420 }
+  ],
+  "forms": [],
+  "imagesAboveFold": [],
+  "fixedBottomBars": [],
+  "h1": ["Welcome", "We do lots of things"],
+  "h2": [],
+  "navText": []
+}

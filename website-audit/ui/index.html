@@ -1,0 +1,778 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Website audit</title>
+<style>
+  :root {
+    --white: #FFFFFF; --gray-50: #F9FAFB; --gray-100: #F3F4F6; --gray-200: #E5E7EB; --gray-300: #D1D5DB;
+    --gray-400: #9CA3AF; --gray-500: #6B7280; --gray-600: #4B5563; --gray-700: #374151; --gray-800: #1F2937; --gray-900: #111827;
+    --success: #10B981; --warning: #F59E0B; --error: #EF4444; --info: #3B82F6;
+    --s1: 4px; --s2: 8px; --s3: 16px; --s4: 24px; --s5: 32px; --s6: 48px; --s7: 64px;
+    --r-sm: 6px; --r-md: 12px; --r-lg: 16px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,.08); --shadow-md: 0 4px 12px rgba(0,0,0,.10);
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, system-ui, sans-serif;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; font-family: var(--font); font-size: 16px; line-height: 1.5; color: var(--gray-700); background: var(--gray-50); }
+  h1, h2, h3 { color: var(--gray-900); margin: 0; line-height: 1.2; letter-spacing: -0.01em; }
+  h1 { font-size: 28px; font-weight: 700; }
+  h2 { font-size: 20px; font-weight: 700; }
+  h3 { font-size: 16px; font-weight: 600; }
+  p { margin: 0; }
+  a { color: var(--info); }
+  code, pre { font-family: var(--mono); font-size: 13px; }
+  [hidden] { display: none !important; }
+
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 var(--s4); }
+  .top { background: var(--white); border-bottom: 1px solid var(--gray-200); padding: var(--s4) 0; }
+  .top .wrap { display: flex; align-items: center; gap: var(--s3); flex-wrap: wrap; }
+  .top .sub { color: var(--gray-500); font-size: 14px; flex: 1 1 320px; }
+  .pill { display: inline-flex; align-items: center; gap: var(--s2); min-height: 32px; padding: 0 var(--s3); border-radius: 9999px; font-size: 14px; font-weight: 600; background: var(--gray-100); color: var(--gray-600); white-space: nowrap; }
+  .pill.running { background: #DBEAFE; color: #1E40AF; }
+  .pill.running::before { content: ""; width: 10px; height: 10px; border-radius: 50%; border: 2px solid #BFDBFE; border-top-color: #1E40AF; animation: spin .8s linear infinite; }
+
+  main.wrap { display: grid; gap: var(--s4); padding-top: var(--s4); padding-bottom: var(--s7); }
+  .card { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--r-lg); padding: var(--s4); box-shadow: var(--shadow-sm); }
+  .card > h2 { margin-bottom: var(--s3); }
+  .card-head { display: flex; align-items: center; justify-content: space-between; gap: var(--s3); flex-wrap: wrap; margin-bottom: var(--s3); }
+  .card-head h2 { margin: 0; }
+  @media (min-width: 640px) { .card { padding: var(--s5); } }
+
+  .row { display: grid; gap: var(--s3); margin-bottom: var(--s3); }
+  @media (min-width: 640px) { .row { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); } }
+  label.field { display: flex; flex-direction: column; gap: var(--s1); font-size: 14px; font-weight: 600; color: var(--gray-700); }
+  label.field .hint { font-weight: 400; color: var(--gray-500); }
+  input[type=text], input[type=number], select { font: inherit; font-size: 16px; min-height: 48px; padding: 0 var(--s3); border: 1.5px solid var(--gray-300); border-radius: var(--r-md); background: var(--white); color: var(--gray-900); width: 100%; }
+  input:focus, select:focus, button:focus-visible, summary:focus-visible { outline: 3px solid rgba(59,130,246,.45); outline-offset: 2px; border-color: var(--info); }
+  fieldset { border: 0; padding: 0; margin: 0 0 var(--s3); min-width: 0; }
+  legend { font-size: 14px; font-weight: 600; padding: 0; margin-bottom: var(--s2); }
+
+  .module-grid { display: grid; gap: var(--s2); }
+  @media (min-width: 640px) { .module-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); } }
+  .module { display: flex; align-items: flex-start; gap: var(--s3); min-height: 48px; padding: var(--s2) var(--s3); border: 1px solid var(--gray-200); border-radius: var(--r-md); cursor: pointer; background: var(--white); }
+  .module:hover { border-color: var(--gray-300); }
+  .module.unbuilt { opacity: .55; cursor: not-allowed; }
+  .module input { width: 20px; height: 20px; margin: 6px 0 0; flex: none; accent-color: var(--gray-900); }
+  .module-text { display: flex; flex-direction: column; gap: 2px; font-size: 14px; }
+  .module-label { font-weight: 600; color: var(--gray-800); }
+  .module-cost { color: var(--gray-500); font-size: 13px; }
+  .tag { display: inline-block; font-size: 12px; font-weight: 600; padding: 1px var(--s2); border-radius: var(--r-sm); background: var(--gray-100); color: var(--gray-600); margin-left: var(--s1); vertical-align: middle; white-space: nowrap; }
+  .tag.warn { background: #FEF3C7; color: #92400E; }
+  .check { display: flex; align-items: center; gap: var(--s2); min-height: 48px; font-size: 14px; font-weight: 500; cursor: pointer; align-self: end; }
+  .check input { width: 20px; height: 20px; accent-color: var(--gray-900); flex: none; }
+
+  details.adv { border: 1px solid var(--gray-200); border-radius: var(--r-md); padding: 0 var(--s3); margin-bottom: var(--s3); }
+  details > summary { cursor: pointer; min-height: 48px; display: flex; align-items: center; font-weight: 600; font-size: 14px; list-style: none; }
+  details > summary::before { content: "\25B8"; margin-right: var(--s2); color: var(--gray-400); }
+  details[open] > summary::before { content: "\25BE"; }
+  details > summary::-webkit-details-marker { display: none; }
+  details .inner { padding: var(--s2) 0 var(--s3); }
+
+  .actions { display: flex; gap: var(--s3); flex-wrap: wrap; margin-top: var(--s3); }
+  .btn { font: inherit; font-size: 16px; font-weight: 600; min-height: 48px; padding: 0 var(--s4); border-radius: var(--r-md); border: 2px solid transparent; cursor: pointer; transition: background .15s ease, box-shadow .15s ease; display: inline-flex; align-items: center; justify-content: center; gap: var(--s2); background: var(--gray-100); color: var(--gray-900); }
+  .btn:hover { background: var(--gray-200); }
+  .btn.primary { background: var(--gray-900); color: var(--white); box-shadow: 0 4px 16px rgba(17,24,39,.25); }
+  .btn.primary:hover { background: #000; }
+  .btn.secondary { background: transparent; border-color: var(--gray-900); }
+  .btn.secondary:hover { background: rgba(17,24,39,.06); }
+  .btn.small { font-size: 14px; padding: 0 var(--s3); }
+  .btn[disabled] { opacity: .5; pointer-events: none; }
+  @media (max-width: 639px) { .actions .btn { width: 100%; } }
+
+  .alert { border-radius: var(--r-md); padding: var(--s3); font-size: 14px; margin-bottom: var(--s3); white-space: pre-wrap; word-break: break-word; }
+  .alert.error { background: #FEF2F2; border: 1px solid var(--error); color: #991B1B; }
+  .alert.info { background: #EFF6FF; border: 1px solid var(--info); color: #1E40AF; }
+  pre.box { background: var(--gray-900); color: #E5E7EB; border-radius: var(--r-md); padding: var(--s3); overflow: auto; max-height: 360px; margin: var(--s3) 0 0; white-space: pre-wrap; word-break: break-word; line-height: 1.45; }
+  pre.box.log { max-height: 280px; margin-top: 0; }
+  .muted { color: var(--gray-500); font-size: 14px; }
+  .num { font-variant-numeric: tabular-nums; }
+
+  .steps { list-style: none; margin: 0 0 var(--s3); padding: 0; display: grid; gap: var(--s1); }
+  .step { display: flex; align-items: flex-start; gap: var(--s3); min-height: 40px; padding: var(--s1) 0; font-size: 14px; }
+  .step-icon { flex: none; width: 24px; height: 24px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; background: var(--gray-100); color: var(--gray-400); margin-top: 2px; }
+  .step.done .step-icon { background: #D1FAE5; color: #065F46; }
+  .step.skip .step-icon { background: var(--gray-100); color: var(--gray-500); }
+  .step.error .step-icon { background: #FEE2E2; color: #991B1B; }
+  .step.start .step-icon { background: transparent; border: 3px solid var(--gray-200); border-top-color: var(--gray-900); animation: spin .8s linear infinite; color: transparent; }
+  .step-body { display: flex; flex-direction: column; min-width: 0; }
+  .step-name { font-weight: 600; color: var(--gray-800); }
+  .step-note { color: var(--gray-400); font-weight: 400; }
+  .step-msg { color: var(--gray-500); word-break: break-word; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .step.start .step-icon, .pill.running::before { animation: none; } }
+
+  .banner { border-radius: var(--r-md); padding: var(--s3) var(--s4); border: 1px solid; margin-bottom: var(--s3); }
+  .banner .v { font-size: 20px; font-weight: 700; }
+  .banner .meta { font-size: 14px; margin-top: var(--s1); }
+  .banner.strong { background: #ECFDF5; border-color: var(--success); color: #065F46; }
+  .banner.fair { background: #FFFBEB; border-color: var(--warning); color: #92400E; }
+  .banner.weak { background: #FEF2F2; border-color: var(--error); color: #991B1B; }
+  .banner.na { background: var(--gray-100); border-color: var(--gray-300); color: var(--gray-700); }
+  .table-wrap { overflow-x: auto; margin-bottom: var(--s3); }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; }
+  th, td { text-align: left; padding: var(--s2); border-bottom: 1px solid var(--gray-200); vertical-align: top; }
+  th { font-weight: 600; color: var(--gray-600); font-size: 13px; white-space: nowrap; }
+  td.nowrap { white-space: nowrap; }
+  td.actions-cell { white-space: nowrap; }
+  td.actions-cell .btn { margin-right: var(--s2); }
+  .verdict { display: inline-block; font-size: 12px; font-weight: 700; padding: 1px var(--s2); border-radius: var(--r-sm); text-transform: uppercase; letter-spacing: .02em; }
+  .verdict.fail, .verdict.weak, .verdict.error { background: #FEE2E2; color: #991B1B; }
+  .verdict.partial, .verdict.fair { background: #FEF3C7; color: #92400E; }
+  .verdict.pass, .verdict.strong, .verdict.done { background: #D1FAE5; color: #065F46; }
+  .verdict.running { background: #DBEAFE; color: #1E40AF; }
+  .verdict.na { background: var(--gray-100); color: var(--gray-600); }
+  .weight { font-weight: 600; }
+  .shots { display: flex; gap: var(--s3); overflow-x: auto; padding-bottom: var(--s2); margin-bottom: var(--s3); }
+  .shots figure { margin: 0; flex: none; display: flex; flex-direction: column; gap: var(--s1); }
+  .shots img { height: 320px; width: auto; max-width: 480px; border: 1px solid var(--gray-200); border-radius: var(--r-sm); background: var(--gray-100); object-fit: contain; }
+  .shots figcaption { font-size: 12px; color: var(--gray-500); max-width: 240px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .links { display: flex; gap: var(--s3); flex-wrap: wrap; font-size: 14px; align-items: center; margin-top: var(--s3); }
+  .links code { background: var(--gray-100); padding: 2px var(--s2); border-radius: var(--r-sm); word-break: break-all; }
+  h3.sub { margin: var(--s3) 0 var(--s2); }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <h1>Website audit</h1>
+    <p class="sub">URL &rarr; industry persona audit &rarr; gap report. Wraps the local <code>website-audit</code> CLI.</p>
+    <span id="status-pill" class="pill">Idle</span>
+  </div>
+</header>
+
+<main class="wrap">
+  <div id="global-error" class="alert error" role="alert" hidden></div>
+
+  <!-- 1. Form -->
+  <section class="card" id="form-card" aria-labelledby="form-title">
+    <h2 id="form-title">New audit</h2>
+    <form id="audit-form" novalidate>
+      <div class="row">
+        <label class="field" for="url">URL
+          <input id="url" type="text" inputmode="url" placeholder="example.com" autocomplete="off" spellcheck="false">
+        </label>
+        <label class="field" for="industry">Industry
+          <select id="industry"><option value="auto">Auto-detect</option></select>
+        </label>
+      </div>
+
+      <fieldset>
+        <legend>Modules</legend>
+        <div id="modules" class="module-grid"><p class="muted">Loading modules&hellip;</p></div>
+      </fieldset>
+
+      <details class="adv" id="advanced">
+        <summary>Advanced</summary>
+        <div class="inner">
+          <div class="row">
+            <label class="field" for="exclude">Exclude item ids <span class="hint">(comma-separated)</span>
+              <input id="exclude" type="text" placeholder="tel-link-above-fold, hours-present" autocomplete="off" spellcheck="false">
+            </label>
+            <label class="field" for="judge">Judge model
+              <select id="judge">
+                <option value="claude-opus-5">claude-opus-5 (default)</option>
+                <option value="claude-sonnet-5">claude-sonnet-5</option>
+              </select>
+            </label>
+          </div>
+          <div class="row">
+            <label class="field" for="tiles">Tiles <span class="hint">(mobile tiles sent to the judge)</span>
+              <input id="tiles" type="number" min="1" max="20" step="1" value="4">
+            </label>
+            <label class="field" for="maxpages">Max candidate pages <span class="hint">(blank = no cap)</span>
+              <input id="maxpages" type="number" min="0" step="1" placeholder="none">
+            </label>
+            <label class="check" for="lenient"><input id="lenient" type="checkbox"> Lenient: invalid judge output &rarr; fail/unverified instead of aborting</label>
+          </div>
+          <div class="row">
+            <label class="field" for="cache">Re-use cache from <span class="hint">(previous runs of the same host)</span>
+              <select id="cache"><option value="">None</option></select>
+            </label>
+          </div>
+        </div>
+      </details>
+
+      <p id="form-error" class="alert error" role="alert" hidden></p>
+      <div class="actions">
+        <button type="button" id="preview-btn" class="btn secondary">Preview config</button>
+        <button type="submit" id="run-btn" class="btn primary">Run audit</button>
+      </div>
+      <pre id="preview" class="box" hidden></pre>
+    </form>
+  </section>
+
+  <!-- 2. Progress -->
+  <section class="card" id="progress-card" aria-labelledby="progress-title" hidden>
+    <div class="card-head">
+      <h2 id="progress-title">Progress</h2>
+      <code id="progress-dir" class="muted"></code>
+    </div>
+    <ol id="steps" class="steps"></ol>
+    <p id="credits" class="muted num" style="margin-bottom: var(--s2)"></p>
+    <div id="progress-error" class="alert error" role="alert" hidden></div>
+    <pre id="log" class="box log" aria-live="polite"></pre>
+  </section>
+
+  <!-- 3. Result -->
+  <section class="card" id="result-card" aria-labelledby="result-title" hidden>
+    <div class="card-head">
+      <h2 id="result-title">Result</h2>
+      <span id="result-id" class="muted"></span>
+    </div>
+    <div id="result-error" class="alert error" role="alert" hidden></div>
+    <div id="banner" class="banner na"></div>
+    <p id="not-evaluated" class="muted" hidden></p>
+    <h3 class="sub">Gaps</h3>
+    <div class="table-wrap" id="gaps"></div>
+    <h3 class="sub">Screenshots</h3>
+    <div id="shots" class="shots"></div>
+    <details>
+      <summary>Raw report.json</summary>
+      <div class="inner"><pre id="raw-json" class="box"></pre></div>
+    </details>
+    <div id="links" class="links"></div>
+  </section>
+
+  <!-- 4. Previous runs -->
+  <section class="card" id="runs-card" aria-labelledby="runs-title">
+    <div class="card-head">
+      <h2 id="runs-title">Previous runs</h2>
+      <button type="button" id="refresh-runs" class="btn small">Refresh</button>
+    </div>
+    <div id="runs-error" class="alert error" role="alert" hidden></div>
+    <p id="runs-empty" class="muted" hidden>No runs yet.</p>
+    <div class="table-wrap">
+      <table id="runs-table">
+        <thead><tr><th>Host</th><th>Time</th><th>Industry</th><th>Verdict</th><th>Status</th><th>Cost</th><th></th></tr></thead>
+        <tbody id="runs-body"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<script>
+(() => {
+  'use strict';
+
+  const $ = (sel, root = document) => root.querySelector(sel);
+  const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+  const esc = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+  const el = {
+    globalError: $('#global-error'), pill: $('#status-pill'),
+    form: $('#audit-form'), url: $('#url'), industry: $('#industry'), modules: $('#modules'),
+    exclude: $('#exclude'), judge: $('#judge'), tiles: $('#tiles'), maxPages: $('#maxpages'), lenient: $('#lenient'),
+    cache: $('#cache'), advanced: $('#advanced'), formError: $('#form-error'),
+    previewBtn: $('#preview-btn'), runBtn: $('#run-btn'), preview: $('#preview'),
+    progressCard: $('#progress-card'), progressTitle: $('#progress-title'), progressDir: $('#progress-dir'),
+    steps: $('#steps'), log: $('#log'), credits: $('#credits'), progressError: $('#progress-error'),
+    resultCard: $('#result-card'), resultId: $('#result-id'), resultError: $('#result-error'), banner: $('#banner'),
+    notEval: $('#not-evaluated'), gaps: $('#gaps'), shots: $('#shots'), raw: $('#raw-json'), links: $('#links'),
+    runsBody: $('#runs-body'), runsError: $('#runs-error'), runsEmpty: $('#runs-empty'), refreshRuns: $('#refresh-runs'),
+  };
+
+  const STEPS = [
+    { n: 1, name: 'resolve', label: 'Resolve URL' },
+    { n: 2, name: 'home rule', label: 'Home page rule', note: 'part of steps 1 and 4' },
+    { n: 3, name: 'map', label: 'Map site' },
+    { n: 4, name: 'scrape-home', label: 'Scrape home page' },
+    { n: 5, name: 'classify', label: 'Classify industry' },
+    { n: 6, name: 'load-checklist', label: 'Load checklist' },
+    { n: 7, name: 'evaluate', label: 'Evaluate items' },
+    { n: 8, name: 'report', label: 'Write report' },
+  ];
+  const WEIGHT_RANK = { high: 0, med: 1, low: 2 };
+  const VERDICT_RANK = { fail: 0, partial: 1, pass: 2 };
+
+  const state = { industries: [], modules: [], runs: [], es: null, runId: null, terminal: true };
+
+  // ---- helpers ----
+  function showError(node, msg) { node.textContent = String(msg == null ? 'Unknown error' : msg); node.hidden = false; }
+  function hideError(node) { node.hidden = true; node.textContent = ''; }
+  function setBusy(btn, busy, label) {
+    btn.disabled = !!busy;
+    if (label) btn.textContent = label;
+  }
+  function setPill(text, running) { el.pill.textContent = text; el.pill.classList.toggle('running', !!running); }
+  function fmtUsd(n) { return typeof n === 'number' ? n.toFixed(4).replace(/0+$/, '').replace(/\.$/, '.00') : '?'; }
+  function hostOf(v) {
+    v = String(v || '').trim();
+    if (!v) return null;
+    try { return new URL(/^[a-z]+:\/\//i.test(v) ? v : 'https://' + v).hostname.toLowerCase() || null; } catch (_) { return null; }
+  }
+  function fmtTime(entry) {
+    const iso = entry.started || String(entry.timestamp || '').replace(/^(\d{4}-\d{2}-\d{2})T(\d{2})-(\d{2})-(\d{2})Z.*$/, '$1T$2:$3:$4Z');
+    const d = new Date(iso);
+    return isNaN(d.getTime()) ? String(entry.timestamp || '') : d.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
+  }
+  function runFileUrl(id, rel, runDir) {
+    let p = String(rel || '');
+    if (runDir && p.startsWith(runDir)) p = p.slice(runDir.length);
+    p = p.replace(/^\/+/, '');
+    return '/runs/' + id + '/' + p.split('/').map(encodeURIComponent).join('/');
+  }
+
+  async function api(path, opts) {
+    let res;
+    try { res = await fetch(path, opts); } catch (e) { throw new Error('Network error: ' + ((e && e.message) || e)); }
+    const text = await res.text();
+    let data = null;
+    try { data = text ? JSON.parse(text) : null; } catch (_) { data = null; }
+    if (!res.ok) {
+      const err = new Error((data && data.error) || (res.status + ' ' + res.statusText));
+      err.status = res.status;
+      err.data = data;
+      throw err;
+    }
+    return { data, res };
+  }
+  function postJson(path, body) {
+    return api(path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  }
+
+  // ---- form ----
+  function renderIndustries() {
+    const sel = el.industry;
+    const prev = sel.value;
+    sel.innerHTML = '<option value="auto">Auto-detect</option>';
+    for (const i of state.industries) {
+      const o = document.createElement('option');
+      o.value = i.slug;
+      o.textContent = i.display_name + ' (' + i.slug + ')';
+      sel.appendChild(o);
+    }
+    if ($$('option', sel).some((o) => o.value === prev)) sel.value = prev;
+  }
+
+  function renderModules() {
+    el.modules.innerHTML = state.modules.map((m) => {
+      const built = m.built !== false;
+      return '<label class="module' + (built ? '' : ' unbuilt') + '" title="' + esc(m.description || '') + '">' +
+        '<input type="checkbox" data-module="' + esc(m.id) + '"' + (built && m.default ? ' checked' : '') + (built ? '' : ' disabled') + '>' +
+        '<span class="module-text"><span class="module-label">' + esc(m.label) +
+        (built ? '' : ' <span class="tag warn">not built yet</span>') + '</span>' +
+        '<span class="module-cost">' + esc(m.cost || '') + '</span></span></label>';
+    }).join('') || '<p class="muted">No modules reported by the CLI.</p>';
+  }
+
+  function moduleCheckboxes() { return $$('#modules input[type=checkbox]'); }
+
+  function collectForm() {
+    const modules = {};
+    for (const cb of moduleCheckboxes()) { if (!cb.disabled) modules[cb.dataset.module] = cb.checked; }
+    const mp = el.maxPages.value.trim();
+    return {
+      url: el.url.value.trim(),
+      industry: el.industry.value || 'auto',
+      modules,
+      exclude_items: el.exclude.value.split(',').map((s) => s.trim()).filter(Boolean),
+      judge_model: el.judge.value,
+      tiles: el.tiles.value.trim() === '' ? 4 : Number(el.tiles.value),
+      max_candidate_pages: mp === '' ? null : Number(mp),
+      lenient: el.lenient.checked,
+      from_cache: el.cache.value || null,
+    };
+  }
+
+  function validate(cfg) {
+    if (!cfg.url) return 'Enter a URL to audit.';
+    if (!hostOf(cfg.url)) return 'That does not look like a URL or hostname.';
+    if (cfg.modules.classify === false && cfg.industry === 'auto') return 'Industry classification is off, so pick an industry instead of Auto-detect.';
+    if (!Number.isInteger(cfg.tiles) || cfg.tiles < 1 || cfg.tiles > 20) return 'Tiles must be a whole number between 1 and 20.';
+    if (cfg.max_candidate_pages !== null && (!Number.isInteger(cfg.max_candidate_pages) || cfg.max_candidate_pages < 0)) return 'Max candidate pages must be a whole number (or blank).';
+    return null;
+  }
+
+  function refreshCacheSelect() {
+    const host = hostOf(el.url.value);
+    const prev = el.cache.value;
+    el.cache.innerHTML = '<option value="">None</option>';
+    for (const r of state.runs) {
+      if (!host || r.host !== host || r.status === 'running') continue;
+      const o = document.createElement('option');
+      o.value = r.id;
+      o.textContent = fmtTime(r) + ' · ' + (r.verdict || r.status) + ' · ' + r.timestamp;
+      el.cache.appendChild(o);
+    }
+    if ($$('option', el.cache).some((o) => o.value === prev)) el.cache.value = prev;
+  }
+
+  function formatPreview(d) {
+    const mods = d.modules || {};
+    const on = Object.keys(mods).filter((k) => mods[k]);
+    const off = Object.keys(mods).filter((k) => !mods[k]);
+    const items = Array.isArray(d.items) ? d.items : [];
+    const pad = (s, n) => String(s == null ? '' : s).padEnd(n);
+    const lines = [
+      'URL:          ' + d.url,
+      'Industry:     ' + d.industry,
+      'Persona file: ' + (d.persona_file || '(none)'),
+      'Judge model:  ' + ((d.models && d.models.judgment) || '?'),
+      'Modules on:   ' + (on.join(', ') || '(none)'),
+      'Modules off:  ' + (off.join(', ') || '(none)'),
+      '',
+      'Items to evaluate (' + items.length + '):',
+      '  ' + pad('id', 30) + pad('weight', 8) + pad('check', 15) + pad('scope', 9) + 'source',
+    ];
+    for (const it of items) lines.push('  ' + pad(it.id, 30) + pad(it.weight, 8) + pad(it.check, 15) + pad(it.scope, 9) + it.source);
+    lines.push('');
+    lines.push('Skipped item ids: ' + ((d.skipped_item_ids || []).join(', ') || '(none)'));
+    return lines.join('\n');
+  }
+
+  async function preview() {
+    hideError(el.formError);
+    const cfg = collectForm();
+    const err = validate(cfg);
+    if (err) { showError(el.formError, err); return; }
+    setBusy(el.previewBtn, true, 'Previewing…');
+    try {
+      const { data } = await postJson('/api/audit', Object.assign({}, cfg, { dry_run: true }));
+      el.preview.textContent = formatPreview(data || {});
+      el.preview.hidden = false;
+    } catch (e) {
+      showError(el.formError, 'Preview failed: ' + e.message);
+    } finally {
+      setBusy(el.previewBtn, false, 'Preview config');
+    }
+  }
+
+  async function run(ev) {
+    ev.preventDefault();
+    hideError(el.formError);
+    const cfg = collectForm();
+    const err = validate(cfg);
+    if (err) { showError(el.formError, err); return; }
+    setBusy(el.runBtn, true, 'Starting…');
+    let started;
+    try {
+      started = (await postJson('/api/audit', cfg)).data;
+    } catch (e) {
+      showError(el.formError, e.status === 409 ? e.message : 'Could not start the audit: ' + e.message);
+      setBusy(el.runBtn, false, 'Run audit');
+      return;
+    }
+    if (!started || !started.run_id) {
+      showError(el.formError, 'The server did not return a run id.');
+      setBusy(el.runBtn, false, 'Run audit');
+      return;
+    }
+    attach(started.run_id, started.run_dir || '');
+  }
+
+  // ---- progress ----
+  function renderSteps() {
+    el.steps.innerHTML = STEPS.map((s) =>
+      '<li class="step pending" data-step="' + s.n + '"><span class="step-icon" aria-hidden="true"></span>' +
+      '<span class="step-body"><span class="step-name">' + s.n + ' · ' + esc(s.label) +
+      (s.note ? ' <span class="step-note">(' + esc(s.note) + ')</span>' : '') + '</span>' +
+      '<span class="step-msg"></span></span></li>').join('');
+  }
+  function setStep(n, status, msg) {
+    const li = el.steps.querySelector('[data-step="' + n + '"]');
+    if (!li) return;
+    li.className = 'step ' + status;
+    li.querySelector('.step-icon').textContent = { done: '✓', skip: '–', error: '✗' }[status] || '';
+    if (msg !== undefined && msg !== null) li.querySelector('.step-msg').textContent = String(msg);
+  }
+  function stepStatus(n) {
+    const li = el.steps.querySelector('[data-step="' + n + '"]');
+    return li ? li.className.replace('step ', '') : '';
+  }
+  function appendLog(line) {
+    const atBottom = el.log.scrollTop + el.log.clientHeight >= el.log.scrollHeight - 8;
+    el.log.textContent += (el.log.textContent ? '\n' : '') + line;
+    if (atBottom) el.log.scrollTop = el.log.scrollHeight;
+  }
+
+  function handleLine(raw) {
+    let ev;
+    try { ev = JSON.parse(raw); } catch (_) { appendLog(raw); return; }
+    if (!ev || typeof ev !== 'object') { appendLog(raw); return; }
+    const msg = ev.message || '';
+    switch (ev.event) {
+      case 'step': {
+        const tag = { start: '▶', done: '✓', skip: '–', error: '✗' }[ev.status] || '·';
+        setStep(ev.step, ev.status, msg);
+        appendLog(tag + ' step ' + ev.step + ' ' + (ev.name || '') + (msg ? ' — ' + msg : ''));
+        if (ev.step === 4 && ev.status === 'done' && stepStatus(2) === 'pending') setStep(2, 'done', 'folded into step 4');
+        if (ev.step === 1 && ev.status === 'start') setStep(2, 'start', '');
+        break;
+      }
+      case 'log':
+        appendLog('  ' + msg);
+        if (/^home rule:/i.test(msg)) setStep(2, 'done', msg.replace(/^home rule:\s*/i, ''));
+        break;
+      case 'done': {
+        const d = ev.data || {};
+        el.credits.textContent = 'Firecrawl credits: ' + (d.credits_used == null ? '?' : d.credits_used) + ' · Anthropic: $' + fmtUsd(d.anthropic_usd) + (d.verdict ? ' · verdict: ' + d.verdict : '');
+        appendLog('✓ done' + (d.verdict ? ' — ' + d.verdict : ''));
+        break;
+      }
+      case 'error':
+        showError(el.progressError, msg || 'The audit reported an error.');
+        appendLog('✗ ' + msg);
+        break;
+      case 'meta': {
+        const d = ev.data || {};
+        if (d.run_dir) el.progressDir.textContent = d.run_dir;
+        appendLog('  meta: modules ' + JSON.stringify(d.modules || {}) + ' models ' + JSON.stringify(d.models || {}));
+        break;
+      }
+      default:
+        appendLog(raw);
+    }
+  }
+
+  function attach(id, dir) {
+    if (state.es) { state.es.close(); state.es = null; }
+    state.runId = id;
+    state.terminal = false;
+    el.progressCard.hidden = false;
+    el.progressTitle.textContent = 'Running ' + id;
+    el.progressDir.textContent = dir || '';
+    renderSteps();
+    el.log.textContent = '';
+    el.credits.textContent = '';
+    hideError(el.progressError);
+    setBusy(el.runBtn, true, 'Running…');
+    setPill('Running ' + id, true);
+    el.progressCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    let es;
+    try { es = new EventSource('/api/runs/' + id + '/events'); } catch (e) { finish('error', JSON.stringify({ message: 'Could not open the event stream: ' + e.message })); return; }
+    state.es = es;
+    es.onmessage = (e) => { try { handleLine(e.data); } catch (err) { appendLog('! ' + err.message); } };
+    es.addEventListener('done', (e) => finish('done', e.data));
+    es.addEventListener('error', (e) => {
+      if (typeof e.data === 'string') { finish('error', e.data); return; }
+      // Connection-level error (no data): EventSource reconnects on its own unless it gave up.
+      if (state.terminal) return;
+      if (es.readyState === EventSource.CLOSED) finish('error', JSON.stringify({ message: 'Lost the connection to the local server. Is it still running?' }));
+      else appendLog('! connection interrupted, reconnecting…');
+    });
+  }
+
+  async function finish(kind, data) {
+    if (state.terminal) return;
+    state.terminal = true;
+    if (state.es) { state.es.close(); state.es = null; }
+    setBusy(el.runBtn, false, 'Run audit');
+    setPill('Idle', false);
+    let d = {};
+    try { d = data ? JSON.parse(data) : {}; } catch (_) { d = { message: String(data) }; }
+    if (kind === 'error') {
+      const parts = ['Audit failed' + (d.code != null ? ' (exit ' + d.code + ')' : '') + (d.message ? ': ' + d.message : '.')];
+      if (d.stderr && String(d.stderr).trim()) parts.push('', 'stderr:', String(d.stderr).trim());
+      showError(el.progressError, parts.join('\n'));
+      for (const s of STEPS) if (stepStatus(s.n) === 'start') setStep(s.n, 'error', 'aborted');
+    } else {
+      el.progressTitle.textContent = 'Finished ' + state.runId;
+    }
+    await loadReport(state.runId, { quiet: kind === 'error' });
+    await refreshRuns();
+  }
+
+  // ---- result ----
+  function rankGaps(items) {
+    return items.map((it, i) => ({ it, i }))
+      .filter((x) => x.it.verdict !== 'pass')
+      .sort((a, b) =>
+        ((WEIGHT_RANK[a.it.weight] ?? 9) - (WEIGHT_RANK[b.it.weight] ?? 9)) ||
+        ((VERDICT_RANK[a.it.verdict] ?? 9) - (VERDICT_RANK[b.it.verdict] ?? 9)) ||
+        ((a.it.source === 'persona' ? 0 : 1) - (b.it.source === 'persona' ? 0 : 1)) ||
+        (a.i - b.i))
+      .map((x) => x.it);
+  }
+
+  async function loadReport(id, opts) {
+    opts = opts || {};
+    try {
+      const { data, res } = await api('/api/runs/' + id + '/report');
+      renderResult(id, data, { aborted: res.headers.get('x-audit-status') === 'partial' });
+      return true;
+    } catch (e) {
+      const status = e.data && e.data.status;
+      if (status === 'running') {
+        if (!opts.noAttach) attach(id, '');
+        return false;
+      }
+      if (!opts.quiet) {
+        el.resultCard.hidden = false;
+        el.resultId.textContent = id;
+        showError(el.resultError, 'Could not load the report: ' + e.message);
+      }
+      return false;
+    }
+  }
+
+  function renderResult(id, r, flags) {
+    flags = flags || {};
+    hideError(el.resultError);
+    el.resultCard.hidden = false;
+    el.resultId.textContent = id;
+    const summary = r.summary || {};
+    const meta = r.run_meta || {};
+    const verdict = summary.verdict || 'n/a';
+    const cls = { strong: 'strong', fair: 'fair', weak: 'weak' }[verdict] || 'na';
+    const industry = r.industry || {};
+    el.banner.className = 'banner ' + cls;
+    el.banner.innerHTML =
+      '<div class="v">Verdict: ' + esc(verdict) + (summary.partial_audit ? ' (partial audit)' : '') + (flags.aborted ? ' — run aborted, showing the partial report' : '') + '</div>' +
+      '<div class="meta num">' + esc(summary.fail ?? 0) + ' fail · ' + esc(summary.partial ?? 0) + ' partial · ' + esc(summary.pass ?? 0) + ' pass' +
+      ' · industry <strong>' + esc(industry.slug || '?') + '</strong> (' + esc(industry.source || '?') + (typeof industry.confidence === 'number' ? ', ' + industry.confidence.toFixed(2) : '') + ')' +
+      (r.home_url ? ' · home <a href="' + esc(r.home_url) + '" target="_blank" rel="noopener">' + esc(r.home_url) + '</a>' : '') + '</div>' +
+      '<div class="meta num">Firecrawl credits: ' + esc(meta.credits_used ?? '?') + ' · Anthropic: $' + fmtUsd(meta.anthropic_usd) +
+      ' · judge: ' + esc((meta.models && meta.models.judgment) || '?') + (meta.cache_source ? ' · cache: ' + esc(meta.cache_source) : '') + '</div>';
+
+    const skipped = summary.skipped || {};
+    const skMods = Array.isArray(skipped.modules) ? skipped.modules : [];
+    const skItems = Array.isArray(skipped.item_ids) ? skipped.item_ids : [];
+    if (skMods.length || skItems.length) {
+      const bits = [];
+      if (skMods.length) bits.push('modules ' + skMods.join(', '));
+      if (skItems.length) bits.push('items ' + skItems.join(', '));
+      el.notEval.textContent = 'Not evaluated: ' + bits.join('; ');
+      el.notEval.hidden = false;
+    } else {
+      el.notEval.hidden = true;
+    }
+
+    const items = Array.isArray(r.items) ? r.items : [];
+    const gaps = rankGaps(items);
+    if (!gaps.length) {
+      el.gaps.innerHTML = '<p class="muted">' + (items.length ? 'None. Every evaluated item passed.' : 'No items were evaluated.') + '</p>';
+    } else {
+      el.gaps.innerHTML = '<table><thead><tr><th>#</th><th>Weight</th><th>Item</th><th>Verdict</th><th>Evidence</th><th>Where</th></tr></thead><tbody>' +
+        gaps.map((g, i) => {
+          const ev = g.evidence || {};
+          const where = g.satisfied_at_url && g.satisfied_at_url !== r.home_url
+            ? '<a href="' + esc(g.satisfied_at_url) + '" target="_blank" rel="noopener">' + esc(g.satisfied_at_url.replace(/^https?:\/\//, '')) + '</a>'
+            : '<span class="muted">—</span>';
+          return '<tr><td class="num nowrap">' + (i + 1) + '</td>' +
+            '<td class="weight nowrap">' + esc(g.weight) + '</td>' +
+            '<td><code>' + esc(g.id) + '</code><br><span class="muted">' + esc(g.source) + ' · ' + esc(g.check) + ' · ' + esc(g.scope) + '</span></td>' +
+            '<td class="nowrap"><span class="verdict ' + esc(g.verdict) + '">' + esc(g.verdict) + '</span>' + (g.unverified ? '<br><span class="tag warn" title="' + esc(g.unverified) + '">unverified</span>' : '') + '</td>' +
+            '<td>' + esc(ev.summary || '') + (g.unverified ? '<br><span class="muted">unverified: ' + esc(g.unverified) + '</span>' : '') + '</td>' +
+            '<td>' + where + '</td></tr>';
+        }).join('') + '</tbody></table>';
+    }
+
+    const pages = Array.isArray(r.pages) ? r.pages : [];
+    const figs = [];
+    for (const p of pages) {
+      const s = p.screenshots || {};
+      const label = (p.role || 'page') + ' · ' + (p.url || '');
+      const push = (rel, kind) => {
+        if (!rel) return;
+        const src = runFileUrl(id, rel, meta.run_dir);
+        figs.push('<figure><a href="' + esc(src) + '" target="_blank" rel="noopener"><img src="' + esc(src) + '" alt="' + esc(kind + ' screenshot of ' + (p.url || '')) + '" loading="lazy"></a><figcaption title="' + esc(label) + '">' + esc(kind) + ' · ' + esc(label) + '</figcaption></figure>');
+      };
+      push(s.mobile_fold, 'mobile fold');
+      (Array.isArray(s.mobile_tiles) ? s.mobile_tiles : []).forEach((t, i) => push(t, 'tile ' + (i + 1)));
+      push(s.desktop_fold, 'desktop fold');
+    }
+    el.shots.innerHTML = figs.length ? figs.join('') : '<p class="muted">No screenshots recorded.</p>';
+
+    el.raw.textContent = JSON.stringify(r, null, 2);
+    el.links.innerHTML =
+      '<a href="/runs/' + esc(id) + '/report.md" target="_blank" rel="noopener">report.md</a>' +
+      '<a href="/runs/' + esc(id) + '/report.json" target="_blank" rel="noopener">report.json</a>' +
+      (meta.run_dir ? '<span>Run directory: <code>' + esc(meta.run_dir) + '</code></span>' : '<span>Run id: <code>' + esc(id) + '</code></span>');
+    el.resultCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // ---- previous runs ----
+  async function refreshRuns() {
+    hideError(el.runsError);
+    try {
+      state.runs = (await api('/api/runs')).data || [];
+    } catch (e) {
+      showError(el.runsError, 'Could not load previous runs: ' + e.message);
+      return;
+    }
+    renderRuns();
+    refreshCacheSelect();
+    const running = state.runs.find((r) => r.status === 'running');
+    if (running && state.terminal) setPill('Running ' + running.id + ' (open it to follow)', true);
+    else if (state.terminal) setPill('Idle', false);
+  }
+
+  function renderRuns() {
+    el.runsEmpty.hidden = state.runs.length > 0;
+    el.runsBody.innerHTML = state.runs.map((r) => {
+      const verdict = r.verdict ? '<span class="verdict ' + esc(r.verdict === 'n/a' ? 'na' : r.verdict) + '">' + esc(r.verdict) + '</span>' : '<span class="muted">—</span>';
+      const status = '<span class="verdict ' + esc(r.status) + '"' + (r.error ? ' title="' + esc(r.error) + '"' : '') + '>' + esc(r.status) + '</span>';
+      const cost = (r.credits_used == null && r.anthropic_usd == null) ? '—' : (r.credits_used == null ? '?' : r.credits_used) + ' cr · $' + fmtUsd(r.anthropic_usd);
+      return '<tr>' +
+        '<td class="nowrap"><strong>' + esc(r.host) + '</strong>' + (r.input_url && r.input_url !== r.host ? '<br><span class="muted">' + esc(r.input_url) + '</span>' : '') + '</td>' +
+        '<td class="nowrap num" title="' + esc(r.timestamp) + '">' + esc(fmtTime(r)) + '</td>' +
+        '<td>' + esc(r.industry || '—') + '</td>' +
+        '<td>' + verdict + '</td>' +
+        '<td>' + status + '</td>' +
+        '<td class="nowrap num">' + cost + '</td>' +
+        '<td class="actions-cell"><button type="button" class="btn small" data-open="' + esc(r.id) + '">Open</button>' +
+        '<button type="button" class="btn small" data-rerun="' + esc(r.id) + '"' + (r.status === 'running' ? ' disabled' : '') + '>Re-run from cache</button></td></tr>';
+    }).join('');
+  }
+
+  function prefillFromRun(entry) {
+    el.url.value = entry.input_url || entry.host || '';
+    const slug = entry.industry && $$('option', el.industry).some((o) => o.value === entry.industry) ? entry.industry : 'auto';
+    el.industry.value = slug;
+    if (entry.modules && typeof entry.modules === 'object') {
+      for (const cb of moduleCheckboxes()) {
+        if (cb.disabled) continue;
+        if (Object.prototype.hasOwnProperty.call(entry.modules, cb.dataset.module)) cb.checked = !!entry.modules[cb.dataset.module];
+      }
+    }
+    refreshCacheSelect();
+    el.cache.value = entry.id;
+    if (el.cache.value !== entry.id) showError(el.formError, 'That run is not available as a cache source (host mismatch or still running).');
+    else hideError(el.formError);
+    el.advanced.open = true;
+    el.preview.hidden = true;
+    $('#form-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    el.url.focus();
+  }
+
+  el.runsBody.addEventListener('click', (ev) => {
+    const btn = ev.target.closest('button[data-open], button[data-rerun]');
+    if (!btn) return;
+    const openId = btn.getAttribute('data-open');
+    const rerunId = btn.getAttribute('data-rerun');
+    if (openId) {
+      hideError(el.resultError);
+      loadReport(openId).catch((e) => showError(el.resultError, e.message));
+    } else if (rerunId) {
+      const entry = state.runs.find((r) => r.id === rerunId);
+      if (entry) prefillFromRun(entry);
+    }
+  });
+
+  // ---- wiring ----
+  el.form.addEventListener('submit', (ev) => { run(ev).catch((e) => showError(el.formError, e.message)); });
+  el.previewBtn.addEventListener('click', () => { preview().catch((e) => showError(el.formError, e.message)); });
+  el.url.addEventListener('input', refreshCacheSelect);
+  el.refreshRuns.addEventListener('click', () => { refreshRuns().catch((e) => showError(el.runsError, e.message)); });
+  window.addEventListener('error', (e) => showError(el.globalError, 'Unexpected error: ' + (e.message || e)));
+  window.addEventListener('unhandledrejection', (e) => showError(el.globalError, 'Unexpected error: ' + ((e.reason && e.reason.message) || e.reason)));
+
+  async function boot() {
+    renderSteps();
+    const [ind, mods] = await Promise.allSettled([api('/api/industries'), api('/api/modules')]);
+    if (ind.status === 'fulfilled') { state.industries = ind.value.data || []; renderIndustries(); }
+    else showError(el.globalError, 'Could not load industries: ' + ind.reason.message);
+    if (mods.status === 'fulfilled') { state.modules = mods.value.data || []; renderModules(); }
+    else { showError(el.globalError, 'Could not load modules: ' + mods.reason.message); el.modules.innerHTML = '<p class="muted">Modules unavailable.</p>'; }
+    await refreshRuns();
+  }
+  boot().catch((e) => showError(el.globalError, e.message));
+})();
+</script>
+</body>
+</html>

@@ -5,18 +5,14 @@ No secrets here. Secret **values** live in `.env` files (gitignored); this docum
 ## AI
 | System | Used by | Env var |
 |--------|---------|---------|
-| Anthropic Claude API | audit, cli, concierge (`serve.js`), voice-agent | `ANTHROPIC_API_KEY` |
+| Anthropic Claude API | website-audit, cli, concierge (`serve.js`), voice-agent | `ANTHROPIC_API_KEY` |
 
 ## Data / scraping
 | System | Purpose | Env var | Required |
 |--------|---------|---------|----------|
-| Firecrawl | scrape pages/content (audit, cli) | `FIRECRAWL_API_KEY` | yes |
-| SerpAPI | Google SERP rank (audit `seo-ranking`) | `SERPAPI_API_KEY` | optional |
-| DataForSEO | traffic/authority (audit `traffic-metrics`) | `DATAFORSEO_LOGIN`, `DATAFORSEO_PASSWORD` | optional |
-| Perplexity | LLM discoverability (audit) | `PERPLEXITY_API_KEY` | optional |
-| OpenAI | secondary LLM check (audit) | `OPENAI_API_KEY` | optional |
+| Firecrawl (v2 SDK `firecrawl`; `/map` + `/scrape` only) | website-audit, cli | `FIRECRAWL_API_KEY` | yes |
 
-Optional integrations degrade gracefully — the module is skipped if its key is absent. Authoritative names: `audit/.env.example`.
+Authoritative names: `website-audit/.env.example`. (SerpAPI, DataForSEO, Perplexity, and OpenAI were used only by the retired `audit/` package; stale keys in `.env` are harmless.)
 
 ## Voice-agent stack (`demo/voice-agent`)
 | System | Purpose |

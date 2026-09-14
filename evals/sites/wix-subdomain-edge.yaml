@@ -1,0 +1,9 @@
+# Edge case — business hosted on a Wix subdomain with a path; the origin root is not the business page.
+url: https://bclawn03.wixsite.com/my-site
+expected_industry: landscaping
+expected_resolved_origin: https://bclawn03.wixsite.com
+expected_home_url: https://bclawn03.wixsite.com/my-site
+# expected_home_rule: root-non-2xx   # TODO: confirm from the first run (root may 404 or redirect)
+skip_items: []
+expected_items: {}
+notes: Exercises the home-rule fallback + LLM chooser and subdomain map behaviour. Label after the first run.

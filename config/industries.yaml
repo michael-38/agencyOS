@@ -1,0 +1,30 @@
+# Single source of truth for industries. Read by website-audit (classifier, persona loader,
+# deterministic checks) and by the build-industry-site skill (v2). Adding an industry = add an
+# entry here + a persona file. Adding an archetype = add an entry here + a reference file.
+version: 1
+
+archetypes:
+  - id: local-service
+    jsonld_type: LocalBusiness
+    reference_file: .claude/skills/build-industry-site/references/archetypes/local-service.md
+  - id: professional-services
+    jsonld_type: ProfessionalService
+    reference_file: .claude/skills/build-industry-site/references/archetypes/professional-services.md
+  - id: generic
+    jsonld_type: Organization
+    reference_file: .claude/skills/build-industry-site/references/archetypes/generic.md
+
+industries:
+  - slug: landscaping
+    display_name: Landscaping & lawn care
+    aliases: [landscaper, landscape design, lawn care, lawn maintenance, hardscaping, yard maintenance, irrigation, tree service]
+    archetype: local-service
+    persona_file: personas/landscaping.md
+    build_reference_file: .claude/skills/build-industry-site/references/landscaping.md
+
+  - slug: generic
+    display_name: Generic business
+    aliases: []
+    archetype: generic
+    persona_file: personas/generic.md
+    build_reference_file: .claude/skills/build-industry-site/references/generic.md
