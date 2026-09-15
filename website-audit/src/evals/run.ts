@@ -64,7 +64,7 @@ export async function evalCommand(o: EvalOptions): Promise<number> {
   }
   const files = fs
     .readdirSync(sitesDir)
-    .filter((f) => f.endsWith('.yaml') || f.endsWith('.yml'))
+    .filter((f) => (f.endsWith('.yaml') || f.endsWith('.yml')) && !f.startsWith('_'))
     .filter((f) => !o.site || path.basename(f, path.extname(f)) === o.site)
     .sort();
   if (!files.length) {
@@ -125,6 +125,11 @@ export async function evalCommand(o: EvalOptions): Promise<number> {
           res.subpathLabeled++;
           const human = exp.satisfied_at_url;
           if (urlsEqual(human, rep.home_url)) continue;
+          // Satisfied on the home page means the selector never ran; that is not a selector miss.
+          if (item.satisfied_at_url && urlsEqual(item.satisfied_at_url, rep.home_url) && item.candidates_selected.length === 0) {
+            res.subpathLabeled--;
+            continue;
+          }
           const selected = item.candidates_selected.some((u) => urlsEqual(u, human));
           if (!selected) {
             res.selectorMisses.push({ id, url: human });
