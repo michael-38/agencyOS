@@ -1,0 +1,16 @@
+# Landscaping #1 — small Kansas City company, WordPress build, separate before/after and contact pages.
+url: treyslawnandlandscape.com
+expected_industry: landscaping
+expected_resolved_origin: https://treyslawnandlandscape.com
+expected_home_url: https://treyslawnandlandscape.com/
+expected_home_rule: root-2xx
+skip_items: []
+expected_items:
+  # TODO (label after inspecting runs/treyslawnandlandscape.com/<ts>/): first pipeline pass shown for reference.
+  tel-link-above-fold: { verdict: pass }
+  LS-quote-cta: { verdict: pass }
+  LS-project-gallery: { verdict: pass, satisfied_at_url: https://treyslawnandlandscape.com/amazing-before-after-landscapers-in-kansas-city-mo }
+  contact-form: { verdict: pass, satisfied_at_url: https://treyslawnandlandscape.com/contact }
+  hours-present: { verdict: fail }
+  single-h1: { verdict: partial }
+notes: First live site. Gallery page timed out on the live run (scrape-failed); before/after post satisfied the gallery item instead.

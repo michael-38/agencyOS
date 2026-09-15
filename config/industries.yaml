@@ -1,0 +1,72 @@
+# Single source of truth for industries. Read by website-audit (classifier, persona loader,
+# deterministic checks) and by the build-industry-site skill (v2). Adding an industry = add an
+# entry here + a persona file. Adding an archetype = add an entry here + a reference file.
+version: 1
+
+archetypes:
+  - id: local-service
+    jsonld_type: LocalBusiness
+    reference_file: .claude/skills/build-industry-site/references/archetypes/local-service.md
+  - id: professional-services
+    jsonld_type: ProfessionalService
+    reference_file: .claude/skills/build-industry-site/references/archetypes/professional-services.md
+  - id: generic
+    jsonld_type: Organization
+    reference_file: .claude/skills/build-industry-site/references/archetypes/generic.md
+
+industries:
+  - slug: landscaping
+    display_name: Landscaping & lawn care
+    aliases: [landscaper, landscape design, lawn care, lawn maintenance, hardscaping, yard maintenance, irrigation, tree service]
+    archetype: local-service
+    persona_file: personas/landscaping.md
+    build_reference_file: .claude/skills/build-industry-site/references/landscaping.md
+
+  - slug: cleaning
+    display_name: Cleaning services
+    aliases: [house cleaning, maid service, housekeeping, residential cleaning, commercial cleaning, janitorial, deep cleaning, move-out cleaning]
+    archetype: local-service
+    persona_file: personas/cleaning.md
+    build_reference_file: .claude/skills/build-industry-site/references/cleaning.md
+
+  - slug: med-spa
+    display_name: Med spa & aesthetics
+    aliases: [medical spa, medspa, aesthetics, aesthetician, injectables, botox, fillers, laser treatments, skin clinic, cosmetic treatments, body contouring]
+    archetype: local-service
+    persona_file: personas/med-spa.md
+    build_reference_file: .claude/skills/build-industry-site/references/med-spa.md
+
+  - slug: senior-care
+    display_name: Senior care & assisted living
+    aliases: [assisted living, memory care, senior living, retirement community, independent living, respite care, home care for seniors, nursing home]
+    archetype: local-service
+    persona_file: personas/senior-care.md
+    build_reference_file: .claude/skills/build-industry-site/references/senior-care.md
+
+  - slug: wedding-venues
+    display_name: Wedding & event venues
+    aliases: [wedding venue, event venue, banquet hall, barn wedding, estate weddings, reception venue, wedding packages, rehearsal dinner]
+    archetype: local-service
+    persona_file: personas/wedding-venues.md
+    build_reference_file: .claude/skills/build-industry-site/references/wedding-venues.md
+
+  - slug: schools-camps
+    display_name: Private schools & camps
+    aliases: [private school, independent school, preschool, montessori, academy, summer camp, day camp, sleepaway camp, admissions, enrollment, tuition]
+    archetype: local-service
+    persona_file: personas/schools-camps.md
+    build_reference_file: .claude/skills/build-industry-site/references/schools-camps.md
+
+  - slug: funeral-homes
+    display_name: Funeral homes & cremation
+    aliases: [funeral home, cremation, mortuary, memorial services, obituaries, pre-planning, funeral services, celebration of life]
+    archetype: local-service
+    persona_file: personas/funeral-homes.md
+    build_reference_file: .claude/skills/build-industry-site/references/funeral-homes.md
+
+  - slug: generic
+    display_name: Generic business
+    aliases: []
+    archetype: generic
+    persona_file: personas/generic.md
+    build_reference_file: .claude/skills/build-industry-site/references/generic.md

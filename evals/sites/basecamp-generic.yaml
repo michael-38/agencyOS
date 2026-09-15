@@ -1,0 +1,9 @@
+# Clearly generic — a software company; must classify as generic (confidence < 0.8 for any listed slug).
+url: basecamp.com
+expected_industry: generic
+expected_home_rule: root-2xx
+skip_items: []
+expected_items:
+  # TODO (label after the first run)
+  tel-link: { verdict: fail }
+notes: Negative control for classification. Expect the generic persona and _common items only.

@@ -1,0 +1,25 @@
+{
+  "probe_version": 1,
+  "viewport": { "width": 390, "height": 844 },
+  "dpr": 3,
+  "scrollHeight": 3900,
+  "telLinks": [
+    { "href": "tel:+12085550142", "text": "(208) 555-0142", "top": 18, "inHeader": true },
+    { "href": "tel:+12085550142", "text": "Call (208) 555-0142", "top": 3400, "inHeader": false }
+  ],
+  "ctas": [
+    { "tag": "a", "text": "Get a free quote", "href": "#quote", "top": 520 },
+    { "tag": "button", "text": "Send request", "href": null, "top": 3300 }
+  ],
+  "forms": [
+    { "action": "/quote", "fieldCount": 3, "hasSubmit": true, "top": 3100, "isSearch": false }
+  ],
+  "imagesAboveFold": [
+    { "src": "/img/logo.svg", "alt": "Green Acres Lawn Care", "w": 120, "h": 40, "top": 12 },
+    { "src": "/img/hero-patio.jpg", "alt": "Paver patio we built in Boise", "w": 390, "h": 260, "top": 96 }
+  ],
+  "fixedBottomBars": [],
+  "h1": ["Lawn care, patios, and seasonal clean-ups in Boise"],
+  "h2": ["Our services", "Recent projects", "What homeowners say", "Frequently asked questions", "Request a quote"],
+  "navText": ["Home", "Lawn care", "Patios & hardscaping", "Projects", "FAQ", "Contact"]
+}

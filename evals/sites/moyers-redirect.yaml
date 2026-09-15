@@ -1,0 +1,11 @@
+# Edge case — bare domain that redirects to www (host-mismatch must NOT fire; www. is the same site).
+url: moyerslawnservice.com
+expected_industry: landscaping
+expected_resolved_origin: https://www.moyerslawnservice.com
+expected_home_url: https://www.moyerslawnservice.com/
+expected_home_rule: root-2xx
+skip_items: []
+expected_items:
+  # TODO (label after the first run)
+  contact-form: { verdict: pass, satisfied_at_url: https://www.moyerslawnservice.com/estimate }
+notes: Established company (since 1981) with an /estimate page; also a good hours/address facts test.

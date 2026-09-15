@@ -1,0 +1,23 @@
+{
+  "probe_version": 1,
+  "viewport": { "width": 390, "height": 844 },
+  "dpr": 2,
+  "scrollHeight": 2600,
+  "telLinks": [
+    { "href": "tel:+12535550188", "text": "Call (253) 555-0188", "top": 2540, "inHeader": false }
+  ],
+  "ctas": [
+    { "tag": "a", "text": "Book online", "href": "https://book.housecallpro.com/book/tpc", "top": 40 },
+    { "tag": "a", "text": "Book online", "href": "https://book.housecallpro.com/book/tpc", "top": 610 }
+  ],
+  "forms": [],
+  "imagesAboveFold": [
+    { "src": "/img/logo.png", "alt": "Tacoma Plumbing Co.", "w": 96, "h": 32, "top": 14 }
+  ],
+  "fixedBottomBars": [
+    { "text": "Book online", "hasTel": false, "hasCta": true }
+  ],
+  "h1": ["Emergency plumbing in Tacoma, 24/7"],
+  "h2": ["Services", "How fast can you get here?", "Service area"],
+  "navText": ["Services", "Reviews", "Book online"]
+}
