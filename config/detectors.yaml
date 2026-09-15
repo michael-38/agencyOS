@@ -44,6 +44,12 @@ schema_org_local_business_subtypes:
   - VeterinaryCare
   - ChildCare
   - EducationalOrganization
+  - School
+  - Preschool
+  - ElementarySchool
+  - MiddleSchool
+  - HighSchool
+  - EventVenue
   - Organization
 
 booking_widgets:
@@ -68,6 +74,15 @@ booking_widgets:
   - { name: FieldPulse, patterns: ["fieldpulse.com"] }
   - { name: LawnPro, patterns: ["lawnprosoftware.com"] }
   - { name: Yardbook, patterns: ["yardbook.com"] }
+  - { name: Launch27, patterns: ["launch27.com"] }
+  - { name: BookingKoala, patterns: ["bookingkoala.com"] }
+  - { name: ZenMaid, patterns: ["zenmaid.com"] }
+  - { name: Mangomint, patterns: ["mangomint.com"] }
+  - { name: CampMinder, patterns: ["campminder.com", "campintouch.com"] }
+  - { name: CampBrain, patterns: ["campbrain.com", "campbrainregistration.com"] }
+  - { name: UltraCamp, patterns: ["ultracamp.com"] }
+  - { name: Sawyer, patterns: ["hisawyer.com"] }
+  - { name: Jane, patterns: ["janeapp.com"] }
 
 # Words that, when they appear in a link/button label, mark it as a booking CTA
 # (matched case-insensitively as whole words or phrases).
