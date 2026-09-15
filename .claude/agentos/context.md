@@ -1,7 +1,7 @@
 # Context — what the AgencyOS operator knows
 
 ## Domain
-AgencyOS is a lead-generation and AI-automation agency for **local service businesses**: med spas & aesthetic surgery, HVAC, roofing, and plumbing. The model: find businesses with a weak web presence, prove value with an audit, rebuild their site, layer on AI (chat concierge, voice agent), and deploy.
+AgencyOS is a lead-generation and AI-automation agency for **local service businesses and local institutions**: landscaping, cleaning, med spas & aesthetics, senior care & assisted living, wedding venues, private schools & camps, funeral homes, plus HVAC, roofing, and plumbing (the audit's industry list lives in `config/industries.yaml`; each has a persona in `personas/`). The model: find businesses with a weak web presence, prove value with an audit, rebuild their site, layer on AI (chat concierge, voice agent), and deploy.
 
 ## The toolkit (what's in this repo)
 
