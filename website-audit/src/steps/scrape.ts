@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import sharp from 'sharp';
 import { LIMITS, VIEWPORTS } from '../config.js';
+import type { JudgeTextStats } from '../content/filter.js';
 import type { FirecrawlService, PageRole, ScrapedDoc } from '../firecrawl.js';
 import type { ProbeResult } from '../checks/registry.js';
 import type { Progress } from '../progress.js';
@@ -33,6 +34,7 @@ export interface PageRecord {
   markdownPath: string | null;
   htmlPath: string | null;
   judgeTextPath: string | null;
+  judgeTextStats: JudgeTextStats | null;
   dpr: number | null;
   imageSize: { width: number; height: number } | null;
   tilesTotal: number;
@@ -105,7 +107,7 @@ function persistDoc(runDir: string, doc: ScrapedDoc, name: string): void {
   fs.writeFileSync(path.join(dir, `${name}.json`), JSON.stringify(doc, null, 2));
 }
 
-export async function scrapePage(fc: FirecrawlService, url: string, role: PageRole, opts: ScrapePageOptions): Promise<PageRecord> {
+export async function scrapePage(fc: Pick<FirecrawlService, 'scrape'>, url: string, role: PageRole, opts: ScrapePageOptions): Promise<PageRecord> {
   const { runDir, progress } = opts;
   const mobile = await fc.scrape({ url, role, viewport: 'mobile', formats: ['markdown', 'rawHtml', 'links'], screenshot: true, probe: opts.probeScript });
   const doc = mobile.doc;
@@ -167,6 +169,7 @@ export async function scrapePage(fc: FirecrawlService, url: string, role: PageRo
     markdownPath,
     htmlPath,
     judgeTextPath: null,
+    judgeTextStats: null,
     dpr,
     imageSize,
     tilesTotal,
@@ -177,7 +180,7 @@ export async function scrapePage(fc: FirecrawlService, url: string, role: PageRo
 }
 
 /** Desktop screenshot only (the mobile scrape already happened); fills files.desktop/desktopFold on the record. */
-export async function addDesktopShot(fc: FirecrawlService, page: PageRecord, runDir: string, progress: Progress): Promise<void> {
+export async function addDesktopShot(fc: Pick<FirecrawlService, 'scrape'>, page: PageRecord, runDir: string, progress: Progress): Promise<void> {
   try {
     const desktop = await fc.scrape({ url: page.url, role: page.role, viewport: 'desktop', formats: [], screenshot: true });
     persistDoc(runDir, desktop.doc, 'desktop');

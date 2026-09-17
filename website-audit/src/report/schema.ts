@@ -2,6 +2,8 @@
 import type { CheckKind, Scope, Verdict, Weight } from '../personas/schema.js';
 import type { ModuleSet } from '../modules.js';
 import type { Facts } from '../checks/facts.js';
+import type { JudgeTextMode, JudgeTextStats } from '../content/filter.js';
+import type { CandidatePool } from '../steps/candidates.js';
 
 export type HomeRule = 'root-2xx' | 'root-non-2xx' | 'splash-detected' | 'host-mismatch' | 'input-page-fallback';
 
@@ -21,7 +23,7 @@ export interface EvidenceDeterministic {
 }
 export type Evidence = EvidenceJudgment | EvidenceDeterministic;
 
-export type CandidateStatus = 'evaluated' | 'scrape-failed' | 'dup-of-home' | 'skipped-cap' | 'selector-failed';
+export type CandidateStatus = 'evaluated' | 'scrape-failed';
 
 export interface CandidateLogEntry {
   url: string;
@@ -56,6 +58,7 @@ export interface ReportPage {
   markdown_path: string | null;
   html_path: string | null;
   judge_text_path: string | null;
+  judge_text_stats: JudgeTextStats | null; // additive
   screenshots: { mobile: string | null; desktop: string | null; mobile_fold: string | null; desktop_fold: string | null; mobile_tiles: string[] };
   status_code: number | null;
 }
@@ -101,6 +104,8 @@ export interface Report {
     pipeline_version: string;
     modules: ModuleSet;
     launched_from: 'cli' | 'ui';
-    flags: { markdown_truncated_pages: string[]; probe_fallback_pages: string[]; second_map: boolean; subdomain_share: number };
+    judge_text: JudgeTextMode; // additive
+    candidate_pool: CandidatePool; // additive
+    flags: { markdown_truncated_pages: string[]; probe_fallback_pages: string[]; second_map: boolean; subdomain_share: number; candidate_pages_skipped: number };
   };
 }

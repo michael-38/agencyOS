@@ -15,5 +15,6 @@ Each `evals/sites/<name>.yaml` follows `_template.yaml`. Label verdicts after in
 point, not ground truth.
 
 Metrics reported: verdict agreement, per-verdict confusion, industry accuracy, home-rule accuracy,
-probe-fallback pages, and the candidate miss rate (labeled `satisfied_at_url` absent from
-`candidates_selected[]`), separated from candidates lost to `scrape-failed` / `skipped-cap`.
+probe-fallback pages, and the candidate miss rate: a labeled `satisfied_at_url` outside the audit's scope,
+i.e. not among the top-level pages linked from the home page (`candidates_selected[]`), separated from
+candidates lost to `scrape-failed`. Pass `--judge-text full` to compare against untrimmed candidate text.

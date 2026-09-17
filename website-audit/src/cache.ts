@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 
-export type CacheKind = 'resolve' | 'map' | 'scrape' | 'screenshot' | 'llm';
+export type CacheKind = 'resolve' | 'map' | 'scrape' | 'screenshot' | 'llm' | 'asset';
 
 interface IndexEntry {
   kind: CacheKind;

@@ -34,6 +34,37 @@ export interface SelfTestResult {
   summary: { pass: number; partial: number; fail: number; not_testable: number };
 }
 
+/** How far above the page to look for a root-absolute stylesheet before giving up. */
+const CSS_LOOKUP_MAX_DEPTH = 6;
+
+/**
+ * Read the local stylesheets the page links to, so layout rules can see the real CSS. A relative
+ * href resolves against the page; a root-absolute one is resolved by walking up from the page until
+ * it is found, because the site root is not knowable from a file path alone.
+ */
+export function readLinkedCss($: ReturnType<typeof loadHtml>, file: string): string {
+  const parts: string[] = [];
+  $('link[rel="stylesheet"][href]').each((_, el) => {
+    const href = ($(el).attr('href') ?? '').split('?')[0];
+    if (!href || /^(https?:)?\/\//i.test(href) || href.startsWith('data:')) return;
+    const candidates: string[] = [];
+    if (href.startsWith('/')) {
+      let dir = path.dirname(path.resolve(file));
+      for (let i = 0; i <= CSS_LOOKUP_MAX_DEPTH; i++) {
+        candidates.push(path.join(dir, href.slice(1)));
+        const parent = path.dirname(dir);
+        if (parent === dir) break;
+        dir = parent;
+      }
+    } else {
+      candidates.push(path.resolve(path.dirname(file), href));
+    }
+    const found = candidates.find((c) => fs.existsSync(c) && fs.statSync(c).isFile());
+    if (found) parts.push(fs.readFileSync(found, 'utf8'));
+  });
+  return parts.join('\n');
+}
+
 export function runSelfTest(o: CheckHtmlOptions): SelfTestResult {
   const industries = loadIndustries(o.repo);
   const industry = industries.industries.find((i) => i.slug === o.slug);
@@ -43,6 +74,7 @@ export function runSelfTest(o: CheckHtmlOptions): SelfTestResult {
   const checklist = loadChecklist(o.repo, industries, o.slug, { includePersona: true, includeCommon: true, registeredCheckIds: REGISTERED_CHECK_IDS });
   const rawHtml = fs.readFileSync(o.file, 'utf8');
   const $ = loadHtml(rawHtml);
+  const localCss = readLinkedCss($, o.file);
   const dataIds = new Set<string>();
   $('[data-checklist]').each((_, el) => {
     for (const id of ($(el).attr('data-checklist') || '').split(/[\s,]+/)) if (id) dataIds.add(id);
@@ -56,6 +88,7 @@ export function runSelfTest(o: CheckHtmlOptions): SelfTestResult {
     viewport: { ...VIEWPORTS.mobile },
     detectors,
     jsonldType: archetype.jsonld_type,
+    localCss,
   };
   const items: SelfTestItem[] = [];
   for (const it of checklist.items) {

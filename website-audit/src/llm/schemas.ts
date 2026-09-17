@@ -24,20 +24,6 @@ export function homeChooserSchema(urls: string[]) {
 }
 export type HomeChooserOutput = z.infer<ReturnType<typeof homeChooserSchema>>;
 
-export function candidatesSchema(itemIds: string[], urls: string[]) {
-  const urlEnum = z.enum(nonEmpty(urls, 'candidate URLs'));
-  const shape = Object.fromEntries(
-    itemIds.map((id) => [
-      id,
-      z.object({
-        candidates: z.array(z.object({ url: urlEnum, reason: z.string() })),
-      }),
-    ]),
-  );
-  return z.object(shape);
-}
-export type CandidatesOutput = Record<string, { candidates: { url: string; reason: string }[] }>;
-
 export const JudgmentItemSchema = z.object({
   verdict: z.enum(['pass', 'partial', 'fail']),
   evidence: z.object({

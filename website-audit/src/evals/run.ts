@@ -5,6 +5,7 @@ import path from 'node:path';
 import { parse as parseYaml } from 'yaml';
 import { z } from 'zod';
 import { MODELS } from '../config.js';
+import type { JudgeTextMode } from '../content/filter.js';
 import { defaultModules, resolveModules } from '../modules.js';
 import { runAudit } from '../pipeline.js';
 import type { Report } from '../report/schema.js';
@@ -33,6 +34,7 @@ export interface EvalOptions {
   repo: string;
   site: string | null;
   refresh: boolean;
+  judgeText: JudgeTextMode;
 }
 
 interface SiteResult {
@@ -45,7 +47,7 @@ interface SiteResult {
   homeRuleOk: boolean | null;
   originOk: boolean | null;
   homeUrlOk: boolean | null;
-  selectorMisses: { id: string; url: string }[];
+  scopeMisses: { id: string; url: string }[];
   lostToFailures: { id: string; url: string; status: string }[];
   subpathLabeled: number;
   probeFallbackPages: number;
@@ -81,7 +83,7 @@ export async function evalCommand(o: EvalOptions): Promise<number> {
     const modules = resolveModules({ config: spec.modules ?? {}, industry: spec.industry_override ?? null });
     const res: SiteResult = {
       name, spec, report: null, error: null, rows: [], industryOk: null, homeRuleOk: null, originOk: null, homeUrlOk: null,
-      selectorMisses: [], lostToFailures: [], subpathLabeled: 0, probeFallbackPages: 0, confusion: {},
+      scopeMisses: [], lostToFailures: [], subpathLabeled: 0, probeFallbackPages: 0, confusion: {},
     };
     try {
       const run = await runAudit({
@@ -96,6 +98,7 @@ export async function evalCommand(o: EvalOptions): Promise<number> {
         judgeModel: MODELS.judgment,
         tiles: 4,
         maxCandidatePages: null,
+        judgeText: o.judgeText,
         lenient: true,
         jsonProgress: false,
         verbose: false,
@@ -125,14 +128,14 @@ export async function evalCommand(o: EvalOptions): Promise<number> {
           res.subpathLabeled++;
           const human = exp.satisfied_at_url;
           if (urlsEqual(human, rep.home_url)) continue;
-          // Satisfied on the home page means the selector never ran; that is not a selector miss.
+          // Satisfied on the home page means no candidate page was needed; that is not a scope miss.
           if (item.satisfied_at_url && urlsEqual(item.satisfied_at_url, rep.home_url) && item.candidates_selected.length === 0) {
             res.subpathLabeled--;
             continue;
           }
           const selected = item.candidates_selected.some((u) => urlsEqual(u, human));
           if (!selected) {
-            res.selectorMisses.push({ id, url: human });
+            res.scopeMisses.push({ id, url: human });
           } else {
             const log = item.candidate_log.find((c) => urlsEqual(c.url, human));
             if (log && log.status !== 'evaluated') res.lostToFailures.push({ id, url: human, status: log.status });
@@ -151,7 +154,7 @@ export async function evalCommand(o: EvalOptions): Promise<number> {
   const allRows = results.flatMap((r) => r.rows);
   const agreement = allRows.length ? (100 * allRows.filter((r) => r.match).length) / allRows.length : 0;
   const industryAcc = results.filter((r) => r.industryOk !== null);
-  const misses = results.flatMap((r) => r.selectorMisses);
+  const misses = results.flatMap((r) => r.scopeMisses);
   const lost = results.flatMap((r) => r.lostToFailures);
   const subpathLabeled = results.reduce((a, r) => a + r.subpathLabeled, 0);
   lines.push(`- Sites: ${results.length} (${results.filter((r) => r.error).length} errored)`);
@@ -159,8 +162,8 @@ export async function evalCommand(o: EvalOptions): Promise<number> {
   lines.push(`- Industry accuracy: ${industryAcc.filter((r) => r.industryOk).length}/${industryAcc.length}`);
   const hr = results.filter((r) => r.homeRuleOk !== null);
   if (hr.length) lines.push(`- Home-rule accuracy: ${hr.filter((r) => r.homeRuleOk).length}/${hr.length}`);
-  lines.push(`- Candidate miss rate (selector): ${subpathLabeled ? `${misses.length}/${subpathLabeled} = ${((100 * misses.length) / subpathLabeled).toFixed(0)}%` : 'n/a (no labeled subpath URLs)'}`);
-  lines.push(`- Lost to scrape-failed/skipped-cap: ${lost.length}`);
+  lines.push(`- Candidate miss rate (scope: labeled URL not among the top-level pages linked from home): ${subpathLabeled ? `${misses.length}/${subpathLabeled} = ${((100 * misses.length) / subpathLabeled).toFixed(0)}%` : 'n/a (no labeled subpath URLs)'}`);
+  lines.push(`- Lost to scrape-failed: ${lost.length}`);
   lines.push(`- Pages with probe fallback: ${results.reduce((a, r) => a + r.probeFallbackPages, 0)}`);
   const confusion: Record<string, number> = {};
   for (const r of results) for (const [k, v] of Object.entries(r.confusion)) confusion[k] = (confusion[k] ?? 0) + v;
@@ -178,7 +181,7 @@ export async function evalCommand(o: EvalOptions): Promise<number> {
       lines.push('', '| id | expected | actual | ok | expected url | actual url |', '|---|---|---|---|---|---|');
       for (const row of r.rows) lines.push(`| ${md(row.id)} | ${row.expected} | ${row.actual} | ${row.match ? 'yes' : 'NO'} | ${md(row.expected_url)} | ${md(row.actual_url)} |`);
     }
-    if (r.selectorMisses.length) lines.push('', `Selector missed: ${r.selectorMisses.map((m) => `${m.id} → ${m.url}`).join('; ')}`);
+    if (r.scopeMisses.length) lines.push('', `Outside scope (not a top-level page linked from home): ${r.scopeMisses.map((m) => `${m.id} → ${m.url}`).join('; ')}`);
     if (r.lostToFailures.length) lines.push(`Lost to failures: ${r.lostToFailures.map((m) => `${m.id} → ${m.url} (${m.status})`).join('; ')}`);
     lines.push('');
   }

@@ -36,7 +36,7 @@
   .pill.running::before { content: ""; width: 10px; height: 10px; border-radius: 50%; border: 2px solid #BFDBFE; border-top-color: #1E40AF; animation: spin .8s linear infinite; }
 
   main.wrap { display: grid; gap: var(--s4); padding-top: var(--s4); padding-bottom: var(--s7); }
-  .card { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--r-lg); padding: var(--s4); box-shadow: var(--shadow-sm); }
+  .card { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--r-lg); padding: var(--s4); box-shadow: var(--shadow-sm); min-width: 0; }
   .card > h2 { margin-bottom: var(--s3); }
   .card-head { display: flex; align-items: center; justify-content: space-between; gap: var(--s3); flex-wrap: wrap; margin-bottom: var(--s3); }
   .card-head h2 { margin: 0; }
@@ -126,10 +126,35 @@
   .verdict.running { background: #DBEAFE; color: #1E40AF; }
   .verdict.na { background: var(--gray-100); color: var(--gray-600); }
   .weight { font-weight: 600; }
-  .shots { display: flex; gap: var(--s3); overflow-x: auto; padding-bottom: var(--s2); margin-bottom: var(--s3); }
-  .shots figure { margin: 0; flex: none; display: flex; flex-direction: column; gap: var(--s1); }
-  .shots img { height: 320px; width: auto; max-width: 480px; border: 1px solid var(--gray-200); border-radius: var(--r-sm); background: var(--gray-100); object-fit: contain; }
-  .shots figcaption { font-size: 12px; color: var(--gray-500); max-width: 240px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .gaps-table { table-layout: fixed; }
+  .gaps-table col.c-num { width: 40px; }
+  .gaps-table col.c-weight { width: 76px; }
+  .gaps-table col.c-item { width: 22%; }
+  .gaps-table col.c-verdict { width: 104px; }
+  .gaps-table col.c-where { width: 16%; }
+  .gaps-table td { overflow-wrap: anywhere; }
+  /* Long subpath slugs clamp to two lines; the full URL stays in the link title. */
+  @media (min-width: 761px) { .gaps-table td:last-child a { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; } }
+  @media (max-width: 760px) {
+    .gaps-table, .gaps-table tbody, .gaps-table tr, .gaps-table td { display: block; }
+    .gaps-table thead { display: none; }
+    .gaps-table tr { border: 1px solid var(--gray-200); border-radius: var(--r-md); padding: var(--s2) var(--s3); margin-bottom: var(--s2); }
+    .gaps-table td { border: 0; padding: 2px 0; white-space: normal; }
+    .gaps-table td::before { content: attr(data-label) " "; color: var(--gray-400); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; margin-right: var(--s1); }
+  }
+
+  .shot-groups { display: grid; gap: var(--s2); margin-bottom: var(--s3); }
+  .shot-group { min-width: 0; border: 1px solid var(--gray-200); border-radius: var(--r-md); padding: 0 var(--s3); }
+  .shot-group > summary { gap: var(--s2); min-height: 44px; }
+  .shot-group .role { font-weight: 600; color: var(--gray-800); }
+  .shot-group .u { flex: 1 1 auto; min-width: 0; font-weight: 400; color: var(--gray-500); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .shots { display: grid; grid-template-columns: repeat(auto-fill, 148px); justify-content: start; gap: var(--s3); padding-bottom: var(--s3); }
+  .shots figure { margin: 0; min-width: 0; display: flex; flex-direction: column; gap: var(--s1); }
+  .shots img { display: block; width: 100%; height: 200px; object-fit: cover; object-position: top center; border: 1px solid var(--gray-200); border-radius: var(--r-sm); background: var(--gray-100); }
+  .shots figcaption { font-size: 12px; color: var(--gray-500); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  @media (min-width: 480px) { .shots figure.wide { grid-column: span 2; } }
+  /* Phones: narrower tiles so two still fit per row. */
+  @media (max-width: 520px) { .shots { grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); } .shots img { height: 160px; } }
   .links { display: flex; gap: var(--s3); flex-wrap: wrap; font-size: 14px; align-items: center; margin-top: var(--s3); }
   .links code { background: var(--gray-100); padding: 2px var(--s2); border-radius: var(--r-sm); word-break: break-all; }
   h3.sub { margin: var(--s3) 0 var(--s2); }
@@ -183,7 +208,7 @@
             <label class="field" for="tiles">Tiles <span class="hint">(mobile tiles sent to the judge)</span>
               <input id="tiles" type="number" min="1" max="20" step="1" value="4">
             </label>
-            <label class="field" for="maxpages">Max candidate pages <span class="hint">(blank = no cap)</span>
+            <label class="field" for="maxpages">Max candidate pages <span class="hint">(top-level pages linked from home; blank = default 8)</span>
               <input id="maxpages" type="number" min="0" step="1" placeholder="none">
             </label>
             <label class="check" for="lenient"><input id="lenient" type="checkbox"> Lenient: invalid judge output &rarr; fail/unverified instead of aborting</label>
@@ -229,7 +254,7 @@
     <h3 class="sub">Gaps</h3>
     <div class="table-wrap" id="gaps"></div>
     <h3 class="sub">Screenshots</h3>
-    <div id="shots" class="shots"></div>
+    <div id="shots" class="shot-groups"></div>
     <details>
       <summary>Raw report.json</summary>
       <div class="inner"><pre id="raw-json" class="box"></pre></div>
@@ -578,6 +603,16 @@
   }
 
   // ---- result ----
+  // "Where" is almost always another page on the audited host: show just the path.
+  function shortPath(url, homeUrl) {
+    try {
+      const u = new URL(url);
+      const home = homeUrl ? new URL(homeUrl) : null;
+      if (home && u.host === home.host) return (u.pathname + u.search).replace(/\/$/, '') || '/';
+      return u.host + (u.pathname + u.search).replace(/\/$/, '');
+    } catch { return String(url).replace(/^https?:\/\//, ''); }
+  }
+
   function rankGaps(items) {
     return items.map((it, i) => ({ it, i }))
       .filter((x) => x.it.verdict !== 'pass')
@@ -647,36 +682,53 @@
     if (!gaps.length) {
       el.gaps.innerHTML = '<p class="muted">' + (items.length ? 'None. Every evaluated item passed.' : 'No items were evaluated.') + '</p>';
     } else {
-      el.gaps.innerHTML = '<table><thead><tr><th>#</th><th>Weight</th><th>Item</th><th>Verdict</th><th>Evidence</th><th>Where</th></tr></thead><tbody>' +
+      el.gaps.innerHTML = '<table class="gaps-table">' +
+        '<colgroup><col class="c-num"><col class="c-weight"><col class="c-item"><col class="c-verdict"><col><col class="c-where"></colgroup>' +
+        '<thead><tr><th>#</th><th>Weight</th><th>Item</th><th>Verdict</th><th>Evidence</th><th>Where</th></tr></thead><tbody>' +
         gaps.map((g, i) => {
           const ev = g.evidence || {};
           const where = g.satisfied_at_url && g.satisfied_at_url !== r.home_url
-            ? '<a href="' + esc(g.satisfied_at_url) + '" target="_blank" rel="noopener">' + esc(g.satisfied_at_url.replace(/^https?:\/\//, '')) + '</a>'
+            ? '<a href="' + esc(g.satisfied_at_url) + '" target="_blank" rel="noopener" title="' + esc(g.satisfied_at_url) + '">' + esc(shortPath(g.satisfied_at_url, r.home_url)) + '</a>'
             : '<span class="muted">—</span>';
-          return '<tr><td class="num nowrap">' + (i + 1) + '</td>' +
-            '<td class="weight nowrap">' + esc(g.weight) + '</td>' +
-            '<td><code>' + esc(g.id) + '</code><br><span class="muted">' + esc(g.source) + ' · ' + esc(g.check) + ' · ' + esc(g.scope) + '</span></td>' +
-            '<td class="nowrap"><span class="verdict ' + esc(g.verdict) + '">' + esc(g.verdict) + '</span>' + (g.unverified ? '<br><span class="tag warn" title="' + esc(g.unverified) + '">unverified</span>' : '') + '</td>' +
-            '<td>' + esc(ev.summary || '') + (g.unverified ? '<br><span class="muted">unverified: ' + esc(g.unverified) + '</span>' : '') + '</td>' +
-            '<td>' + where + '</td></tr>';
+          return '<tr><td class="num nowrap" data-label="Gap">' + (i + 1) + '</td>' +
+            '<td class="weight nowrap" data-label="Weight">' + esc(g.weight) + '</td>' +
+            '<td data-label="Item"><code>' + esc(g.id) + '</code><br><span class="muted">' + esc(g.source) + ' · ' + esc(g.check) + ' · ' + esc(g.scope) + '</span></td>' +
+            '<td class="nowrap" data-label="Verdict"><span class="verdict ' + esc(g.verdict) + '">' + esc(g.verdict) + '</span>' + (g.unverified ? '<br><span class="tag warn" title="' + esc(g.unverified) + '">unverified</span>' : '') + '</td>' +
+            '<td data-label="Evidence">' + esc(ev.summary || '') + (g.unverified ? '<br><span class="muted">unverified: ' + esc(g.unverified) + '</span>' : '') + '</td>' +
+            '<td data-label="Where">' + where + '</td></tr>';
         }).join('') + '</tbody></table>';
     }
 
+    // One collapsible group per page, each a wrapping grid — 35 shots stay inside the card
+    // instead of one endless horizontal strip. The home page is open; candidates start closed.
     const pages = Array.isArray(r.pages) ? r.pages : [];
-    const figs = [];
+    const groups = [];
     for (const p of pages) {
       const s = p.screenshots || {};
-      const label = (p.role || 'page') + ' · ' + (p.url || '');
-      const push = (rel, kind) => {
-        if (!rel) return;
-        const src = runFileUrl(id, rel, meta.run_dir);
-        figs.push('<figure><a href="' + esc(src) + '" target="_blank" rel="noopener"><img src="' + esc(src) + '" alt="' + esc(kind + ' screenshot of ' + (p.url || '')) + '" loading="lazy"></a><figcaption title="' + esc(label) + '">' + esc(kind) + ' · ' + esc(label) + '</figcaption></figure>');
-      };
+      const shots = [];
+      const push = (rel, kind, wide) => { if (rel) shots.push({ rel, kind, wide: !!wide }); };
       push(s.mobile_fold, 'mobile fold');
       (Array.isArray(s.mobile_tiles) ? s.mobile_tiles : []).forEach((t, i) => push(t, 'tile ' + (i + 1)));
-      push(s.desktop_fold, 'desktop fold');
+      push(s.desktop_fold, 'desktop fold', true);
+      if (shots.length) groups.push({ page: p, shots });
     }
-    el.shots.innerHTML = figs.length ? figs.join('') : '<p class="muted">No screenshots recorded.</p>';
+    el.shots.innerHTML = groups.length ? groups.map((group, gi) => {
+      const p = group.page;
+      const url = p.url || '';
+      const figs = group.shots.map((sh) => {
+        const src = runFileUrl(id, sh.rel, meta.run_dir);
+        return '<figure' + (sh.wide ? ' class="wide"' : '') + '>' +
+          '<a href="' + esc(src) + '" target="_blank" rel="noopener">' +
+          '<img src="' + esc(src) + '" alt="' + esc(sh.kind + ' screenshot of ' + url) + '" loading="lazy"></a>' +
+          '<figcaption title="' + esc(sh.kind) + '">' + esc(sh.kind) + '</figcaption></figure>';
+      }).join('');
+      const open = (p.role === 'home' || gi === 0) ? ' open' : '';
+      return '<details class="shot-group"' + open + '>' +
+        '<summary><span class="role">' + esc(p.role || 'page') + '</span>' +
+        '<span class="u" title="' + esc(url) + '">' + esc(url.replace(/^https?:\/\//, '')) + '</span>' +
+        '<span class="tag num">' + group.shots.length + '</span></summary>' +
+        '<div class="shots">' + figs + '</div></details>';
+    }).join('') : '<p class="muted">No screenshots recorded.</p>';
 
     el.raw.textContent = JSON.stringify(r, null, 2);
     el.links.innerHTML =

@@ -10,7 +10,15 @@ import type { RunCache } from '../cache.js';
 import { sha256 } from '../cache.js';
 import type { Progress } from '../progress.js';
 
-export type ContentPart = { type: 'text'; text: string } | { type: 'image'; path: string; label: string };
+export type ContentPart =
+  /**
+   * `cacheable` marks a block as a prompt-cache breakpoint. Put the large, invariant part of a
+   * prompt first and mark it: every later call that shares the same system prompt and the same
+   * leading blocks then reads it at a tenth of the input price instead of paying full freight.
+   * Only worth it above the cache's minimum block size, which is checked before the flag is honoured.
+   */
+  | { type: 'text'; text: string; cacheable?: boolean }
+  | { type: 'image'; path: string; label: string };
 
 export interface ParseRequest<T> {
   step: string;
@@ -25,6 +33,15 @@ export interface ParseRequest<T> {
   /** Enable the server-side refusal fallback beta (judge on Opus 5). */
   fallbacks?: boolean;
 }
+
+/**
+ * The SDK refuses a non-streaming request whose max_tokens implies it could run past ten minutes.
+ * Anything at or above this has to stream; below it, the simpler non-streaming path is kept so the
+ * audit's existing cache entries and behaviour are untouched.
+ */
+const NONSTREAMING_MAX_TOKENS = 20_000;
+const STRUCTURED_OUTPUTS_BETA = 'structured-outputs-2025-12-15';
+const FALLBACKS_BETA = 'server-side-fallback-2026-07-01';
 
 export interface Usage {
   input_tokens: number;
@@ -53,6 +70,16 @@ export interface CallRecord {
   cacheHit: boolean;
 }
 
+/**
+ * What the build stages actually need from the client. Narrowing to this lets a build be driven from
+ * recorded stage outputs instead of the API — which is how the pipeline gets exercised end to end in
+ * `npm test` without spending anything.
+ */
+export interface LlmParser {
+  readonly usd: number;
+  parse<T>(req: ParseRequest<T>): Promise<ParseResult<T>>;
+}
+
 export class JudgeOutputError extends Error {
   constructor(
     message: string,
@@ -74,6 +101,9 @@ export function usdFor(model: string, usage: Usage | null): number {
     1_000_000
   );
 }
+
+/** Roughly the 1024-token floor below which a cache breakpoint is rejected (~4 chars per token). */
+const MIN_CACHEABLE_CHARS = 4096;
 
 function mediaType(p: string): 'image/png' | 'image/jpeg' | 'image/webp' | 'image/gif' {
   const ext = path.extname(p).toLowerCase();
@@ -105,7 +135,10 @@ export class LlmClient {
     let imageIndex = 0;
     for (const part of parts) {
       if (part.type === 'text') {
-        blocks.push({ type: 'text', text: part.text });
+        const cache = part.cacheable === true && part.text.length >= MIN_CACHEABLE_CHARS;
+        blocks.push(cache ? { type: 'text', text: part.text, cache_control: { type: 'ephemeral' } } : { type: 'text', text: part.text });
+        // The cache flag is a billing detail, not part of the request's identity, so it stays out of
+        // the run-cache key: toggling it must not invalidate a previously recorded response.
         loggable.push({ type: 'text', text: part.text });
       } else {
         imageIndex++;
@@ -173,10 +206,17 @@ export class LlmClient {
           stop_details?: unknown;
           model: string;
         };
-        if (req.fallbacks) {
+        if (req.maxTokens >= NONSTREAMING_MAX_TOKENS) {
+          const stream = this.client.beta.messages.stream({
+            ...base,
+            betas: [STRUCTURED_OUTPUTS_BETA, ...(req.fallbacks ? [FALLBACKS_BETA] : [])],
+            ...(req.fallbacks ? { fallbacks: 'default' } : {}),
+          } as Parameters<typeof this.client.beta.messages.stream>[0]);
+          msg = (await stream.finalMessage()) as unknown as typeof msg;
+        } else if (req.fallbacks) {
           const m = await this.client.beta.messages.parse({
             ...base,
-            betas: ['server-side-fallback-2026-07-01'],
+            betas: [FALLBACKS_BETA],
             fallbacks: 'default',
           } as Parameters<typeof this.client.beta.messages.parse>[0]);
           msg = m as unknown as typeof msg;

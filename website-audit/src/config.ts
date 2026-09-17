@@ -11,10 +11,53 @@ export const PROBE_VERSION = 2;
 export const MODELS = {
   classify: 'claude-haiku-4-5',
   home: 'claude-haiku-4-5',
-  candidates: 'claude-haiku-4-5',
   judgment: 'claude-opus-5',
 } as const;
 export type ModelRole = keyof typeof MODELS;
+
+/**
+ * SiteRedesign (site:build) models. Kept separate from MODELS so the audit's run_meta.models keeps
+ * describing the audit only.
+ */
+export const SITE_MODELS = {
+  plan: 'claude-opus-5',
+  design: 'claude-opus-5',
+  /**
+   * Render was tried on Sonnet 5 on the theory that markup against an explicit contract, with a
+   * validator and repair passes behind it, is where a cheaper model is safest. Measured on a real
+   * 6-page build (2026-09-17) it is not: Sonnet went 36 → 13 → 21 errors across its repair passes and
+   * never converged, mostly by omitting `data-copy-id` and inventing step labels, while Opus went
+   * 2 → 0. It also cost more in practice ($1.32 vs $1.49) because it burned every repair pass and
+   * still failed. Keep Opus; `--render-model` is there if you want to retest.
+   */
+  render: 'claude-opus-5',
+} as const;
+export type SiteModelRole = keyof typeof SITE_MODELS;
+
+export const SITE_LIMITS = {
+  /** Per-source-page cap on the corpus sent to the plan stage. */
+  corpusMaxCharsPerPage: 40_000,
+  /** Total pages a build may generate, including the home page. */
+  maxPages: 12,
+  /** Images downloaded from the source site. */
+  maxAssets: 24,
+  architectureMaxTokens: 24_000,
+  contentMaxTokens: 16_000,
+  /** Pages whose copy is written concurrently. */
+  contentConcurrency: 4,
+  designMaxTokens: 32_000,
+  renderMaxTokens: 16_000,
+  /** Validation failures are fed back to the render stage at most this many times. */
+  repairPasses: 2,
+  /** Abort the build once spend passes this, so a bad run cannot quietly cost a good one twice over. */
+  maxUsd: 6,
+  /** Pages rendered concurrently. */
+  renderConcurrency: 4,
+  titleMinChars: 10,
+  titleMaxChars: 70,
+  descriptionMinChars: 50,
+  descriptionMaxChars: 170,
+} as const;
 
 export const VIEWPORTS = {
   mobile: { width: 390, height: 844 },
@@ -24,7 +67,8 @@ export const VIEWPORTS = {
 export const LIMITS = {
   mapLimit: 100,
   subdomainShareForSecondMap: 0.3,
-  candidatesPerItem: 3,
+  /** Top-level pages linked from home to judge for unmet subpath items (--max-candidate-pages). */
+  candidatePagesMax: 8,
   tilesSent: 4,
   /** Long-edge limit above which Opus 5 / Sonnet 5 downscale an image (px). */
   maxTileEdgePx: 2576,

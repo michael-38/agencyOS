@@ -20,6 +20,8 @@ import { runMap, type MapStepResult } from './steps/map.js';
 import { addDesktopShot, scrapePage, type PageRecord } from './steps/scrape.js';
 import { classifyIndustry, type ClassifyResult } from './steps/classify.js';
 import { evaluateChecklist, type EvaluationResult } from './steps/evaluate.js';
+import { buildCandidatePool, type CandidatePool } from './steps/candidates.js';
+import type { JudgeTextMode } from './content/filter.js';
 import { canonicalReport, overallVerdict, rankGaps, renderMarkdown } from './steps/report.js';
 import type { Report, ReportItem, ReportPage } from './report/schema.js';
 
@@ -34,7 +36,10 @@ export interface RunOptions {
   offline: boolean;
   judgeModel: string;
   tiles: number;
+  /** Cap on top-level pages linked from home to judge; null = LIMITS.candidatePagesMax. */
   maxCandidatePages: number | null;
+  /** Candidate-page judge text: lean (default) strips link targets/images and home-duplicate blocks. */
+  judgeText: JudgeTextMode;
   lenient: boolean;
   jsonProgress: boolean;
   verbose: boolean;
@@ -127,7 +132,8 @@ export async function runAudit(opts: RunOptions): Promise<RunResult> {
     viewports: VIEWPORTS,
     limits: LIMITS,
     tiles: opts.tiles,
-    max_candidate_pages: opts.maxCandidatePages,
+    max_candidate_pages: opts.maxCandidatePages ?? LIMITS.candidatePagesMax,
+    judge_text: opts.judgeText,
     lenient: opts.lenient,
     probe_version: PROBE_VERSION,
     pipeline_version: PIPELINE_VERSION,
@@ -146,6 +152,7 @@ export async function runAudit(opts: RunOptions): Promise<RunResult> {
   let facts: Facts | null = null;
   let splash: SplashResult | null = null;
   let homeUrl = '';
+  let pool: CandidatePool | null = null;
   let effectiveSlug = opts.industry ?? 'generic';
   let industrySource: 'llm' | 'override' = opts.industry ? 'override' : 'llm';
 
@@ -236,6 +243,9 @@ export async function runAudit(opts: RunOptions): Promise<RunResult> {
     }
     if (opts.modules.desktop) await addDesktopShot(fc, home, runDir, progress);
     progress.step(4, 'scrape-home', 'done', `${home.url} status ${home.statusCode ?? '?'}, ${home.files.tiles.length}/${home.tilesTotal} tiles${home.probe ? '' : ', no probe'}`);
+    pool = buildCandidatePool({ url: home.url, links: home.links }, opts.maxCandidatePages ?? LIMITS.candidatePagesMax);
+    writeJson(runDir, 'candidate_pool.json', pool);
+    progress.log(`candidate pool: ${pool.urls.length} top-level page(s) linked from home (relative depth ${pool.relative_depth}), ${pool.capped.length} capped, ${pool.considered} same-origin link(s) considered`);
 
     // ---- 5 classify ----
     if (opts.modules.classify) {
@@ -281,7 +291,7 @@ export async function runAudit(opts: RunOptions): Promise<RunResult> {
       detectors,
       jsonldType: archetype.jsonld_type,
       modules: opts.modules,
-      sameOrigin: mapRes.normalized.same_origin,
+      candidatePool: pool,
       llm,
       fc,
       probeScript,
@@ -290,10 +300,10 @@ export async function runAudit(opts: RunOptions): Promise<RunResult> {
       judgeModel: opts.judgeModel,
       tilesSent: opts.tiles,
       lenient: opts.lenient,
-      maxCandidatePages: opts.maxCandidatePages,
+      judgeText: opts.judgeText,
     });
     writeJson(runDir, 'evaluation.json', { flags: evaluation.flags, skipped_item_ids: evaluation.skippedItemIds, items: evaluation.items });
-    progress.step(7, 'evaluate', 'done', `${evaluation.items.length} item(s), ${evaluation.flags.judge_calls} judge call(s), ${evaluation.flags.candidate_pages} candidate page(s)`);
+    progress.step(7, 'evaluate', 'done', `${evaluation.items.length} item(s), ${evaluation.flags.judge_calls} judge call(s), ${evaluation.flags.candidate_pages} candidate page(s), ${evaluation.flags.candidate_pages_skipped} skipped after pass`);
 
     if (opts.modules.facts) {
       const ctx: PageContext = { url: home.url, rawHtml: home.rawHtml, markdown: home.markdown, links: home.links, probe: home.probe, viewport: { ...VIEWPORTS.mobile }, detectors, jsonldType: archetype.jsonld_type };
@@ -302,7 +312,7 @@ export async function runAudit(opts: RunOptions): Promise<RunResult> {
 
     // ---- 8 report ----
     progress.step(8, 'report', 'start');
-    const report = buildReport({ opts, started, runDir, resolve, decision, classify, effectiveSlug, industrySource, checklist, evaluation, facts, home, root, mapRes, fc, llm, cache, models });
+    const report = buildReport({ opts, started, runDir, resolve, decision, classify, effectiveSlug, industrySource, checklist, evaluation, facts, home, root, mapRes, pool, fc, llm, cache, models });
     writeJson(runDir, 'report.json', report);
     fs.writeFileSync(path.join(runDir, 'report.md'), renderMarkdown(report, { displayName: industry.display_name }));
     writeJson(runDir, 'report.canonical.json', canonicalReport(report));
@@ -313,10 +323,10 @@ export async function runAudit(opts: RunOptions): Promise<RunResult> {
     const err = e as Error;
     progress.error(err.message);
     writeJson(runDir, 'error.json', { message: err.message, stack: err.stack, at: new Date().toISOString(), details: (err as { details?: unknown }).details ?? null });
-    if (evaluation && checklist && home && resolve && decision && mapRes) {
+    if (evaluation && checklist && home && resolve && decision && mapRes && pool) {
       try {
         const industry = industries.industries.find((i) => i.slug === effectiveSlug)!;
-        const report = buildReport({ opts, started, runDir, resolve, decision, classify, effectiveSlug, industrySource, checklist, evaluation, facts, home, root, mapRes, fc, llm, cache, models });
+        const report = buildReport({ opts, started, runDir, resolve, decision, classify, effectiveSlug, industrySource, checklist, evaluation, facts, home, root, mapRes, pool, fc, llm, cache, models });
         writeJson(runDir, 'report.partial.json', report);
         fs.writeFileSync(path.join(runDir, 'report.md'), `${renderMarkdown(report, { displayName: industry.display_name })}\n\n> Run aborted: ${err.message}\n`);
       } catch {
@@ -342,6 +352,7 @@ interface BuildReportInput {
   home: PageRecord;
   root: PageRecord | null;
   mapRes: MapStepResult;
+  pool: CandidatePool;
   fc: FirecrawlService;
   llm: LlmClient | null;
   cache: RunCache;
@@ -356,6 +367,7 @@ function pageEntry(p: PageRecord, role: ReportPage['role']): ReportPage {
     markdown_path: p.markdownPath,
     html_path: p.htmlPath,
     judge_text_path: p.judgeTextPath,
+    judge_text_stats: p.judgeTextStats,
     screenshots: { mobile: p.files.mobile, desktop: p.files.desktop, mobile_fold: p.files.mobileFold, desktop_fold: p.files.desktopFold, mobile_tiles: p.files.tiles },
     status_code: p.statusCode,
   };
@@ -430,11 +442,14 @@ function buildReport(b: BuildReportInput): Report {
       pipeline_version: PIPELINE_VERSION,
       modules: opts.modules,
       launched_from: opts.launchedFrom,
+      judge_text: opts.judgeText,
+      candidate_pool: b.pool,
       flags: {
         markdown_truncated_pages: evaluation.flags.markdown_truncated_pages,
         probe_fallback_pages: evaluation.flags.probe_fallback_pages,
         second_map: b.mapRes.second_map,
         subdomain_share: Number(b.mapRes.normalized.subdomain_share.toFixed(3)),
+        candidate_pages_skipped: evaluation.flags.candidate_pages_skipped,
       },
     },
   };

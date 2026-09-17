@@ -36,6 +36,12 @@ export interface PageContext {
   detectors: Detectors;
   /** Archetype's expected JSON-LD type (e.g. LocalBusiness). */
   jsonldType: string;
+  /**
+   * CSS from stylesheets the page links to locally. Only check-html sets this: a live scrape has the
+   * layout probe, but an offline file's rules would otherwise be blind to everything outside a
+   * <style> element, and a generated site keeps its CSS in a separate file.
+   */
+  localCss?: string;
   // lazily computed
   _$?: CheerioAPI;
   _jsonld?: JsonLdExtract;
@@ -414,15 +420,19 @@ export const STATIC_LAYOUT_RULES: Record<string, (ctx: PageContext) => CheckResu
       if (/position\s*:\s*fixed/.test(s) && /bottom\s*:\s*0/.test(s) && $(el).find('a[href^="tel:"], a, button').length) found = true;
     });
     if (found) return ok('inline-styled fixed bottom bar with a link (static rule)', {});
-    const css = $('style').text().toLowerCase();
+    const css = `${$('style').text()}\n${ctx.localCss ?? ''}`.toLowerCase();
     if (/position\s*:\s*fixed[^}]*bottom\s*:\s*0|bottom\s*:\s*0[^}]*position\s*:\s*fixed/.test(css)) return partial('stylesheet declares a fixed bottom element (static rule)', 'Cannot bind it to a CTA without layout.', {});
     return fail('no fixed bottom bar (static rule)', 'No sticky CTA.', {});
   },
   'above-fold-images': (ctx) => {
     const $ = $of(ctx);
-    const firstSection = $('header, main > section').first();
-    const img = firstSection.find('img, svg').first();
-    if (img.length) return ok(`${img.prop('tagName')?.toString().toLowerCase()} in the first section (static rule)`, {});
+    // The header and the first section are both above the fold, and either may carry the image, so
+    // both are checked. Selecting `header, main > section` and taking .first() only ever looked in
+    // the header, which made a hero image inside the first section invisible to this rule.
+    for (const scope of [$('header').first(), $('main > section').first()]) {
+      const img = scope.find('img, svg').first();
+      if (img.length) return ok(`${img.prop('tagName')?.toString().toLowerCase()} in the header or first section (static rule)`, {});
+    }
     return null;
   },
 };

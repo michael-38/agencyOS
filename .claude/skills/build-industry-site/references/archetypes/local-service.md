@@ -1,41 +1,69 @@
 # local-service
 
-<!-- TODO (author): one paragraph on what unites this archetype (a business serving a physical area whose site exists to make the phone ring or a quote form get sent) and how that shapes the page versus professional-services. No industry specifics here; those live in references/<slug>.md. -->
+A local-service business sells its availability inside a geography. The visitor already has a
+problem or a plan; what they are deciding is whether this business can be trusted with it and how
+fast they can start. The page therefore exists to make one of two things happen — the phone rings,
+or a request form arrives — and everything on it is judged by whether it moves the visitor toward
+that. This is the opposite of a professional-services page, where the visitor is evaluating a
+relationship over months and will read at length before acting; here the visitor is mid-task, often
+on a phone, and will leave for the next result if the answer is not already on the screen.
 
 ## Section order
-<!-- TODO (author): confirm the order below (it is the scaffold's default), mark each section required or optional, and state where industry-added sections are inserted (e.g. "after services"). -->
 1. hero — required
 2. services — required
-3. trust — <!-- TODO (author): required or optional -->
-4. gallery — <!-- TODO (author): required or optional -->
-5. process — <!-- TODO (author): required or optional -->
+3. trust — required
+4. gallery — optional (required when the work has a visible result the visitor is buying)
+5. process — optional
 6. faq — required
 7. contact — required
 
+Industry-added sections are inserted after `services` unless the industry file says otherwise.
+
 ## Per-section required elements
-<!-- TODO (author): one bullet per element every local-service page must have in that section. Structure only (heading level, CTA, tel link, form fields, list types, placeholder blocks). Copy and imagery guidance belong in the industry file. -->
 ### hero
-- <!-- TODO (author): e.g. the one H1; an answer-first opener paragraph; the primary CTA; the hero placeholder as an inline <svg> inside this section (the offline above-fold-images rule looks in <header> or the first <main> section) -->
+- One `<h1>` naming what the business does, for whom, and where.
+- An answer-first opening paragraph that answers the visitor's first question on its own.
+- The primary CTA, in the first screen, above everything else on mobile.
+- The hero image as an `<svg>` or `<img>` inside `<header>` or the first `<main> > section`.
+- The service area stated in words, not implied by a map.
 ### services
-- <!-- TODO (author) -->
+- A list or card grid of the services actually named on the source site, each with its own heading.
+- One sentence per service saying what the visitor gets, not what the business does.
+- A path to the detail for each service: an anchor, or a link to its own page.
 ### trust
-- <!-- TODO (author): proof elements are only allowed when present in the source; otherwise a labelled placeholder block -->
+- The proof the source site already carries: credentials, memberships, years, named affiliations.
+- Reviews or ratings only when the source page contains those exact reviews or that exact rating.
+- When the source carries no proof at all, a visibly labelled placeholder block that stays failing.
 ### gallery
-- <!-- TODO (author) -->
+- Images of the business's own completed work, each with a caption naming what it is.
+- Before/after pairing wherever the source presents work that way.
 ### process
-- <!-- TODO (author) -->
+- Ordered steps from first contact to finished job, one sentence each.
+- Where a recurring or seasonal arrangement exists on the source, the step that explains it.
 ### faq
-- <!-- TODO (author): question-form H3s, one short paragraph each, mirrored into FAQPage.mainEntity -->
+- Question-form headings, each answered in one to three self-contained sentences.
+- The same questions, verbatim, mirrored into `FAQPage.mainEntity`.
 ### contact
-- <!-- TODO (author): tel link, form fields, address or service area, hours -->
+- A tap-to-call link using the source's phone number.
+- A request form: name, phone, and one free-text field describing the job.
+- The service area, the hours, and the address when the source states them.
 
 ## JSON-LD
 - Type: `LocalBusiness` (from `config/industries.yaml` → `archetypes[id=local-service].jsonld_type`)
-- Required properties: <!-- TODO (author): list only properties fillable from report.json facts (business_name, phones, address) or a source page -->
-- Optional properties: <!-- TODO (author): e.g. areaServed, openingHoursSpecification, url — each only when the source states it -->
+- Required properties: `name`, `url`, `description`, plus `telephone` and `address` whenever
+  `report.json` `facts` carries them.
+- Optional properties, each emitted only when its source exists: `openingHoursSpecification` from
+  `facts.hours`; `areaServed` from places the source says the business serves; `hasOfferCatalog`
+  from services the source describes; `image` in the production profile when a photograph was
+  recovered; `aggregateRating` only when the source states both a rating value and a review count.
 - Paired with `FAQPage` in the same `@graph`: always
+- Multi-page builds additionally carry `WebSite`, a `WebPage` per page, `BreadcrumbList` below the
+  home page, and a `Service` node on each service page.
 
 ## Navigation
-- <!-- TODO (author): which sections appear in the header anchor nav and in what order -->
-- <!-- TODO (author): tel link placement (the scaffold puts it in <header>, which is what the offline tel-link-above-fold rule checks) and primary CTA placement in the first screen -->
-- <!-- TODO (author): sticky mobile bar — which two actions (scaffold default: Call + Request a quote) -->
+- Header nav: home, then the service pages, then areas, then the FAQ. Labels are the service's own
+  name as the source writes it, never a category word the business does not use.
+- The tel link sits inside `<header>` so it is reachable without scrolling, and it is the boldest
+  text in the header.
+- The primary CTA appears in the first screen, and again at the end of every page.
+- Sticky mobile bar: call, and request a quote. Two actions, never three.

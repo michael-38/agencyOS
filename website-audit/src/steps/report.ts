@@ -60,6 +60,20 @@ export function renderMarkdown(report: Report, extras: MarkdownExtras): string {
   lines.push(
     `Verdict: ${verdict}${report.summary.partial_audit ? ' (partial audit)' : ''} · industry: ${report.industry.slug} (${report.industry.confidence.toFixed(2)}${report.industry.source === 'override' ? ', override' : ''}) · home: ${report.home_url} (rule: ${report.home_rule})`,
   );
+  const pool = report.run_meta.candidate_pool;
+  if (!report.run_meta.modules.subpath) lines.push('Scope: home page only (subpath search off)');
+  else if (!pool.urls.length) lines.push('Scope: home page only (no top-level pages linked from home)');
+  else {
+    const paths = pool.urls.map((u) => {
+      try {
+        return new URL(u).pathname;
+      } catch {
+        return u;
+      }
+    });
+    const more = pool.capped.length ? ` (+${pool.capped.length} more linked page(s) not checked: cap ${pool.cap})` : '';
+    lines.push(`Scope: home page + ${pool.urls.length} top-level page(s) linked from it: ${paths.join(', ')}${more}`);
+  }
   const skippedBits: string[] = [];
   for (const m of report.summary.skipped.modules) skippedBits.push(`${moduleLabel(m)} (module off)`);
   if (report.summary.skipped.item_ids.length) skippedBits.push(`items ${report.summary.skipped.item_ids.join(', ')} (excluded)`);
@@ -71,7 +85,11 @@ export function renderMarkdown(report: Report, extras: MarkdownExtras): string {
     lines.push(report.items.length ? 'None. Every evaluated item passed.' : 'No items were evaluated.');
   } else {
     gaps.forEach((g, i) => {
-      const where = g.satisfied_at_url && g.verdict === 'partial' && g.satisfied_at_url !== report.home_url ? ` (at ${g.satisfied_at_url})` : '';
+      let where = '';
+      if (g.satisfied_at_url && g.verdict === 'partial' && g.satisfied_at_url !== report.home_url) where = ` (at ${g.satisfied_at_url})`;
+      else if (g.scope === 'subpath' && g.verdict === 'fail' && !g.unverified && report.run_meta.modules.subpath) {
+        where = g.candidates_checked.length ? ` (not found on home or the ${g.candidates_checked.length} linked page(s) checked)` : ' (home page only)';
+      }
       const unverified = g.unverified ? ` [unverified: ${g.unverified}]` : '';
       lines.push(`${i + 1}. [${g.weight}] ${g.id} — ${g.verdict} — ${g.evidence.summary}${where}${unverified}`);
     });

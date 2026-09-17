@@ -1,102 +1,167 @@
 # med-spa
 
-<!-- TODO (author): this file is the industry layer on top of references/archetypes/local-service.md. Fill every heading; keep the H2s exactly as they are (the builder parses them). No invented industry facts, no numbers. -->
-
 ## Visitor priorities
-<!-- TODO (author): 3–5 bullets, in order, derived from personas/med-spa.md "What this visitor is trying to do" (the three questions it names, then what earns trust). No numbers. -->
-- <!-- TODO (author) -->
+- Which treatment addresses *my* concern — arriving either by the concern or by the treatment name,
+  so both paths have to exist.
+- Who performs it and what they are qualified to do, in detail, because the anxiety is medical.
+- What it costs, per unit or starting at, and whether it can be financed.
+- What the result actually looks like on someone their own age, and what recovery involves.
+- Booking from the practice's own scheduling software, in the same session, without a phone call.
 
 ## Sections
-<!-- TODO (author): one ### block per section in the archetype's section order, plus any industry-added section (define it here and say where it goes). Use the scaffold ids as the ### text. -->
-
 ### hero
-- **Purpose:** <!-- TODO (author) -->
+- **Purpose:** Establish within one screen that this is a medical practice, what it treats, and
+  where, with booking one tap away.
 - **Required elements:**
-  - <!-- TODO (author) -->
-- **Copy guidance:** <!-- TODO (author): what to pull from the source home page for the H1 and the opener; the opener must answer the persona's first question on its own -->
+  - The `<h1>` naming the practice, its category, and its city.
+  - An opening sentence answering "what is this place and who runs it?".
+  - The booking action, plus the tel link in the header.
+  - A photograph of the real practice or the real provider.
+- **Copy guidance:** Take the practice's own description of itself. Never add an outcome claim the
+  source does not make, and never soften a missing credential into "expert" or "specialist".
 - **Placeholder imagery labels:**
-  - <!-- TODO (author): e.g. "Hero photo: <what the asset should show>" -->
-
+  - "Hero photo: the practice's own treatment room or its provider"
 ### services
-- **Purpose:** <!-- TODO (author) -->
+- **Purpose:** Let the visitor arrive by concern or by treatment name and land in the same place.
 - **Required elements:**
-  - <!-- TODO (author): how services are listed (cards vs list), what each entry needs -->
-- **Copy guidance:** <!-- TODO (author): use only services named on the source pages; how to group them -->
+  - Treatments grouped by the concern they address, each treatment named as the source names it.
+  - One sentence per treatment describing what it addresses, from the source.
+- **Copy guidance:** Use the source's treatment names, including brand names it already uses. Do
+  not describe a mechanism, a dosage, a duration, or a recovery time the source does not state.
 - **Placeholder imagery labels:**
-  - <!-- TODO (author) -->
-
+  - "Treatment photo: the treatment being performed in this practice"
 ### trust
-- **Purpose:** <!-- TODO (author) -->
+- **Purpose:** Answer the safety question in the visitor's own terms.
 - **Required elements:**
-  - <!-- TODO (author): what counts as proof for this persona; what to show when the source has none (labelled placeholder block, never fabricated reviews or ratings) -->
-- **Copy guidance:** <!-- TODO (author) -->
+  - Provider credentials exactly as the source states them, including the medical director.
+  - Products, devices, and manufacturer training named as the source names them.
+  - A labelled placeholder block when the source states no credentials, tagged and left failing.
+- **Copy guidance:** Credentials are quoted, never paraphrased or upgraded. If the source names a
+  person, name that person.
 - **Placeholder imagery labels:**
-  - <!-- TODO (author) -->
-
+  - "Provider photo: the named provider, in the practice"
 ### gallery
-- **Purpose:** <!-- TODO (author) -->
+- **Purpose:** Show results for the specific treatment, which is what the visitor is really here for.
 - **Required elements:**
-  - <!-- TODO (author): before/after pairing, captions, how many placeholder slots -->
-- **Copy guidance:** <!-- TODO (author): caption format; only project types the source mentions -->
+  - Before/after pairs grouped by treatment, each captioned with the treatment name.
+- **Copy guidance:** Captions name only the treatment. Never add a session count, a timeframe, a
+  patient age, or a product quantity the source does not state.
 - **Placeholder imagery labels:**
-  - <!-- TODO (author): e.g. "Project photo: before/after <project type>" -->
-
+  - "Before/after: the practice's own result for a treatment the source names"
 ### process
-- **Purpose:** <!-- TODO (author) -->
+- **Purpose:** Remove the unknowns between booking and walking out.
 - **Required elements:**
-  - <!-- TODO (author): ordered steps from first contact to finished job; where a recurring or seasonal plan is described if the source has one -->
-- **Copy guidance:** <!-- TODO (author) -->
+  - Consultation, treatment, and aftercare as ordered steps, one sentence each.
+- **Copy guidance:** Only steps the source describes. No downtime claims, no pain descriptions, no
+  "most patients" statements.
 - **Placeholder imagery labels:**
-  - <!-- TODO (author) -->
-
+  - "Process photo: the consultation room"
 ### faq
-- **Purpose:** <!-- TODO (author) -->
+- **Purpose:** Answer the safety, price, and recovery questions that otherwise stop the booking.
 - **Required elements:**
-  - <!-- TODO (author): question-form H3s, one short paragraph each, mirrored into FAQPage.mainEntity -->
-- **Copy guidance:** <!-- TODO (author): answer only from the source; otherwise a placeholder answer with no numbers -->
+  - Question-form headings, each answered in one to three self-contained sentences.
+- **Copy guidance:** Where the source is silent — and it often is on price and recovery — write a
+  short placeholder answer that points at the consultation and states no number.
 - **Placeholder imagery labels:**
   - none
-
 ### contact
-- **Purpose:** <!-- TODO (author) -->
+- **Purpose:** Book, not enquire.
 - **Required elements:**
-  - <!-- TODO (author): tel link, quote form fields, service area statement, hours, address if the source has one -->
-- **Copy guidance:** <!-- TODO (author): service area and hours verbatim from the source or facts; placeholder if absent -->
+  - The booking action first, the tel link second, a form only as a fallback.
+  - Address and hours when the source states them.
+- **Copy guidance:** If the source books through a named scheduling product, say so and link to it
+  as the source links to it.
 - **Placeholder imagery labels:**
-  - <!-- TODO (author): e.g. "Map placeholder: service area" -->
+  - "Map placeholder: the practice location"
 
 ## FAQ seeds
-<!-- TODO (author): question-form only, no answers, no numbers. These are prompts for the builder; it answers from the source or marks the answer placeholder. -->
-- <!-- TODO (author) -->
+- Who performs the treatments here?
+- Is a consultation required before treatment?
+- What does a treatment cost?
+- Is financing available?
+- What should I expect at my first visit?
+- How do I know which treatment is right for my concern?
+- Which products and devices do you use?
+- How do I book?
 
 ## Vocabulary to use / avoid
-- **Use:** <!-- TODO (author): the words this persona searches and says -->
-- **Avoid:** <!-- TODO (author): jargon, superlatives, and any phrasing that implies an unverified claim -->
+- **Use:** treatment, concern, consultation, provider, injector, medical director, aesthetic,
+  before and after, per unit, starting at, financing, the treatment and product names the source
+  already uses, the city the source names.
+- **Avoid:** "permanent", "guaranteed", "risk-free", "miracle", "instant" — this persona reads
+  outcome guarantees as a red flag, and a med-spa persona item fails the page for them; "anti-aging
+  solutions"; "rejuvenation journey"; any credential, qualification, board certification, or
+  training the source does not state; any price the source does not publish.
+
+## Design direction
+- **Mood:** Editorial and clinical at once — a magazine spread with a medical licence on the wall.
+  This visitor is spending real money on their own face or body and is scanning for seriousness, so
+  restraint reads as competence and decoration reads as risk. Calm, precise, expensive-feeling,
+  never cute and never clinical-cold.
+- **Palette:** A warm off-white or soft neutral ground rather than pure white, deep near-black ink,
+  and one muted accent — a terracotta, a clay, a dusty rose — used sparingly for emphasis and the
+  booking action. No gradients. No more than one accent.
+- **Type:** A serif or high-contrast display face paired with a quiet neutral sans for body text,
+  and optionally a monospace for metadata such as prices and treatment durations. The display face
+  is the whole personality; let it be large. Body stays modest and highly legible.
+- **Density and rhythm:** Airy, with a wider container than a utility page would use and long
+  vertical gaps between sections. Whitespace is the luxury signal; resist filling it.
+- **Hero form:** Editorial — a large display headline with generous margin, the photograph beside
+  or beneath it rather than behind it. Text over a photograph reads as an advertisement here.
+- **Motion:** Minimal. A slow fade on entry at most. Nothing that bounces, nothing that counts up,
+  and nothing at all under reduced motion.
+- **Proof:** Credentials are set as text, with the provider's name and qualification given room —
+  not compressed into a badge row. Before/after pairs are presented at a consistent size and
+  alignment, captioned, never in a carousel that hides them.
+- **Imagery:** The practice's own rooms, its own providers, its own results. Portrait and square
+  crops, soft natural light, minimal retouching. Where the source has no usable photography, prefer
+  an honest labelled placeholder over a generic interior — a generic stock or AI-generated-looking
+  image is exactly what this visitor discounts.
+- **Avoid:** Purple-to-pink gradients; lotus, leaf, and sparkle motifs; a model with her eyes
+  closed touching her own cheek; countdown offers; script fonts; "as seen in" logo walls.
+
+## Page architecture
+- **Generate:** one page per treatment the source describes with real substance; one page per
+  concern when the source groups treatments that way; one page per city or neighbourhood the source
+  explicitly says it serves; one FAQ page once there are three or more sourced questions.
+- **Home page answers:** "What does this practice treat, who performs it, and how do I book?"
+- **Query intents:**
+  - med spa near me
+  - <treatment name> in <city>
+  - what treatment is best for <concern>
+  - how much does <treatment name> cost
+  - who injects in <city>
+  - <treatment name> before and after
+- **Entities to name:** every treatment by the source's own name, including brand names it already
+  uses; every provider name and qualification exactly as written; the medical director; the city;
+  the scheduling product the practice books through.
+- **Internal linking:** the home page links to every concern page and treatment page; each concern
+  page links to the treatments that address it; each treatment page links back to its concern and
+  to the booking action; the FAQ links to the treatment page each answer concerns.
 
 ## Checklist coverage
-<!-- TODO (author): every row below is a proposal: ids, source, check, weight, and scope are copied from personas/med-spa.md and personas/_common.md; section and satisfying element are derived from the scaffold's structure. Confirm each row; resolve every TODO cell. -->
 | id | source | check | weight | scope | section | satisfying element |
 |---|---|---|---|---|---|---|
+| MS-navigate-by-concern | persona | judgment | high | home | services | the concern grouping above the treatment list |
+| booking-widget | persona | deterministic | high | home | contact | the booking action linking to the source's own scheduling product; a labelled placeholder that stays failing when the source has none |
+| tel-link-above-fold | persona | deterministic | high | home | header | the `<a href="tel:…">` inside `<header>` |
+| MS-treatment-detail | persona | judgment | high | subpath | services | the generated treatment pages |
+| MS-pricing | persona | judgment | high | subpath | services | the per-unit or starting-at price, only when the source publishes one; otherwise a labelled placeholder that stays failing |
+| MS-provider-credentials | persona | judgment | high | subpath | trust | the provider credential block, quoted from the source |
+| MS-before-after | persona | judgment | med | subpath | gallery | the before/after pairs grouped by treatment |
+| MS-financing | persona | judgment | med | subpath | contact | the financing sentence, only when the source names a financing provider |
+| MS-safety-products | persona | judgment | low | subpath | trust | the products and devices list, named as the source names them |
+| MS-real-people | persona | judgment | med | home | hero | the hero photograph of the real practice or provider |
+| MS-provider-video | persona | judgment | low | subpath | trust | the provider introduction, or its labelled placeholder |
+| MS-concern-finder | persona | judgment | low | subpath | services | the concern index on the services page |
+| MS-no-prohibited-claims | persona | judgment | med | home | main | the whole page: the fabrication gate and the vocabulary list above keep outcome guarantees off it |
+| review-markup | persona | deterministic | med | home | trust | real reviews or rating from the source as structured data; otherwise a labelled placeholder block that stays failing |
+| jsonld-localbusiness | persona | deterministic | med | home | head | the `LocalBusiness` node in the `@graph` |
+| hours-present | persona | deterministic | low | subpath | contact | the hours block from `facts.hours` or the source; a labelled placeholder when absent |
+| address-present | persona | deterministic | low | subpath | contact | the `<address>` element |
 | structured-data | common | deterministic | high | home | head | the `<script type="application/ld+json">` `@graph` |
 | meta-title-description | common | deterministic | med | home | head | `<title>` + `<meta name="description">` |
 | single-h1 | common | deterministic | med | home | hero | the one `<h1>` |
-| h2-structure | common | deterministic | med | home | main | tag `<main>`; every section's `<h2>` is descriptive |
-| C-answer-first | common | judgment | med | home | main | tag `<main>`; the first `<p>` of every section answers its `<h2>` |
-| faq-present | common | deterministic | med | subpath | faq | `<section id="faq">` with question-form `<h3>`s + short answers |
-| MS-navigate-by-concern | persona | judgment | high | home | services | TODO — treatments can be found both by concern and by treatment name from the home page |
-| booking-widget | persona | deterministic | high | home | contact | a booking CTA `<a>` (widget scripts are not allowed offline; the CTA words satisfy the check as partial) |
-| tel-link-above-fold | persona | deterministic | high | home | hero | `<a href="tel:…">` inside `<header>` (offline static rule) |
-| MS-treatment-detail | persona | judgment | high | subpath | services | TODO — per-treatment pages cover candidacy, what to expect, downtime, and results timeline |
-| MS-pricing | persona | judgment | high | subpath | services | TODO — treatment prices are published (per unit or "starting at") |
-| MS-provider-credentials | persona | judgment | high | subpath | trust | TODO — provider credentials are stated in detail (RN/NP, medical director MD, product-specific training) |
-| MS-before-after | persona | judgment | med | subpath | gallery | TODO — a before/after gallery exists per treatment with consistent angle and lighting |
-| MS-financing | persona | judgment | med | subpath | services | TODO — financing options such as CareCredit or Cherry are stated |
-| MS-safety-products | persona | judgment | low | subpath | trust | TODO — a safety and products page explains what is used and the safety protocols |
-| MS-real-people | persona | judgment | med | home | gallery | TODO — imagery features real providers and real patients rather than generic stock models |
-| MS-provider-video | persona | judgment | low | subpath | gallery | TODO — a short provider-to-camera video explains treatments |
-| MS-concern-finder | persona | judgment | low | subpath | contact | TODO — a concern-to-treatment finder or quiz ends in a booking |
-| MS-no-prohibited-claims | persona | judgment | med | home | services | TODO — no "permanent", "guaranteed", or similar outcome claims appear on the home page |
-| review-markup | persona | deterministic | med | home | head | only real reviews/ratings from the source as structured data; otherwise a labelled placeholder block that stays failing |
-| jsonld-localbusiness | persona | deterministic | med | home | head | the archetype node in the `@graph` |
-| hours-present | persona | deterministic | low | subpath | contact | hours from `facts.hours` or the source; placeholder block if absent |
-| address-present | persona | deterministic | low | subpath | contact | `<address>` from `facts.address` or the source; placeholder block if absent |
+| h2-structure | common | deterministic | med | home | main | every section's `<h2>` |
+| C-answer-first | common | judgment | med | home | main | the `[data-answer-first]` opener in each section |
+| faq-present | common | deterministic | med | subpath | faq | the FAQ list with question-form headings |
