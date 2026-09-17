@@ -29,7 +29,7 @@ export const MODULES: ModuleDef[] = [
   { id: 'persona-checklist', label: 'Industry persona checklist', description: 'Visitor-goal items from personas/<slug>.md.', default: true, cost: 'No extra cost by itself', built: true },
   { id: 'deterministic', label: 'Deterministic checks', description: 'Code checks against the scraped HTML and layout probe.', default: true, cost: 'Free (no API calls)', built: true },
   { id: 'judgment', label: 'Judgment checks (vision)', description: 'Opus 5 evaluates judgment items from screenshots + text.', default: true, cost: 'About $0.10-0.30 per page on Opus 5', built: true },
-  { id: 'subpath', label: 'Subpath candidate search', description: 'For unmet subpath items, pick and scrape up to 3 candidate pages each.', default: true, cost: '1 Firecrawl credit + one judgment call per candidate page', built: true },
+  { id: 'subpath', label: 'Subpath candidate search', description: 'For unmet subpath items, judge the top-level pages linked from the home page (up to 8) and stop once every item has passed.', default: true, cost: 'Up to 8 Firecrawl credits + up to 8 judgment calls', built: true },
   { id: 'desktop', label: 'Desktop screenshot', description: 'Secondary 1366x768 full-page screenshot of the home page.', default: true, cost: '1 Firecrawl credit', built: true },
   { id: 'facts', label: 'Facts extraction', description: 'Business name, phones, address, hours, services for the v2 builder.', default: true, cost: 'Free', built: true },
   { id: 'lighthouse', label: 'Lighthouse scores', description: 'Reserved: mobile + desktop Lighthouse categories (not built yet).', default: false, cost: 'Local Chrome, no API cost', built: false },

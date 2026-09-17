@@ -31,8 +31,9 @@ Keep it low-friction: don't interrupt mid-task or nag. At a natural stopping poi
 
 The AgencyOS toolkit (full detail in `.claude/agentos/context.md`):
 - `website-audit/` — URL → industry persona audit → gap report. `cd website-audit && npx tsx src/index.ts audit <url> [--industry <slug>] [--enable/--disable <modules>] [--from-cache <runDir>]`, or `npm run ui` for the local web UI (http://127.0.0.1:8790). Runs land in `runs/<host>/<timestamp>/` (`report.json`, `report.md`, raw + cache). Every part is a toggleable module (`list-modules`); skipped work is always declared in the report.
-- `cli/` — SiteRefresh: scrape an outdated site → rewrite copy with Claude → generate a modern page.
-- `personas/` + `config/industries.yaml` + `config/detectors.yaml` — **personas are data, not skills.** Industry knowledge lives only here (persona checklists, industry list/aliases/archetypes, vendor detection patterns); it is loaded by code by slug, never chosen by Claude and never hard-coded in `website-audit/src` (a test enforces it). Add an industry = one YAML entry + one persona file, no code.
+- `site:build` (in `website-audit/`, skill `/build-site`) — an audit run → a small multi-page site written from the business's own content, optimised for search and answer engines, designed for its industry persona. Claude owns taste (copy, stylesheet, markup); code owns correctness (`<head>`, JSON-LD, breadcrumbs, sitemap, robots, llms.txt) and gates the result — a fabrication gate rejects any number, credential, or superlative that is not traceable to a source quote or to `report.facts`.
+- `cli/` — SiteRefresh: scrape an outdated site → rewrite copy with Claude → generate a modern page. Superseded by `site:build` for the verticals it covers; note its rewrite prompt fabricates reviews when the source has none, which the new path forbids.
+- `personas/` + `config/industries.yaml` + `config/detectors.yaml` — **personas are data, not skills.** Industry knowledge lives only here (persona checklists, industry list/aliases/archetypes, vendor detection patterns); it is loaded by code by slug, never chosen by Claude and never hard-coded in `website-audit/src` (a test enforces it). Add an industry = one YAML entry + one persona file (+ its build reference, for `site:build`'s design direction and page architecture), no code. Self-hostable webfonts are data too: `config/fonts.yaml`.
 - `templates/` — med-spa / hvac / roofing / plumbing landing pages + `design-system.md` + the AI concierge.
 - `demo/voice-agent/` — Vapi + Supabase + Next.js voice-agent SaaS.
 - `hyperworkflow/` — the agency's own marketing site (hyperworkflow.ai, Cloudflare Pages).
@@ -50,4 +51,4 @@ The AgencyOS toolkit (full detail in `.claude/agentos/context.md`):
 
 Design source of truth: `templates/design-system.md` (house style; per-industry specifics in `templates/<industry>/<industry>-design.md`).
 
-Skills available now: `/audit-prospect` · `/build-industry-site` · `/refresh-site` · `/build-landing-page` · `/configure-concierge` · `/provision-voice-agent` · `/prospect-leads`.
+Skills available now: `/audit-prospect` · `/build-site` · `/build-industry-site` · `/refresh-site` · `/build-landing-page` · `/configure-concierge` · `/provision-voice-agent` · `/prospect-leads`.

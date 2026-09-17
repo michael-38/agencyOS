@@ -4,6 +4,9 @@ import { canonicalReport, overallVerdict, rankGaps, renderMarkdown } from '../sr
 import type { Report, ReportItem } from '../src/report/schema.js';
 import { defaultModules } from '../src/modules.js';
 import type { Verdict, Weight } from '../src/personas/schema.js';
+import type { CandidatePool } from '../src/steps/candidates.js';
+
+const EMPTY_POOL: CandidatePool = { rule: 'home-links-top-level', relative_depth: 1, urls: [], capped: [], cap: 8, considered: 0 };
 
 function item(id: string, weight: Weight, verdict: Verdict, extra: Partial<ReportItem> = {}): ReportItem {
   return {
@@ -26,7 +29,7 @@ function item(id: string, weight: Weight, verdict: Verdict, extra: Partial<Repor
   };
 }
 
-function report(items: ReportItem[], over: Partial<Report['summary']> = {}): Report {
+function report(items: ReportItem[], over: Partial<Report['summary']> = {}, meta: Partial<Report['run_meta']> = {}): Report {
   return {
     input_url: 'example.com',
     resolved_origin: 'https://www.example.com',
@@ -63,7 +66,10 @@ function report(items: ReportItem[], over: Partial<Report['summary']> = {}): Rep
       pipeline_version: '0.1.0',
       modules: defaultModules(),
       launched_from: 'cli',
-      flags: { markdown_truncated_pages: [], probe_fallback_pages: [], second_map: false, subdomain_share: 0 },
+      judge_text: 'lean',
+      candidate_pool: EMPTY_POOL,
+      flags: { markdown_truncated_pages: [], probe_fallback_pages: [], second_map: false, subdomain_share: 0, candidate_pages_skipped: 0 },
+      ...meta,
     },
   };
 }
@@ -99,22 +105,25 @@ test('renderMarkdown: gaps only, ranked, one evidence line each, no preamble', (
   const lines = md.trim().split('\n');
   assert.equal(lines[0], '# www.example.com — Landscaping & lawn care persona audit');
   assert.match(lines[1], /^Verdict: WEAK · industry: landscaping \(0\.93\) · home: https:\/\/www\.example\.com\/ \(rule: root-2xx\)$/);
-  assert.equal(lines[2], '');
-  assert.equal(lines[3], '## Gaps');
-  assert.equal(lines[4], '1. [high] y-fail — fail — summary y-fail');
-  assert.equal(lines[5], '2. [med] z-partial — partial — summary z-partial (at https://www.example.com/gallery)');
+  assert.equal(lines[2], 'Scope: home page only (no top-level pages linked from home)');
+  assert.equal(lines[3], '');
+  assert.equal(lines[4], '## Gaps');
+  assert.equal(lines[5], '1. [high] y-fail — fail — summary y-fail');
+  assert.equal(lines[6], '2. [med] z-partial — partial — summary z-partial (at https://www.example.com/gallery)');
   assert.ok(!md.includes('x-pass'));
   assert.ok(!md.includes('Not evaluated'));
   assert.ok(!md.includes('Placeholder copy'));
 });
 
 test('renderMarkdown: Not evaluated line, (partial audit) suffix, [unverified] tag, empty states', () => {
-  const r = report([item('y-fail', 'high', 'fail', { unverified: 'judge-output-invalid' })], {
-    partial_audit: true,
-    skipped: { modules: ['judgment', 'subpath'], item_ids: ['LS-x'] },
-  });
+  const r = report(
+    [item('y-fail', 'high', 'fail', { unverified: 'judge-output-invalid' })],
+    { partial_audit: true, skipped: { modules: ['judgment', 'subpath'], item_ids: ['LS-x'] } },
+    { modules: { ...defaultModules(), judgment: false, subpath: false } },
+  );
   const md = renderMarkdown(r, { displayName: 'L' });
   assert.match(md, /Verdict: WEAK \(partial audit\)/);
+  assert.match(md, /^Scope: home page only \(subpath search off\)$/m);
   assert.match(md, /^Not evaluated: judgment checks \(module off\), subpath search \(module off\), items LS-x \(excluded\)$/m);
   assert.match(md, /y-fail — fail — summary y-fail \[unverified: judge-output-invalid\]/);
 
@@ -143,4 +152,33 @@ test('canonicalReport strips run-specific fields and candidate_log error text', 
   r2.run_meta.credits_used = 0;
   r2.items[0].candidate_log[0].error = 'offline miss';
   assert.deepEqual(canonicalReport(r), canonicalReport(r2));
+});
+
+test('renderMarkdown: scope line lists the top-level pages checked and the cap; subpath fails say where we looked', () => {
+  const pool: CandidatePool = {
+    rule: 'home-links-top-level',
+    relative_depth: 1,
+    urls: ['https://www.example.com/services', 'https://www.example.com/about'],
+    capped: ['https://www.example.com/contact'],
+    cap: 2,
+    considered: 5,
+  };
+  const r = report(
+    [
+      item('s-fail', 'high', 'fail', { scope: 'subpath', candidates_checked: ['https://www.example.com/services', 'https://www.example.com/about'], candidates_selected: pool.urls }),
+      item('h-fail', 'med', 'fail'),
+      item('u-fail', 'low', 'fail', { scope: 'subpath', unverified: 'judge-output-invalid' }),
+    ],
+    {},
+    { candidate_pool: pool },
+  );
+  const md = renderMarkdown(r, { displayName: 'L' });
+  assert.match(md, /^Scope: home page \+ 2 top-level page\(s\) linked from it: \/services, \/about \(\+1 more linked page\(s\) not checked: cap 2\)$/m);
+  assert.match(md, /s-fail — fail — summary s-fail \(not found on home or the 2 linked page\(s\) checked\)/);
+  assert.match(md, /h-fail — fail — summary h-fail$/m);
+  assert.match(md, /u-fail — fail — summary u-fail \[unverified: judge-output-invalid\]$/m);
+
+  const none = renderMarkdown(report([item('s-fail', 'high', 'fail', { scope: 'subpath' })]), { displayName: 'L' });
+  assert.match(none, /^Scope: home page only \(no top-level pages linked from home\)$/m);
+  assert.match(none, /s-fail — fail — summary s-fail \(home page only\)$/m);
 });

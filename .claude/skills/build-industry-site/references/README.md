@@ -1,16 +1,27 @@
-# Reference files — what the builder reads
+# Reference files — what the builders read
 
-`/build-industry-site` is data-driven. For each build it reads two Markdown files from this
-directory and parses them by heading, so the skeletons below are a contract, not a suggestion.
+Both site builders are data-driven. For each build they read two Markdown files from this
+directory and parse them by heading, so the skeletons below are a contract, not a suggestion.
 Adding an archetype or an industry is one file here plus one entry in `config/industries.yaml`;
 no code changes.
+
+Two builders consume these files:
+
+| builder | reads | for |
+|---|---|---|
+| `/build-industry-site` (`site:scaffold`) | `## Sections`, `## FAQ seeds`, `## Vocabulary…`, `## Checklist coverage`, and the whole archetype file | the one-page offline mockup an agent fills in by hand |
+| `/build-site` (`site:build`) | every filled H2; `## Design direction` goes to the design stage and `## Page architecture` to the plan stage | the multi-page, SEO/AEO-optimised site |
+
+`site:build` sends only the sections that are actually filled, and declares any that are still
+authoring skeletons in its `seo-report.md`. An unwritten reference degrades the output; it does not
+break the build.
 
 | file | selected by | role |
 |---|---|---|
 | `archetypes/<archetype>.md` | `industries.yaml` → `archetypes[].reference_file` | page skeleton: section order, per-section required elements, JSON-LD type + properties, anchor nav |
 | `<slug>.md` | `industries.yaml` → `industries[].build_reference_file` | what this industry's visitor needs: sections, copy guidance, placeholder imagery labels, FAQ seeds, vocabulary, and which section/element satisfies each checklist id |
 
-Current archetypes: `local-service` (`LocalBusiness`), `professional-services` (`ProfessionalService`), `generic` (`Organization`). Current industries: `landscaping` (local-service), `generic` (generic).
+Current archetypes: `local-service` (`LocalBusiness`), `professional-services` (`ProfessionalService`), `generic` (`Organization`). Every industry in `config/industries.yaml` has a file here; the ones still carrying `<!-- TODO (author) -->` markers are unwritten.
 
 ## Authoring rules (both kinds)
 - Headings are parsed. The H1 text must equal the archetype id or industry slug exactly. The H2s must appear exactly as written in the skeletons, in that order. Put content under headings; never add H2s.
@@ -18,7 +29,7 @@ Current archetypes: `local-service` (`LocalBusiness`), `professional-services` (
 - No invented industry facts: no prices, statistics, typical timelines, regulations, credential or licence names, or "most customers…" claims. Describe what to pull from the source, not what the answer is.
 - No numbers in FAQ seeds or copy guidance. The builder's copy must be sourced or marked placeholder, and reference text tends to leak into pages.
 - `<!-- TODO (author): … -->` comments mark what still needs writing. Delete them as you fill the file. The builder ignores HTML comments, but a file that still contains TODOs is incomplete and the builder must say so in its report.
-- Visual rules live in `templates/design-system.md`. Reference files may name a component ("service card", "review card", "sticky mobile bar") but must not restate tokens, sizes, or colours.
+- Visual rules live in `templates/design-system.md`. Reference files may name a component ("service card", "review card", "sticky mobile bar") but must not restate tokens, sizes, or colours. `## Design direction` is the one exception: it names the direction for this industry, including palette *character* and type *pairing*, because that is the only place a persona's visual identity is written down. It still must not restate the shared scale, spacing, or component specs.
 - Imagery guidance is always a placeholder label in the form `"<Asset kind>: <what it should show>"` (for example `"Project photo: before/after patio"`). Never reference the audited site's images.
 
 ## Archetype file skeleton (`archetypes/<archetype>.md`)
@@ -79,6 +90,27 @@ Current archetypes: `local-service` (`LocalBusiness`), `professional-services` (
 ## Vocabulary to use / avoid
 - **Use:** term, term, …
 - **Avoid:** term (why), …
+
+## Design direction
+- **Mood:** (two or three sentences: what this page should feel like to this visitor, and why)
+- **Palette:** (character and role, e.g. "muted, low-contrast ground with a single warm accent
+   reserved for the primary action" — no hex values; those belong to the design stage)
+- **Type:** (the pairing and why: serif or sans for display, what the body wants, minimum body size
+   if the persona needs one)
+- **Density and rhythm:** (airy or dense; how much sits above the fold)
+- **Hero form:** (full-bleed photograph, split, editorial, quiet centred, …)
+- **Motion:** (none | restrained | present — and why for this visitor)
+- **Proof:** (what counts as proof here and how it is shown; what to do when the source has none)
+- **Imagery:** (what the photographs should show and how they are cropped and treated)
+- **Avoid:** (visual clichés and patterns that misread this visitor)
+
+## Page architecture
+- **Generate:** (which page kinds earn their own page for this industry, and on what condition)
+- **Home page answers:** (the question the home page must answer in its first screen)
+- **Query intents:** (3–6 phrasings a person types or asks out loud; no volumes, no numbers)
+- **Entities to name:** (the kinds of thing that must appear in full inside sentences — service
+   names, places, credentials — so an assistant can quote them)
+- **Internal linking:** (what should link to what)
 
 ## Checklist coverage
 | id | source | check | weight | scope | section | satisfying element |

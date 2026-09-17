@@ -254,7 +254,7 @@ function parseAuditRequest(body: Record<string, unknown>, slugs: string[], runsD
   }
   if (body.max_candidate_pages !== undefined && body.max_candidate_pages !== null && body.max_candidate_pages !== '') {
     const n = Number(body.max_candidate_pages);
-    if (!Number.isInteger(n) || n < 0) return { ok: false, error: 'max_candidate_pages must be a whole number (blank = no cap)' };
+    if (!Number.isInteger(n) || n < 0) return { ok: false, error: 'max_candidate_pages must be a whole number (blank = default 8)' };
     config.max_candidate_pages = n;
   }
   if (body.lenient !== undefined && body.lenient !== null) {

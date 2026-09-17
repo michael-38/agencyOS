@@ -1,0 +1,21 @@
+# Self-hosted webfonts available to `site:build`. Files are copied into <site>/assets/fonts/ and
+# referenced from assets/site.css with a relative url(), so a generated page makes zero network
+# requests in either build profile.
+#
+# Adding a face = drop the .woff2 somewhere in the repo and add an entry here. No code changes.
+# `classification` is a hint for the design stage (sans | serif | mono | display); when no file suits
+# the direction it chooses, it falls back to a system stack, which is always allowed.
+version: 1
+
+fonts:
+  - family: Geist
+    file: hyperworkflow/fonts/geist-latin.woff2
+    weight_range: "100 900"
+    style: normal
+    classification: sans
+
+  - family: Geist Mono
+    file: hyperworkflow/fonts/geist-mono-latin.woff2
+    weight_range: "100 900"
+    style: normal
+    classification: mono
