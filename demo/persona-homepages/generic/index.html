@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Brightline Sign &amp; Graphics | Signs &amp; Vehicle Wraps, Tacoma</title>
+  <meta name="description" content="We design, build, permit and install storefront signs, vehicle wraps and interior wayfinding for businesses across Pierce County. In-house since 2004.">
+  <meta name="theme-color" content="#1c2024">
+  <meta name="color-scheme" content="light dark">
+  <link rel="canonical" href="https://brightlinesigns.com/">
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Brightline Sign &amp; Graphics">
+  <meta property="og:title" content="Brightline Sign &amp; Graphics | Signs &amp; Vehicle Wraps, Tacoma">
+  <meta property="og:description" content="Storefront signs, vehicle wraps and wayfinding for Pierce County businesses. Designed, fabricated, permitted and installed in-house since 2004.">
+  <meta property="og:url" content="https://brightlinesigns.com/">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Brightline Sign &amp; Graphics | Signs &amp; Vehicle Wraps, Tacoma">
+  <meta name="twitter:description" content="Storefront signs, vehicle wraps and wayfinding for Pierce County businesses. Designed, fabricated, permitted and installed in-house since 2004.">
+  <link rel="alternate" type="text/markdown" href="/index.md">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231c2024'/%3E%3Crect x='7' y='11' width='18' height='10' rx='2' fill='%234f8ff0'/%3E%3C/svg%3E">
+  <style>
+    /* ---------------------------------------------------------------------
+       Brightline Sign & Graphics - generic persona
+       The fallback design, used when an audit cannot classify the industry.
+       It makes no industry bet: one obvious thing the business does, one
+       obvious way to contact them, proof, and nothing decorative. Neutral
+       system type, a single blue accent, short page.
+       --------------------------------------------------------------------- */
+    :root {
+      --ink: #14181c;
+      --graphite: #1c2024;
+      --body: #40474e;
+      --muted: #666e76;
+      --line: #e1e5e9;
+      --wash: #f5f7f9;
+      --wash-2: #eaeef2;
+      --blue: #1550b5;
+      --blue-2: #10408f;
+      --white: #fff;
+      --accent-fg: #fff;
+      --font: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --wrap: 1080px;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body { margin: 0; background: var(--white); color: var(--body); font-family: var(--font); font-size: 17px; line-height: 1.62; }
+    h1, h2, h3 { color: var(--ink); margin: 0 0 .5em; font-weight: 700; line-height: 1.14; letter-spacing: -.02em; }
+    h1 { font-size: clamp(2.1rem, 6vw, 3.4rem); line-height: 1.08; }
+    h2 { font-size: clamp(1.7rem, 4vw, 2.4rem); }
+    h3 { font-size: 1.18rem; letter-spacing: -.01em; }
+    p { margin: 0 0 1.05em; max-width: 66ch; }
+    a { color: var(--blue); }
+    a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, summary:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; border-radius: 4px; }
+    .wrap { width: 100%; max-width: var(--wrap); margin-inline: auto; padding-inline: 22px; }
+    .skip-link { position: absolute; left: -9999px; background: var(--graphite); color: #fff; padding: 12px 18px; z-index: 60; }
+    .skip-link:focus { left: 8px; top: 8px; }
+    .eyebrow { font-size: .76rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--blue); margin: 0 0 12px; }
+
+    /* Header */
+    header { background: var(--graphite); color: #cdd4da; }
+    .bar { display: flex; align-items: center; gap: 18px; min-height: 68px; }
+    .brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.06rem; color: #fff; text-decoration: none; letter-spacing: -.01em; }
+    .nav { display: none; margin-left: auto; gap: 26px; }
+    .nav a { color: #d4dae0; text-decoration: none; font-size: .95rem; padding: 8px 0; }
+    .nav a:hover { color: #fff; text-decoration: underline; text-underline-offset: 5px; }
+    .tel { margin-left: auto; display: inline-flex; align-items: center; gap: 9px; color: #fff; text-decoration: none; font-weight: 700; font-size: 1.14rem; font-variant-numeric: tabular-nums; min-height: 48px; }
+    .tel:hover { color: #8fbaf5; }
+    @media (min-width: 900px) { .nav { display: flex; } .tel { margin-left: 0; } }
+
+    /* Buttons */
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 52px; padding: 0 26px; border-radius: 8px; font-weight: 700; font-size: 1.01rem; text-decoration: none; border: 2px solid transparent; cursor: pointer; transition: background-color .15s ease; }
+    .btn-primary { background: var(--blue); color: var(--accent-fg); }
+    .btn-primary:hover { background: var(--blue-2); }
+    .btn-line { border-color: var(--ink); color: var(--ink); }
+    .btn-line:hover { background: var(--wash-2); }
+    @media (max-width: 560px) { .cta-row .btn, form .btn { width: 100%; } }
+
+    /* Hero */
+    .hero { padding: 44px 0 0; border-bottom: 1px solid var(--line); }
+    @media (min-width: 900px) { .hero { padding: 72px 0 0; } }
+    .hero-grid { display: grid; gap: 32px; align-items: center; }
+    @media (min-width: 900px) { .hero-grid { grid-template-columns: 1.05fr .95fr; gap: 48px; } }
+    .hero h1 { max-width: 16ch; }
+    .hero .lede { font-size: 1.16rem; color: var(--ink); max-width: 48ch; }
+    .cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+    .hero figure { margin: 0; }
+    .hero figure svg { display: block; width: 100%; height: auto; border-radius: 12px; }
+    .hero figcaption { font-size: .85rem; color: var(--muted); margin-top: 10px; }
+    .quickfacts { display: grid; gap: 1px; background: var(--line); border-top: 0; }
+    @media (min-width: 700px) { .quickfacts { grid-template-columns: repeat(4, 1fr); } }
+    .quickfacts div { background: var(--white); padding: 20px 4px 26px; }
+    .quickfacts dt { font-size: .82rem; color: var(--muted); margin-bottom: 4px; }
+    .quickfacts dd { margin: 0; font-weight: 700; font-size: 1.1rem; color: var(--ink); }
+
+
+    /* Facts band: the trust strip the hero used to carry, now its own quiet section. */
+    .band { padding: 26px 0; border-bottom: 1px solid var(--line); }
+    @media (min-width: 900px) { .band { padding: 34px 0; } }
+
+    /* Sections */
+    .section { padding: 54px 0; }
+    @media (min-width: 900px) { .section { padding: 84px 0; } }
+    .section-wash { background: var(--wash); }
+    .section-dark { background: var(--graphite); color: #c6ced5; }
+    .section-dark h2, .section-dark h3 { color: #fff; }
+    .section-dark .eyebrow { color: #8fbaf5; }
+    .head { max-width: 60ch; margin-bottom: 36px; }
+    .answer { font-size: 1.1rem; color: var(--ink); max-width: 60ch; }
+    .section-dark .answer { color: #e6ebef; }
+
+    /* Services */
+    .svcs { display: grid; gap: 16px; }
+    @media (min-width: 640px) { .svcs { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 980px) { .svcs { grid-template-columns: repeat(3, 1fr); } }
+    .svc { background: var(--white); border: 1px solid var(--line); border-radius: 12px; padding: 24px; }
+    .svc h3 { margin-bottom: 6px; }
+    .svc p { font-size: .96rem; margin: 0 0 12px; }
+    .svc .range { font-size: .9rem; font-weight: 700; color: var(--blue-2); font-variant-numeric: tabular-nums; }
+
+    .svc.feature { background: var(--wash); border-color: #cfd8e0; box-shadow: inset 3px 0 0 var(--blue); }
+    .svc.feature h3 { font-size: 1.3rem; }
+
+    /* Process */
+    .steps { list-style: none; counter-reset: s; margin: 0; padding: 0; display: grid; gap: 16px; }
+    @media (min-width: 900px) { .steps { grid-template-columns: repeat(3, 1fr); gap: 18px; } }
+    .steps li { counter-increment: s; border: 1px solid rgba(255,255,255,.18); border-radius: 12px; padding: 22px; }
+    .steps li::before { content: counter(s); display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; background: var(--blue); color: #fff; font-weight: 700; font-size: .95rem; margin-bottom: 12px; }
+    .steps h3 { font-size: 1.08rem; margin-bottom: 6px; }
+    .steps p { font-size: .95rem; margin: 0; }
+
+    /* Proof */
+    .proof { display: grid; gap: 34px; }
+    @media (min-width: 900px) { .proof { grid-template-columns: 1.05fr .95fr; gap: 52px; } }
+    .creds { list-style: none; margin: 0; padding: 0; display: grid; gap: 13px; }
+    .creds li { display: grid; grid-template-columns: 20px 1fr; gap: 12px; font-size: 1rem; }
+    .creds svg { margin-top: 5px; }
+    .clients { background: var(--white); border: 1px solid var(--line); border-radius: 12px; padding: 24px; }
+    .clients ul { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 10px; font-size: .98rem; }
+    .clients li { padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+    .clients li:last-child { border-bottom: 0; padding-bottom: 0; }
+    .clients b { color: var(--ink); display: block; }
+    .clients li span { display: block; color: var(--muted); font-size: .92rem; margin-top: 2px; }
+
+    /* FAQ */
+    .faq-list { max-width: 820px; border-top: 1px solid var(--line); }
+    .faq-item { border-bottom: 1px solid var(--line); }
+    .faq-item summary { list-style: none; cursor: pointer; padding: 19px 44px 19px 0; position: relative; }
+    .faq-item summary::-webkit-details-marker { display: none; }
+    .faq-q { font-weight: 700; font-size: 1.08rem; color: var(--ink); margin: 0; display: inline; letter-spacing: -.01em; }
+    .faq-item summary::after { content: ""; position: absolute; right: 10px; top: 26px; width: 11px; height: 11px; border-right: 2.5px solid var(--blue); border-bottom: 2.5px solid var(--blue); transform: rotate(45deg); }
+    .faq-item[open] summary::after { transform: rotate(-135deg); top: 31px; }
+    .faq-a { margin: 0 0 20px; }
+
+    /* Contact */
+    .contactgrid { display: grid; gap: 34px; }
+    @media (min-width: 920px) { .contactgrid { grid-template-columns: 1.05fr .95fr; gap: 52px; } }
+    form { background: var(--white); border: 1px solid var(--line); border-radius: 14px; padding: 24px; }
+    @media (min-width: 640px) { form { padding: 30px; } }
+    .field { margin-bottom: 17px; }
+    .field label { display: block; font-size: .88rem; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+    .field input, .field select, .field textarea { width: 100%; font: inherit; font-size: 16px; color: var(--ink); background: var(--white); border: 1.5px solid #c4ccd3; border-radius: 9px; padding: 13px 14px; min-height: 50px; }
+    .field textarea { min-height: 110px; resize: vertical; }
+    .two { display: grid; gap: 17px; }
+    @media (min-width: 560px) { .two { grid-template-columns: 1fr 1fr; } }
+    .hint { font-size: .86rem; color: var(--muted); }
+    .info dl { margin: 0; display: grid; gap: 18px; }
+    .info dt { font-size: .76rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+    .info dd { margin: 0; color: var(--ink); }
+    .info address { font-style: normal; }
+
+    /* Footer */
+    footer { background: var(--graphite); color: #a3acb4; padding: 42px 0 30px; font-size: .92rem; }
+    footer a { color: #fff; }
+    .foot { display: grid; gap: 24px; }
+    @media (min-width: 760px) { .foot { grid-template-columns: 1.6fr 1fr 1fr; gap: 40px; } }
+    .foot h2 { font-size: 1rem; color: #fff; }
+    .foot ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+    .legal { border-top: 1px solid rgba(255,255,255,.14); margin-top: 30px; padding-top: 18px; font-size: .84rem; color: #848d95; }
+
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) and (min-width: 700px) {
+        .section .head, .svcs, .steps, .proof, .contactgrid { animation: rise linear both; animation-timeline: view(); animation-range: entry 8% cover 26%; }
+        @keyframes rise { from { transform: translateY(12px); } to { transform: none; } }
+      }
+    }
+
+    /* Dark mode: the same hierarchy, inverted. Surfaces lift rather than darken, so the
+       sections that were dark bands in light mode stay the elevated layer here too. */
+    @media (prefers-color-scheme: dark) {
+      :root {
+      --ink: #eef2f6; --body: #c2cad2; --muted: #939da7; --line: #262d34;
+      --white: #14181c; --wash: #101418; --wash-2: #171c21; --graphite: #0c1013;
+      --blue: #6da8f5; --blue-2: #97c2fa; --accent-fg: #04070a;
+      }
+      .svc.feature { background: #1e242b; }
+      img, svg[role="img"] { filter: brightness(.92) saturate(.94); }
+      .field input, .field select, .field textarea,
+      .obit-search input { background: var(--white); border-color: var(--line); color: var(--ink); }
+      ::placeholder { color: var(--muted); }
+    }
+  </style>
+  <script type="application/ld+json" data-checklist="structured-data meta-title-description address-present">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://brightlinesigns.com/#website",
+        "url": "https://brightlinesigns.com/",
+        "name": "Brightline Sign & Graphics",
+        "description": "Sign design, fabrication, permitting and installation in Tacoma, Washington.",
+        "publisher": { "@id": "https://brightlinesigns.com/#organization" },
+        "inLanguage": "en"
+      },
+      {
+        "@type": "LocalBusiness",
+        "@id": "https://brightlinesigns.com/#organization",
+        "name": "Brightline Sign & Graphics",
+        "url": "https://brightlinesigns.com/",
+        "description": "Brightline Sign & Graphics designs, fabricates, permits and installs storefront signs, illuminated channel letters, vehicle wraps, interior wayfinding and ADA signage for businesses across Tacoma and Pierce County, Washington.",
+        "telephone": "+1-253-555-0190",
+        "email": "quotes@brightlinesigns.com",
+        "foundingDate": "2004",
+        "priceRange": "$$",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "3120 South Tacoma Way",
+          "addressLocality": "Tacoma",
+          "addressRegion": "WA",
+          "postalCode": "98409",
+          "addressCountry": "US"
+        },
+        "geo": { "@type": "GeoCoordinates", "latitude": 47.2263, "longitude": -122.4652 },
+        "openingHoursSpecification": [
+          { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "07:30", "closes": "16:30" }
+        ],
+        "areaServed": [
+          { "@type": "Place", "name": "Tacoma, WA" },
+          { "@type": "Place", "name": "Lakewood, WA" },
+          { "@type": "Place", "name": "Puyallup, WA" },
+          { "@type": "Place", "name": "Gig Harbor, WA" },
+          { "@type": "Place", "name": "Federal Way, WA" },
+          { "@type": "Place", "name": "Pierce County, WA" }
+        ],
+        "hasOfferCatalog": {
+          "@type": "OfferCatalog",
+          "name": "Services offered by Brightline Sign & Graphics",
+          "itemListElement": [
+            { "@type": "Offer", "priceCurrency": "USD", "price": "4500", "itemOffered": { "@type": "Service", "name": "Storefront and building signs", "description": "Illuminated channel letters, cabinet signs, blade signs and monument signs, designed, permitted, fabricated and installed." } },
+            { "@type": "Offer", "priceCurrency": "USD", "price": "3200", "itemOffered": { "@type": "Service", "name": "Vehicle wraps and fleet graphics", "description": "Full and partial wraps and cut-vinyl fleet lettering, printed and installed in our own bay." } },
+            { "@type": "Offer", "priceCurrency": "USD", "price": "1900", "itemOffered": { "@type": "Service", "name": "Interior and wayfinding signage", "description": "Lobby and reception signs, directories, room identification and ADA-compliant tactile and braille signage." } },
+            { "@type": "Offer", "priceCurrency": "USD", "price": "380", "itemOffered": { "@type": "Service", "name": "Window and wall graphics", "description": "Cut vinyl, frosted privacy film, full-colour window prints and large-format wall murals." } },
+            { "@type": "Offer", "priceCurrency": "USD", "price": "185", "itemOffered": { "@type": "Service", "name": "Banners and event graphics", "description": "Vinyl banners, retractable stands, A-frames, table throws and step-and-repeat backdrops." } },
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Sign permitting and service", "description": "Permit drawings and filing with the City of Tacoma and Pierce County, plus repair and relamping of signs we did not build." } }
+          ]
+        },
+        "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.8", "reviewCount": "142", "bestRating": "5" }
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://brightlinesigns.com/#webpage",
+        "url": "https://brightlinesigns.com/",
+        "name": "Brightline Sign & Graphics | Signs & Vehicle Wraps, Tacoma",
+        "description": "We design, build, permit and install storefront signs, vehicle wraps and interior wayfinding for businesses across Pierce County. In-house since 2004.",
+        "isPartOf": { "@id": "https://brightlinesigns.com/#website" },
+        "about": { "@id": "https://brightlinesigns.com/#organization" },
+        "inLanguage": "en",
+        "speakable": { "@type": "SpeakableSpecification", "cssSelector": ["h1", "[data-answer-first]"] }
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://brightlinesigns.com/#faq",
+        "mainEntity": [
+          { "@type": "Question", "name": "How much does a storefront sign cost?", "acceptedAnswer": { "@type": "Answer", "text": "Illuminated channel letters on a typical retail frontage run $4,500 to $18,000 depending on letter height, depth and how many circuits the electrician has to pull. A lit cabinet sign is usually $3,000 to $9,000, and non-illuminated dimensional letters start around $1,400. Every quote is itemised into design, fabrication, permit and installation so you can see what is driving the number." } },
+          { "@type": "Question", "name": "Do you handle the sign permit?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, on every exterior job. We produce the permit drawings, file with the City of Tacoma or the relevant Pierce County jurisdiction, and deal with any correction notices. Permits typically add two to four weeks, and we tell you at the survey if your address sits in a design-review overlay that will add more." } },
+          { "@type": "Question", "name": "How long does the whole thing take?", "acceptedAnswer": { "@type": "Answer", "text": "Most storefront signs are installed three to five weeks after you approve the proof, plus permit time. Vehicle wraps take five working days from art approval, and we need the vehicle for two of them. Banners and window graphics are usually ready in two to three business days." } },
+          { "@type": "Question", "name": "Can you repair a sign you did not build?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. We relamp, re-power and repair signs from any manufacturer, and we carry a bucket truck rated to 45 feet. Service calls within Pierce County are $185 for the first hour and $110 an hour after that, plus parts." } },
+          { "@type": "Question", "name": "Will the colours match our brand exactly?", "acceptedAnswer": { "@type": "Answer", "text": "We match to Pantone rather than to a screenshot, and we will print a physical swatch for you to hold against your existing materials before anything goes into production. Bring your brand guide if you have one, or a printed piece if you do not." } },
+          { "@type": "Question", "name": "Can you wrap a leased vehicle?", "acceptedAnswer": { "@type": "Answer", "text": "Usually, yes. We use cast vinyl with a removable adhesive on leased vehicles, which comes off cleanly at the end of the term without damaging factory paint. Check your lease for a graphics clause first, and we will remove the wrap for you before you hand the vehicle back." } },
+          { "@type": "Question", "name": "What warranty do you give?", "acceptedAnswer": { "@type": "Answer", "text": "Five years on electrical components and labour for signs we fabricate and install, three years on vehicle wraps against lifting, cracking and fading, and one year on banners and window graphics. The warranty is written into the quote, not buried on the back of an invoice." } }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header>
+    <div class="wrap bar">
+      <a class="brand" href="/">
+        <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#2a3138"/><rect x="7" y="11" width="18" height="10" rx="2" fill="#4f8ff0"/></svg>
+        Brightline Sign &amp; Graphics
+      </a>
+      <nav class="nav" aria-label="Primary">
+        <a href="#services">What we make</a>
+        <a href="#process">How it works</a>
+        <a href="#proof">Who we work for</a>
+        <a href="#faq">FAQ</a>
+        <a href="#contact">Get a quote</a>
+      </nav>
+      <a class="tel" href="tel:+12535550190" data-checklist="tel-link tel-link-above-fold">
+        <svg width="19" height="19" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M222.37,158.46l-47.11-21.11-.13-.06a16,16,0,0,0-15.17,1.4,8.12,8.12,0,0,0-.75.56L134.87,160c-15.42-7.49-31.34-23.29-38.83-38.51l20.78-24.71c.2-.25.39-.5.57-.77a16,16,0,0,0,1.32-15.06l0-.12L97.54,33.64a16,16,0,0,0-16.62-9.52A56.26,56.26,0,0,0,32,80c0,79.4,64.6,144,144,144a56.26,56.26,0,0,0,55.88-48.92A16,16,0,0,0,222.37,158.46ZM176,208A128.14,128.14,0,0,1,48,80,40.2,40.2,0,0,1,82.87,40a.61.61,0,0,0,0,.12l21,47L83.2,111.86a6.13,6.13,0,0,0-.57.77,16,16,0,0,0-1,15.7c9.06,18.53,27.73,37.06,46.46,46.11a16,16,0,0,0,15.75-1.14,8,8,0,0,0,.74-.56L168.89,152l47,21.05h0s.08,0,.11,0A40.21,40.21,0,0,1,176,208Z"/></svg>
+        (253) 555-0190
+      </a>
+    </div>
+  </header>
+
+  <main id="main" data-checklist="h2-structure">
+    <section class="hero" id="hero" aria-labelledby="hero-h">
+      <div class="wrap">
+        <div class="hero-grid">
+          <div>
+            <p class="eyebrow">Tacoma, Washington &middot; Since 2004</p>
+            <h1 id="hero-h" data-checklist="single-h1">Signs for businesses in Pierce County, made start to finish.</h1>
+            <p class="lede" data-answer-first data-checklist="G-what-they-do C-answer-first">Brightline Sign &amp; Graphics designs, fabricates, permits and installs storefront signs, vehicle wraps, interior wayfinding and window graphics for businesses in Tacoma, Lakewood, Puyallup, Gig Harbor and Federal Way, all in one shop on South Tacoma Way.</p>
+            <div class="cta-row">
+              <a class="btn btn-primary" href="#contact" data-checklist="G-primary-cta">Get a quote</a>
+              <a class="btn btn-line" href="tel:+12535550190">Call (253) 555-0190</a>
+            </div>
+          </div>
+          <figure>
+            <svg viewBox="0 0 700 480" role="img" aria-label="A Brightline crew installing illuminated channel letters above a shopfront from a lift, with a wrapped van parked at the kerb.">
+              <rect width="700" height="480" fill="#e7edf2"/>
+              <rect width="700" height="250" fill="#dfe8ef"/>
+              <rect y="330" width="700" height="150" fill="#ccd5dc"/>
+              <rect y="318" width="700" height="14" fill="#b9c3cb"/>
+              <rect x="60" y="120" width="580" height="200" fill="#aeb9c2"/>
+              <rect x="60" y="120" width="580" height="46" fill="#8e9aa4"/>
+              <g fill="#dfe8ef"><rect x="96" y="186" width="130" height="110" rx="4"/><rect x="260" y="186" width="130" height="110" rx="4"/><rect x="424" y="186" width="130" height="110" rx="4"/></g>
+              <rect x="568" y="186" width="46" height="110" rx="4" fill="#7e8a95"/>
+              <g fill="#4f8ff0">
+                <rect x="140" y="128" width="26" height="30" rx="3"/><rect x="176" y="128" width="26" height="30" rx="3"/>
+                <rect x="212" y="128" width="26" height="30" rx="3"/><rect x="248" y="128" width="26" height="30" rx="3"/>
+                <rect x="284" y="128" width="26" height="30" rx="3"/>
+              </g>
+              <g fill="#9fb3c6"><rect x="320" y="128" width="26" height="30" rx="3"/><rect x="356" y="128" width="26" height="30" rx="3"/></g>
+              <g>
+                <rect x="392" y="196" width="18" height="124" fill="#5b646d"/>
+                <rect x="352" y="300" width="100" height="20" rx="4" fill="#3f474f"/>
+                <rect x="330" y="150" width="96" height="14" rx="4" fill="#f0a52b"/>
+                <rect x="336" y="108" width="84" height="46" rx="5" fill="none" stroke="#f0a52b" stroke-width="7"/>
+                <g transform="translate(378 96)">
+                  <circle cy="-4" r="13" fill="#e8c9a8"/>
+                  <path d="M-13-8a13 13 0 0 1 26 0q-13-8-26 0Z" fill="#f0a52b"/>
+                  <path d="M-16 44V14a16 16 0 0 1 32 0v30Z" fill="#f0a52b"/>
+                  <path d="M14 20 l22 6" stroke="#e8c9a8" stroke-width="7" stroke-linecap="round"/>
+                </g>
+              </g>
+              <g>
+                <path d="M40 396 h180 l34 -52 h86 l14 52 h22 v42 H40 Z" fill="#1550b5"/>
+                <path d="M254 344 h86 l14 52 h-134 Z" fill="#cfe0f7"/>
+                <rect x="60" y="356" width="150" height="40" rx="6" fill="#4f8ff0"/>
+                <g fill="#fff"><rect x="76" y="368" width="42" height="7" rx="3"/><rect x="76" y="381" width="90" height="5" rx="2"/></g>
+                <circle cx="104" cy="438" r="24" fill="#2b3138"/><circle cx="104" cy="438" r="9" fill="#96a1ab"/>
+                <circle cx="316" cy="438" r="24" fill="#2b3138"/><circle cx="316" cy="438" r="9" fill="#96a1ab"/>
+              </g>
+              <g fill="#fff" opacity=".8"><circle cx="560" cy="60" r="22"/><circle cx="592" cy="56" r="30"/><circle cx="626" cy="66" r="20"/></g>
+            </svg>
+            <figcaption>Illustrated stand-in. On a live build this is the shop&rsquo;s own installation photography.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="band" aria-label="Brightline in numbers">
+      <div class="wrap">
+        <dl class="quickfacts">
+          <div><dt>In business</dt><dd>22 years</dd></div>
+          <div><dt>Signs installed</dt><dd>3,400+</dd></div>
+          <div><dt>Typical storefront sign</dt><dd>3-5 weeks</dd></div>
+          <div><dt>Quote turnaround</dt><dd>2 business days</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="section" id="services" aria-labelledby="services-h">
+      <div class="wrap">
+        <div class="head">
+          <h2 id="services-h">Six things, all under one roof</h2>
+          <p class="answer" data-answer-first data-checklist="C-answer-first">Design, print, fabrication, permitting and installation all happen at our own shop on South Tacoma Way, so there is one company to call when something needs fixing.</p>
+        </div>
+        <div class="svcs">
+          <article class="svc feature">
+            <h3>Storefront &amp; building signs</h3>
+            <p>Illuminated channel letters, lit cabinets, blade signs and monument signs, surveyed, engineered, permitted and hung by our own crew.</p>
+            <p class="range">Typically $4,500 - $18,000</p>
+          </article>
+          <article class="svc feature">
+            <h3>Vehicle wraps &amp; fleet graphics</h3>
+            <p>Full and partial wraps and cut-vinyl fleet lettering, printed on cast vinyl and installed indoors in our own bay.</p>
+            <p class="range">Full wrap $3,200 - $4,800</p>
+          </article>
+          <article class="svc">
+            <h3>Interior &amp; wayfinding</h3>
+            <p>Lobby signs, directories, room identification and ADA-compliant tactile and braille signage that will pass inspection.</p>
+            <p class="range">Sets from $1,900</p>
+          </article>
+          <article class="svc">
+            <h3>Window &amp; wall graphics</h3>
+            <p>Cut vinyl, frosted privacy film, full-colour window prints and large-format wall murals, measured on site.</p>
+            <p class="range">From $380</p>
+          </article>
+          <article class="svc">
+            <h3>Banners &amp; event graphics</h3>
+            <p>Vinyl banners, retractable stands, A-frames, table throws and step-and-repeat backdrops, usually in two to three days.</p>
+            <p class="range">From $185</p>
+          </article>
+          <article class="svc">
+            <h3>Permits, service &amp; repair</h3>
+            <p>Permit drawings and filing with the City of Tacoma and Pierce County, plus relamping and repair of signs we did not build.</p>
+            <p class="range">Service call $185 first hour</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-dark" id="process" aria-labelledby="process-h">
+      <div class="wrap">
+        <div class="head">
+          <h2 id="process-h">From a phone call to a lit sign</h2>
+          <p class="answer" data-answer-first data-checklist="C-answer-first">Six steps, and you see a proof and a fixed price before anything is built.</p>
+        </div>
+        <ol class="steps">
+          <li>
+            <h3>Site survey</h3>
+            <p>We come out, measure the frontage or the vehicle, photograph it, and check the power and the zoning overlay.</p>
+          </li>
+          <li>
+            <h3>Design proof</h3>
+            <p>A rendering of the sign on a photograph of your own building, with a fixed itemised price. Two revisions included.</p>
+          </li>
+          <li>
+            <h3>Permit</h3>
+            <p>We draw and file with the City of Tacoma or your jurisdiction, and handle any correction notices. Two to four weeks.</p>
+          </li>
+          <li>
+            <h3>Fabrication</h3>
+            <p>Built in our shop: routed aluminium, LED modules, UL-listed wiring. We send a photo the day it comes off the bench.</p>
+          </li>
+          <li>
+            <h3>Installation</h3>
+            <p>Our own crew and our own bucket truck, scheduled around your opening hours. Most installs take half a day.</p>
+          </li>
+          <li>
+            <h3>Warranty &amp; service</h3>
+            <p>Five years on electrical parts and labour, three on wraps, written into the quote. One number to call if anything fails.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section section-wash" id="proof" aria-labelledby="proof-h">
+      <div class="wrap">
+        <div class="head">
+          <p class="eyebrow">Who we work for</p>
+          <h2 id="proof-h">Twenty-two years and 3,400 signs</h2>
+          <p class="answer" data-answer-first data-checklist="C-answer-first">Brightline has been licensed, bonded and insured in Washington since 2004, and most of our work now comes from businesses a previous customer sent to us.</p>
+        </div>
+        <div class="proof">
+          <ul class="creds" data-checklist="G-trust">
+            <li>
+              <svg width="18" height="18" viewBox="0 0 256 256" fill="#1550b5" aria-hidden="true"><path d="M208,40H48A16,16,0,0,0,32,56v56c0,52.72,25.52,84.67,46.93,102.19,23.06,18.86,46,25.26,47,25.53a8,8,0,0,0,4.2,0c1-.27,23.91-6.67,47-25.53C198.48,196.67,224,164.72,224,112V56A16,16,0,0,0,208,40Zm0,72c0,37.07-13.66,67.16-40.6,89.42A129.3,129.3,0,0,1,128,223.62a128.25,128.25,0,0,1-38.92-21.81C61.82,179.51,48,149.42,48,112V56H208ZM82.34,141.66a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32l-56,56a8,8,0,0,1-11.32,0Z"/></svg>
+              <span><strong>Washington contractor licence BRIGHSG882QK</strong>, bonded and continuously registered since 2004.</span>
+            </li>
+            <li>
+              <svg width="18" height="18" viewBox="0 0 256 256" fill="#1550b5" aria-hidden="true"><path d="M208,40H48A16,16,0,0,0,32,56v56c0,52.72,25.52,84.67,46.93,102.19,23.06,18.86,46,25.26,47,25.53a8,8,0,0,0,4.2,0c1-.27,23.91-6.67,47-25.53C198.48,196.67,224,164.72,224,112V56A16,16,0,0,0,208,40Zm0,72c0,37.07-13.66,67.16-40.6,89.42A129.3,129.3,0,0,1,128,223.62a128.25,128.25,0,0,1-38.92-21.81C61.82,179.51,48,149.42,48,112V56H208ZM82.34,141.66a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32l-56,56a8,8,0,0,1-11.32,0Z"/></svg>
+              <span><strong>$2,000,000 general liability</strong> plus Washington workers&rsquo; compensation. Certificates on request.</span>
+            </li>
+            <li>
+              <svg width="18" height="18" viewBox="0 0 256 256" fill="#1550b5" aria-hidden="true"><path d="M208,40H48A16,16,0,0,0,32,56v56c0,52.72,25.52,84.67,46.93,102.19,23.06,18.86,46,25.26,47,25.53a8,8,0,0,0,4.2,0c1-.27,23.91-6.67,47-25.53C198.48,196.67,224,164.72,224,112V56A16,16,0,0,0,208,40Zm0,72c0,37.07-13.66,67.16-40.6,89.42A129.3,129.3,0,0,1,128,223.62a128.25,128.25,0,0,1-38.92-21.81C61.82,179.51,48,149.42,48,112V56H208ZM82.34,141.66a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32l-56,56a8,8,0,0,1-11.32,0Z"/></svg>
+              <span><strong>UL-listed sign shop</strong> (file E-338204), so every illuminated sign we build carries its own UL label.</span>
+            </li>
+            <li>
+              <svg width="18" height="18" viewBox="0 0 256 256" fill="#1550b5" aria-hidden="true"><path d="M208,40H48A16,16,0,0,0,32,56v56c0,52.72,25.52,84.67,46.93,102.19,23.06,18.86,46,25.26,47,25.53a8,8,0,0,0,4.2,0c1-.27,23.91-6.67,47-25.53C198.48,196.67,224,164.72,224,112V56A16,16,0,0,0,208,40Zm0,72c0,37.07-13.66,67.16-40.6,89.42A129.3,129.3,0,0,1,128,223.62a128.25,128.25,0,0,1-38.92-21.81C61.82,179.51,48,149.42,48,112V56H208ZM82.34,141.66a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32l-56,56a8,8,0,0,1-11.32,0Z"/></svg>
+              <span><strong>Eleven staff</strong>, including two 3M-certified wrap installers and a licensed electrician on the install crew.</span>
+            </li>
+            <li>
+              <svg width="18" height="18" viewBox="0 0 256 256" fill="#1550b5" aria-hidden="true"><path d="M208,40H48A16,16,0,0,0,32,56v56c0,52.72,25.52,84.67,46.93,102.19,23.06,18.86,46,25.26,47,25.53a8,8,0,0,0,4.2,0c1-.27,23.91-6.67,47-25.53C198.48,196.67,224,164.72,224,112V56A16,16,0,0,0,208,40Zm0,72c0,37.07-13.66,67.16-40.6,89.42A129.3,129.3,0,0,1,128,223.62a128.25,128.25,0,0,1-38.92-21.81C61.82,179.51,48,149.42,48,112V56H208ZM82.34,141.66a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32l-56,56a8,8,0,0,1-11.32,0Z"/></svg>
+              <span><strong>4.8 out of 5 across 142 Google reviews</strong> of the South Tacoma Way shop.</span>
+            </li>
+          </ul>
+          <div class="clients">
+            <h3>Recent work</h3>
+            <ul>
+              <li><b>Harborview Dental Group</b><span>illuminated channel letters and a monument sign, Lakewood</span></li>
+              <li><b>Puget Fitness Collective</b><span>storefront cabinet, window graphics and a 22-piece wayfinding set</span></li>
+              <li><b>Sixth Ave Bakehouse</b><span>hand-finished blade sign and gold-leaf window lettering</span></li>
+              <li><b>Rainier Auto Care</b><span>nine-vehicle fleet wrap over three weekends</span></li>
+              <li><b>Nisqually Realty</b><span>lobby sign, directory and 40 ADA room plaques</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="faq" aria-labelledby="faq-h">
+      <div class="wrap">
+        <div class="head">
+          <h2 id="faq-h">Frequently asked questions</h2>
+          <p class="answer" data-answer-first data-checklist="C-answer-first">Cost, permits, timing, warranty and leased vehicles: the seven things we get asked on almost every first call.</p>
+        </div>
+        <div class="faq-list" data-checklist="faq-present">
+          <details class="faq-item" open>
+            <summary><h3 class="faq-q">How much does a storefront sign cost?</h3></summary>
+            <p class="faq-a" data-answer-first>Illuminated channel letters on a typical retail frontage run $4,500 to $18,000 depending on letter height, depth and how many circuits the electrician has to pull. A lit cabinet sign is usually $3,000 to $9,000, and non-illuminated dimensional letters start around $1,400. Every quote is itemised into design, fabrication, permit and installation so you can see what is driving the number.</p>
+          </details>
+          <details class="faq-item">
+            <summary><h3 class="faq-q">Do you handle the sign permit?</h3></summary>
+            <p class="faq-a" data-answer-first>Yes, on every exterior job. We produce the permit drawings, file with the City of Tacoma or the relevant Pierce County jurisdiction, and deal with any correction notices. Permits typically add two to four weeks, and we tell you at the survey if your address sits in a design-review overlay that will add more.</p>
+          </details>
+          <details class="faq-item">
+            <summary><h3 class="faq-q">How long does the whole thing take?</h3></summary>
+            <p class="faq-a" data-answer-first>Most storefront signs are installed three to five weeks after you approve the proof, plus permit time. Vehicle wraps take five working days from art approval, and we need the vehicle for two of them. Banners and window graphics are usually ready in two to three business days.</p>
+          </details>
+          <details class="faq-item">
+            <summary><h3 class="faq-q">Can you repair a sign you did not build?</h3></summary>
+            <p class="faq-a" data-answer-first>Yes. We relamp, re-power and repair signs from any manufacturer, and we carry a bucket truck rated to 45 feet. Service calls within Pierce County are $185 for the first hour and $110 an hour after that, plus parts.</p>
+          </details>
+          <details class="faq-item">
+            <summary><h3 class="faq-q">Will the colours match our brand exactly?</h3></summary>
+            <p class="faq-a" data-answer-first>We match to Pantone rather than to a screenshot, and we will print a physical swatch for you to hold against your existing materials before anything goes into production. Bring your brand guide if you have one, or a printed piece if you do not.</p>
+          </details>
+          <details class="faq-item">
+            <summary><h3 class="faq-q">Can you wrap a leased vehicle?</h3></summary>
+            <p class="faq-a" data-answer-first>Usually, yes. We use cast vinyl with a removable adhesive on leased vehicles, which comes off cleanly at the end of the term without damaging factory paint. Check your lease for a graphics clause first, and we will remove the wrap for you before you hand the vehicle back.</p>
+          </details>
+          <details class="faq-item">
+            <summary><h3 class="faq-q">What warranty do you give?</h3></summary>
+            <p class="faq-a" data-answer-first>Five years on electrical components and labour for signs we fabricate and install, three years on vehicle wraps against lifting, cracking and fading, and one year on banners and window graphics. The warranty is written into the quote, not buried on the back of an invoice.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-wash" id="contact" aria-labelledby="contact-h">
+      <div class="wrap">
+        <div class="head">
+          <h2 id="contact-h">Tell us what you need</h2>
+          <p class="answer" data-answer-first data-checklist="C-answer-first">Send a photo of the frontage or the vehicle and we will come back with an itemised price within two business days, or call and talk it through now.</p>
+        </div>
+        <div class="contactgrid">
+          <form action="#" method="post" novalidate data-checklist="contact-form">
+            <div class="two">
+              <div class="field">
+                <label for="g-name">Your name</label>
+                <input id="g-name" name="name" type="text" autocomplete="name" required>
+              </div>
+              <div class="field">
+                <label for="g-business">Business name</label>
+                <input id="g-business" name="business" type="text" autocomplete="organization">
+              </div>
+            </div>
+            <div class="two">
+              <div class="field">
+                <label for="g-phone">Phone</label>
+                <input id="g-phone" name="phone" type="tel" autocomplete="tel" required>
+              </div>
+              <div class="field">
+                <label for="g-email">Email</label>
+                <input id="g-email" name="email" type="email" autocomplete="email" required>
+              </div>
+            </div>
+            <div class="field">
+              <label for="g-type">What do you need?</label>
+              <select id="g-type" name="type">
+                <option>Storefront or building sign</option>
+                <option>Vehicle wrap or fleet graphics</option>
+                <option>Interior or wayfinding signage</option>
+                <option>Window or wall graphics</option>
+                <option>Banners or event graphics</option>
+                <option>Repair or relamp an existing sign</option>
+                <option>Not sure yet</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="g-photos">Photos of the frontage or vehicle (optional)</label>
+              <input id="g-photos" name="photos" type="file" accept="image/*" multiple>
+            </div>
+            <div class="field">
+              <label for="g-note">Anything else?</label>
+              <textarea id="g-note" name="note" placeholder="Address, deadline, whether there is existing power at the sign location, landlord or HOA requirements."></textarea>
+            </div>
+            <button class="btn btn-primary" type="submit">Get a quote</button>
+            <p class="hint" style="margin-top:14px">We reply within two business days. Nothing is sold on, and we do not add you to a mailing list.</p>
+          </form>
+          <div class="info">
+            <dl>
+              <div>
+                <dt>Shop</dt>
+                <dd><address>Brightline Sign &amp; Graphics<br>3120 South Tacoma Way<br>Tacoma, WA 98409</address></dd>
+              </div>
+              <div>
+                <dt>Phone</dt>
+                <dd><a href="tel:+12535550190">(253) 555-0190</a></dd>
+              </div>
+              <div>
+                <dt>Email</dt>
+                <dd><a href="mailto:quotes@brightlinesigns.com">quotes@brightlinesigns.com</a></dd>
+              </div>
+              <div>
+                <dt>Hours</dt>
+                <dd>Monday-Friday 7:30 am-4:30 pm<br>Closed Saturday and Sunday</dd>
+              </div>
+              <div>
+                <dt>We work across</dt>
+                <dd>Tacoma, Lakewood, Puyallup, Gig Harbor, Federal Way and the rest of Pierce County.</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div class="foot">
+        <div>
+          <h2>Brightline Sign &amp; Graphics</h2>
+          <p>Sign design, fabrication, permitting and installation for Pierce County businesses since 2004.</p>
+          <p><a href="tel:+12535550190">(253) 555-0190</a><br>3120 South Tacoma Way, Tacoma, WA 98409</p>
+        </div>
+        <div>
+          <h2>What we make</h2>
+          <ul>
+            <li><a href="#services">Storefront &amp; building signs</a></li>
+            <li><a href="#services">Vehicle wraps</a></li>
+            <li><a href="#services">Interior &amp; wayfinding</a></li>
+            <li><a href="#services">Window &amp; wall graphics</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2>Company</h2>
+          <ul>
+            <li><a href="#process">How it works</a></li>
+            <li><a href="#proof">Licences &amp; insurance</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="#contact">Get a quote</a></li>
+          </ul>
+        </div>
+      </div>
+      <p class="legal">Washington contractor licence BRIGHSG882QK, UL-listed sign shop file E-338204, $2,000,000 general liability. Demonstration page built for the AgencyOS generic persona. The business, prices and clients are illustrative.</p>
+    </div>
+  </footer>
+</body>
+</html>
