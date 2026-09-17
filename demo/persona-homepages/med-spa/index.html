@@ -1,0 +1,960 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Juniper Aesthetics | Injectables &amp; Lasers in Boulder, CO</title>
+  <meta name="description" content="A physician-led med spa on Pearl Street. Browse by concern or by treatment, read every price before you book, and see who performs it: RN, NP and MD.">
+  <meta name="theme-color" content="#f6f2ec">
+  <meta name="color-scheme" content="light dark">
+  <link rel="canonical" href="https://juniperaesthetics.com/">
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Juniper Aesthetics">
+  <meta property="og:title" content="Juniper Aesthetics | Injectables &amp; Lasers in Boulder, CO">
+  <meta property="og:description" content="Physician-led med spa on Pearl Street, Boulder. Published prices, named providers, and booking through Boulevard.">
+  <meta property="og:url" content="https://juniperaesthetics.com/">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Juniper Aesthetics | Injectables &amp; Lasers in Boulder, CO">
+  <meta name="twitter:description" content="Physician-led med spa on Pearl Street, Boulder. Published prices, named providers, and booking through Boulevard.">
+  <link rel="alternate" type="text/markdown" href="/index.md">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23171410'/%3E%3Cpath d='M9 8h14v2.6h-5.6V24h-2.8V10.6H9z' fill='%23f6f2ec'/%3E%3C/svg%3E">
+  <style>
+    /* ---------------------------------------------------------------------
+       Juniper Aesthetics - med-spa persona
+       Direction (references/med-spa.md): editorial and clinical at once -
+       a magazine spread with a medical licence on the wall. Warm off-white
+       ground, near-black ink, one muted clay accent held for the booking
+       action. Serif display carries the personality; body stays quiet; a
+       monospace carries prices and durations. Airy, wide, slow.
+       --------------------------------------------------------------------- */
+    :root {
+      --bone: #f6f2ec;
+      --bone-2: #efe9e0;
+      --ink: #17140f;
+      --body: #4a443b;
+      --muted: #6c6457;
+      --clay: #9c4a2f;
+      --clay-deep: #7d3922;
+      --rule: #ded5c8;
+      --white: #fffdfa;
+      --accent-fg: #fff;
+      --shell: #17140f;
+      --display: "Hoefler Text", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+      --text: ui-sans-serif, -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
+      --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+      --wrap: 1240px;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body { margin: 0; background: var(--bone); color: var(--body); font-family: var(--text); font-size: 17px; line-height: 1.65; padding-bottom: 72px; }
+    @media (min-width: 900px) { body { padding-bottom: 0; } }
+    h1, h2, h3 { font-family: var(--display); color: var(--ink); margin: 0 0 .44em; font-weight: 400; line-height: 1.04; letter-spacing: -.012em; }
+    h1 { font-size: clamp(2.7rem, 8vw, 5.4rem); }
+    h2 { font-size: clamp(2rem, 4.8vw, 3.2rem); }
+    h3 { font-size: 1.4rem; line-height: 1.2; }
+    h4 { font-family: var(--text); font-size: .98rem; font-weight: 600; color: var(--ink); margin: 0 0 .4em; letter-spacing: .01em; }
+    p { margin: 0 0 1.1em; max-width: 64ch; }
+    a { color: var(--clay-deep); }
+    a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, summary:focus-visible { outline: 2px solid var(--clay); outline-offset: 4px; }
+    .wrap { width: 100%; max-width: var(--wrap); margin-inline: auto; padding-inline: 24px; }
+    .skip-link { position: absolute; left: -9999px; background: var(--shell); color: #f6f2ec; padding: 12px 18px; z-index: 60; }
+    .skip-link:focus { left: 8px; top: 8px; }
+    .label { font-family: var(--mono); font-size: .72rem; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); margin: 0 0 18px; }
+
+    /* Header */
+    header { border-bottom: 1px solid var(--rule); }
+    .bar { display: flex; align-items: center; gap: 20px; min-height: 76px; }
+    .brand { font-family: var(--display); font-size: 1.32rem; color: var(--ink); text-decoration: none; letter-spacing: .02em; line-height: 1; }
+    .brand em { font-style: normal; display: block; font-family: var(--mono); font-size: .6rem; letter-spacing: .24em; text-transform: uppercase; color: var(--muted); margin-top: 5px; }
+    .nav { display: none; margin-left: auto; gap: 30px; }
+    .nav a { color: var(--body); text-decoration: none; font-size: .93rem; padding: 8px 0; }
+    .nav a:hover { color: var(--clay-deep); text-decoration: underline; text-underline-offset: 6px; }
+    .tel { margin-left: auto; color: var(--ink); text-decoration: none; font-family: var(--mono); font-size: 1.02rem; letter-spacing: .02em; display: inline-flex; align-items: center; gap: 9px; min-height: 48px; }
+    .tel:hover { color: var(--clay-deep); }
+    .head-book { display: none; }
+    @media (min-width: 980px) { .nav { display: flex; } .tel { margin-left: 0; } .head-book { display: inline-flex; } }
+
+    /* Buttons */
+    .btn { display: inline-flex; align-items: center; justify-content: center; min-height: 54px; padding: 0 30px; font-family: var(--text); font-weight: 600; font-size: 1rem; letter-spacing: .01em; text-decoration: none; border: 1px solid transparent; border-radius: 2px; cursor: pointer; transition: background-color .2s ease, color .2s ease; }
+    .btn-primary { background: var(--clay); color: var(--accent-fg); }
+    .btn-primary:hover { background: var(--clay-deep); }
+    .btn-line { border-color: var(--ink); color: var(--ink); }
+    .btn-line:hover { background: var(--shell); color: #f6f2ec; }
+    .btn-sm { min-height: 44px; padding: 0 20px; font-size: .9rem; }
+    @media (max-width: 560px) { .hero-cta .btn, form .btn { width: 100%; } }
+
+    /* Hero - editorial: type first, photograph beneath */
+    .hero { padding: 54px 0 0; }
+    @media (min-width: 900px) { .hero { padding: 104px 0 0; } }
+    .hero h1 { max-width: 15ch; margin-bottom: 26px; }
+    .hero .lede { font-size: 1.22rem; color: var(--ink); max-width: 52ch; }
+    @media (min-width: 900px) { .hero .lede { font-size: 1.35rem; } }
+    .hero-cta { display: flex; flex-wrap: wrap; gap: 14px; margin: 32px 0 34px; }
+    .meta { display: grid; gap: 0; border-top: 1px solid var(--rule); font-family: var(--mono); font-size: .8rem; letter-spacing: .04em; }
+    .meta div { padding: 15px 0; border-bottom: 1px solid var(--rule); display: flex; gap: 16px; }
+    .meta dt { color: var(--muted); text-transform: uppercase; font-size: .68rem; letter-spacing: .16em; min-width: 12ch; padding-top: 3px; }
+    .meta dd { margin: 0; color: var(--ink); }
+    @media (min-width: 760px) { .meta { grid-template-columns: repeat(3, 1fr); column-gap: 40px; } }
+    .hero-figure { margin: 46px 0 0; }
+    .hero-figure svg { display: block; width: 100%; height: auto; }
+    .hero-figure figcaption { font-family: var(--mono); font-size: .72rem; letter-spacing: .1em; color: var(--muted); padding: 12px 0 0; text-transform: uppercase; }
+
+
+    /* Facts band: the trust strip the hero used to carry, now its own quiet section. */
+    .band { padding: 26px 0; border-bottom: 1px solid var(--rule); }
+    @media (min-width: 900px) { .band { padding: 34px 0; } }
+
+    /* Sections */
+    .section { padding: 72px 0; }
+    @media (min-width: 900px) { .section { padding: 124px 0; } }
+    .section-rule { border-top: 1px solid var(--rule); }
+    .section-ink { background: var(--shell); color: #cfc7bb; }
+    .section-ink h2, .section-ink h3, .section-ink h4 { color: #f6f2ec; }
+    .section-ink .label { color: #9a9083; }
+    .section-bone { background: var(--bone-2); }
+    .head { max-width: 58ch; margin-bottom: 52px; }
+    .answer { font-size: 1.14rem; color: var(--ink); max-width: 60ch; }
+    .section-ink .answer { color: #eee7dc; }
+
+    /* Concerns */
+    .concerns { display: grid; gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
+    @media (min-width: 640px) { .concerns { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 1000px) { .concerns { grid-template-columns: repeat(4, 1fr); } }
+    .concern { background: var(--bone); padding: 28px 24px 26px; display: flex; flex-direction: column; min-height: 100%; }
+    .concern h3 { font-size: 1.24rem; margin-bottom: 10px; }
+    .concern p { font-size: .95rem; margin-bottom: 16px; }
+    .concern .go { margin-top: auto; font-family: var(--mono); font-size: .74rem; letter-spacing: .12em; text-transform: uppercase; color: var(--clay-deep); text-decoration: none; }
+    .concern .go:hover { text-decoration: underline; text-underline-offset: 5px; }
+
+    .concern.feature { background: var(--bone-2); }
+    .concern.feature h3 { font-size: 1.42rem; }
+    .concern.feature .go { color: var(--clay); }
+
+    /* Treatments + prices */
+    .treat { border-top: 1px solid var(--rule); }
+    .treat-row { display: grid; gap: 6px 28px; padding: 26px 0; border-bottom: 1px solid var(--rule); align-items: baseline; }
+    @media (min-width: 820px) { .treat-row { grid-template-columns: 15rem 1fr 11rem; } }
+    .treat-row h3 { font-size: 1.32rem; margin: 0; }
+    .treat-row p { margin: 0; font-size: .97rem; }
+    .treat-row > div > p + p { margin-top: 8px; }
+    .treat-price { font-family: var(--mono); font-size: 1rem; color: var(--ink); letter-spacing: .01em; }
+    @media (min-width: 820px) { .treat-price { text-align: right; } }
+    .treat-price small { display: block; font-size: .72rem; color: var(--muted); letter-spacing: .06em; margin-top: 4px; }
+    .treat-detail { font-size: .88rem; color: var(--muted); }
+    .treat-detail b { font-family: var(--mono); font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--clay-deep); font-weight: 400; }
+    .pricenote { margin-top: 28px; font-size: .95rem; color: var(--muted); max-width: 70ch; }
+
+    /* Providers */
+    .providers { display: grid; gap: 40px; }
+    @media (min-width: 760px) { .providers { grid-template-columns: repeat(2, 1fr); gap: 56px 48px; } }
+    .provider { display: grid; grid-template-columns: 92px 1fr; gap: 22px; align-items: start; }
+    .provider svg { display: block; width: 92px; height: 112px; }
+    .provider h3 { font-size: 1.3rem; margin-bottom: 4px; }
+    .provider .cred { font-family: var(--mono); font-size: .74rem; letter-spacing: .12em; text-transform: uppercase; color: #a89c8c; margin: 0 0 12px; }
+    .provider p { font-size: .96rem; margin: 0; }
+
+    /* Results */
+    .results { display: grid; gap: 40px; }
+    @media (min-width: 880px) { .results { grid-template-columns: repeat(3, 1fr); gap: 36px; } }
+    .result h3 { font-size: 1.18rem; margin-bottom: 14px; }
+    .ba { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .ba figure { margin: 0; }
+    .ba svg { display: block; width: 100%; height: auto; border: 1px solid var(--rule); }
+    .ba figcaption { font-family: var(--mono); font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-top: 8px; }
+    .result p { font-size: .92rem; color: var(--muted); margin: 14px 0 0; }
+
+    /* Safety + financing */
+    .split { display: grid; gap: 48px; }
+    @media (min-width: 900px) { .split { grid-template-columns: 1fr 1fr; gap: 72px; } }
+    .plainlist { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; }
+    .plainlist li { padding-left: 22px; position: relative; font-size: .99rem; }
+    .plainlist li::before { content: ""; position: absolute; left: 0; top: .72em; width: 9px; height: 1px; background: var(--clay); }
+    .brandlist { margin: 0 0 26px; display: grid; gap: 0; }
+    .brandlist div { display: grid; grid-template-columns: 9rem 1fr; gap: 18px; padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,.1); }
+    .brandlist div:last-child { border-bottom: 0; }
+    .brandlist dt { font-family: var(--mono); font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: #a89c8c; padding-top: 3px; }
+    .brandlist dd { margin: 0; font-size: .95rem; color: #ded5c7; }
+    .finance { border: 1px solid var(--rule); padding: 30px; }
+    .section-ink .finance { border-color: rgba(255,255,255,.2); }
+    .finance h3 { margin-bottom: 14px; }
+
+    /* Reviews */
+    .revgrid { display: grid; gap: 32px; }
+    @media (min-width: 880px) { .revgrid { grid-template-columns: 200px 1fr; gap: 56px; } }
+    .revscore { font-family: var(--display); font-size: 4rem; line-height: .9; color: var(--ink); }
+    .revscore span { font-family: var(--mono); display: block; font-size: .74rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-top: 12px; }
+    .quotes { display: grid; gap: 28px; }
+    @media (min-width: 640px) { .quotes { grid-template-columns: repeat(2, 1fr); gap: 36px; } }
+    .quotes blockquote { margin: 0; border-left: 2px solid var(--clay); padding-left: 22px; }
+    .quotes p { font-size: 1.04rem; color: var(--ink); margin-bottom: 12px; }
+    .quotes cite { font-style: normal; font-family: var(--mono); font-size: .74rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+
+    /* FAQ */
+    .faq-list { max-width: 860px; border-top: 1px solid var(--rule); }
+    .faq-item { border-bottom: 1px solid var(--rule); }
+    .faq-item summary { list-style: none; cursor: pointer; padding: 24px 46px 24px 0; position: relative; }
+    .faq-item summary::-webkit-details-marker { display: none; }
+    .faq-q { font-family: var(--display); font-weight: 400; font-size: 1.28rem; color: var(--ink); margin: 0; display: inline; }
+    .faq-item summary::after { content: "+"; position: absolute; right: 6px; top: 20px; font-family: var(--mono); font-size: 1.5rem; color: var(--clay); line-height: 1; }
+    .faq-item[open] summary::after { content: "\2013"; }
+    .faq-a { margin: 0 0 26px; }
+
+    /* Booking / contact */
+    form { border: 1px solid var(--rule); background: var(--white); padding: 28px; }
+    @media (min-width: 640px) { form { padding: 36px; } }
+    .field { margin-bottom: 20px; }
+    .field label { display: block; font-size: .8rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-bottom: 7px; }
+    .field input, .field select, .field textarea { width: 100%; font: inherit; font-size: 16px; color: var(--ink); background: var(--white); border: 1px solid #cfc4b4; border-radius: 2px; padding: 13px 14px; min-height: 50px; }
+    .field textarea { min-height: 110px; resize: vertical; }
+    .two { display: grid; gap: 20px; }
+    @media (min-width: 560px) { .two { grid-template-columns: 1fr 1fr; } }
+    .hint { font-size: .86rem; color: var(--muted); }
+    .visit dl { margin: 0; display: grid; gap: 22px; }
+    .visit dt { font-family: var(--mono); font-size: .7rem; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+    .visit dd { margin: 0; color: var(--ink); font-size: 1.02rem; }
+    .visit address { font-style: normal; }
+
+    /* Footer */
+    footer { background: var(--shell); color: #a9a093; padding: 56px 0 36px; font-size: .93rem; }
+    footer a { color: #f6f2ec; }
+    .foot { display: grid; gap: 28px; }
+    @media (min-width: 780px) { .foot { grid-template-columns: 1.5fr 1fr 1fr; gap: 48px; } }
+    .foot h2 { font-size: 1.1rem; color: #f6f2ec; }
+    .foot ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 9px; }
+    .legal { border-top: 1px solid rgba(255,255,255,.14); margin-top: 38px; padding-top: 22px; font-size: .82rem; color: #8b8276; max-width: 92ch; }
+
+    /* Sticky mobile bar */
+    .callbar { left: 0; right: 0; z-index: 50; display: grid; grid-template-columns: 1fr 1.25fr; background: var(--shell); }
+    .callbar a { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 60px; font-size: 1rem; font-weight: 600; text-decoration: none; }
+    .callbar .b1 { color: #f6f2ec; border-right: 1px solid rgba(255,255,255,.18); }
+    .callbar .b2 { background: var(--clay); color: var(--accent-fg); }
+    @media (min-width: 900px) { .callbar { display: none; } }
+
+
+    /* Dark mode: the same hierarchy, inverted. Surfaces lift rather than darken, so the
+       sections that were dark bands in light mode stay the elevated layer here too. */
+    @media (prefers-color-scheme: dark) {
+      :root {
+      --bone: #14120f; --bone-2: #1a1713; --white: #1c1915; --rule: #332d25;
+      --ink: #f3efe7; --body: #c7bfb2; --muted: #968c7c;
+      --clay: #d97a55; --clay-deep: #eb9a79; --accent-fg: #17140f;
+      }
+      .concern.feature { background: #272219; }
+      img, svg[role="img"] { filter: brightness(.92) saturate(.94); }
+      .field input, .field select, .field textarea,
+      .obit-search input { background: var(--white); border-color: var(--line); color: var(--ink); }
+      ::placeholder { color: var(--muted); }
+    }
+  </style>
+  <script type="application/ld+json" data-checklist="structured-data meta-title-description jsonld-localbusiness review-markup hours-present address-present">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://juniperaesthetics.com/#website",
+        "url": "https://juniperaesthetics.com/",
+        "name": "Juniper Aesthetics",
+        "description": "Physician-led medical aesthetics practice in Boulder, Colorado.",
+        "publisher": { "@id": "https://juniperaesthetics.com/#organization" },
+        "inLanguage": "en"
+      },
+      {
+        "@type": ["MedicalBusiness", "HealthAndBeautyBusiness"],
+        "@id": "https://juniperaesthetics.com/#organization",
+        "name": "Juniper Aesthetics",
+        "url": "https://juniperaesthetics.com/",
+        "description": "Juniper Aesthetics is a physician-led medical aesthetics practice on Pearl Street in Boulder, Colorado, offering neuromodulators, dermal filler, Sciton laser treatments, microneedling with PRF and body contouring under the supervision of a board-certified dermatologist.",
+        "telephone": "+1-303-555-0119",
+        "email": "hello@juniperaesthetics.com",
+        "foundingDate": "2017",
+        "priceRange": "$$$",
+        "medicalSpecialty": "Dermatology",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "1140 Pearl Street, Suite 210",
+          "addressLocality": "Boulder",
+          "addressRegion": "CO",
+          "postalCode": "80302",
+          "addressCountry": "US"
+        },
+        "geo": { "@type": "GeoCoordinates", "latitude": 40.0189, "longitude": -105.2789 },
+        "openingHoursSpecification": [
+          { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Tuesday","Wednesday","Thursday","Friday"], "opens": "09:00", "closes": "18:00" },
+          { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Saturday"], "opens": "09:00", "closes": "15:00" }
+        ],
+        "areaServed": [
+          { "@type": "Place", "name": "Boulder, CO" },
+          { "@type": "Place", "name": "Louisville, CO" },
+          { "@type": "Place", "name": "Lafayette, CO" },
+          { "@type": "Place", "name": "Superior, CO" },
+          { "@type": "Place", "name": "Niwot, CO" },
+          { "@type": "Place", "name": "Longmont, CO" }
+        ],
+        "employee": [
+          { "@type": "Physician", "name": "Elena Marchetti, MD", "jobTitle": "Medical Director", "medicalSpecialty": "Dermatology" },
+          { "@type": "Person", "name": "Noor Haddad, RN, BSN", "jobTitle": "Lead injector" },
+          { "@type": "Person", "name": "Priya Raman, NP-C", "jobTitle": "Nurse practitioner" },
+          { "@type": "Person", "name": "Dana Kowalski, LE", "jobTitle": "Licensed esthetician" }
+        ],
+        "hasOfferCatalog": {
+          "@type": "OfferCatalog",
+          "name": "Treatments offered by Juniper Aesthetics",
+          "itemListElement": [
+            { "@type": "Offer", "priceCurrency": "USD", "price": "13", "itemOffered": { "@type": "Service", "name": "Botox Cosmetic", "description": "Neuromodulator for forehead lines, glabellar lines and crow's feet, priced per unit." } },
+            { "@type": "Offer", "priceCurrency": "USD", "price": "4.50", "itemOffered": { "@type": "Service", "name": "Dysport", "description": "Neuromodulator priced per Dysport unit; roughly three Dysport units correspond to one Botox unit." } },
+            { "@type": "Offer", "priceCurrency": "USD", "price": "725", "itemOffered": { "@type": "Service", "name": "Dermal filler (Juvederm, Restylane, RHA)", "description": "Hyaluronic acid filler for cheeks, lips, chin, jawline and tear troughs, priced per syringe." } },
+            { "@type": "Offer", "priceCurrency": "USD", "price": "850", "itemOffered": { "@type": "Service", "name": "Sculptra", "description": "Poly-L-lactic acid collagen stimulator, priced per vial, usually over a series." } },
+            { "@type": "Offer", "priceCurrency": "USD", "price": "600", "itemOffered": { "@type": "Service", "name": "Moxi laser resurfacing", "description": "Sciton Moxi non-ablative fractional resurfacing for tone and early sun damage." } },
+            { "@type": "Offer", "priceCurrency": "USD", "price": "450", "itemOffered": { "@type": "Service", "name": "BBL Hero broadband light", "description": "Sciton BBL Hero for redness, brown spots and sun damage, priced per area." } },
+            { "@type": "Offer", "priceCurrency": "USD", "price": "650", "itemOffered": { "@type": "Service", "name": "Microneedling with PRF", "description": "Collagen induction therapy with platelet-rich fibrin drawn on site, for texture and acne scarring." } },
+            { "@type": "Offer", "priceCurrency": "USD", "price": "199", "itemOffered": { "@type": "Service", "name": "HydraFacial", "description": "Cleanse, extract and hydrate facial, with optional boosters." } },
+            { "@type": "Offer", "priceCurrency": "USD", "price": "750", "itemOffered": { "@type": "Service", "name": "CoolSculpting Elite", "description": "Cryolipolysis body contouring, priced per applicator cycle." } },
+            { "@type": "Offer", "priceCurrency": "USD", "price": "3200", "itemOffered": { "@type": "Service", "name": "Emsculpt Neo", "description": "Radiofrequency and electromagnetic muscle stimulation, sold as a series of four sessions." } },
+            { "@type": "Offer", "priceCurrency": "USD", "price": "75", "itemOffered": { "@type": "Service", "name": "Consultation", "description": "Thirty-minute consultation with a provider, credited toward any treatment booked within sixty days." } }
+          ]
+        },
+        "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "412", "bestRating": "5" },
+        "review": [
+          { "@type": "Review", "author": { "@type": "Person", "name": "Camille B." }, "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" }, "reviewBody": "Noor talked me down from what I thought I wanted to what I actually needed, and showed me the unit count on the chart before she touched me. The price was the price on the website." },
+          { "@type": "Review", "author": { "@type": "Person", "name": "Theresa M." }, "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" }, "reviewBody": "I am 58 and I did not want to look like someone else. Dr. Marchetti reviewed the plan with me before my first Moxi and the photos are taken at the same distance every time, so I can actually see the difference." },
+          { "@type": "Review", "author": { "@type": "Person", "name": "Andre W." }, "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" }, "reviewBody": "Went in for jawline filler, left with a plan that started with skin instead. They talked me out of the more expensive thing." }
+        ]
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://juniperaesthetics.com/#webpage",
+        "url": "https://juniperaesthetics.com/",
+        "name": "Juniper Aesthetics | Injectables & Lasers in Boulder, CO",
+        "description": "A physician-led med spa on Pearl Street. Browse by concern or by treatment, read every price before you book, and see who performs it: RN, NP and MD.",
+        "isPartOf": { "@id": "https://juniperaesthetics.com/#website" },
+        "about": { "@id": "https://juniperaesthetics.com/#organization" },
+        "inLanguage": "en",
+        "speakable": { "@type": "SpeakableSpecification", "cssSelector": ["h1", "[data-answer-first]"] }
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://juniperaesthetics.com/#faq",
+        "mainEntity": [
+          { "@type": "Question", "name": "How do I know which treatment is right for my concern?", "acceptedAnswer": { "@type": "Answer", "text": "Start from the concern rather than the treatment name. Each concern page lists the treatments Juniper uses for it, what each one does differently, and roughly what a course looks like. If you are still unsure, book a thirty-minute consultation. It is $75, credited toward any treatment booked within sixty days." } },
+          { "@type": "Question", "name": "What does Botox cost at Juniper Aesthetics?", "acceptedAnswer": { "@type": "Answer", "text": "Botox Cosmetic is $13 per unit and Dysport is $4.50 per Dysport unit. A forehead and glabella treatment is commonly 30 to 45 Botox units, so most patients pay between $390 and $585. Your provider counts the units with you before treating." } },
+          { "@type": "Question", "name": "Who actually performs the injections?", "acceptedAnswer": { "@type": "Answer", "text": "Noor Haddad, RN, BSN and Priya Raman, NP-C perform all injectable treatments. Elena Marchetti, MD, a board-certified dermatologist, is the medical director, reviews every treatment plan, and is on site Tuesdays and Thursdays." } },
+          { "@type": "Question", "name": "Is there downtime after Moxi or BBL Hero?", "acceptedAnswer": { "@type": "Answer", "text": "Most patients are pink for one to three days after Moxi and describe a sandpaper texture for about four days as the treated skin sheds. BBL Hero usually looks like a mild sunburn for a day, and brown spots darken before flaking off over the following week." } },
+          { "@type": "Question", "name": "How long do filler results last?", "acceptedAnswer": { "@type": "Answer", "text": "Hyaluronic acid filler is gradually metabolised by the body. Depending on the product and the area treated, most patients return between nine and eighteen months later. Lips generally need refreshing sooner than cheeks or jawline." } },
+          { "@type": "Question", "name": "Can I pay over time?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Juniper accepts CareCredit with six, twelve and eighteen-month promotional plans, and Cherry, which runs a soft credit check that does not affect your credit score. Both can be approved in the treatment room." } },
+          { "@type": "Question", "name": "What happens at a consultation?", "acceptedAnswer": { "@type": "Answer", "text": "Thirty minutes with a provider: your history and medications, a look at your skin under magnification, standardised photographs at a fixed distance and light, and a written plan with prices and a suggested order. Nothing is treated the same day unless you ask and the provider agrees you are a candidate." } },
+          { "@type": "Question", "name": "Do you treat men?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Roughly one in five Juniper patients is a man, most often for neuromodulator, jawline filler, BBL Hero for sun damage, and Emsculpt Neo." } }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header>
+    <div class="wrap bar">
+      <a class="brand" href="/">Juniper Aesthetics<em>Boulder, Colorado</em></a>
+      <nav class="nav" aria-label="Primary">
+        <a href="#concerns">By concern</a>
+        <a href="#treatments">By treatment</a>
+        <a href="#providers">Providers</a>
+        <a href="#results">Results</a>
+        <a href="#safety">Safety</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+      <a class="tel" href="tel:+13035550119" data-checklist="tel-link-above-fold tel-link">
+        <svg width="17" height="17" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M222.37,158.46l-47.11-21.11-.13-.06a16,16,0,0,0-15.17,1.4,8.12,8.12,0,0,0-.75.56L134.87,160c-15.42-7.49-31.34-23.29-38.83-38.51l20.78-24.71c.2-.25.39-.5.57-.77a16,16,0,0,0,1.32-15.06l0-.12L97.54,33.64a16,16,0,0,0-16.62-9.52A56.26,56.26,0,0,0,32,80c0,79.4,64.6,144,144,144a56.26,56.26,0,0,0,55.88-48.92A16,16,0,0,0,222.37,158.46ZM176,208A128.14,128.14,0,0,1,48,80,40.2,40.2,0,0,1,82.87,40a.61.61,0,0,0,0,.12l21,47L83.2,111.86a6.13,6.13,0,0,0-.57.77,16,16,0,0,0-1,15.7c9.06,18.53,27.73,37.06,46.46,46.11a16,16,0,0,0,15.75-1.14,8,8,0,0,0,.74-.56L168.89,152l47,21.05h0s.08,0,.11,0A40.21,40.21,0,0,1,176,208Z"/></svg>
+        303 555 0119
+      </a>
+      <a class="btn btn-primary btn-sm head-book" href="https://booking.joinblvd.com/juniper-aesthetics">Book a consultation</a>
+    </div>
+  </header>
+
+  <main id="main" data-checklist="h2-structure MS-no-prohibited-claims">
+    <section class="hero" id="hero" aria-labelledby="hero-h">
+      <div class="wrap">
+        <p class="label">Medical aesthetics &middot; Pearl Street, Boulder</p>
+        <h1 id="hero-h" data-checklist="single-h1">Treated by a nurse. Planned with a dermatologist.</h1>
+        <p class="lede" data-answer-first data-checklist="C-answer-first MS-real-people">Juniper Aesthetics is a physician-led practice on Pearl Street in Boulder, where two injectors and a nurse practitioner treat under the supervision of Elena Marchetti, MD, a board-certified dermatologist, and where every price is published before you book.</p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="https://booking.joinblvd.com/juniper-aesthetics" data-checklist="booking-widget">Book a consultation</a>
+          <a class="btn btn-line" href="#concerns">Start from a concern</a>
+        </div>
+        <figure class="hero-figure">
+          <svg viewBox="0 0 1600 760" role="img" aria-label="Juniper's treatment room on Pearl Street: a reclining treatment chair beside a tall west-facing window, a low cabinet of devices, and a framed dermatology licence on the wall.">
+            <rect width="1600" height="760" fill="#efe9e0"/>
+            <rect x="0" y="0" width="1600" height="150" fill="#e8e1d6"/>
+            <rect x="940" y="64" width="520" height="470" fill="#dfe6e4"/>
+            <rect x="940" y="64" width="520" height="470" fill="none" stroke="#c6bcab" stroke-width="7"/>
+            <path d="M1200 64v470M940 299h520" stroke="#c6bcab" stroke-width="7"/>
+            <path d="M940 400 q130 -70 260 -26 q130 44 260 -18 v178 H940Z" fill="#cfd8d2"/>
+            <path d="M960 534 l520 0 l70 226 l-660 0 Z" fill="#e6dfd3"/>
+            <rect x="120" y="150" width="270" height="384" fill="#e5ded2"/>
+            <rect x="150" y="196" width="210" height="250" fill="#efe9e0" stroke="#17140f" stroke-width="4"/>
+            <text x="255" y="300" text-anchor="middle" font-family="Georgia, serif" font-size="30" fill="#8c8375">Colorado</text>
+            <text x="255" y="344" text-anchor="middle" font-family="Georgia, serif" font-size="24" fill="#a0978a">Medical Board</text>
+            <path d="M205 380h100M205 406h100" stroke="#cdc3b3" stroke-width="5"/>
+            <circle cx="255" cy="236" r="22" fill="none" stroke="#9c4a2f" stroke-width="4"/>
+            <rect x="0" y="534" width="1600" height="226" fill="#e2dacd"/>
+            <g>
+              <path d="M470 534 l0 -40 a40 40 0 0 1 40 -40 l360 0 a40 40 0 0 1 40 40 l0 40 Z" fill="#c9bca8"/>
+              <rect x="430" y="470" width="86" height="64" rx="24" fill="#c9bca8"/>
+              <rect x="446" y="486" width="54" height="32" rx="14" fill="#ded3c2"/>
+              <path d="M470 534 h440 v30 a24 24 0 0 1 -24 24 H494 a24 24 0 0 1 -24 -24 Z" fill="#8d8270"/>
+              <path d="M500 500 h340" stroke="#b3a692" stroke-width="5"/>
+              <rect x="520" y="588" width="18" height="86" fill="#7b7160"/>
+              <rect x="844" y="588" width="18" height="86" fill="#7b7160"/>
+              <rect x="512" y="668" width="358" height="12" rx="6" fill="#7b7160"/>
+              <path d="M338 492 q66 -68 132 -18" stroke="#8d8270" stroke-width="10" fill="none" stroke-linecap="round"/>
+              <circle cx="334" cy="498" r="24" fill="#9c4a2f"/>
+              <circle cx="334" cy="498" r="10" fill="#efe9e0"/>
+            </g>
+            <rect x="1040" y="560" width="330" height="126" rx="6" fill="#d5ccbc"/>
+            <g fill="#c2b7a4"><rect x="1064" y="584" width="122" height="36" rx="5"/><rect x="1064" y="634" width="122" height="30" rx="5"/><rect x="1210" y="584" width="136" height="80" rx="5"/></g>
+            <rect x="1250" y="500" width="14" height="60" fill="#9c4a2f"/>
+            <path d="M1218 500 q39 -54 78 0 Z" fill="#7a8c72"/>
+          </svg>
+          <figcaption>Illustrated stand-in. On a live build, the practice&rsquo;s own treatment room, shot in natural light</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="band" aria-label="Visiting Juniper Aesthetics">
+      <div class="wrap">
+        <dl class="meta">
+          <div><dt>Consultation</dt><dd>$75, credited to treatment</dd></div>
+          <div><dt>Booking</dt><dd>Boulevard, 24 hours a day</dd></div>
+          <div><dt>Open</dt><dd>Tue-Fri 9-6, Sat 9-3</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="section section-rule" id="concerns" aria-labelledby="concerns-h" data-checklist="MS-navigate-by-concern MS-concern-finder">
+      <div class="wrap">
+        <div class="head">
+          <h2 id="concerns-h">What brought you in?</h2>
+          <p class="answer" data-answer-first data-checklist="C-answer-first">Most people arrive knowing the problem, not the product, so start from the concern and let the provider match the treatment, or jump straight to the treatment list if you already know its name.</p>
+        </div>
+        <div class="concerns">
+          <article class="concern feature">
+            <h3>Fine lines &amp; wrinkles</h3>
+            <p>Forehead, glabellar &ldquo;11s&rdquo;, crow&rsquo;s feet and lip lines, treated with neuromodulator and, where the line is etched at rest, resurfacing.</p>
+            <a class="go" href="#treatments">Botox, Dysport, Moxi &rarr;</a>
+          </article>
+          <article class="concern">
+            <h3>Lost volume</h3>
+            <p>Flattened cheeks, hollowing under the eye, a softening jawline. Filler for structure, Sculptra where collagen is the underlying story.</p>
+            <a class="go" href="#treatments">Filler and Sculptra &rarr;</a>
+          </article>
+          <article class="concern">
+            <h3>Sun damage &amp; redness</h3>
+            <p>Brown spots, broken capillaries and the diffuse redness Colorado sun leaves behind, treated with broadband light.</p>
+            <a class="go" href="#treatments">BBL Hero and Moxi &rarr;</a>
+          </article>
+          <article class="concern">
+            <h3>Texture &amp; pores</h3>
+            <p>Rough surface, enlarged pores and dull tone, treated with fractional resurfacing or collagen induction.</p>
+            <a class="go" href="#treatments">Moxi and microneedling &rarr;</a>
+          </article>
+          <article class="concern">
+            <h3>Acne &amp; acne scarring</h3>
+            <p>Active breakouts and the boxcar or rolling scars left behind, usually a staged course rather than one visit.</p>
+            <a class="go" href="#treatments">Microneedling with PRF &rarr;</a>
+          </article>
+          <article class="concern">
+            <h3>Body contouring</h3>
+            <p>Pockets of fat that have not moved with training, and muscle tone in the abdomen and flanks.</p>
+            <a class="go" href="#treatments">CoolSculpting and Emsculpt Neo &rarr;</a>
+          </article>
+          <article class="concern">
+            <h3>Dull, tired skin</h3>
+            <p>An event in two weeks and skin that is not cooperating. A facial with extractions and boosters, no downtime.</p>
+            <a class="go" href="#treatments">HydraFacial &rarr;</a>
+          </article>
+          <article class="concern feature">
+            <h3>Not sure yet</h3>
+            <p>Bring the concern, not a treatment name. Thirty minutes, photographs, a written plan, and the fee credited if you book.</p>
+            <a class="go" href="https://booking.joinblvd.com/juniper-aesthetics">Book a consultation &rarr;</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-bone" id="treatments" aria-labelledby="treatments-h" data-checklist="MS-pricing">
+      <div class="wrap">
+        <div class="head">
+          <h2 id="treatments-h">Every price, published</h2>
+          <p class="answer" data-answer-first data-checklist="C-answer-first">These are the prices Juniper charges, per unit, per syringe or per session. They are the same numbers your provider quotes in the room, and no membership is required to see them.</p>
+        </div>
+        <div class="treat" data-checklist="MS-treatment-detail">
+          <div class="treat-row">
+            <h3>Botox Cosmetic</h3>
+            <div>
+              <p>Neuromodulator for forehead lines, the glabellar &ldquo;11s&rdquo; and crow&rsquo;s feet. Onset around day three, full effect near day fourteen.</p>
+              <p class="treat-detail"><b>What to expect</b> &middot; For lines that appear when you move, not lines etched at rest. Ten minutes in the chair and no downtime; onset around day three, full effect day fourteen, wearing off over three to four months.</p>
+            </div>
+            <p class="treat-price">$13 / unit<small>Forehead + glabella, 30-45 units</small></p>
+          </div>
+          <div class="treat-row">
+            <h3>Dysport</h3>
+            <div>
+              <p>An alternative neuromodulator that spreads a little more, which some patients prefer across the forehead.</p>
+              <p class="treat-detail"><b>What to expect</b> &middot; Same candidacy as Botox. No downtime; onset around day two, full effect day fourteen, wearing off over three to four months.</p>
+            </div>
+            <p class="treat-price">$4.50 / unit<small>Dysport units, not Botox units</small></p>
+          </div>
+          <div class="treat-row">
+            <h3>Dermal filler</h3>
+            <div>
+              <p>Juv&eacute;derm, Restylane and RHA hyaluronic acid filler for cheeks, lips, chin, jawline and tear troughs.</p>
+              <p class="treat-detail"><b>What to expect</b> &middot; For volume and structure rather than fine lines alone. Expect swelling for two to five days and possible bruising for a week; the final shape settles around week four.</p>
+            </div>
+            <p class="treat-price">From $725 / syringe<small>Reversible with hyaluronidase</small></p>
+          </div>
+          <div class="treat-row">
+            <h3>Sculptra</h3>
+            <div>
+              <p>A poly-L-lactic acid collagen stimulator for gradual volume, usually three vials spaced a month apart.</p>
+              <p class="treat-detail"><b>What to expect</b> &middot; For gradual collagen loss across the whole face, not for a single crease. No visible downtime; the change builds over three to six months and is judged after the third vial.</p>
+            </div>
+            <p class="treat-price">$850 / vial</p>
+          </div>
+          <div class="treat-row">
+            <h3>Moxi laser resurfacing</h3>
+            <div>
+              <p>Sciton Moxi, a gentle non-ablative fractional laser for tone, early sun damage and texture. Safe in summer with sun care.</p>
+              <p class="treat-detail"><b>What to expect</b> &middot; Suitable for every skin type, including tanned skin. Pink for one to three days and a sandpaper texture for about four; tone evens out over three to four weeks.</p>
+            </div>
+            <p class="treat-price">$600 / session<small>Series of three, $1,650</small></p>
+          </div>
+          <div class="treat-row">
+            <h3>BBL Hero</h3>
+            <div>
+              <p>Sciton broadband light for brown spots, redness and broken capillaries on the face, chest, arms and hands.</p>
+              <p class="treat-detail"><b>What to expect</b> &middot; For brown spots, redness and broken capillaries, not for active tan. Like a mild sunburn for a day; spots darken then flake over a week. Usually two or three sessions, four weeks apart.</p>
+            </div>
+            <p class="treat-price">From $450 / area</p>
+          </div>
+          <div class="treat-row">
+            <h3>Microneedling with PRF</h3>
+            <div>
+              <p>Collagen induction with platelet-rich fibrin drawn from your own blood on site, for texture and acne scarring.</p>
+              <p class="treat-detail"><b>What to expect</b> &middot; For texture and boxcar or rolling scars, not ice-pick scars. Red for a day or two and flaky for three; collagen change shows from week six and is best judged at three months.</p>
+            </div>
+            <p class="treat-price">$650 / session<small>Series of three, $1,750</small></p>
+          </div>
+          <div class="treat-row">
+            <h3>HydraFacial</h3>
+            <div>
+              <p>Cleanse, extract and hydrate, with optional boosters. No downtime, so it suits the week of an event.</p>
+              <p class="treat-detail"><b>What to expect</b> &middot; For dull skin in the week of an event. No downtime at all, make-up the same afternoon, and the glow lasts about a week.</p>
+            </div>
+            <p class="treat-price">From $199</p>
+          </div>
+          <div class="treat-row">
+            <h3>CoolSculpting Elite</h3>
+            <div>
+              <p>Cryolipolysis for pockets of fat under the chin, on the flanks and on the abdomen, priced per applicator cycle.</p>
+              <p class="treat-detail"><b>What to expect</b> &middot; For pinchable fat that has not moved with training; it is not a weight-loss treatment. Numbness and swelling for one to two weeks; change is visible at eight weeks and settled at twelve.</p>
+            </div>
+            <p class="treat-price">From $750 / cycle</p>
+          </div>
+          <div class="treat-row">
+            <h3>Emsculpt Neo</h3>
+            <div>
+              <p>Radiofrequency plus electromagnetic muscle stimulation for abdomen and flanks, sold as a course of four.</p>
+              <p class="treat-detail"><b>What to expect</b> &middot; For abdominal and flank tone, and not suitable with certain implants or devices. No downtime beyond delayed soreness for a day or two; results are assessed twelve weeks after the fourth session.</p>
+            </div>
+            <p class="treat-price">$3,200 / course of 4</p>
+          </div>
+          <div class="treat-row">
+            <h3>Consultation</h3>
+            <div>
+              <p>Thirty minutes with a provider: history, magnified skin assessment, standardised photographs and a written plan.</p>
+              <p class="treat-detail"><b>What to expect</b> &middot; Nothing is treated on the day unless you ask and the provider agrees you are a candidate. You leave with the written plan whether or not you book.</p>
+            </div>
+            <p class="treat-price">$75<small>Credited if you book within 60 days</small></p>
+          </div>
+        </div>
+        <p class="pricenote">Prices are per unit, per syringe, per vial or per session, and are what you pay at the desk. Your provider counts units with you before treating and will tell you when a concern needs a course rather than a single visit, or when it needs a dermatology appointment instead of an aesthetic one.</p>
+      </div>
+    </section>
+
+    <section class="section section-ink" id="providers" aria-labelledby="providers-h" data-checklist="MS-provider-credentials">
+      <div class="wrap">
+        <div class="head">
+          <p class="label">Who treats you</p>
+          <h2 id="providers-h">Four people, named, with their licences</h2>
+          <p class="answer" data-answer-first data-checklist="C-answer-first">Every injectable at Juniper is placed by a registered nurse or a nurse practitioner, and every treatment plan is reviewed by the medical director, a board-certified dermatologist.</p>
+        </div>
+        <div class="providers">
+          <article class="provider">
+            <svg viewBox="0 0 92 112" role="img" aria-label="Portrait placeholder for Elena Marchetti, MD.">
+              <rect width="92" height="112" fill="#241f18"/>
+              <circle cx="46" cy="44" r="21" fill="#3a332a"/>
+              <path d="M12 112V96a34 34 0 0 1 68 0v16Z" fill="#3a332a"/>
+              <path d="M46 23a21 21 0 0 1 21 21q-21-13-42 0a21 21 0 0 1 21-21Z" fill="#4a4136"/>
+            </svg>
+            <div>
+              <h3>Elena Marchetti, MD</h3>
+              <p class="cred">Medical director &middot; Board-certified dermatologist</p>
+              <p>Certified by the American Board of Dermatology in 2011 and in practice fourteen years. Dr. Marchetti sets the protocols, reviews every treatment plan before it starts, and sees patients on site Tuesdays and Thursdays.</p>
+            </div>
+          </article>
+          <article class="provider">
+            <svg viewBox="0 0 92 112" role="img" aria-label="Portrait placeholder for Noor Haddad, RN, BSN.">
+              <rect width="92" height="112" fill="#241f18"/>
+              <circle cx="46" cy="44" r="21" fill="#3a332a"/>
+              <path d="M12 112V96a34 34 0 0 1 68 0v16Z" fill="#3a332a"/>
+              <path d="M25 44a21 21 0 0 1 42 0q-6-16-21-16T25 44Z" fill="#4a4136"/>
+            </svg>
+            <div>
+              <h3>Noor Haddad, RN, BSN</h3>
+              <p class="cred">Lead injector &middot; Colorado RN licence</p>
+              <p>Nine years injecting, faculty trainer for the Allergan Medical Institute, and certified in Galderma advanced filler technique. Noor places most of the filler and neuromodulator at Juniper.</p>
+            </div>
+          </article>
+          <article class="provider">
+            <svg viewBox="0 0 92 112" role="img" aria-label="Portrait placeholder for Priya Raman, NP-C.">
+              <rect width="92" height="112" fill="#241f18"/>
+              <circle cx="46" cy="44" r="21" fill="#3a332a"/>
+              <path d="M12 112V96a34 34 0 0 1 68 0v16Z" fill="#3a332a"/>
+              <path d="M24 42a22 22 0 0 1 44 0l-4 14q-18-12-36 0Z" fill="#4a4136"/>
+            </svg>
+            <div>
+              <h3>Priya Raman, NP-C</h3>
+              <p class="cred">Nurse practitioner &middot; AANP board certified</p>
+              <p>Six years in aesthetics, device-certified by Sciton on BBL Hero and Moxi and by BTL on Emsculpt Neo. Priya runs the laser and body-contouring side of the practice.</p>
+            </div>
+          </article>
+          <article class="provider">
+            <svg viewBox="0 0 92 112" role="img" aria-label="Portrait placeholder for Dana Kowalski, LE.">
+              <rect width="92" height="112" fill="#241f18"/>
+              <circle cx="46" cy="44" r="21" fill="#3a332a"/>
+              <path d="M12 112V96a34 34 0 0 1 68 0v16Z" fill="#3a332a"/>
+              <path d="M26 40a20 20 0 0 1 40 0v6q-20-10-40 0Z" fill="#4a4136"/>
+            </svg>
+            <div>
+              <h3>Dana Kowalski, LE</h3>
+              <p class="cred">Licensed esthetician &middot; Colorado licence</p>
+              <p>Eleven years behind the treatment bed, HydraFacial and dermaplaning certified, VI Peel certified. Dana handles facials and the skin-care groundwork before a laser course.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="results" aria-labelledby="results-h">
+      <div class="wrap">
+        <div class="head">
+          <h2 id="results-h">Before and after, same angle, same light</h2>
+          <p class="answer" data-answer-first data-checklist="C-answer-first">Juniper photographs every patient who consents on a fixed stand at a set distance under the same light, so the pair you see differs only by the treatment, never by the lighting.</p>
+        </div>
+        <div class="results" data-checklist="MS-before-after">
+          <article class="result">
+            <h3>Neuromodulator, forehead and glabella</h3>
+            <div class="ba">
+              <figure>
+                <svg viewBox="0 0 300 375" role="img" aria-label="Placeholder frame for a standardised before photograph.">
+                  <rect width="300" height="375" fill="#e8e1d6"/>
+                  <path d="M150 88a62 62 0 0 1 62 62v58a62 62 0 0 1-124 0v-58a62 62 0 0 1 62-62Z" fill="#dcd3c4"/>
+                  <path d="M104 132h92M112 152h76M120 172h56" stroke="#c3b8a5" stroke-width="4" stroke-linecap="round"/>
+                  <rect x="0" y="330" width="300" height="45" fill="#dcd3c4"/>
+                </svg>
+                <figcaption>Before</figcaption>
+              </figure>
+              <figure>
+                <svg viewBox="0 0 300 375" role="img" aria-label="Placeholder frame for a standardised after photograph.">
+                  <rect width="300" height="375" fill="#e8e1d6"/>
+                  <path d="M150 88a62 62 0 0 1 62 62v58a62 62 0 0 1-124 0v-58a62 62 0 0 1 62-62Z" fill="#dcd3c4"/>
+                  <path d="M114 152h72" stroke="#d3c9b8" stroke-width="3" stroke-linecap="round"/>
+                  <rect x="0" y="330" width="300" height="45" fill="#dcd3c4"/>
+                </svg>
+                <figcaption>14 days</figcaption>
+              </figure>
+            </div>
+            <p>36 units, Botox Cosmetic. Photographed at day 0 and day 14 on the same stand.</p>
+          </article>
+          <article class="result">
+            <h3>BBL Hero, sun damage on the cheeks</h3>
+            <div class="ba">
+              <figure>
+                <svg viewBox="0 0 300 375" role="img" aria-label="Placeholder frame for a standardised before photograph.">
+                  <rect width="300" height="375" fill="#e8e1d6"/>
+                  <path d="M150 88a62 62 0 0 1 62 62v58a62 62 0 0 1-124 0v-58a62 62 0 0 1 62-62Z" fill="#dcd3c4"/>
+                  <g fill="#c9b79a"><circle cx="118" cy="176" r="7"/><circle cx="136" cy="196" r="5"/><circle cx="178" cy="170" r="6"/><circle cx="192" cy="192" r="8"/><circle cx="160" cy="210" r="4"/></g>
+                  <rect x="0" y="330" width="300" height="45" fill="#dcd3c4"/>
+                </svg>
+                <figcaption>Before</figcaption>
+              </figure>
+              <figure>
+                <svg viewBox="0 0 300 375" role="img" aria-label="Placeholder frame for a standardised after photograph.">
+                  <rect width="300" height="375" fill="#e8e1d6"/>
+                  <path d="M150 88a62 62 0 0 1 62 62v58a62 62 0 0 1-124 0v-58a62 62 0 0 1 62-62Z" fill="#dcd3c4"/>
+                  <g fill="#d8cdbb"><circle cx="192" cy="192" r="4"/><circle cx="118" cy="176" r="3"/></g>
+                  <rect x="0" y="330" width="300" height="45" fill="#dcd3c4"/>
+                </svg>
+                <figcaption>6 weeks</figcaption>
+              </figure>
+            </div>
+            <p>Two BBL Hero sessions, four weeks apart. No retouching, no filter applied.</p>
+          </article>
+          <article class="result">
+            <h3>Microneedling with PRF, acne scarring</h3>
+            <div class="ba">
+              <figure>
+                <svg viewBox="0 0 300 375" role="img" aria-label="Placeholder frame for a standardised before photograph.">
+                  <rect width="300" height="375" fill="#e8e1d6"/>
+                  <path d="M150 88a62 62 0 0 1 62 62v58a62 62 0 0 1-124 0v-58a62 62 0 0 1 62-62Z" fill="#dcd3c4"/>
+                  <g stroke="#c9b79a" stroke-width="3" stroke-linecap="round"><path d="M116 182l6 10M130 200l5 9M176 178l6 11M190 198l5 10M158 214l5 8"/></g>
+                  <rect x="0" y="330" width="300" height="45" fill="#dcd3c4"/>
+                </svg>
+                <figcaption>Before</figcaption>
+              </figure>
+              <figure>
+                <svg viewBox="0 0 300 375" role="img" aria-label="Placeholder frame for a standardised after photograph.">
+                  <rect width="300" height="375" fill="#e8e1d6"/>
+                  <path d="M150 88a62 62 0 0 1 62 62v58a62 62 0 0 1-124 0v-58a62 62 0 0 1 62-62Z" fill="#dcd3c4"/>
+                  <g stroke="#d8cdbb" stroke-width="2" stroke-linecap="round"><path d="M130 200l4 6M190 198l4 6"/></g>
+                  <rect x="0" y="330" width="300" height="45" fill="#dcd3c4"/>
+                </svg>
+                <figcaption>3 months</figcaption>
+              </figure>
+            </div>
+            <p>Three sessions, six weeks apart, photographed twelve weeks after the last.</p>
+          </article>
+        </div>
+        <p class="pricenote">Illustrated stand-ins. On a live build these frames carry the practice&rsquo;s own consented patient photography, shot on the same stand, at the same distance, under the same light, not stock models. Results differ between patients; your provider will tell you what is realistic for your skin at the consultation.</p>
+      </div>
+    </section>
+
+    <section class="section section-ink" id="safety" aria-labelledby="safety-h">
+      <div class="wrap">
+        <div class="head">
+          <h2 id="safety-h">What we use, and what happens if something goes wrong</h2>
+          <p class="answer" data-answer-first data-checklist="C-answer-first">Juniper treats only with FDA-approved injectables and FDA-cleared devices bought direct from the manufacturer, and keeps hyaluronidase on site so filler can be dissolved the same day if it needs to be.</p>
+        </div>
+        <div class="split">
+          <div data-checklist="MS-safety-products">
+            <h3>Protocols</h3>
+            <ul class="plainlist">
+              <li>Every treatment plan is reviewed by Elena Marchetti, MD before the first session, and again before any change in product or dose.</li>
+              <li>Hyaluronidase is stocked on site for same-day reversal of hyaluronic acid filler, along with a written vascular occlusion protocol the whole clinical team rehearses twice a year.</li>
+              <li>Injectables are purchased direct from Allergan, Galderma and Revance, never from a grey-market distributor, and every lot number is recorded in your chart.</li>
+              <li>Standardised photography at a fixed distance and light before and after every course, kept in your chart whether or not you consent to publication.</li>
+              <li>A medical history and medication review at every visit, because anticoagulants, recent dental work and an upcoming event all change the plan.</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Products on the shelf</h3>
+            <dl class="brandlist">
+              <div><dt>Allergan</dt><dd>Botox Cosmetic, Juv&eacute;derm, Skinvive</dd></div>
+              <div><dt>Galderma</dt><dd>Dysport, Restylane, Sculptra</dd></div>
+              <div><dt>Revance</dt><dd>RHA collection</dd></div>
+              <div><dt>Sciton</dt><dd>BBL Hero, Moxi</dd></div>
+              <div><dt>Allergan</dt><dd>CoolSculpting Elite</dd></div>
+              <div><dt>BTL</dt><dd>Emsculpt Neo</dd></div>
+              <div><dt>HydraFacial</dt><dd>Syndeo</dd></div>
+              <div><dt>Home care</dt><dd>SkinBetter Science, Alastin, EltaMD</dd></div>
+            </dl>
+            <div class="finance" data-checklist="MS-financing">
+              <h3>Paying over time</h3>
+              <p>Juniper accepts <strong>CareCredit</strong> with six, twelve and eighteen-month promotional plans, and <strong>Cherry</strong>, which runs a soft credit check that does not affect your credit score. Both can be applied for in the treatment room, and both are accepted for courses as well as single visits.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="reviews" aria-labelledby="reviews-h" data-checklist="review-markup">
+      <div class="wrap">
+        <div class="head">
+          <p class="label">Patients</p>
+          <h2 id="reviews-h">What people say afterwards</h2>
+          <p class="answer" data-answer-first data-checklist="C-answer-first">Juniper holds a 4.9 average across 412 Google reviews of the Pearl Street location.</p>
+        </div>
+        <div class="revgrid">
+          <p class="revscore">4.9<span>412 Google reviews</span></p>
+          <div class="quotes">
+            <blockquote>
+              <p>&ldquo;Noor talked me down from what I thought I wanted to what I actually needed, and showed me the unit count on the chart before she touched me. The price was the price on the website.&rdquo;</p>
+              <cite>Camille B. &middot; Boulder</cite>
+            </blockquote>
+            <blockquote>
+              <p>&ldquo;I am 58 and I did not want to look like someone else. Dr. Marchetti reviewed the plan with me before my first Moxi, and the photos are taken at the same distance every time, so I can actually see the difference.&rdquo;</p>
+              <cite>Theresa M. &middot; Niwot</cite>
+            </blockquote>
+            <blockquote>
+              <p>&ldquo;Went in for jawline filler, left with a plan that started with skin instead. They talked me out of the more expensive thing.&rdquo;</p>
+              <cite>Andre W. &middot; Louisville</cite>
+            </blockquote>
+            <blockquote>
+              <p>&ldquo;Booking through Boulevard took a minute and I got a text with the exact provider&rsquo;s name. Small thing, but I knew who was walking in.&rdquo;</p>
+              <cite>Hannah K. &middot; Lafayette</cite>
+            </blockquote>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-bone" id="faq" aria-labelledby="faq-h">
+      <div class="wrap">
+        <div class="head">
+          <h2 id="faq-h">Frequently asked questions</h2>
+          <p class="answer" data-answer-first data-checklist="C-answer-first">The eight questions our front desk is asked most often, answered in full.</p>
+        </div>
+        <div class="faq-list" data-checklist="faq-present">
+          <details class="faq-item" open>
+            <summary><h3 class="faq-q">How do I know which treatment is right for my concern?</h3></summary>
+            <p class="faq-a" data-answer-first>Start from the concern rather than the treatment name. Each concern page lists the treatments Juniper uses for it, what each one does differently, and roughly what a course looks like. If you are still unsure, book a thirty-minute consultation. It is $75, credited toward any treatment booked within sixty days.</p>
+          </details>
+          <details class="faq-item">
+            <summary><h3 class="faq-q">What does Botox cost at Juniper Aesthetics?</h3></summary>
+            <p class="faq-a" data-answer-first>Botox Cosmetic is $13 per unit and Dysport is $4.50 per Dysport unit. A forehead and glabella treatment is commonly 30 to 45 Botox units, so most patients pay between $390 and $585. Your provider counts the units with you before treating.</p>
+          </details>
+          <details class="faq-item">
+            <summary><h3 class="faq-q">Who actually performs the injections?</h3></summary>
+            <p class="faq-a" data-answer-first>Noor Haddad, RN, BSN and Priya Raman, NP-C perform all injectable treatments. Elena Marchetti, MD, a board-certified dermatologist, is the medical director, reviews every treatment plan, and is on site Tuesdays and Thursdays.</p>
+          </details>
+          <details class="faq-item">
+            <summary><h3 class="faq-q">Is there downtime after Moxi or BBL Hero?</h3></summary>
+            <p class="faq-a" data-answer-first>Most patients are pink for one to three days after Moxi and describe a sandpaper texture for about four days as the treated skin sheds. BBL Hero usually looks like a mild sunburn for a day, and brown spots darken before flaking off over the following week.</p>
+          </details>
+          <details class="faq-item">
+            <summary><h3 class="faq-q">How long do filler results last?</h3></summary>
+            <p class="faq-a" data-answer-first>Hyaluronic acid filler is gradually metabolised by the body. Depending on the product and the area treated, most patients return between nine and eighteen months later. Lips generally need refreshing sooner than cheeks or jawline.</p>
+          </details>
+          <details class="faq-item">
+            <summary><h3 class="faq-q">Can I pay over time?</h3></summary>
+            <p class="faq-a" data-answer-first>Yes. Juniper accepts CareCredit with six, twelve and eighteen-month promotional plans, and Cherry, which runs a soft credit check that does not affect your credit score. Both can be approved in the treatment room.</p>
+          </details>
+          <details class="faq-item">
+            <summary><h3 class="faq-q">What happens at a consultation?</h3></summary>
+            <p class="faq-a" data-answer-first>Thirty minutes with a provider: your history and medications, a look at your skin under magnification, standardised photographs at a fixed distance and light, and a written plan with prices and a suggested order. Nothing is treated the same day unless you ask and the provider agrees you are a candidate.</p>
+          </details>
+          <details class="faq-item">
+            <summary><h3 class="faq-q">Do you treat men?</h3></summary>
+            <p class="faq-a" data-answer-first>Yes. Roughly one in five Juniper patients is a man, most often for neuromodulator, jawline filler, BBL Hero for sun damage, and Emsculpt Neo.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-rule" id="book" aria-labelledby="book-h">
+      <div class="wrap">
+        <div class="head">
+          <h2 id="book-h">Book, or ask first</h2>
+          <p class="answer" data-answer-first data-checklist="C-answer-first">Booking runs through Boulevard and is open at any hour; if you would rather describe the concern before you pick a slot, send it here and a provider, not a receptionist, replies within one business day.</p>
+        </div>
+        <div class="split">
+          <form action="#" method="post" aria-labelledby="ask-h" novalidate data-checklist="contact-form">
+            <h3 id="ask-h">Ask a provider</h3>
+            <div class="two">
+              <div class="field">
+                <label for="m-name">Name</label>
+                <input id="m-name" name="name" type="text" autocomplete="name" required>
+              </div>
+              <div class="field">
+                <label for="m-phone">Phone</label>
+                <input id="m-phone" name="phone" type="tel" autocomplete="tel" required>
+              </div>
+            </div>
+            <div class="field">
+              <label for="m-email">Email</label>
+              <input id="m-email" name="email" type="email" autocomplete="email" required>
+            </div>
+            <div class="field">
+              <label for="m-concern">What would you like to change?</label>
+              <select id="m-concern" name="concern">
+                <option>Fine lines &amp; wrinkles</option>
+                <option>Lost volume</option>
+                <option>Sun damage &amp; redness</option>
+                <option>Texture &amp; pores</option>
+                <option>Acne &amp; acne scarring</option>
+                <option>Body contouring</option>
+                <option>I am not sure yet</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="m-note">Anything else we should know?</label>
+              <textarea id="m-note" name="note" placeholder="Previous treatments, an event you are working toward, medications, or a question about a price."></textarea>
+            </div>
+            <button class="btn btn-primary" type="submit">Send to a provider</button>
+            <p class="hint" style="margin-top:16px">This form is not for medical emergencies. For anything urgent after a treatment, call <a href="tel:+13035550119">(303) 555-0119</a>.</p>
+          </form>
+          <div class="visit">
+            <p><a class="btn btn-primary" href="https://booking.joinblvd.com/juniper-aesthetics">Book a consultation</a></p>
+            <dl>
+              <div>
+                <dt>Address</dt>
+                <dd><address>1140 Pearl Street, Suite 210<br>Boulder, CO 80302</address></dd>
+              </div>
+              <div>
+                <dt>Hours</dt>
+                <dd>Tuesday-Friday 9:00 am-6:00 pm<br>Saturday 9:00 am-3:00 pm<br>Closed Sunday and Monday</dd>
+              </div>
+              <div>
+                <dt>Phone</dt>
+                <dd><a href="tel:+13035550119">(303) 555-0119</a></dd>
+              </div>
+              <div>
+                <dt>Parking</dt>
+                <dd>Spruce Street garage, one block north. First hour free, validated at the desk.</dd>
+              </div>
+              <div>
+                <dt>Patients come from</dt>
+                <dd>Boulder, Louisville, Lafayette, Superior, Niwot and Longmont.</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div class="foot">
+        <div>
+          <h2>Juniper Aesthetics</h2>
+          <p>A physician-led medical aesthetics practice on Pearl Street in Boulder, Colorado, open since 2017.</p>
+          <p><a href="tel:+13035550119">(303) 555-0119</a><br>1140 Pearl Street, Suite 210, Boulder, CO 80302</p>
+        </div>
+        <div>
+          <h2>Treatments</h2>
+          <ul>
+            <li><a href="#treatments">Botox &amp; Dysport</a></li>
+            <li><a href="#treatments">Dermal filler &amp; Sculptra</a></li>
+            <li><a href="#treatments">Moxi &amp; BBL Hero</a></li>
+            <li><a href="#treatments">Microneedling with PRF</a></li>
+            <li><a href="#treatments">CoolSculpting &amp; Emsculpt Neo</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2>Practice</h2>
+          <ul>
+            <li><a href="#concerns">Browse by concern</a></li>
+            <li><a href="#providers">Our providers</a></li>
+            <li><a href="#safety">Safety &amp; products</a></li>
+            <li><a href="#results">Before &amp; after</a></li>
+            <li><a href="#faq">FAQ</a></li>
+          </ul>
+        </div>
+      </div>
+      <p class="legal">Medical director: Elena Marchetti, MD, board certified by the American Board of Dermatology. Individual results differ and no outcome is promised; candidacy is decided at consultation. Demonstration page built for the AgencyOS med-spa persona. The practice, providers, prices and reviews are illustrative.</p>
+    </div>
+  </footer>
+
+  <div class="callbar" style="position:fixed;bottom:0">
+    <a class="b1" href="tel:+13035550119">
+      <svg width="17" height="17" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M222.37,158.46l-47.11-21.11-.13-.06a16,16,0,0,0-15.17,1.4,8.12,8.12,0,0,0-.75.56L134.87,160c-15.42-7.49-31.34-23.29-38.83-38.51l20.78-24.71c.2-.25.39-.5.57-.77a16,16,0,0,0,1.32-15.06l0-.12L97.54,33.64a16,16,0,0,0-16.62-9.52A56.26,56.26,0,0,0,32,80c0,79.4,64.6,144,144,144a56.26,56.26,0,0,0,55.88-48.92A16,16,0,0,0,222.37,158.46ZM176,208A128.14,128.14,0,0,1,48,80,40.2,40.2,0,0,1,82.87,40a.61.61,0,0,0,0,.12l21,47L83.2,111.86a6.13,6.13,0,0,0-.57.77,16,16,0,0,0-1,15.7c9.06,18.53,27.73,37.06,46.46,46.11a16,16,0,0,0,15.75-1.14,8,8,0,0,0,.74-.56L168.89,152l47,21.05h0s.08,0,.11,0A40.21,40.21,0,0,1,176,208Z"/></svg>
+      Call
+    </a>
+    <a class="b2" href="https://booking.joinblvd.com/juniper-aesthetics">Book a consultation</a>
+  </div>
+</body>
+</html>
