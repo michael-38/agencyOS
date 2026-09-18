@@ -141,15 +141,23 @@ export function corpusToPrompt(corpus: SourceCorpus): string {
   return parts.join('\n\n');
 }
 
-/** Facts block for the prompt: the values that must survive the rewrite unchanged. */
+/**
+ * Facts block for the prompt: the values that must survive the rewrite unchanged.
+ *
+ * `services` is deliberately not sent. It is a sweep of the nav and the headings, so it arrives with
+ * page chrome mixed in, and the model reads the full source pages anyway — from which it returns a
+ * service list with a verbatim quote behind every entry. Sending the noisy version invites it to be
+ * trusted. The atomic contact values below are different: they are exact, and the page must state
+ * them unchanged.
+ */
 export function factsToPrompt(facts: Facts | null): string {
   if (!facts) return '(no facts were extracted from the source site)';
   const lines: string[] = [];
   if (facts.business_name) lines.push(`business_name: ${facts.business_name}`);
   if (facts.phones.length) lines.push(`phones: ${facts.phones.join(', ')}`);
+  if (facts.emails.length) lines.push(`emails: ${facts.emails.join(', ')}`);
   if (facts.address) lines.push(`address: ${typeof facts.address === 'string' ? facts.address : JSON.stringify(facts.address)}`);
   if (facts.hours) lines.push(`hours: ${typeof facts.hours === 'string' ? facts.hours : JSON.stringify(facts.hours)}`);
-  if (facts.services.length) lines.push(`services (as scraped from nav/headings, may be noisy): ${facts.services.join(' | ')}`);
   lines.push(`provenance: ${JSON.stringify(facts.sources)}`);
   return lines.join('\n');
 }
