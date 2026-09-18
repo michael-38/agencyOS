@@ -1,15 +1,48 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { MODULES, MODULE_IDS, defaultModules, parseList, resolveModules } from '../src/modules.js';
+import { MODULES, MODULE_IDS, OPENSEO_MODULE_IDS, defaultModules, parseList, resolveModules } from '../src/modules.js';
 
-test('defaults: everything on except lighthouse; registry is consistent', () => {
+test('defaults: every audit module on except lighthouse, every OpenSEO module off; registry is consistent', () => {
   const d = defaultModules();
-  assert.equal(Object.keys(d).length, 9);
+  const audit = MODULES.filter((m) => m.group === 'audit');
+  const openseo = MODULES.filter((m) => m.group === 'openseo');
+  assert.equal(Object.keys(d).length, MODULE_IDS.length);
+  assert.equal(audit.length, 9);
+  assert.ok(openseo.length >= 1);
   assert.equal(d.lighthouse, false);
-  assert.ok(MODULE_IDS.every((id) => id === 'lighthouse' ? d[id] === false : d[id] === true));
+  assert.ok(audit.every((m) => (m.id === 'lighthouse' ? d[m.id] === false : d[m.id] === true)));
   assert.deepEqual(MODULES.map((m) => m.id), [...MODULE_IDS]);
   assert.ok(MODULES.every((m) => m.label && m.cost && m.description));
   assert.equal(MODULES.find((m) => m.id === 'lighthouse')!.built, false);
+});
+
+test('OpenSEO modules: off by default, billing declared, tools listed, never audit-billing', () => {
+  const d = defaultModules();
+  const openseo = MODULES.filter((m) => m.group === 'openseo');
+  assert.equal(openseo.length, OPENSEO_MODULE_IDS.length);
+  for (const m of openseo) {
+    assert.equal(d[m.id], false, `${m.id} must default off — it needs a connected account or spends credits`);
+    assert.ok(m.billing === 'openseo' || m.billing === 'dataforseo', `${m.id} must declare who it bills`);
+    assert.ok(m.built, `${m.id} must be built to be tickable`);
+    assert.ok(m.tools && m.tools.length, `${m.id} must name the OpenSEO tools it maps to`);
+  }
+  // Every audit module is free of third-party billing.
+  assert.ok(MODULES.filter((m) => m.group === 'audit').every((m) => m.billing === 'none'));
+  // The money-spending set is explicitly enumerated, so a new one can't slip in unlabelled.
+  assert.deepEqual(
+    openseo.filter((m) => m.billing === 'dataforseo').map((m) => m.id).sort(),
+    ['openseo-backlinks', 'openseo-competitors', 'openseo-keywords', 'openseo-lighthouse', 'openseo-local-grid', 'openseo-local-pack', 'openseo-rank-tracking', 'openseo-rankings', 'openseo-reviews', 'openseo-serp'],
+  );
+});
+
+test('OpenSEO: lighthouse implies the crawl, local modules warn without facts', () => {
+  const lh = resolveModules({ enable: ['openseo-lighthouse'] });
+  assert.equal(lh.modules['openseo-crawl'], true);
+  assert.ok(lh.warnings.some((w) => /runs as part of the OpenSEO crawl/.test(w)));
+
+  const local = resolveModules({ enable: ['openseo-local-grid'], disable: ['facts'] });
+  assert.ok(local.warnings.some((w) => /openseo-local-grid.*no location pre-filled/.test(w)));
+  assert.deepEqual(resolveModules({ enable: ['openseo-local-grid'] }).warnings, []);
 });
 
 test('--enable/--disable/config precedence (config < enable < disable)', () => {

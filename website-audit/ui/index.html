@@ -62,6 +62,16 @@
   .module-cost { color: var(--gray-500); font-size: 13px; }
   .tag { display: inline-block; font-size: 12px; font-weight: 600; padding: 1px var(--s2); border-radius: var(--r-sm); background: var(--gray-100); color: var(--gray-600); margin-left: var(--s1); vertical-align: middle; white-space: nowrap; }
   .tag.warn { background: #FEF3C7; color: #92400E; }
+  .tag.free { background: #DCFCE7; color: #166534; }
+  .tag.paid { background: #FFE4E6; color: #9F1239; }
+  .module-requires { color: var(--gray-500); font-size: 12px; font-style: italic; }
+  .openseo-plan { margin: var(--s3) 0; padding: var(--s3); border: 1px solid var(--gray-200); border-radius: var(--r-md); background: var(--gray-50, #FAFAFA); font-size: 13px; }
+  .openseo-plan h3 { margin: 0 0 var(--s1); font-size: 14px; }
+  .openseo-plan ul { margin: var(--s2) 0 0; padding-left: 18px; }
+  .openseo-plan li { margin-bottom: 2px; }
+  .openseo-plan code { font-size: 12px; }
+  .group-help { margin: 0 0 var(--s2); color: var(--gray-500); font-size: 13px; line-height: 1.5; }
+  .group-help code { font-size: 12px; background: var(--gray-100); padding: 1px 4px; border-radius: var(--r-sm); }
   .check { display: flex; align-items: center; gap: var(--s2); min-height: 48px; font-size: 14px; font-weight: 500; cursor: pointer; align-self: end; }
   .check input { width: 20px; height: 20px; accent-color: var(--gray-900); flex: none; }
 
@@ -190,6 +200,18 @@
         <div id="modules" class="module-grid"><p class="muted">Loading modules&hellip;</p></div>
       </fieldset>
 
+      <fieldset id="openseo-fieldset" hidden>
+        <legend>OpenSEO enrichment</legend>
+        <p class="group-help">
+          Off by default. These are written to <code>report.json</code> as pre-filled requests for an agent
+          session to run with the OpenSEO MCP tools &mdash; the audit CLI does not call OpenSEO itself.
+          <span class="tag free">free</span> needs only a connected OpenSEO account;
+          <span class="tag paid">DataForSEO</span> spends credits on your DataForSEO key per call.
+        </p>
+        <div id="openseo-modules" class="module-grid"></div>
+        <p id="openseo-note" class="group-help" style="margin-top: var(--s2); margin-bottom: 0;"></p>
+      </fieldset>
+
       <details class="adv" id="advanced">
         <summary>Advanced</summary>
         <div class="inner">
@@ -251,6 +273,7 @@
     <div id="result-error" class="alert error" role="alert" hidden></div>
     <div id="banner" class="banner na"></div>
     <p id="not-evaluated" class="muted" hidden></p>
+    <div id="openseo-plan" class="openseo-plan" hidden></div>
     <h3 class="sub">Gaps</h3>
     <div class="table-wrap" id="gaps"></div>
     <h3 class="sub">Screenshots</h3>
@@ -290,13 +313,14 @@
   const el = {
     globalError: $('#global-error'), pill: $('#status-pill'),
     form: $('#audit-form'), url: $('#url'), industry: $('#industry'), modules: $('#modules'),
+    openseoModules: $('#openseo-modules'), openseoFieldset: $('#openseo-fieldset'), openseoNote: $('#openseo-note'),
     exclude: $('#exclude'), judge: $('#judge'), tiles: $('#tiles'), maxPages: $('#maxpages'), lenient: $('#lenient'),
     cache: $('#cache'), advanced: $('#advanced'), formError: $('#form-error'),
     previewBtn: $('#preview-btn'), runBtn: $('#run-btn'), preview: $('#preview'),
     progressCard: $('#progress-card'), progressTitle: $('#progress-title'), progressDir: $('#progress-dir'),
     steps: $('#steps'), log: $('#log'), credits: $('#credits'), progressError: $('#progress-error'),
     resultCard: $('#result-card'), resultId: $('#result-id'), resultError: $('#result-error'), banner: $('#banner'),
-    notEval: $('#not-evaluated'), gaps: $('#gaps'), shots: $('#shots'), raw: $('#raw-json'), links: $('#links'),
+    notEval: $('#not-evaluated'), openseoPlan: $('#openseo-plan'), gaps: $('#gaps'), shots: $('#shots'), raw: $('#raw-json'), links: $('#links'),
     runsBody: $('#runs-body'), runsError: $('#runs-error'), runsEmpty: $('#runs-empty'), refreshRuns: $('#refresh-runs'),
   };
 
@@ -373,18 +397,62 @@
     if ($$('option', sel).some((o) => o.value === prev)) sel.value = prev;
   }
 
-  function renderModules() {
-    el.modules.innerHTML = state.modules.map((m) => {
-      const built = m.built !== false;
-      return '<label class="module' + (built ? '' : ' unbuilt') + '" title="' + esc(m.description || '') + '">' +
-        '<input type="checkbox" data-module="' + esc(m.id) + '"' + (built && m.default ? ' checked' : '') + (built ? '' : ' disabled') + '>' +
-        '<span class="module-text"><span class="module-label">' + esc(m.label) +
-        (built ? '' : ' <span class="tag warn">not built yet</span>') + '</span>' +
-        '<span class="module-cost">' + esc(m.cost || '') + '</span></span></label>';
-    }).join('') || '<p class="muted">No modules reported by the CLI.</p>';
+  function renderOpenSeo(plan) {
+    if (!plan || !Array.isArray(plan.requests) || !plan.requests.length) { el.openseoPlan.hidden = true; return; }
+    const paid = (plan.dataforseo || []).length;
+    const free = (plan.free || []).length;
+    const rows = plan.requests.map((r) => {
+      const tag = r.billing === 'dataforseo' ? '<span class="tag paid">DataForSEO</span>' : '<span class="tag free">free</span>';
+      const tools = (r.tools || []).map((t) => '<code>' + esc(t) + '</code>').join(', ');
+      return '<li><strong>' + esc(r.label) + '</strong> ' + tag + ' &mdash; ' + tools + ' &mdash; ' + esc(r.cost || '') +
+        (r.requires ? ' <em>(needs ' + esc(r.requires) + ')</em>' : '') + '</li>';
+    }).join('');
+    el.openseoPlan.innerHTML =
+      '<h3>OpenSEO enrichment requested &mdash; not yet run</h3>' +
+      '<p class="muted">' + plan.requests.length + ' pre-filled request(s) in <code>report.json</code> under <code>openseo.requests</code> (' +
+      free + ' free, ' + paid + ' DataForSEO-billed). Run them from an agent session with the OpenSEO MCP tools or the <code>/openseo:*</code> skills.</p>' +
+      (Array.isArray(plan.keyword_seeds) && plan.keyword_seeds.length ? '<p class="muted">Keyword seeds: ' + esc(plan.keyword_seeds.join(', ')) + '</p>' : '') +
+      '<ul>' + rows + '</ul>';
+    el.openseoPlan.hidden = false;
   }
 
-  function moduleCheckboxes() { return $$('#modules input[type=checkbox]'); }
+  function moduleCard(m) {
+    const built = m.built !== false;
+    let badge = '';
+    if (m.billing === 'openseo') badge = ' <span class="tag free">free</span>';
+    else if (m.billing === 'dataforseo') badge = ' <span class="tag paid">DataForSEO</span>';
+    return '<label class="module' + (built ? '' : ' unbuilt') + '" title="' + esc(m.description || '') + '">' +
+      '<input type="checkbox" data-module="' + esc(m.id) + '"' + (built && m.default ? ' checked' : '') + (built ? '' : ' disabled') + '>' +
+      '<span class="module-text"><span class="module-label">' + esc(m.label) + badge +
+      (built ? '' : ' <span class="tag warn">not built yet</span>') + '</span>' +
+      '<span class="module-cost">' + esc(m.cost || '') + '</span>' +
+      (m.requires ? '<span class="module-requires">Needs: ' + esc(m.requires) + '</span>' : '') +
+      '</span></label>';
+  }
+
+  function renderModules() {
+    const audit = state.modules.filter((m) => m.group !== 'openseo');
+    const openseo = state.modules.filter((m) => m.group === 'openseo');
+    el.modules.innerHTML = audit.map(moduleCard).join('') || '<p class="muted">No modules reported by the CLI.</p>';
+    el.openseoModules.innerHTML = openseo.map(moduleCard).join('');
+    el.openseoFieldset.hidden = openseo.length === 0;
+    for (const cb of $$('#openseo-modules input[type=checkbox]')) cb.addEventListener('change', updateOpenSeoNote);
+    updateOpenSeoNote();
+  }
+
+  // Standing reminder of what the selection would cost. Ticking a box never spends anything by
+  // itself: the run writes the requests, an agent session runs them.
+  function updateOpenSeoNote() {
+    const on = state.modules.filter((m) => m.group === 'openseo' && (($('#openseo-modules input[data-module="' + m.id + '"]') || {}).checked));
+    if (!on.length) { el.openseoNote.textContent = 'Nothing selected — the run writes no OpenSEO requests.'; return; }
+    const paid = on.filter((m) => m.billing === 'dataforseo');
+    const free = on.length - paid.length;
+    let text = on.length + ' selected: ' + free + ' free, ' + paid.length + ' DataForSEO-billed.';
+    if (paid.length) text += ' Billed: ' + paid.map((m) => m.label).join(', ') + '. The run itself spends nothing — these are written to report.json for an agent to run and confirm first.';
+    el.openseoNote.textContent = text;
+  }
+
+  function moduleCheckboxes() { return $$('#modules input[type=checkbox], #openseo-modules input[type=checkbox]'); }
 
   function collectForm() {
     const modules = {};
@@ -677,6 +745,8 @@
       el.notEval.hidden = true;
     }
 
+    renderOpenSeo(r.openseo);
+
     const items = Array.isArray(r.items) ? r.items : [];
     const gaps = rankGaps(items);
     if (!gaps.length) {
@@ -781,6 +851,7 @@
         if (cb.disabled) continue;
         if (Object.prototype.hasOwnProperty.call(entry.modules, cb.dataset.module)) cb.checked = !!entry.modules[cb.dataset.module];
       }
+      updateOpenSeoNote();
     }
     refreshCacheSelect();
     el.cache.value = entry.id;

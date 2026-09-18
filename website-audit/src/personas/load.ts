@@ -81,6 +81,7 @@ export function loadDetectors(repo: string, industry?: Industry): Detectors {
     hours_regex: extra.hours_regex ?? base.hours_regex,
     address_regex: extra.address_regex ?? base.address_regex,
     phone_regex: extra.phone_regex ?? base.phone_regex,
+    nav_chrome: [...new Set([...base.nav_chrome, ...(extra.nav_chrome ?? [])])],
   };
   return {
     ...merged,

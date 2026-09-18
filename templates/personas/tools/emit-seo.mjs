@@ -49,7 +49,7 @@ function orgOf(graph) {
 }
 
 /** Walk <main> section by section, mirroring headings, answer-first openers, lists and tables. */
-function sectionsOf($) {
+export function sectionsOf($) {
   const out = [];
   $('main > section').each((_, el) => {
     const $s = $(el);
@@ -90,7 +90,7 @@ function sectionsOf($) {
   return out;
 }
 
-function markdownFor(page) {
+export function markdownFor(page) {
   const { $, origin } = page;
   const graph = graphOf($);
   const faq = nodeOfType(graph, 'FAQPage');
@@ -117,7 +117,7 @@ function markdownFor(page) {
   return lines.join('\n');
 }
 
-function llmsFor(page) {
+export function llmsFor(page) {
   const { $, origin } = page;
   const graph = graphOf($);
   const org = orgOf(graph);
@@ -153,9 +153,14 @@ const robotsFor = (origin) =>
 const sitemapFor = (origin, date) =>
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url>\n    <loc>${origin}/</loc>\n    <lastmod>${date}</lastmod>\n    <priority>1.0</priority>\n  </url>\n</urlset>\n`;
 
+// Guarded so website-audit's own tests can import sectionsOf/markdownFor/llmsFor and assert that its
+// TypeScript emitter walks a page the same way this does. Importing a module that rewrites files on
+// load would be a trap.
+const MAIN = process.argv[1] && process.argv[1].endsWith('emit-seo.mjs');
+
 const BUILD_DATE = new Date().toISOString().slice(0, 10);
 let stale = 0;
-const slugs = fs.readdirSync(ROOT).filter((d) => fs.existsSync(path.join(ROOT, d, 'index.html'))).sort();
+const slugs = MAIN ? fs.readdirSync(ROOT).filter((d) => fs.existsSync(path.join(ROOT, d, 'index.html'))).sort() : [];
 
 for (const slug of slugs) {
   const dir = path.join(ROOT, slug);
@@ -183,7 +188,7 @@ for (const slug of slugs) {
   }
 }
 
-if (CHECK) {
+if (MAIN && CHECK) {
   process.stdout.write(stale ? `\n${stale} file(s) out of date, run: node tools/emit-seo.mjs\n` : '\nall sidecar files up to date\n');
   process.exit(stale ? 1 : 0);
 }

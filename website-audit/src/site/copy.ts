@@ -6,7 +6,7 @@
 // specific claim, raises the placeholder ratio, and keeps the unverified-copy notice on the page.
 import crypto from 'node:crypto';
 import type { SourceCorpus } from './corpus.js';
-import type { CopyMap, CopyMapEntry, Provenance, SitePlan } from './types.js';
+import type { CopyMap, CopyMapEntry, Entities, Provenance } from './types.js';
 
 export interface CopySlot {
   copyId: string;
@@ -20,16 +20,8 @@ export interface CopySlot {
   correctedUrl: string | null;
 }
 
-export interface SectionCopy {
-  sectionId: string;
-  opener: CopySlot;
-  blocks: CopySlot[];
-}
-
 export interface PageCopy {
   path: string;
-  sections: SectionCopy[];
-  faq: CopySlot[];
 }
 
 export interface CopyIndex {
@@ -84,34 +76,66 @@ function verify(source: Provenance, corpus: SourceCorpus): { verified: boolean; 
   return { verified: false, correctedUrl: null, issue: `quote not found in any scraped page: "${quote.slice(0, 120)}"` };
 }
 
-/** Walk the plan in render order, assigning ids and checking every declared quote. */
-export function indexCopy(plan: SitePlan, corpus: SourceCorpus): CopyIndex {
+/** Every quote the build is willing to vouch for, for the fabrication gate to check claims against. */
+export function verifiedQuoteCorpus(index: CopyIndex): string {
+  return [...index.slots.filter((s) => s.verified && s.source.quote).map((s) => s.source.quote as string), ...index.entityQuotes].join('\n');
+}
+
+// ---------------------------------------------------------------------------------------------
+// The templated build
+// ---------------------------------------------------------------------------------------------
+
+/**
+ * One rendered string from the fill, before its quote has been checked.
+ *
+ * `source.kind: 'source'` with no quote means the value came from `report.facts` — the audit's own
+ * deterministic extraction — which is verified by construction and needs no span to back it.
+ */
+export interface FilledCopyInput {
+  copyId: string;
+  kind: string;
+  text: string;
+  source: Provenance;
+}
+
+/**
+ * Index the strings a fill actually rendered, checking every declared quote the same way the
+ * multi-page plan is checked. Provenance is the load-bearing part: a quote that cannot be found in
+ * the scraped source loses its credit, which forces the fabrication gate to demand the sentence
+ * carry no specific claim, raises the placeholder ratio, and keeps the notice on the page.
+ */
+export function indexFilledCopy(inputs: FilledCopyInput[], entities: Entities, corpus: SourceCorpus): CopyIndex {
   const slots: CopySlot[] = [];
-  const byPath = new Map<string, PageCopy>();
   const issues: string[] = [];
   const placeholderIds = new Set<string>();
-  let n = 0;
 
-  const make = (pagePath: string, kind: string, text: string, source: Provenance): CopySlot => {
-    n++;
-    const copyId = `p${String(n).padStart(3, '0')}`;
-    const v = verify(source, corpus);
-    if (v.issue) issues.push(`${copyId} (${pagePath}): ${v.issue}`);
-    const slot: CopySlot = { copyId, pagePath, kind, text, source, verified: v.verified, correctedUrl: v.correctedUrl };
-    if (!v.verified) placeholderIds.add(copyId);
+  for (const input of inputs) {
+    // A fact needs no quote: the audit extracted it from the page itself.
+    const isFact = input.source.kind === 'source' && !input.source.quote;
+    const v = isFact ? { verified: true, correctedUrl: null, issue: null } : verify(input.source, corpus);
+    if (v.issue) issues.push(`${input.copyId}: ${v.issue}`);
+    const slot: CopySlot = {
+      copyId: input.copyId,
+      pagePath: '/',
+      kind: input.kind,
+      text: input.text,
+      source: input.source,
+      verified: v.verified,
+      correctedUrl: v.correctedUrl,
+    };
+    if (!v.verified) placeholderIds.add(input.copyId);
     slots.push(slot);
-    return slot;
-  };
+  }
 
   const entityQuotes: string[] = [];
-  const entityGroups: [string, { name: string; source: Provenance }[]][] = [
-    ['service', plan.entities.services],
-    ['area', plan.entities.areas],
-    ['credential', plan.entities.credentials],
-    ['price', plan.entities.price_statements],
-    ['rating', plan.entities.rating ? [{ name: `${plan.entities.rating.value} from ${plan.entities.rating.count}`, source: plan.entities.rating.source }] : []],
+  const groups: [string, { name: string; source: Provenance }[]][] = [
+    ['service', entities.services],
+    ['area', entities.areas],
+    ['credential', entities.credentials],
+    ['price', entities.price_statements],
+    ['rating', entities.rating ? [{ name: `${entities.rating.value} from ${entities.rating.count}`, source: entities.rating.source }] : []],
   ];
-  for (const [kind, list] of entityGroups) {
+  for (const [kind, list] of groups) {
     for (const e of list) {
       const v = verify(e.source, corpus);
       if (v.issue) issues.push(`${kind} "${e.name}": ${v.issue}`);
@@ -119,33 +143,27 @@ export function indexCopy(plan: SitePlan, corpus: SourceCorpus): CopyIndex {
     }
   }
 
-  for (const page of plan.pages) {
-    const sections: SectionCopy[] = page.sections.map((s) => ({
-      sectionId: s.id,
-      opener: make(page.path, 'opener', s.answer_first_opener.text, s.answer_first_opener.source),
-      blocks: s.blocks.map((b) => make(page.path, b.kind, b.text, b.source)),
-    }));
-    const faq = page.faq.map((f) => make(page.path, 'faq', f.a, f.source));
-    byPath.set(page.path, { path: page.path, sections, faq });
-  }
+  const byPath = new Map<string, PageCopy>([['/', { path: '/' }]]);
   return { slots, byPath, issues, placeholderIds, entityQuotes };
 }
 
-export function buildCopyMap(index: CopyIndex): CopyMap {
+/**
+ * copy_map.json for a templated page. The third source kind matters: `'template'` is text checked
+ * into the page rather than written by a model, and the fabrication gate holds it to the same
+ * fact-only standard as a placeholder.
+ */
+export function buildFilledCopyMap(index: CopyIndex): CopyMap {
   const paragraphs: CopyMapEntry[] = index.slots.map((s) => ({
     copy_id: s.copyId,
-    page_path: s.pagePath,
+    page_path: '/',
     text_sha256: sha256Text(s.text),
     source:
       s.verified && s.source.quote
         ? { url: s.correctedUrl ?? s.source.page_url ?? '', quote: s.source.quote }
-        : 'placeholder',
+        : s.verified
+          ? 'template'
+          : 'placeholder',
   }));
-  const placeholders = paragraphs.filter((p) => p.source === 'placeholder').length;
-  return { paragraphs, placeholder_ratio: paragraphs.length ? placeholders / paragraphs.length : 0 };
-}
-
-/** Every quote the build is willing to vouch for, for the fabrication gate to check claims against. */
-export function verifiedQuoteCorpus(index: CopyIndex): string {
-  return [...index.slots.filter((s) => s.verified && s.source.quote).map((s) => s.source.quote as string), ...index.entityQuotes].join('\n');
+  const unsourced = paragraphs.filter((p) => p.source === 'placeholder').length;
+  return { paragraphs, placeholder_ratio: paragraphs.length ? unsourced / paragraphs.length : 0 };
 }

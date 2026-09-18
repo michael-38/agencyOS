@@ -5,6 +5,7 @@ import { headingTexts, snippet, telHrefs, typesOf, visibleText } from './html.js
 export interface Facts {
   business_name: string | null;
   phones: string[];
+  emails: string[];
   address: Record<string, unknown> | string | null;
   hours: unknown | null;
   services: string[];
@@ -54,6 +55,31 @@ export function extractFacts(ctx: PageContext, navText?: string[]): Facts {
   }
   if (phones.size) sources.phones = telHrefs($).length ? 'tel-links' : org ? 'jsonld' : 'regex';
 
+  // mailto: only. A regex over visible text picks up obfuscated and third-party addresses, and a
+  // wrong contact address on a rebuilt page is worse than no contact address.
+  const emails = new Set<string>();
+  /** mailto: hrefs are percent-encoded in the wild, and `%20name@host` is not an address. */
+  const cleanEmail = (raw: string): string | null => {
+    let v = raw.replace(/^mailto:/i, '').split('?')[0];
+    try {
+      v = decodeURIComponent(v);
+    } catch {
+      // A malformed escape sequence means this is not an address worth keeping.
+      return null;
+    }
+    v = v.trim().toLowerCase();
+    return /^[^@\s]+@[^@\s]+\.[a-z]{2,}$/.test(v) ? v : null;
+  };
+  $('a[href^="mailto:"]').each((_, el) => {
+    const addr = cleanEmail($(el).attr('href') ?? '');
+    if (addr) emails.add(addr);
+  });
+  if (org && typeof org['email'] === 'string') {
+    const addr = cleanEmail(String(org['email']));
+    if (addr) emails.add(addr);
+  }
+  if (emails.size) sources.emails = $('a[href^="mailto:"]').length ? 'mailto-links' : 'jsonld';
+
   let address: Facts['address'] = null;
   const ldAddr = ld.objects.find((o) => 'address' in o);
   if (ldAddr) {
@@ -86,19 +112,41 @@ export function extractFacts(ctx: PageContext, navText?: string[]): Facts {
     }
   }
 
-  const services = new Set<string>();
+  // Services are swept out of the nav and the headings, which means page chrome arrives with them.
+  // That matters beyond the report: validate.ts treats facts.services as things the source site
+  // says, so "Skip to content" in this array widens what generated copy is allowed to claim.
+  const services = new Map<string, string>();
   const NOISE = /^(home|about( us)?|contact( us)?|blog|faqs?|login|menu|search|gallery|reviews?|testimonials?|careers?|apply|portfolio|news)$/i;
   const PHONEISH = /\d{3}[\s.-]?\d{4}|call|email|book|schedule|quote|estimate/i;
-  for (const t of navText ?? []) if (t.length >= 3 && t.length <= 40 && !NOISE.test(t) && !PHONEISH.test(t)) services.add(t);
-  for (const h of headingTexts($, 'h2, h3')) if (h.length >= 3 && h.length <= 60 && !NOISE.test(h) && !PHONEISH.test(h)) services.add(snippet(h, 60));
+  const chrome = new Set((ctx.detectors.nav_chrome ?? []).map((c) => c.trim().toLowerCase()));
+  const isChrome = (raw: string): boolean => {
+    const t = raw.trim().toLowerCase().replace(/\s+/g, ' ').replace(/[.,:;!?]+$/, '');
+    if (chrome.has(t)) return true;
+    if (t.startsWith('skip to')) return true;
+    // A shouted multi-word string is a button, not a service name.
+    if (/\s/.test(raw.trim()) && raw === raw.toUpperCase() && /[A-Z]/.test(raw)) return true;
+    // Six words or more is a heading or a sentence, not the name of a thing being sold.
+    if (t.split(' ').length >= 6) return true;
+    return false;
+  };
+  const add = (raw: string) => {
+    const t = raw.trim();
+    if (t.length < 3 || NOISE.test(t) || PHONEISH.test(t) || isChrome(t)) return;
+    // Case-insensitive dedupe, keeping the first spelling seen.
+    const key = t.toLowerCase().replace(/\s+/g, ' ');
+    if (!services.has(key)) services.set(key, t);
+  };
+  for (const t of navText ?? []) if (t.length <= 40) add(t);
+  for (const h of headingTexts($, 'h2, h3')) if (h.length <= 60) add(snippet(h, 60));
   if (services.size) sources.services = 'nav+headings';
 
   return {
     business_name,
     phones: [...phones].slice(0, 5),
+    emails: [...emails].slice(0, 3),
     address,
     hours,
-    services: [...services].slice(0, 25),
+    services: [...services.values()].slice(0, 25),
     sources,
   };
 }

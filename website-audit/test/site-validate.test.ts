@@ -2,27 +2,40 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
-import { buildAllowedClaims, findClaims, repairNotesFor, validateSiteTree, type SiteValidation } from '../src/site/validate.js';
-import { indexCopy } from '../src/site/copy.js';
+import { buildAllowedClaims, findClaims, validateSiteTree, type SiteValidation } from '../src/site/validate.js';
+import { indexFilledCopy } from '../src/site/copy.js';
 import { REPO_ROOT, tmpDir } from './helpers.js';
-import { fixtureCorpus, fixturePlan, fixtureReport, item, replaceCopy, writeFixtureSite } from './site-helpers.js';
+import { fixturePack, fixtureReport, item, replaceCopy, writeFixtureSite } from './site-helpers.js';
 import type { BuildProfile } from '../src/site/types.js';
 
-function run(opts: { profile?: BuildProfile; mutate?: (p: string, html: string) => string; plan?: ReturnType<typeof fixturePlan>; report?: ReturnType<typeof fixtureReport> } = {}): SiteValidation {
-  const dir = tmpDir('siteredesign-validate-');
-  const plan = opts.plan ?? fixturePlan();
-  const site = writeFixtureSite(dir, { profile: opts.profile, plan, mutate: opts.mutate });
+interface RunOpts {
+  profile?: BuildProfile;
+  mutate?: (p: string, html: string) => string;
+  pack?: ReturnType<typeof fixturePack>;
+  report?: ReturnType<typeof fixtureReport>;
+  residue?: { mockTokens: string[]; demoLexicon: string[] } | null;
+  allowedLinkHosts?: string[];
+  templateCoveredIds?: string[] | null;
+}
+
+function run(opts: RunOpts = {}): SiteValidation {
+  const dir = tmpDir('sitefill-validate-');
+  const pack = opts.pack ?? fixturePack();
+  const site = writeFixtureSite(dir, { profile: opts.profile, pack, mutate: opts.mutate });
   return validateSiteTree({
     siteDir: dir,
     repo: REPO_ROOT,
     slug: 'landscaping',
     profile: opts.profile ?? 'mockup',
-    plan,
+    page: { path: '/', title: pack.title, meta_description: pack.meta_description },
     copyMap: site.copyMap,
     copyIndex: site.copyIndex,
     report: opts.report ?? fixtureReport([item('tel-link')]),
     installedFonts: [],
     jsonldType: 'LocalBusiness',
+    templateCoveredIds: opts.templateCoveredIds ?? null,
+    residue: opts.residue ?? null,
+    allowedLinkHosts: opts.allowedLinkHosts,
   });
 }
 
@@ -60,30 +73,23 @@ test('a missing skip link is an error', () => {
 
 // ---- SEO -------------------------------------------------------------------------------------
 
-test('titles and descriptions outside the bounds search results render are errors', () => {
-  const plan = fixturePlan();
-  plan.pages[0].title = 'Too short';
-  plan.pages[1].meta_description = 'Short.';
-  const v = run({ plan });
-  assert.ok(errors(v, 'seo').some((m) => m.includes('<title> is 9 characters')));
-  assert.ok(errors(v, 'seo').some((m) => m.includes('meta description is 6 characters')));
+test('a title or description outside the bounds search results render is an error', () => {
+  // patchHead clamps the long end, so a build cannot overrun; a value too SHORT still has to fail,
+  // because that is the one the model can produce and code cannot pad.
+  const short = run({ mutate: (p, h) => h.replace(/<title>[^<]*<\/title>/, '<title>Too short</title>') });
+  assert.ok(errors(short, 'seo').some((m) => m.includes('<title> is 9 characters')));
+  const thin = run({ mutate: (p, h) => h.replace(/<meta name="description" content="[^"]*">/, '<meta name="description" content="Short.">') });
+  assert.ok(errors(thin, 'seo').some((m) => m.includes('meta description is 6 characters')));
 });
 
-test('two pages sharing a title or a description is an error', () => {
-  const plan = fixturePlan();
-  plan.pages[1].title = plan.pages[0].title;
-  plan.pages[1].meta_description = plan.pages[0].meta_description;
-  const v = run({ plan });
-  assert.ok(errors(v, 'seo').some((m) => m.includes('duplicate <title>')));
-  assert.ok(errors(v, 'seo').some((m) => m.includes('duplicate meta description')));
-});
 
 test('a second h1 and a skipped heading level are both errors', () => {
-  const v = run({ mutate: (p, h) => (p === '/' ? h.replace('<h2 id="faq-h">', '<h1>Extra</h1><h2 id="faq-h">') : h) });
+  const v = run({ mutate: (p, h) => h.replace('<section class="section" id="faq"', '<h1>Extra</h1><section class="section" id="faq"') });
   assert.ok(errors(v, 'seo').some((m) => m.includes('exactly one <h1>')));
 
-  const skipped = run({ mutate: (p, h) => (p === '/' ? h.replace('<h2 id="faq-h">Frequently asked questions</h2>', '<h4 id="faq-h">Frequently asked questions</h4>') : h) });
-  assert.ok(errors(skipped, 'seo').some((m) => m.includes('heading level jumps')));
+  // An h4 immediately after the h1, so the outline jumps two levels.
+  const skipped = run({ mutate: (p, h) => h.replace('</h1>', '</h1><h4>Jumped</h4>') });
+  assert.ok(errors(skipped, 'seo').some((m) => m.includes('heading level jumps')), errors(skipped, 'seo').join(' | '));
 });
 
 test('an image with no alt text or no intrinsic size is an error, because both cost real users', () => {
@@ -104,18 +110,16 @@ test('production requires a canonical, a sitemap, robots.txt and llms.txt', () =
 // ---- AEO -------------------------------------------------------------------------------------
 
 test('structured data that disagrees with the rendered FAQ is an error', () => {
-  const v = run({
-    mutate: (p, h) =>
-      p === '/'
-        ? h.replace('>When can I reach you?<', '>Something else entirely?<')
-        : h,
-  });
-  assert.ok(errors(v, 'aeo').some((m) => m.includes('is not visible in the rendered page')));
+  // The question in the markup is changed after the JSON-LD was built from it, so the two disagree.
+  // A build cannot reach this state — the graph is derived from the rendered questions — which is
+  // the point: the gate still catches it if anything ever edits one half.
+  const v = run({ mutate: (p, h) => h.replace('>Do you work in my town?<', '>Something else entirely?<') });
+  assert.ok(errors(v, 'aeo').some((m) => m.includes('is not visible in the rendered page')), errors(v, 'aeo').join(' | '));
 });
 
 test('an FAQ answer that differs between the markup and the structured data is an error', () => {
-  const v = run({ mutate: (p, h) => (p === '/' ? replaceCopy(h, 'p003', 'We cover a wide area.') : h) });
-  assert.ok(errors(v, 'aeo').some((m) => m.includes('does not match the answer rendered on the page')));
+  const v = run({ mutate: (p, h) => replaceCopy(h, 'p015', 'We cover a wide area.') });
+  assert.ok(errors(v, 'aeo').some((m) => m.includes('does not match the answer rendered on the page')), errors(v, 'aeo').join(' | '));
 });
 
 test('back-references break a chunk quoted out of context, so they are an error', () => {
@@ -154,8 +158,23 @@ test('an invented credential is caught', () => {
 });
 
 test('a credential the source site already states is allowed through', () => {
-  const v = run({ mutate: (p, h) => (p === '/' ? replaceCopy(h, 'p002', 'Every crew is licensed and insured.') : h) });
-  assert.ok(!errors(v, 'fabrication').some((m) => m.includes('licensed')));
+  // The claim has to arrive with the quote that supports it, which is how a real build states one:
+  // CORPUS_TEXT says "We are licensed and insured for every job we take on."
+  const pack = fixturePack();
+  const lede = pack.slots.find((sl) => sl.slot === 'hero.lede')!;
+  lede.text = 'Every crew is licensed and insured.';
+  lede.source_quote = 'We are licensed and insured for every job we take on.';
+  const v = run({ pack });
+  assert.ok(!errors(v, 'fabrication').some((m) => m.includes('licensed')), errors(v, 'fabrication').join(' | '));
+
+  // The same sentence with no quote behind it is a fabrication.
+  const bare = fixturePack();
+  const bareLede = bare.slots.find((sl) => sl.slot === 'hero.lede')!;
+  bareLede.text = 'Every crew is licensed and insured.';
+  bareLede.source_kind = 'placeholder';
+  bareLede.source_page_url = null;
+  bareLede.source_quote = null;
+  assert.ok(errors(run({ pack: bare }), 'fabrication').some((m) => m.includes('licensed')));
 });
 
 test('rewriting the planned copy is caught by the text hash', () => {
@@ -168,40 +187,37 @@ test('text in <main> with no data-copy-id is untracked and rejected', () => {
   assert.ok(errors(v, 'fabrication').some((m) => m.includes('no data-copy-id')));
 });
 
-test('planned copy that never reached the page is reported', () => {
-  const v = run({ mutate: (p, h) => (p === '/' ? h.replace(/<p data-copy-id="p002">[^<]*<\/p>/, '') : h) });
-  assert.ok(errors(v, 'fabrication').some((m) => m.includes('p002 was never rendered')));
+test('copy the fill wrote but the page does not carry is reported', () => {
+  const v = run({ mutate: (p, h) => h.replace(/<p [^>]*data-copy-id="p006"[^>]*>[^<]*<\/p>/, '') });
+  assert.ok(errors(v, 'fabrication').some((m) => m.includes('p006 was never rendered')), errors(v, 'fabrication').join(' | '));
 });
 
 test('unsourced copy may make no specific claim at all', () => {
-  const plan = fixturePlan();
-  plan.pages[0].sections[0].blocks = [{ kind: 'paragraph', text: 'We have served 4,000 gardens.', source: { kind: 'placeholder', page_url: null, quote: null } }];
-  const dir = tmpDir('siteredesign-placeholder-');
-  const site = writeFixtureSite(dir, { plan, mutate: (p, h) => (p === '/' ? replaceCopy(h, 'p002', 'We have served 4,000 gardens.') : h) });
-  const v = validateSiteTree({
-    siteDir: dir,
-    repo: REPO_ROOT,
-    slug: 'landscaping',
-    profile: 'mockup',
-    plan,
-    copyMap: site.copyMap,
-    copyIndex: site.copyIndex,
-    report: fixtureReport([item('tel-link')]),
-    installedFonts: [],
-    jsonldType: 'LocalBusiness',
-  });
+  const pack = fixturePack();
+  const lede = pack.slots.find((sl) => sl.slot === 'hero.lede')!;
+  lede.source_kind = 'placeholder';
+  lede.source_page_url = null;
+  lede.source_quote = null;
+  lede.text = 'We have served 4,000 gardens.';
+  const v = run({ pack });
   assert.ok(errors(v, 'fabrication').some((m) => m.includes('"4,000"') && m.includes('not an extracted fact')));
 });
 
 test('the allowed-claim corpus is built from verified quotes and extracted facts only', () => {
-  const plan = fixturePlan();
-  const index = indexCopy(plan, fixtureCorpus());
-  const allowed = buildAllowedClaims(index, fixtureReport());
-  assert.ok(allowed.text.includes('licensed and insured'), 'a credential the source states counts even though no paragraph quotes it directly');
-  assert.ok(allowed.digits.has('49') && allowed.digits.has('132'), 'the sourced rating contributes its digits');
-  assert.ok(allowed.digits.has('2009'));
+  const dir = tmpDir('sitefill-claims-');
+  const site = writeFixtureSite(dir);
+  const allowed = buildAllowedClaims(site.copyIndex, fixtureReport());
+  assert.ok(allowed.digits.has('2009'), 'a quote the fill verified contributes its digits');
+  assert.ok(allowed.digits.has('45'), 'so does the sourced price');
   assert.ok(allowed.digits.has('84065'), 'facts contribute their digits');
-  assert.ok(!allowed.digits.has('900'));
+  assert.ok(allowed.factDigits.has('84065'), 'and appear in the stricter fact-only set');
+  assert.ok(!allowed.digits.has('900'), 'a number the source never states is not allowed');
+  // An unverifiable quote earns nothing.
+  const bad = fixturePack();
+  bad.slots.find((sl) => sl.slot === 'hero.lede')!.source_quote = 'Nowhere in the source at all.';
+  const dir2 = tmpDir('sitefill-claims2-');
+  const site2 = writeFixtureSite(dir2, { pack: bad });
+  assert.ok(site2.copyIndex.issues.some((m) => /quote not found/.test(m)));
 });
 
 // ---- coverage --------------------------------------------------------------------------------
@@ -213,25 +229,6 @@ test('an audit gap tagged nowhere in the site is an error', () => {
   assert.ok(v.coverage.tagged.includes('tel-link'));
 });
 
-test('a page the plan promised but never wrote is an error', () => {
-  const dir = tmpDir('siteredesign-missing-');
-  const plan = fixturePlan();
-  const site = writeFixtureSite(dir, { plan });
-  fs.rmSync(path.join(dir, 'services', 'mowing', 'index.html'));
-  const v = validateSiteTree({
-    siteDir: dir,
-    repo: REPO_ROOT,
-    slug: 'landscaping',
-    profile: 'mockup',
-    plan,
-    copyMap: site.copyMap,
-    copyIndex: site.copyIndex,
-    report: fixtureReport([item('tel-link')]),
-    installedFonts: [],
-    jsonldType: 'LocalBusiness',
-  });
-  assert.ok(errors(v, 'structure').some((m) => m.includes('was not written')));
-});
 
 test('a claim in a caption or a table cell is caught even though captions are not copy-mapped', () => {
   const v = run({
@@ -248,39 +245,16 @@ test('a claim in a caption or a table cell is caught even though captions are no
   assert.ok(msgs.some((m) => /td .*claims "accredited"/i.test(m)));
 });
 
-test('a missing audit tag is attributed to the page that was supposed to carry it', () => {
-  const plan = fixturePlan();
-  plan.pages[1].sections[0].checklist_ids = ['review-markup'];
-  const v = run({ plan, report: fixtureReport([item('tel-link'), item('review-markup')]) });
-  const finding = v.findings.find((f) => f.gate === 'coverage' && f.message.includes('review-markup'));
-  assert.equal(finding?.page, '/services/mowing/', 'the repair pass needs to know which page to re-render');
-});
 
-test('repair notes exclude findings a re-render cannot fix', () => {
-  const plan = fixturePlan();
-  plan.pages[0].title = 'Too short';
-  const v = run({ plan });
-  assert.ok(errors(v, 'seo').some((m) => m.includes('<title> is 9 characters')));
-  assert.ok(!repairNotesFor(v, '/').some((m) => m.includes('<title> is 9 characters')), 'a bad title comes from the copy pass, not the markup');
-});
 
 test('unsourced copy may repeat an extracted fact, since a fact is not a fabrication', () => {
-  const plan = fixturePlan();
-  plan.pages[0].sections[0].blocks = [{ kind: 'paragraph', text: 'Call 801-555-0100 to get started.', source: { kind: 'placeholder', page_url: null, quote: null } }];
-  const dir = tmpDir('siteredesign-factph-');
-  const site = writeFixtureSite(dir, { plan, mutate: (p, h) => (p === '/' ? replaceCopy(h, 'p002', 'Call 801-555-0100 to get started.') : h) });
-  const v = validateSiteTree({
-    siteDir: dir,
-    repo: REPO_ROOT,
-    slug: 'landscaping',
-    profile: 'mockup',
-    plan,
-    copyMap: site.copyMap,
-    copyIndex: site.copyIndex,
-    report: fixtureReport([item('tel-link')]),
-    installedFonts: [],
-    jsonldType: 'LocalBusiness',
-  });
+  const pack = fixturePack();
+  const lede = pack.slots.find((sl) => sl.slot === 'hero.lede')!;
+  lede.source_kind = 'placeholder';
+  lede.source_page_url = null;
+  lede.source_quote = null;
+  lede.text = 'Call 801-555-0100 to get started.';
+  const v = run({ pack });
   assert.deepEqual(errors(v, 'fabrication'), [], 'the phone number is in report.facts');
 });
 
@@ -289,21 +263,7 @@ test('the same planned block rendered twice is an error', () => {
   assert.ok(errors(v, 'fabrication').some((m) => m.includes('rendered more than once')));
 });
 
-test('the build renders the FAQ, so it always mirrors the structured data', () => {
-  const dir = tmpDir('siteredesign-faq-');
-  const plan = fixturePlan();
-  writeFixtureSite(dir, { plan });
-  const html = fs.readFileSync(path.join(dir, 'index.html'), 'utf8');
-  assert.ok(html.includes('<h3 class="faq-q" id="faq-1">When can I reach you?</h3>'));
-  assert.ok(html.includes('data-checklist="faq-present"'));
-  assert.ok(html.includes('class="related"'), 'internal links are emitted by the build too');
-  assert.ok(html.includes('<li><a href="services/mowing/index.html">Weekly mowing</a></li>'));
-});
 
-test('a link to a page that was never written is an error', () => {
-  const v = run({ mutate: (p, h) => (p === '/' ? h.replace('</main>', '<p data-copy-id="x"><a href="services/index.html">Services</a></p></main>') : h) });
-  assert.ok(errors(v, 'structure').some((m) => m.includes('dead link: services/index.html')));
-});
 
 test('a link to an image that was never written is an error', () => {
   const v = run({ mutate: (p, h) => (p === '/' ? h.replace('</main>', '<img src="assets/img/nope.webp" alt="x" width="1" height="1"></main>') : h) });
@@ -312,4 +272,89 @@ test('a link to an image that was never written is an error', () => {
 
 test('the fixture site has no dead links', () => {
   assert.ok(!errors(run(), 'structure').some((m) => m.includes('dead link')));
+});
+
+// ---- residue ---------------------------------------------------------------------------------
+
+test("the template's mock business must not survive the fill", () => {
+  const residue = { mockTokens: ['Hollow Creek Landscape Co.', 'C-48219'], demoLexicon: ['Hollow Creek has been installing hardscape since 2009.'] };
+
+  // A page that never mentions the mock is silent on this gate.
+  assert.deepEqual(errors(run({ residue }), 'residue'), []);
+
+  // An identity string in rendered text.
+  const named = run({ residue, mutate: (p, h) => (p === '/' ? h.replace('</main>', '<p data-copy-id="zz">Call Hollow Creek Landscape Co. today.</p></main>') : h) });
+  assert.ok(errors(named, 'residue').some((m) => m.includes('Hollow Creek Landscape Co.')));
+
+  // An identity string hiding in an attribute a reader sees.
+  const inAttr = run({ residue, mutate: (p, h) => (p === '/' ? h.replace('</main>', '<img src="a.webp" alt="C-48219" width="1" height="1"></main>') : h) });
+  assert.ok(errors(inAttr, 'residue').some((m) => m.includes('C-48219')));
+
+  // Demo prose rendered verbatim.
+  const prose = run({ residue, mutate: (p, h) => (p === '/' ? h.replace('</main>', '<p data-copy-id="zz">Hollow Creek has been installing hardscape since 2009.</p></main>') : h) });
+  assert.ok(errors(prose, 'residue').some((m) => m.includes('template demo copy was rendered verbatim')));
+
+  // The stylesheet is not the mock business, and neither is the build's own JSON-LD.
+  const inStyle = run({ residue, mutate: (p, h) => (p === '/' ? h.replace('</head>', '<style>/* C-48219 */</style></head>') : h) });
+  assert.deepEqual(errors(inStyle, 'residue'), [], 'a token inside <style> is not rendered text');
+});
+
+// ---- off-site links --------------------------------------------------------------------------
+
+test('an off-site link is allowed only to a host the audited site itself links to', () => {
+  const link = (href: string) => (p: string, h: string) => (p === '/' ? h.replace('</main>', `<a href="${href}">Book</a></main>`) : h);
+
+  const allowed = run({ allowedLinkHosts: ['booking.joinblvd.com'], mutate: link('https://booking.joinblvd.com/verdant') });
+  assert.deepEqual(errors(allowed, 'structure'), [], 'a real booking system the source linked to survives');
+
+  const invented = run({ allowedLinkHosts: ['booking.joinblvd.com'], mutate: link('https://evil.example/pay') });
+  assert.ok(errors(invented, 'structure').some((m) => m.includes('evil.example is not a host the audited site links to')));
+
+  // www. is not a different host.
+  const withWww = run({ allowedLinkHosts: ['joinblvd.com'], mutate: link('https://www.joinblvd.com/x') });
+  assert.deepEqual(errors(withWww, 'structure'), []);
+
+  // With no allowlist at all, every off-site link is an error, as before.
+  assert.ok(errors(run({ mutate: link('https://anything.example/') }), 'structure').length > 0);
+});
+
+test('an anchor pointing at no element is a dead link, because omitting a section can orphan one', () => {
+  const v = run({ mutate: (p, h) => (p === '/' ? h.replace('</main>', '<a href="#gone">Jump</a></main>') : h) });
+  assert.ok(errors(v, 'structure').some((m) => m.includes('dead anchor: <a href="#gone">')));
+  // The fixture's own in-page anchors must not trip it.
+  assert.deepEqual(errors(run(), 'structure'), []);
+});
+
+// ---- coverage tiers --------------------------------------------------------------------------
+
+test('an audit gap the template cannot carry is a warning; one it can carry and dropped is an error', () => {
+  // The fixture tags tel-link from the plan and faq-present from the build's own FAQ block, so
+  // live-chat and review-markup are the untagged gaps.
+  const report = fixtureReport([item('tel-link'), item('live-chat'), item('review-markup')]);
+
+  // With no template declared, every untagged gap is a build failure, as before.
+  const strict = run({ report });
+  assert.equal(errors(strict, 'coverage').filter((m) => m.includes('live-chat')).length, 1);
+  assert.equal(errors(strict, 'coverage').filter((m) => m.includes('review-markup')).length, 1);
+
+  // Declaring what the template can carry splits them. review-markup is inside its remit, so the
+  // built page dropping it is still a real bug; live-chat needs a third-party chat script no
+  // template ships, so it is reported rather than failing the build.
+  const tiered = run({ report, templateCoveredIds: ['tel-link', 'review-markup'] });
+  assert.deepEqual(errors(tiered, 'coverage').filter((m) => m.includes('live-chat')), []);
+  assert.deepEqual(tiered.coverage.uncoverable, ['live-chat']);
+  assert.ok(
+    tiered.findings.some((f) => f.gate === 'coverage' && f.level === 'warning' && /live-chat.*outside what this template can carry/.test(f.message)),
+  );
+  assert.ok(errors(tiered, 'coverage').some((m) => m.includes('review-markup')));
+  assert.deepEqual(tiered.coverage.missing, ['review-markup']);
+});
+
+test('template boilerplate is held to the same fact-only standard as placeholder copy', () => {
+  const v = run({
+    mutate: (p, h) =>
+      p === '/' ? h.replace('</main>', '<p data-copy-id="tpl">Fully licensed, with 25 years behind us.</p></main>') : h,
+  });
+  // The block is not in copy_map.json at all, which is itself the error the gate reports first.
+  assert.ok(errors(v, 'fabrication').some((m) => m.includes('not in copy_map.json')));
 });

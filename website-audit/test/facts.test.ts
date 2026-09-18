@@ -46,3 +46,65 @@ test('tel: hrefs with slashes are normalized and phone-like nav entries are not 
   assert.ok(!f.services.includes('Gallery'));
   assert.ok(f.services.includes('Design & Build'));
 });
+
+test('page chrome is kept out of facts.services, because validate.ts treats them as claims', () => {
+  // validate.ts's buildAllowedClaims reads facts.services as things the source site says, so
+  // "Skip to content" in this array widens what generated copy is allowed to state.
+  const ctx = pageCtx('landscaping-good', { probe: true });
+  const nav = [
+    'Skip to content',
+    'Landscaping',
+    'Paver Install',
+    'More',
+    'Employment',
+    'Partners',
+    'Accessibility',
+    'REQUEST CONSULTATION',
+    'Areas We Serve',
+    'Hours of Operation',
+    'landscaping',
+  ];
+  const f = extractFacts(ctx, nav);
+
+  for (const chrome of ['Skip to content', 'More', 'Employment', 'Partners', 'Accessibility', 'Areas We Serve', 'Hours of Operation']) {
+    assert.ok(!f.services.includes(chrome), `chrome survived: ${chrome}`);
+  }
+  assert.ok(!f.services.some((s) => s === 'REQUEST CONSULTATION'), 'a shouted multi-word string is a button, not a service');
+  assert.ok(f.services.includes('Landscaping'), 'a real service must survive');
+  assert.ok(f.services.includes('Paver Install'));
+  // Case-insensitive dedupe, first spelling wins.
+  assert.equal(f.services.filter((s) => s.toLowerCase() === 'landscaping').length, 1);
+  assert.ok(!f.services.includes('landscaping'));
+});
+
+test('a heading long enough to be a sentence is not a service name', () => {
+  const f = extractFacts(pageCtx('landscaping-good', { probe: true }), ['Exceptional Landscaping in Northern and Southern Utah']);
+  assert.ok(!f.services.includes('Exceptional Landscaping in Northern and Southern Utah'));
+});
+
+test('emails come from mailto: and JSON-LD only, percent-decoded', () => {
+  const ctx = pageCtx('landscaping-good', { probe: true });
+  ctx.rawHtml =
+    '<!doctype html><html lang="en"><body>' +
+    // A percent-encoded leading space is common in the wild and is not part of the address.
+    '<a href="mailto:%20office@example.com">Email</a>' +
+    '<a href="mailto:sales@example.com?subject=Hi">Sales</a>' +
+    '<a href="mailto:not-an-address">Broken</a>' +
+    '<a href="mailto:%E0%A4%A">Malformed</a>' +
+    // A plain-text address is deliberately ignored: obfuscated and third-party addresses live there.
+    '<p>reception@example.com</p>' +
+    '</body></html>';
+  ctx._$ = undefined;
+  ctx._jsonld = undefined;
+  const f = extractFacts(ctx);
+  assert.deepEqual(f.emails, ['office@example.com', 'sales@example.com']);
+  assert.equal(f.sources.emails, 'mailto-links');
+});
+
+test('no mailto anywhere means no email, not a guess', () => {
+  const ctx = pageCtx('landscaping-good', { probe: true });
+  ctx.rawHtml = '<!doctype html><html lang="en"><body><p>Call us.</p></body></html>';
+  ctx._$ = undefined;
+  ctx._jsonld = undefined;
+  assert.deepEqual(extractFacts(ctx).emails, []);
+});

@@ -118,11 +118,17 @@ test('ui server', async (t) => {
     }
   });
 
-  await t.test('GET /api/modules returns 9 modules, lighthouse not built', async () => {
+  await t.test('GET /api/modules returns both groups with billing, lighthouse not built', async () => {
     const r = await request(port, 'GET', '/api/modules');
     assert.equal(r.status, 200);
-    const mods = json(r) as { id: string; built: boolean; label: string; cost: string; default: boolean }[];
-    assert.equal(mods.length, 9);
+    const mods = json(r) as { id: string; built: boolean; label: string; cost: string; default: boolean; group: string; billing: string; tools?: string[] }[];
+    assert.equal(mods.filter((m) => m.group === 'audit').length, 9);
+    const openseo = mods.filter((m) => m.group === 'openseo');
+    assert.ok(openseo.length >= 1);
+    // The UI renders the free/DataForSEO badge straight off these fields.
+    assert.ok(openseo.every((m) => m.billing === 'openseo' || m.billing === 'dataforseo'));
+    assert.ok(openseo.every((m) => m.default === false));
+    assert.ok(mods.find((m) => m.id === 'openseo-local-grid')?.tools?.includes('get_local_rank_grid'));
     const lh = mods.find((m) => m.id === 'lighthouse');
     assert.ok(lh);
     assert.equal(lh.built, false);

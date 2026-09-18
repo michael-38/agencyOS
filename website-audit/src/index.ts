@@ -6,12 +6,14 @@ import { Command } from 'commander';
 import { MODELS, PIPELINE_VERSION, SITE_LIMITS, repoRoot } from './config.js';
 import { CHECKS, REGISTERED_CHECK_IDS } from './checks/registry.js';
 import { MODULES, parseList, resolveModules } from './modules.js';
-import { validateAllPersonas } from './personas/load.js';
+import { loadIndustries, validateAllPersonas } from './personas/load.js';
 import { runAudit } from './pipeline.js';
 import { checkHtmlCommand } from './site/check-html.js';
+import { readTemplate } from './site/template.js';
 import { evalCommand } from './evals/run.js';
-import { siteScaffold, sitePreview, siteValidate } from './site/commands.js';
-import { DEFAULT_LIMITS, DEFAULT_MODELS, STAGES, runBuild, type Stage } from './site/build.js';
+import { sitePreview } from './site/commands.js';
+import { DEFAULT_LIMITS, DEFAULT_MODEL, STAGES, runBuild, type Stage } from './site/build.js';
+import { siteShot, type ShotViewport } from './site/shot.js';
 
 const program = new Command();
 program.name('website-audit').description('URL → industry persona audit → gap report').version(PIPELINE_VERSION);
@@ -124,7 +126,56 @@ program
       process.stdout.write(`${JSON.stringify(MODULES, null, 2)}\n`);
       return;
     }
-    for (const m of MODULES) process.stdout.write(`${m.id.padEnd(20)} ${m.default ? 'on ' : 'off'} ${m.built ? '' : '(not built) '}${m.label} — ${m.cost}\n`);
+    const billingTag = (b: (typeof MODULES)[number]['billing']) => (b === 'dataforseo' ? '[DataForSEO]' : b === 'openseo' ? '[free]' : '');
+    for (const group of ['audit', 'openseo'] as const) {
+      const rows = MODULES.filter((m) => m.group === group);
+      if (!rows.length) continue;
+      process.stdout.write(group === 'audit' ? '\nAudit pipeline\n' : '\nOpenSEO enrichment (written to report.json for an agent session to run)\n');
+      for (const m of rows) {
+        process.stdout.write(`  ${m.id.padEnd(24)} ${m.default ? 'on ' : 'off'} ${billingTag(m.billing).padEnd(13)} ${m.built ? '' : '(not built) '}${m.label} — ${m.cost}\n`);
+      }
+    }
+  });
+
+program
+  .command('template:manifest')
+  .description("Print a page template's slot contract, derived from the template itself")
+  .requiredOption('--slug <slug>', 'industry slug (the template comes from industries.yaml)')
+  .option('--template <path>', 'read this file instead of the industry\'s registered template')
+  .option('--json', 'JSON output', false)
+  .option('--repo-root <dir>')
+  .action((o) => {
+    const repo = repoRoot(o.repoRoot);
+    const industries = loadIndustries(repo);
+    const industry = industries.industries.find((i) => i.slug === o.slug);
+    if (!industry) {
+      process.stderr.write(`error: unknown slug "${o.slug}"; valid: ${industries.industries.map((i) => i.slug).join(', ')}\n`);
+      process.exit(2);
+    }
+    const rel = o.template ?? industry.template_file;
+    try {
+      const m = readTemplate(path.isAbsolute(rel) ? rel : path.join(repo, rel), o.slug, rel);
+      if (o.json) {
+        process.stdout.write(`${JSON.stringify(m, null, 2)}\n`);
+        return;
+      }
+      process.stdout.write(`${m.file}\n  sha256 ${m.sha256.slice(0, 16)}\n\n`);
+      process.stdout.write(`slots (${m.slots.length})\n`);
+      for (const sl of m.slots) {
+        const flags = [sl.attr ? `@${sl.attr}` : null, sl.optional ? 'optional' : null, sl.max ? `<=${sl.max}` : null, sl.answerFirst ? 'answer-first' : null].filter(Boolean).join(' ');
+        process.stdout.write(`  ${sl.id.padEnd(30)} ${sl.kind.padEnd(10)} ${flags.padEnd(28)} ${sl.intent}\n`);
+      }
+      process.stdout.write(`\nrepeats (${m.repeats.length})\n`);
+      for (const r of m.repeats) process.stdout.write(`  ${r.group.padEnd(20)} ${r.min}-${r.max} items, ${r.prototypes} prototype(s), section#${r.sectionId ?? '-'}\n`);
+      process.stdout.write(`\nsections (${m.sections.length})\n`);
+      for (const sec of m.sections) process.stdout.write(`  ${sec.id.padEnd(20)} ${sec.omitGroup ? `omit if "${sec.omitGroup}" empty` : ''}\n`);
+      process.stdout.write(`\nchecklist ids covered (${m.coveredChecklistIds.length}): ${m.coveredChecklistIds.join(' ')}\n`);
+      process.stdout.write(`mock identity tokens (${m.mockTokens.length}): ${m.mockTokens.join(' | ')}\n`);
+      process.stdout.write(`demo lexicon entries (${m.demoLexicon.length})\n`);
+    } catch (e) {
+      process.stderr.write(`\n${(e as Error).message}\n`);
+      process.exit(1);
+    }
   });
 
 program
@@ -156,41 +207,23 @@ program
   });
 
 program
-  .command('site:scaffold')
-  .description('v2: write the archetype skeleton for a run (site/index.html + copy_map.json)')
-  .requiredOption('--slug <slug>')
-  .requiredOption('--report <path>', 'path to report.json')
-  .option('--repo-root <dir>')
-  .action((o) => process.exit(siteScaffold({ slug: o.slug, report: path.resolve(o.report), repo: repoRoot(o.repoRoot) })));
-
-program
-  .command('site:validate')
-  .description('v2: validate a generated site directory')
-  .argument('<dir>', 'site directory containing index.html and copy_map.json')
-  .option('--slug <slug>', 'industry slug (default: read from the run\'s report.json)')
-  .option('--repo-root <dir>')
-  .action((dir: string, o) => process.exit(siteValidate({ dir: path.resolve(dir), repo: repoRoot(o.repoRoot), slug: o.slug ?? null })));
-
-program
   .command('site:build')
-  .description('SiteRedesign: rewrite a finished audit run into an SEO/AEO-optimised, persona-designed site')
-  .requiredOption('--report <path>', 'path to a finished run\'s report.json')
+  .description("fill this industry's page template from a finished audit run")
+  .requiredOption('--report <path>', "path to a finished run's report.json")
   .option('--profile <name>', 'mockup (offline preview, default) | production (deployable)', 'mockup')
   .option('--base-url <url>', 'origin for canonical/OG/sitemap/llms.txt (required by --profile production)')
   .option('--slug <slug>', 'industry slug (default: read from report.json)')
-  .option('--max-pages <n>', 'total pages to generate, including home', (v) => parseInt(v, 10), DEFAULT_LIMITS.maxPages)
-  .option('--max-assets <n>', 'images to reuse from the source site', (v) => parseInt(v, 10), DEFAULT_LIMITS.maxAssets)
-  .option('--assets <mode>', 'reuse (download the source site\'s own images) | placeholder', 'reuse')
+  .option('--template <path>', "read this template instead of the industry's registered one")
+  .option('--brand <mode>', "auto (accent from the client's logo) | off | a hex colour", 'auto')
+  .option('--max-assets <n>', "images to reuse from the source site", (v) => parseInt(v, 10), DEFAULT_LIMITS.maxAssets)
+  .option('--assets <mode>', "placeholder (keep the template's labelled stand-ins, default) | reuse", 'placeholder')
   .option('--stage <name>', `start at this stage, reusing earlier artifacts: ${STAGES.join(' | ')}`, 'assets')
-  .option('--repair-passes <n>', 'times to feed validation errors back into the render stage', (v) => parseInt(v, 10), DEFAULT_LIMITS.repairPasses)
-  .option('--max-usd <n>', 'stop the build once Anthropic spend reaches this', (v) => parseFloat(v), DEFAULT_LIMITS.maxUsd)
+  .option('--max-usd <n>', 'refuse the build if the content call would cost more than this', (v) => parseFloat(v), DEFAULT_LIMITS.maxUsd)
   .option('--from-cache <runDir>', 'reuse cached downloads and LLM responses from another run')
   .option('--offline', 'fail on any cache miss (no network)', false)
-  .option('--plan-model <model>', 'model for the plan stage', DEFAULT_MODELS.plan)
-  .option('--design-model <model>', 'model for the design stage', DEFAULT_MODELS.design)
-  .option('--render-model <model>', 'model for the render stage', DEFAULT_MODELS.render)
+  .option('--model <model>', 'model for the content call', DEFAULT_MODEL)
   .option('--repo-root <dir>')
-  .option('--dry-run', 'print the effective config and exit', false)
+  .option('--dry-run', 'print the effective config and a cost estimate, then exit', false)
   .option('--verbose', 'debug logging', false)
   .action(async (o) => {
     if (o.profile !== 'mockup' && o.profile !== 'production') {
@@ -205,9 +238,6 @@ program
       process.stderr.write(`error: --stage must be one of ${STAGES.join(', ')} (got "${o.stage}")\n`);
       process.exit(2);
     }
-    if (o.maxPages > SITE_LIMITS.maxPages) {
-      process.stderr.write(`warning: --max-pages ${o.maxPages} exceeds the ${SITE_LIMITS.maxPages}-page ceiling in config.ts; building ${SITE_LIMITS.maxPages}\n`);
-    }
     try {
       const res = await runBuild({
         reportPath: path.resolve(o.report),
@@ -215,25 +245,25 @@ program
         profile: o.profile,
         baseUrl: o.baseUrl ?? null,
         slug: o.slug ?? null,
-        maxPages: Math.max(1, Math.min(o.maxPages, SITE_LIMITS.maxPages)),
+        templatePath: o.template ? path.resolve(o.template) : null,
+        brand: o.brand,
         maxAssets: Math.max(0, o.maxAssets),
         useAssets: o.assets === 'reuse',
         startStage: o.stage as Stage,
-        repairPasses: Math.max(0, o.repairPasses),
         maxUsd: Number.isFinite(o.maxUsd) && o.maxUsd > 0 ? o.maxUsd : DEFAULT_LIMITS.maxUsd,
         fromCache: o.fromCache ? path.resolve(o.fromCache) : null,
         offline: !!o.offline,
-        models: { plan: o.planModel, design: o.designModel, render: o.renderModel },
+        model: o.model,
         verbose: !!o.verbose,
         dryRun: !!o.dryRun,
       });
       if (o.dryRun) return;
       const errors = res.validation?.findings.filter((f) => f.level === 'error') ?? [];
-      for (const f of errors) process.stdout.write(`error: ${f.page} [${f.gate}] ${f.message}\n`);
-      if (res.budgetStop) process.stdout.write(`error: ${res.budgetStop}\n`);
-      process.stdout.write(`${res.validation?.ok && !res.budgetStop ? 'OK' : 'FAILED'} — ${res.pagesWritten.length} page(s) in ${res.siteDir}, $${res.usd.toFixed(4)}\n`);
+      for (const f of errors) process.stdout.write(`error: [${f.gate}] ${f.message}\n`);
+      const ok = !!res.validation?.ok;
+      process.stdout.write(`${ok ? 'OK' : 'FAILED'} — ${res.siteDir}/index.html, $${res.usd.toFixed(4)}\n`);
       process.stdout.write(`report: ${path.join(res.siteDir, 'seo-report.md')}\n`);
-      process.exit(res.validation?.ok && !res.budgetStop ? 0 : 1);
+      process.exit(ok ? 0 : 1);
     } catch (e) {
       const err = e as Error;
       process.stderr.write(`\n${err.name}: ${err.message}\n`);
@@ -247,5 +277,43 @@ program
   .description('v2: open a generated site in the default browser')
   .argument('<dir>')
   .action((dir: string) => process.exit(sitePreview({ dir: path.resolve(dir) })));
+
+program
+  .command('site:shot')
+  .description('screenshot a generated home page, and pair it with the audit\'s own screenshot of the current site')
+  .argument('<dir>', 'site directory containing index.html (usually runs/<host>/<ts>/site)')
+  .option('--report <path>', 'run report.json holding the "before" screenshots (default: ../report.json next to the site dir)')
+  .option('--out <dir>', 'where to write the images (default: <dir>/shots)')
+  .option('--viewport <name>', 'mobile | desktop | both', 'both')
+  .option('--scale <n>', 'device pixel ratio for the generated page', (v) => parseFloat(v), 2)
+  .option('--no-compare', 'skip the before/after image')
+  .option('--hide-notice', 'drop the unverified-copy banner from the image', false)
+  .action(async (dir: string, o) => {
+    const siteDir = path.resolve(dir);
+    const viewports: ShotViewport[] =
+      o.viewport === 'both' ? ['mobile', 'desktop'] : o.viewport === 'mobile' || o.viewport === 'desktop' ? [o.viewport] : [];
+    if (!viewports.length) {
+      process.stderr.write(`error: --viewport must be mobile, desktop, or both (got "${o.viewport}")\n`);
+      process.exit(2);
+    }
+    const reportPath = o.report ? path.resolve(o.report) : path.join(path.dirname(siteDir), 'report.json');
+    try {
+      const res = await siteShot({
+        dir: siteDir,
+        reportPath,
+        outDir: o.out ? path.resolve(o.out) : path.join(siteDir, 'shots'),
+        viewports,
+        compare: o.compare !== false,
+        scale: Number.isFinite(o.scale) && o.scale > 0 ? o.scale : 2,
+        hideNotice: !!o.hideNotice,
+      });
+      for (const n of res.notes) process.stdout.write(`note: ${n}\n`);
+      for (const f of res.files) process.stdout.write(`${path.relative(process.cwd(), f)}\n`);
+      process.exit(0);
+    } catch (e) {
+      process.stderr.write(`\n${(e as Error).message}\n`);
+      process.exit(1);
+    }
+  });
 
 program.parseAsync(process.argv);

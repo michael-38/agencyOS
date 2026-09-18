@@ -94,6 +94,27 @@ export function renderMarkdown(report: Report, extras: MarkdownExtras): string {
       lines.push(`${i + 1}. [${g.weight}] ${g.id} — ${g.verdict} — ${g.evidence.summary}${where}${unverified}`);
     });
   }
+  const openseo = report.openseo;
+  if (openseo) {
+    lines.push('');
+    lines.push('## OpenSEO enrichment');
+    lines.push(
+      `Requested but not yet run — the audit CLI cannot call OpenSEO. ${openseo.requests.length} request(s) are pre-filled in report.json under \`openseo.requests\`; run them from an agent session with the OpenSEO MCP tools or the /openseo:* skills.`,
+    );
+    if (openseo.keyword_seeds.length) lines.push(`Keyword seeds from this audit: ${openseo.keyword_seeds.join(', ')}`);
+    const billed = openseo.dataforseo.length;
+    lines.push(
+      billed
+        ? `Billing: ${openseo.free.length} free, ${billed} charged to your DataForSEO key — confirm the estimate before running those.`
+        : `Billing: all ${openseo.free.length} free (no DataForSEO spend).`,
+    );
+    lines.push('');
+    for (const r of openseo.requests) {
+      const tag = r.billing === 'dataforseo' ? 'DataForSEO' : 'free';
+      const needs = r.requires ? ` — needs ${r.requires}` : '';
+      lines.push(`- **${r.label}** [${tag}] — \`${r.tools.join('`, `')}\` — ${r.cost}${needs}`);
+    }
+  }
   if (extras.placeholderRatio && extras.placeholderRatio.total > 0) {
     const r = extras.placeholderRatio;
     lines.push('');
