@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { renderSeoReport } from '../src/site/report.js';
 import { buildCopyMap, indexCopy } from '../src/site/copy.js';
 import { fixtureCorpus, fixturePlan } from './site-helpers.js';
-import type { AssetManifest, AssetRecord } from '../src/site/types.js';
+import type { AssetManifest, AssetRecord, SitePlan } from '../src/site/types.js';
 import type { SiteValidation } from '../src/site/validate.js';
 
 function asset(over: Partial<AssetRecord> = {}): AssetRecord {
@@ -22,8 +22,8 @@ function asset(over: Partial<AssetRecord> = {}): AssetRecord {
   };
 }
 
-function report(over: { assets?: AssetManifest; validation?: SiteValidation | null; notes?: string[] } = {}) {
-  const plan = fixturePlan();
+function report(over: { assets?: AssetManifest; validation?: SiteValidation | null; notes?: string[]; preview?: boolean; plan?: SitePlan; shots?: string[] } = {}) {
+  const plan = over.plan ?? fixturePlan();
   const copyMap = buildCopyMap(indexCopy(plan, fixtureCorpus()));
   return renderSeoReport({
     file: '/tmp/x.md',
@@ -33,9 +33,11 @@ function report(over: { assets?: AssetManifest; validation?: SiteValidation | nu
     slug: 'landscaping',
     assets: over.assets ?? { assets: [asset()], skipped: [], harvested: 3, downloaded: 1 },
     copyMap,
-    validation: over.validation === undefined ? ({ ok: true, findings: [], placeholder: { placeholder: 0, total: 4 }, selfTest: {}, coverage: { tagged: [], missing: [] } } as SiteValidation) : over.validation,
+    validation: over.validation === undefined ? ({ ok: true, findings: [], placeholder: { placeholder: 0, total: 4 }, selfTest: {}, coverage: { tagged: [], missing: [], deferred: [] } } as SiteValidation) : over.validation,
     notes: over.notes ?? [],
     usd: 2.5,
+    preview: over.preview ?? false,
+    shots: over.shots,
   });
 }
 
@@ -77,7 +79,7 @@ test('unresolved errors are reproduced verbatim rather than summarised away', ()
       ],
       placeholder: { placeholder: 1, total: 4 },
       selfTest: {},
-      coverage: { tagged: [], missing: ['review-markup'] },
+      coverage: { tagged: [], missing: ['review-markup'], deferred: [] },
     } as SiteValidation,
     notes: ['build reference: med-spa.md is an unfilled authoring skeleton'],
   });

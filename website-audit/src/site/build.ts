@@ -45,6 +45,13 @@ export interface BuildOptions {
   baseUrl: string | null;
   slug: string | null;
   maxPages: number;
+  /**
+   * Write only the home page, while still planning the whole site at `maxPages`. The artifact is a
+   * real home page, not a mockup image, so `site:shot` can screenshot it for outreach and the
+   * acceptance build resumes in the same run directory without paying for architecture or design
+   * twice. See `PlanStageOptions.buildPaths`.
+   */
+  preview: boolean;
   maxAssets: number;
   useAssets: boolean;
   startStage: Stage;
@@ -131,17 +138,28 @@ export async function runBuild(o: BuildOptions): Promise<BuildResult> {
   if (o.profile === 'production' && !o.baseUrl) {
     throw new Error('--profile production requires --base-url (canonical, Open Graph, sitemap, and llms.txt all need the real origin)');
   }
+  // A preview writes one page out of a site the architecture planned as many. Emitting a sitemap and
+  // an llms.txt that describe it as a one-page site would be a lie told to a search engine, so the
+  // combination is refused rather than quietly fudged.
+  if (o.preview && o.profile === 'production') {
+    throw new Error('--preview builds the home page only, so it cannot be --profile production (sitemap.xml and llms.txt would describe a one-page site). Preview in the mockup profile, then re-run without --preview to build and publish the rest.');
+  }
 
   const progress = new Progress(runDir, false, o.verbose);
   const notes: string[] = [...refs.gaps.map((g) => `build reference: ${g}`)];
+  if (o.preview) {
+    notes.push(
+      `preview: the home page only. The architecture still planned up to ${o.maxPages} pages and is cached in this run, so \`site:build --report ${path.relative(process.cwd(), reportPath)} --stage plan\` (no --preview) finishes the site without re-paying for architecture or design.`,
+    );
+  }
 
   const { fonts, warnings: fontWarnings } = loadFonts(o.repo);
   notes.push(...fontWarnings.map((w) => `fonts: ${w}`));
 
   if (o.dryRun) {
     const corpus = buildCorpus(report, runDir, { maxCharsPerPage: SITE_LIMITS.corpusMaxCharsPerPage });
-    const est = estimateCost({ corpusChars: corpus.total_chars, maxPages: o.maxPages, repairPasses: o.repairPasses, models: o.models });
-    progress.info(`dry run — slug=${slug} profile=${o.profile} base=${baseUrl} pages<=${o.maxPages} assets<=${o.maxAssets}`);
+    const est = estimateCost({ corpusChars: corpus.total_chars, maxPages: o.maxPages, buildPages: o.preview ? 1 : o.maxPages, repairPasses: o.repairPasses, models: o.models });
+    progress.info(`dry run — slug=${slug} profile=${o.profile} base=${baseUrl} pages<=${o.maxPages}${o.preview ? ' (preview: home page only)' : ''} assets<=${o.maxAssets}`);
     progress.info(`corpus ${corpus.pages.length} page(s), ${corpus.total_chars} chars (~${Math.round(corpus.total_chars / CHARS_PER_TOKEN)} tokens)`);
     for (const line of est.lines) progress.info(`  ${line}`);
     progress.info(
@@ -170,7 +188,7 @@ export async function runBuild(o: BuildOptions): Promise<BuildResult> {
   const corpus = buildCorpus(report, runDir, { maxCharsPerPage: SITE_LIMITS.corpusMaxCharsPerPage });
   if (!corpus.pages.length) throw new Error('the run has no scraped markdown to rewrite (raw/pages/*/page.md is empty)');
   progress.step(1, 'corpus', 'done', `${corpus.pages.length} page(s), ${corpus.total_chars} chars`);
-  const estimate = estimateCost({ corpusChars: corpus.total_chars, maxPages: o.maxPages, repairPasses: o.repairPasses, models: o.models });
+  const estimate = estimateCost({ corpusChars: corpus.total_chars, maxPages: o.maxPages, buildPages: o.preview ? 1 : o.maxPages, repairPasses: o.repairPasses, models: o.models });
 
   // Refuse before doing any work at all, not just before the first billed call: downloading a
   // client's whole image library for a build that cannot finish is wasted time either way.
@@ -218,6 +236,7 @@ export async function runBuild(o: BuildOptions): Promise<BuildResult> {
       availableImageRoles: availableRoles(assets),
       profile: o.profile,
       maxPages: o.maxPages,
+      buildPaths: o.preview ? ['/'] : null,
     });
     plan = res.plan;
     notes.push(...res.adjustments.map((a) => `plan: ${a}`));
@@ -380,6 +399,7 @@ export async function runBuild(o: BuildOptions): Promise<BuildResult> {
     validation,
     notes,
     usd: llm.usd,
+    preview: o.preview,
   });
 
   if (budgetStop) notes.push(budgetStop);
@@ -443,7 +463,16 @@ const CHARS_PER_TOKEN = 2.6;
 /** System prompt plus the non-corpus part of a plan-stage user message, in tokens. */
 const PLAN_OVERHEAD_TOKENS = 9_500;
 
-export function estimateCost(o: { corpusChars: number; maxPages: number; repairPasses: number; models: BuildOptions['models'] }): CostEstimate {
+export function estimateCost(o: {
+  corpusChars: number;
+  /** Pages the architecture pass is asked to plan. Drives the size of its one response. */
+  maxPages: number;
+  /** Pages this build actually writes copy and markup for. Defaults to `maxPages`; 1 under --preview. */
+  buildPages?: number;
+  repairPasses: number;
+  models: BuildOptions['models'];
+}): CostEstimate {
+  const buildPages = Math.max(1, Math.min(o.buildPages ?? o.maxPages, o.maxPages));
   const price = (model: string) => PRICING[model] ?? PRICING[Object.keys(PRICING).find((k) => model.startsWith(k)) ?? ''] ?? { input: 5, output: 25 };
   const corpusTokens = Math.round(o.corpusChars / CHARS_PER_TOKEN);
   const call = (model: string, inTok: number, outTok: number, cachedInTok = 0) => {
@@ -457,17 +486,17 @@ export function estimateCost(o: { corpusChars: number; maxPages: number; repairP
 
   const firstCopy = call(o.models.plan, corpusTokens + PLAN_OVERHEAD_TOKENS, 5_500);
   const cachedCopy = call(o.models.plan, PLAN_OVERHEAD_TOKENS, 5_500, corpusTokens);
-  const copy = firstCopy + Math.max(0, o.maxPages - 1) * cachedCopy;
-  lines.push(`copy: ${o.maxPages} calls on ${o.models.plan} ≈ $${copy.toFixed(2)} (corpus cached after the first, saving ~$${(o.maxPages * firstCopy - copy).toFixed(2)})`);
+  const copy = firstCopy + Math.max(0, buildPages - 1) * cachedCopy;
+  lines.push(`copy: ${buildPages} calls on ${o.models.plan} ≈ $${copy.toFixed(2)} (corpus cached after the first, saving ~$${(buildPages * firstCopy - copy).toFixed(2)})`);
 
   const design = call(o.models.design, 12_000, 20_000);
   lines.push(`design: 1 call on ${o.models.design} ≈ $${design.toFixed(2)}`);
 
   const perRender = call(o.models.render, 12_000, 7_500);
-  const renders = o.maxPages * (1 + o.repairPasses);
+  const renders = buildPages * (1 + o.repairPasses);
   const render = renders * perRender;
   // Observed: a clean build re-renders roughly a third of one page per page planned.
-  const expectedRenders = o.maxPages * Math.min(1 + o.repairPasses, 1.3);
+  const expectedRenders = buildPages * Math.min(1 + o.repairPasses, 1.3);
   const expectedRender = expectedRenders * perRender;
   lines.push(`render: ~${Math.round(expectedRenders)} calls on ${o.models.render} ≈ $${expectedRender.toFixed(2)}, up to ${renders} ≈ $${render.toFixed(2)} if every repair pass fires`);
 

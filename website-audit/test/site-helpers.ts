@@ -101,6 +101,7 @@ export function fixturePlan(overrides: Partial<SitePlan> = {}): SitePlan {
       price_statements: [],
     },
     internal_links: [{ from_path: '/', to_path: '/services/mowing/', anchor_text: 'Weekly mowing' }],
+    deferred_pages: [],
     notes: [],
     ...overrides,
   };
@@ -203,6 +204,7 @@ export function fixtureReport(items: ReportItem[] = [item('tel-link')]): Report 
     items,
     summary: { pass: 0, partial: 0, fail: items.length, top_gaps: [], verdict: 'weak', partial_audit: false, skipped: { modules: [], item_ids: [] } },
     facts: fixtureCorpus().facts,
+    openseo: null,
     pages: [],
     run_meta: {
       timestamps: { started: '', finished: '' },
@@ -263,6 +265,21 @@ export function homeMarkup(): RenderedPage {
 </section>`,
     footer_html: FOOTER,
     sticky_html: '',
+  };
+}
+
+/**
+ * What the render stage produces in a `--preview` build: the deferred page is still named in the nav,
+ * but its link goes to the home page, because its file does not exist.
+ */
+export function previewHomeMarkup(): RenderedPage {
+  return {
+    ...homeMarkup(),
+    header_html: `<nav aria-label="Site">
+  <a href="index.html" aria-current="page">Home</a>
+  <a href="index.html">Weekly mowing</a>
+</nav>
+<a class="tel" href="tel:8015550100" data-checklist="tel-link">801-555-0100</a>`,
   };
 }
 

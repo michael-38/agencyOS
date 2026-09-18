@@ -12,6 +12,7 @@ import { checkHtmlCommand } from './site/check-html.js';
 import { evalCommand } from './evals/run.js';
 import { siteScaffold, sitePreview, siteValidate } from './site/commands.js';
 import { DEFAULT_LIMITS, DEFAULT_MODELS, STAGES, runBuild, type Stage } from './site/build.js';
+import { siteShot, type ShotViewport } from './site/shot.js';
 
 const program = new Command();
 program.name('website-audit').description('URL → industry persona audit → gap report').version(PIPELINE_VERSION);
@@ -124,7 +125,15 @@ program
       process.stdout.write(`${JSON.stringify(MODULES, null, 2)}\n`);
       return;
     }
-    for (const m of MODULES) process.stdout.write(`${m.id.padEnd(20)} ${m.default ? 'on ' : 'off'} ${m.built ? '' : '(not built) '}${m.label} — ${m.cost}\n`);
+    const billingTag = (b: (typeof MODULES)[number]['billing']) => (b === 'dataforseo' ? '[DataForSEO]' : b === 'openseo' ? '[free]' : '');
+    for (const group of ['audit', 'openseo'] as const) {
+      const rows = MODULES.filter((m) => m.group === group);
+      if (!rows.length) continue;
+      process.stdout.write(group === 'audit' ? '\nAudit pipeline\n' : '\nOpenSEO enrichment (written to report.json for an agent session to run)\n');
+      for (const m of rows) {
+        process.stdout.write(`  ${m.id.padEnd(24)} ${m.default ? 'on ' : 'off'} ${billingTag(m.billing).padEnd(13)} ${m.built ? '' : '(not built) '}${m.label} — ${m.cost}\n`);
+      }
+    }
   });
 
 program
@@ -179,6 +188,7 @@ program
   .option('--base-url <url>', 'origin for canonical/OG/sitemap/llms.txt (required by --profile production)')
   .option('--slug <slug>', 'industry slug (default: read from report.json)')
   .option('--max-pages <n>', 'total pages to generate, including home', (v) => parseInt(v, 10), DEFAULT_LIMITS.maxPages)
+  .option('--preview', 'write the home page only, still planning the whole site (for site:shot outreach; re-run with --stage plan to finish)', false)
   .option('--max-assets <n>', 'images to reuse from the source site', (v) => parseInt(v, 10), DEFAULT_LIMITS.maxAssets)
   .option('--assets <mode>', 'reuse (download the source site\'s own images) | placeholder', 'reuse')
   .option('--stage <name>', `start at this stage, reusing earlier artifacts: ${STAGES.join(' | ')}`, 'assets')
@@ -216,6 +226,7 @@ program
         baseUrl: o.baseUrl ?? null,
         slug: o.slug ?? null,
         maxPages: Math.max(1, Math.min(o.maxPages, SITE_LIMITS.maxPages)),
+        preview: !!o.preview,
         maxAssets: Math.max(0, o.maxAssets),
         useAssets: o.assets === 'reuse',
         startStage: o.stage as Stage,
@@ -247,5 +258,43 @@ program
   .description('v2: open a generated site in the default browser')
   .argument('<dir>')
   .action((dir: string) => process.exit(sitePreview({ dir: path.resolve(dir) })));
+
+program
+  .command('site:shot')
+  .description('screenshot a generated home page, and pair it with the audit\'s own screenshot of the current site')
+  .argument('<dir>', 'site directory containing index.html (usually runs/<host>/<ts>/site)')
+  .option('--report <path>', 'run report.json holding the "before" screenshots (default: ../report.json next to the site dir)')
+  .option('--out <dir>', 'where to write the images (default: <dir>/shots)')
+  .option('--viewport <name>', 'mobile | desktop | both', 'both')
+  .option('--scale <n>', 'device pixel ratio for the generated page', (v) => parseFloat(v), 2)
+  .option('--no-compare', 'skip the before/after image')
+  .option('--hide-notice', 'drop the unverified-copy banner from the image', false)
+  .action(async (dir: string, o) => {
+    const siteDir = path.resolve(dir);
+    const viewports: ShotViewport[] =
+      o.viewport === 'both' ? ['mobile', 'desktop'] : o.viewport === 'mobile' || o.viewport === 'desktop' ? [o.viewport] : [];
+    if (!viewports.length) {
+      process.stderr.write(`error: --viewport must be mobile, desktop, or both (got "${o.viewport}")\n`);
+      process.exit(2);
+    }
+    const reportPath = o.report ? path.resolve(o.report) : path.join(path.dirname(siteDir), 'report.json');
+    try {
+      const res = await siteShot({
+        dir: siteDir,
+        reportPath,
+        outDir: o.out ? path.resolve(o.out) : path.join(siteDir, 'shots'),
+        viewports,
+        compare: o.compare !== false,
+        scale: Number.isFinite(o.scale) && o.scale > 0 ? o.scale : 2,
+        hideNotice: !!o.hideNotice,
+      });
+      for (const n of res.notes) process.stdout.write(`note: ${n}\n`);
+      for (const f of res.files) process.stdout.write(`${path.relative(process.cwd(), f)}\n`);
+      process.exit(0);
+    } catch (e) {
+      process.stderr.write(`\n${(e as Error).message}\n`);
+      process.exit(1);
+    }
+  });
 
 program.parseAsync(process.argv);

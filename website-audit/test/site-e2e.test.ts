@@ -70,6 +70,7 @@ function options(dir: string, llm: LlmParser, over: Partial<BuildOptions> = {}):
     baseUrl: null,
     slug: 'landscaping',
     maxPages: 4,
+    preview: false,
     maxAssets: 0,
     useAssets: false,
     startStage: 'assets',

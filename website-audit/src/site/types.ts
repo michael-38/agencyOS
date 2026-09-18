@@ -97,6 +97,21 @@ export interface InternalLink {
   anchor_text: string;
 }
 
+/**
+ * A page the architecture pass planned but this build did not write, because `--preview` limited the
+ * build to the home page. It is carried in the plan so the home page can still show the real site's
+ * navigation — a one-item nav would make a preview look like a one-page site, which undersells it —
+ * and so the acceptance build knows what it still owes.
+ */
+export interface DeferredPage {
+  path: string;
+  /** The nav label the page would have had. */
+  label: string;
+  title: string;
+  /** Audit item ids the architecture assigned to this page, which no built page has to satisfy. */
+  checklist_ids: string[];
+}
+
 export interface SitePlan {
   business_name: string;
   /** One sentence for llms.txt and the OG description fallback. */
@@ -104,6 +119,8 @@ export interface SitePlan {
   pages: PlanPage[];
   entities: Entities;
   internal_links: InternalLink[];
+  /** Planned but not written by this build; empty unless `--preview` was used. */
+  deferred_pages: DeferredPage[];
   /** Anything the model could not source, in its own words. Surfaced in seo-report.md. */
   notes: string[];
 }
@@ -206,7 +223,20 @@ function ctaOf(s: z.infer<typeof ContentSectionSchema>): Cta | null {
 
 /** Stitch the architecture pass and the per-page content passes into one plan. */
 export function toSitePlan(arch: SiteArchitecture, contents: Map<string, PageContent>): SitePlan {
-  const pages: PlanPage[] = arch.pages.map((p) => {
+  // A page with no recorded content was deliberately deferred (`--preview`) or its copy call came
+  // back empty; either way it is not part of this build's page set, so it must not reach the
+  // renderer, the sitemap, or the validator as a page that was "not written".
+  const built = arch.pages.filter((p) => contents.has(p.path));
+  const deferred_pages: DeferredPage[] = arch.pages
+    .filter((p) => !contents.has(p.path))
+    .map((p) => ({
+      path: p.path,
+      label: p.entity_name ?? p.breadcrumb[p.breadcrumb.length - 1] ?? p.h1,
+      title: p.title,
+      checklist_ids: p.sections.flatMap((s) => s.checklist_ids),
+    }));
+  const builtPaths = new Set(built.map((p) => p.path));
+  const pages: PlanPage[] = built.map((p) => {
     const content = contents.get(p.path);
     const briefs = new Map(p.sections.map((s) => [s.id, s]));
     const sections: PlanSection[] = (content?.sections ?? []).map((s) => {
@@ -253,7 +283,8 @@ export function toSitePlan(arch: SiteArchitecture, contents: Map<string, PageCon
             }
           : null,
     },
-    internal_links: arch.internal_links,
+    internal_links: arch.internal_links.filter((l) => builtPaths.has(l.from_path) && builtPaths.has(l.to_path)),
+    deferred_pages,
     notes: [...arch.notes, ...[...contents.values()].flatMap((c) => c.notes)],
   };
 }

@@ -43,6 +43,16 @@ export interface PlanStageOptions {
   availableImageRoles: string[];
   profile: 'mockup' | 'production';
   maxPages: number;
+  /**
+   * Restricts the copy pass to these paths. `null` writes copy for every architected page.
+   *
+   * The architecture call is deliberately *not* narrowed: it is asked to plan the whole site at the
+   * full page budget even when only the home page is being written. That costs the same either way
+   * (~$0.49 of a $4.25 build), it gives the home page real siblings to link to and a real nav, and —
+   * because the run cache keys on the exact request — the acceptance build re-runs the plan stage
+   * and gets that architecture back for free.
+   */
+  buildPaths: string[] | null;
 }
 
 export interface PlanStageResult {
@@ -263,8 +273,15 @@ export async function runPlanStage(o: PlanStageOptions): Promise<PlanStageResult
   adjustments.push(...archAdjustments);
 
   const guidance = [o.guidance.archetype, o.guidance.industry].filter(Boolean).join('\n\n');
+  const wanted = o.buildPaths ? new Set(o.buildPaths) : null;
+  const copyTargets = wanted ? arch.pages.filter((p) => wanted.has(p.path)) : arch.pages;
+  if (wanted && !copyTargets.length) throw new Error(`--preview asked for ${[...wanted].join(', ')}, which the architecture did not plan`);
+  if (wanted) {
+    const deferred = arch.pages.filter((p) => !wanted.has(p.path));
+    if (deferred.length) adjustments.push(`preview: wrote copy for ${copyTargets.map((p) => p.path).join(', ')} and deferred ${deferred.length} planned page(s): ${deferred.map((p) => p.path).join(', ')}`);
+  }
   const contents = new Map<string, PageContent>();
-  const results = await pool(arch.pages, SITE_LIMITS.contentConcurrency, async (page) => {
+  const results = await pool(copyTargets, SITE_LIMITS.contentConcurrency, async (page) => {
     const res = await o.llm.parse({
       step: 'site-copy',
       label: page.path === '/' ? 'home' : page.path.replace(/\//g, '_').replace(/^_|_$/g, ''),

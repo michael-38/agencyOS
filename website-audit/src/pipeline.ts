@@ -8,11 +8,12 @@ import { FirecrawlService, loadProbeScript } from './firecrawl.js';
 import { LlmClient } from './llm/client.js';
 import { homeChooserSchema, type HomeChooserOutput } from './llm/schemas.js';
 import { homeChooserSystem, homeChooserUser } from './llm/prompts/home.js';
-import type { ModuleSet } from './modules.js';
+import { isOpenSeoModule, type ModuleSet } from './modules.js';
 import { Progress } from './progress.js';
 import { loadChecklist, loadDetectors, loadIndustries, type LoadedChecklist } from './personas/load.js';
 import { REGISTERED_CHECK_IDS } from './checks/registry.js';
 import { extractFacts, type Facts } from './checks/facts.js';
+import { buildOpenSeoPlan } from './openseo/plan.js';
 import type { PageContext } from './checks/registry.js';
 import { pathSlugs } from './urls.js';
 import { decideHome, detectSplash, resolveInput, type HomeDecision, type ResolveResult, type SplashResult } from './steps/resolve.js';
@@ -392,8 +393,10 @@ function buildReport(b: BuildReportInput): Report {
     unverified: ev.unverified,
     extra: ev.item.extra,
   }));
+  // OpenSEO modules are opt-in enrichment, not audit coverage: leaving them off is the normal case,
+  // so they never show up as "not evaluated" work.
   const skippedModules = Object.entries(opts.modules)
-    .filter(([id, on]) => !on && id !== 'lighthouse')
+    .filter(([id, on]) => !on && id !== 'lighthouse' && !isOpenSeoModule(id))
     .map(([id]) => id);
   const skippedItemIds = [...new Set([...evaluation.skippedItemIds, ...opts.excludeItems])];
   const pages: ReportPage[] = [];
@@ -427,6 +430,7 @@ function buildReport(b: BuildReportInput): Report {
       skipped: { modules: skippedModules, item_ids: skippedItemIds },
     },
     facts: b.facts,
+    openseo: buildOpenSeoPlan({ modules: opts.modules, homeUrl: b.home.url, industrySlug: b.effectiveSlug, facts: b.facts }),
     pages,
     run_meta: {
       timestamps: { started: b.started.toISOString(), finished: finished.toISOString() },

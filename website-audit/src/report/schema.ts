@@ -4,6 +4,7 @@ import type { ModuleSet } from '../modules.js';
 import type { Facts } from '../checks/facts.js';
 import type { JudgeTextMode, JudgeTextStats } from '../content/filter.js';
 import type { CandidatePool } from '../steps/candidates.js';
+import type { OpenSeoPlan } from '../openseo/plan.js';
 
 export type HomeRule = 'root-2xx' | 'root-non-2xx' | 'splash-detected' | 'host-mismatch' | 'input-page-fallback';
 
@@ -89,6 +90,7 @@ export interface Report {
     skipped: { modules: string[]; item_ids: string[] }; // additive
   };
   facts: Facts | null; // additive
+  openseo: OpenSeoPlan | null; // additive — enrichment the operator asked for, for an agent to run
   pages: ReportPage[]; // additive
   run_meta: {
     timestamps: { started: string; finished: string };

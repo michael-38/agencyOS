@@ -29,7 +29,7 @@ export interface SiteValidation {
   findings: Finding[];
   placeholder: { placeholder: number; total: number };
   selfTest: Record<string, SelfTestResult>;
-  coverage: { tagged: string[]; missing: string[] };
+  coverage: { tagged: string[]; missing: string[]; deferred: string[] };
 }
 
 export interface ValidateOptions {
@@ -442,21 +442,38 @@ export function validateSiteTree(o: ValidateOptions): SiteValidation {
   }
 
   // Audit coverage: every gap the audit found must be tagged somewhere in the site.
+  //
+  // A preview build only writes the home page, so gaps the architecture assigned to a page it did not
+  // write cannot be tagged and are not that page's failure. They are reported as deferred — the
+  // acceptance build has to satisfy them — but they do not fail the preview, and crucially they are
+  // not fed to the repair pass, which would otherwise spend the whole budget trying to cram a
+  // twelve-page site's checklist onto one page.
   const missing: string[] = [];
+  const deferredIds = new Set((o.plan.deferred_pages ?? []).flatMap((d) => d.checklist_ids));
+  const deferred: string[] = [];
   if (o.report) {
     const ownerOf = new Map<string, string>();
     for (const page of o.plan.pages) for (const s of page.sections) for (const id of s.checklist_ids) if (!ownerOf.has(id)) ownerOf.set(id, page.path);
     for (const item of o.report.items.filter((i) => i.verdict !== 'pass')) {
-      if (!taggedIds.has(item.id)) {
-        missing.push(item.id);
-        const owner = ownerOf.get(item.id) ?? '/';
+      if (taggedIds.has(item.id)) continue;
+      if (!ownerOf.has(item.id) && deferredIds.has(item.id)) {
+        deferred.push(item.id);
         findings.push({
-          page: owner,
-          level: 'error',
+          page: '/',
+          level: 'warning',
           gate: 'coverage',
-          message: `audit gap ${item.id} (${item.verdict}) has no data-checklist element; put data-checklist="${item.id}" on the element that satisfies it`,
+          message: `audit gap ${item.id} (${item.verdict}) is planned for ${(o.plan.deferred_pages ?? []).find((d) => d.checklist_ids.includes(item.id))!.path}, which this preview did not build`,
         });
+        continue;
       }
+      missing.push(item.id);
+      const owner = ownerOf.get(item.id) ?? '/';
+      findings.push({
+        page: owner,
+        level: 'error',
+        gate: 'coverage',
+        message: `audit gap ${item.id} (${item.verdict}) has no data-checklist element; put data-checklist="${item.id}" on the element that satisfies it`,
+      });
     }
   }
 
@@ -485,7 +502,7 @@ export function validateSiteTree(o: ValidateOptions): SiteValidation {
     findings,
     placeholder: { placeholder: placeholders, total: o.copyMap.paragraphs.length },
     selfTest,
-    coverage: { tagged: [...taggedIds].sort(), missing },
+    coverage: { tagged: [...taggedIds].sort(), missing, deferred: deferred.sort() },
   };
 }
 

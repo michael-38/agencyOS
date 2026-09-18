@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { canonicalReport, overallVerdict, rankGaps, renderMarkdown } from '../src/steps/report.js';
 import type { Report, ReportItem } from '../src/report/schema.js';
 import { defaultModules } from '../src/modules.js';
+import { buildOpenSeoPlan } from '../src/openseo/plan.js';
 import type { Verdict, Weight } from '../src/personas/schema.js';
 import type { CandidatePool } from '../src/steps/candidates.js';
 
@@ -51,6 +52,7 @@ function report(items: ReportItem[], over: Partial<Report['summary']> = {}, meta
       ...over,
     },
     facts: null,
+    openseo: null,
     pages: [],
     run_meta: {
       timestamps: { started: '2026-09-14T00:00:00Z', finished: '2026-09-14T00:01:00Z' },
@@ -181,4 +183,26 @@ test('renderMarkdown: scope line lists the top-level pages checked and the cap; 
   const none = renderMarkdown(report([item('s-fail', 'high', 'fail', { scope: 'subpath' })]), { displayName: 'L' });
   assert.match(none, /^Scope: home page only \(no top-level pages linked from home\)$/m);
   assert.match(none, /s-fail — fail — summary s-fail \(home page only\)$/m);
+});
+
+test('markdown: the OpenSEO section declares what was requested, what it costs, and that it has not run', () => {
+  const plan = buildOpenSeoPlan({
+    modules: { ...defaultModules(), 'openseo-crawl': true, 'openseo-backlinks': true },
+    homeUrl: 'https://www.example.com/',
+    industrySlug: 'landscaping',
+    facts: null,
+  });
+  const md = renderMarkdown({ ...report([item('a', 'high', 'fail')]), openseo: plan }, { displayName: 'Landscaping' });
+
+  assert.match(md, /## OpenSEO enrichment/);
+  assert.match(md, /not yet run/);
+  assert.match(md, /Billing: 1 free, 1 charged to your DataForSEO key/);
+  assert.match(md, /\*\*Whole-site technical crawl\*\* \[free\]/);
+  assert.match(md, /\*\*Backlink profile\*\* \[DataForSEO\]/);
+  assert.match(md, /`get_backlinks_overview`/);
+});
+
+test('markdown: no OpenSEO section when none was requested, and no OpenSEO module in "not evaluated"', () => {
+  const md = renderMarkdown(report([item('a', 'high', 'fail')]), { displayName: 'Landscaping' });
+  assert.ok(!md.includes('OpenSEO'));
 });

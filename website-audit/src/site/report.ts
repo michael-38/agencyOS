@@ -15,6 +15,10 @@ export interface SeoReportOptions {
   validation: SiteValidation | null;
   notes: string[];
   usd: number;
+  /** True when only the home page was built (`--preview`). */
+  preview: boolean;
+  /** What `site:shot` wrote, if it has run for this build. */
+  shots?: string[];
 }
 
 export function renderSeoReport(o: SeoReportOptions): string {
@@ -24,12 +28,14 @@ export function renderSeoReport(o: SeoReportOptions): string {
   const total = o.copyMap.paragraphs.length;
   const pct = total ? Math.round((placeholders / total) * 100) : 0;
 
+  const deferred = o.plan.deferred_pages ?? [];
+
   const out: string[] = [];
-  out.push(`# ${o.plan.business_name} — generated site`, '');
+  out.push(`# ${o.plan.business_name} — generated ${o.preview ? 'home-page preview' : 'site'}`, '');
   out.push(
     `- Industry: \`${o.slug}\``,
     `- Profile: \`${o.profile}\` (base URL \`${o.baseUrl}\`)`,
-    `- Pages: ${o.plan.pages.length}`,
+    `- Pages: ${o.plan.pages.length}${deferred.length ? ` built, ${deferred.length} planned and deferred` : ''}`,
     `- Placeholder copy: ${placeholders} of ${total} blocks (${pct}%)`,
     `- Images reused from the source site: ${o.assets.downloaded} of ${o.assets.harvested} found`,
     `- Anthropic spend: $${o.usd.toFixed(4)}`,
@@ -43,6 +49,30 @@ export function renderSeoReport(o: SeoReportOptions): string {
     out.push(`| \`${p.path}\` | ${p.kind} | ${p.title.length} ch | ${p.meta_description.length} ch | ${p.sections.length} | ${p.faq.length} |`);
   }
   out.push('');
+
+  if (o.preview) {
+    out.push(
+      '## This is a preview',
+      '',
+      'Only the home page was written. It is real HTML built from the business\'s own words under the same fabrication gate as a full build — not a mockup image — so nothing here has to be redone if the prospect says yes.',
+      '',
+    );
+    if (deferred.length) {
+      out.push('The architecture planned these pages and this build deferred them. They appear in the navigation, pointing at the home page:', '');
+      for (const d of deferred) out.push(`- \`${d.path}\` — ${d.title}${d.checklist_ids.length ? ` (would satisfy: ${d.checklist_ids.join(', ')})` : ''}`);
+      out.push('');
+    }
+    out.push(
+      'Re-run the same command without `--preview` and with `--stage plan` to finish the site. The architecture and design calls are already cached in this run, so only the remaining pages are billed.',
+      '',
+    );
+  }
+
+  if (o.shots?.length) {
+    out.push('## Screenshots', '');
+    for (const f of o.shots) out.push(`- \`${f}\``);
+    out.push('');
+  }
 
   out.push('## What was optimised', '');
   out.push(
@@ -84,6 +114,11 @@ export function renderSeoReport(o: SeoReportOptions): string {
   if (o.validation?.coverage.missing.length) {
     out.push('## Audit gaps with no home on the page', '');
     for (const id of o.validation.coverage.missing) out.push(`- \`${id}\``);
+    out.push('');
+  }
+  if (o.validation?.coverage.deferred?.length) {
+    out.push('## Audit gaps this preview defers', '', 'These are planned for pages the preview did not build. The full build has to satisfy them.', '');
+    for (const id of o.validation.coverage.deferred) out.push(`- \`${id}\``);
     out.push('');
   }
   if (o.notes.length) {

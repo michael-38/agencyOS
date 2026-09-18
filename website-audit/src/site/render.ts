@@ -6,7 +6,7 @@ import { designContractBlock, siteRenderSystem, siteRenderUser, type RenderImage
 import { escapeHtml } from './escape.js';
 import { assetHref, hrefBetween } from './paths.js';
 import { buildBreadcrumbHtml, buildFaqHtml, buildHead, buildRelatedHtml, type SeoContext } from './seo.js';
-import { RenderedPageSchema, type AssetRecord, type PlanPage, type RenderedPage } from './types.js';
+import { RenderedPageSchema, type AssetRecord, type DeferredPage, type PlanPage, type RenderedPage } from './types.js';
 import type { CopyIndex } from './copy.js';
 import type { LlmParser } from '../llm/client.js';
 
@@ -58,6 +58,32 @@ function navLabel(p: PlanPage): string {
 }
 
 /**
+ * The navigation for one page: the pages this build wrote, then — in a `--preview` build — the pages
+ * it planned but deferred, so the header reads like the finished site rather than a one-page stub.
+ *
+ * Deferred items point at the home page rather than at a file that does not exist. That keeps the
+ * screenshot honest (the label is the real planned page) without producing a dead link the validator
+ * would reject and a prospect would hit.
+ */
+export function navEntries(
+  page: PlanPage,
+  allPages: PlanPage[],
+  deferred: DeferredPage[],
+  profile: SeoContext['profile'],
+): RenderNavItem[] {
+  const built = navPages(allPages).map((p) => ({
+    label: navLabel(p),
+    href: hrefBetween(page.path, p.path, profile),
+    current: p.path === page.path,
+  }));
+  const room = MAX_NAV_ITEMS - built.length;
+  if (room <= 0) return built;
+  const home = hrefBetween(page.path, '/', profile);
+  const extra = deferred.slice(0, room).map((d) => ({ label: d.label, href: home, current: false }));
+  return [...built, ...extra];
+}
+
+/**
  * Hand out the real photographs section by section. Hero is unique to the page that asks for it
  * first; gallery images cycle so two sections never show the same photo unless there is only one.
  */
@@ -101,11 +127,7 @@ export function buildRenderInput(
 } {
   const profile = ctx.seo.profile;
   const pageCopy = ctx.copy.byPath.get(page.path)!;
-  const nav: RenderNavItem[] = navPages(allPages).map((p) => ({
-    label: navLabel(p),
-    href: hrefBetween(page.path, p.path, profile),
-    current: p.path === page.path,
-  }));
+  const nav: RenderNavItem[] = navEntries(page, allPages, ctx.seo.plan.deferred_pages ?? [], profile);
 
   let lcpImage: AssetRecord | null = null;
   const headerChecklistIds: string[] = [];

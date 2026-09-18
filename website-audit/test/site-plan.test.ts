@@ -110,14 +110,31 @@ test('FAQ headings are forced into question form', () => {
   assert.ok(adjustments.some((a) => a.includes('question mark')));
 });
 
-test('a page the copy pass returned nothing for is dropped, not shipped empty', () => {
+test('a page the copy pass returned an empty body for is dropped, not shipped empty', () => {
+  const empty: PageContent = { sections: [], faq: [], notes: [] };
   const contents = new Map<string, PageContent>([
     ['/', fixtureContent('overview', 'We keep gardens tidy.', null)],
+    ['/services/mowing/', empty],
   ]);
   const { plan, adjustments } = normalizePlan(stitched({}, contents));
   assert.deepEqual(plan.pages.map((p) => p.path), ['/']);
   assert.equal(plan.internal_links.length, 0, 'links into the dropped page go with it');
   assert.ok(adjustments.some((a) => a.includes('has no copy')));
+});
+
+test('a page no copy was ever requested for becomes a deferred page, not a dropped one', () => {
+  // This is the --preview shape: the architecture planned two pages and the build wrote one. The
+  // second must survive in the plan as something the site still owes, so the home page can name it in
+  // the nav and the acceptance build knows what is missing.
+  const contents = new Map<string, PageContent>([
+    ['/', fixtureContent('overview', 'We keep gardens tidy.', null)],
+  ]);
+  const { plan, adjustments } = normalizePlan(stitched({}, contents));
+  assert.deepEqual(plan.pages.map((p) => p.path), ['/']);
+  assert.deepEqual(plan.deferred_pages.map((d) => d.path), ['/services/mowing/']);
+  assert.equal(plan.deferred_pages[0].label, 'Weekly mowing');
+  assert.equal(plan.internal_links.length, 0, 'links into a page that was not written go with it');
+  assert.ok(!adjustments.some((a) => a.includes('has no copy')), 'a deferred page is not a failure');
 });
 
 // ---- provenance ------------------------------------------------------------------------------
