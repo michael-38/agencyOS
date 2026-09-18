@@ -68,21 +68,23 @@ export const BASE_INDUSTRIES_YAML = `version: 1
 archetypes:
   - id: local-service
     jsonld_type: LocalBusiness
-    reference_file: .claude/skills/build-industry-site/references/archetypes/local-service.md
+    reference_file: templates/archetypes/local-service.md
   - id: generic
     jsonld_type: Organization
-    reference_file: .claude/skills/build-industry-site/references/archetypes/generic.md
+    reference_file: templates/archetypes/generic.md
 industries:
   - slug: landscaping
     display_name: Landscaping
     aliases: []
     archetype: local-service
     persona_file: personas/landscaping.md
-    build_reference_file: .claude/skills/build-industry-site/references/landscaping.md
+    template_file: templates/personas/landscaping/index.html
+    build_reference_file: templates/personas/landscaping/reference.md
   - slug: generic
     display_name: Generic business
     aliases: []
     archetype: generic
     persona_file: personas/generic.md
-    build_reference_file: .claude/skills/build-industry-site/references/generic.md
+    template_file: templates/personas/generic/index.html
+    build_reference_file: templates/personas/generic/reference.md
 `;

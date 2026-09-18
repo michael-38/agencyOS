@@ -68,7 +68,7 @@ test('loadPersonaFile enforces frontmatter industry == file slug', () => {
 test('loadChecklist: unregistered deterministic id lists the registry', () => {
   const yaml = BASE_INDUSTRIES_YAML.replace(
     'industries:\n',
-    'industries:\n  - slug: unregistered-deterministic\n    display_name: X\n    aliases: []\n    archetype: local-service\n    persona_file: personas/unregistered-deterministic.md\n    build_reference_file: x.md\n',
+    'industries:\n  - slug: unregistered-deterministic\n    display_name: X\n    aliases: []\n    archetype: local-service\n    persona_file: personas/unregistered-deterministic.md\n    template_file: x.html\n    build_reference_file: x.md\n',
   );
   const repo = tempRepo({ industries: yaml, personas: { 'unregistered-deterministic.md': personaFixture('unregistered-deterministic') } });
   const industries = loadIndustries(repo);
@@ -82,7 +82,7 @@ test('loadChecklist: an id shared by the persona and _common is a validation err
   const collide = `---\nindustry: collide\npersona_name: T\nprimary_goal: T\n---\n\n| id | criterion | scope | check | weight |\n|---|---|---|---|---|\n| structured-data | dup of common | home | deterministic | high |\n`;
   const yaml = BASE_INDUSTRIES_YAML.replace(
     'industries:\n',
-    'industries:\n  - slug: collide\n    display_name: X\n    aliases: []\n    archetype: local-service\n    persona_file: personas/collide.md\n    build_reference_file: x.md\n',
+    'industries:\n  - slug: collide\n    display_name: X\n    aliases: []\n    archetype: local-service\n    persona_file: personas/collide.md\n    template_file: x.html\n    build_reference_file: x.md\n',
   );
   const repo = tempRepo({ industries: yaml, personas: { 'collide.md': collide } });
   const industries = loadIndustries(repo);
@@ -95,7 +95,7 @@ test('loadChecklist: an id shared by the persona and _common is a validation err
 test('loadChecklist: missing persona file falls back to generic with a warning', () => {
   const yaml = BASE_INDUSTRIES_YAML.replace(
     'industries:\n',
-    'industries:\n  - slug: ghost\n    display_name: Ghost\n    aliases: []\n    archetype: local-service\n    persona_file: personas/ghost.md\n    build_reference_file: x.md\n',
+    'industries:\n  - slug: ghost\n    display_name: Ghost\n    aliases: []\n    archetype: local-service\n    persona_file: personas/ghost.md\n    template_file: x.html\n    build_reference_file: x.md\n',
   );
   const repo = tempRepo({ industries: yaml });
   const industries = loadIndustries(repo);

@@ -156,7 +156,7 @@ to them.
 ## Running them
 
 ```sh
-cd demo/persona-homepages
+cd templates/personas
 
 node tools/serve.mjs            # http://127.0.0.1:8099/<slug>/
 tools/verify.sh                 # persona checks + criterion coverage + sidecar freshness
@@ -189,7 +189,7 @@ mkdir -p .context/icons && cd .context/icons && npm init -y && npm install @phos
 
 ```sh
 cd website-audit
-npx tsx src/index.ts check-html ../demo/persona-homepages/med-spa/index.html --slug med-spa
+npx tsx src/index.ts check-html ../templates/personas/med-spa/index.html --slug med-spa
 ```
 
 That runs the same deterministic checks the audit runs against a live prospect, using the static
