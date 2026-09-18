@@ -390,6 +390,26 @@ export const CHECKS: CheckDef[] = [
   addressPresent,
 ];
 
+/**
+ * Selectors of CSS rules that pin an element to the bottom of the viewport. Deliberately simple:
+ * only class, id and element selectors survive, because the point is to hand cheerio something it
+ * can evaluate, not to implement a CSS engine.
+ */
+function stickySelectors(lowerCss: string): string[] {
+  const out: string[] = [];
+  // Comments sit between rules, so they otherwise arrive glued to the front of a selector.
+  const css = lowerCss.replace(/\/\*[\s\S]*?\*\//g, ' ');
+  for (const m of css.matchAll(/([^{}]+)\{([^}]*)\}/g)) {
+    const body = m[2];
+    if (!/position\s*:\s*fixed/.test(body) || !/bottom\s*:\s*0/.test(body)) continue;
+    for (const raw of m[1].split(',')) {
+      const sel = raw.trim().replace(/::?[a-z-]+(\([^)]*\))?/g, '').trim();
+      if (sel && /^[a-z0-9 .#_>-]+$/.test(sel)) out.push(sel);
+    }
+  }
+  return [...new Set(out)];
+}
+
 export const REGISTRY: Map<string, CheckDef> = new Map(CHECKS.map((c) => [c.id, c]));
 export const REGISTERED_CHECK_IDS: Set<string> = new Set(REGISTRY.keys());
 
@@ -421,6 +441,20 @@ export const STATIC_LAYOUT_RULES: Record<string, (ctx: PageContext) => CheckResu
     });
     if (found) return ok('inline-styled fixed bottom bar with a link (static rule)', {});
     const css = `${$('style').text()}\n${ctx.localCss ?? ''}`.toLowerCase();
+    // A class-based bar is better practice than an inline style, so bind the rule to the DOM rather
+    // than settling for `partial`: take the selectors of any rule that pins an element to the
+    // bottom, and see whether one of them actually matches a bar containing an action.
+    for (const sel of stickySelectors(css)) {
+      let bound = false;
+      try {
+        $(sel).each((_, el) => {
+          if ($(el).find('a[href^="tel:"], a, button').length) bound = true;
+        });
+      } catch {
+        continue; // a selector cheerio cannot evaluate tells us nothing either way
+      }
+      if (bound) return ok(`stylesheet pins "${sel}" to the bottom and it holds an action (static rule)`, {});
+    }
     if (/position\s*:\s*fixed[^}]*bottom\s*:\s*0|bottom\s*:\s*0[^}]*position\s*:\s*fixed/.test(css)) return partial('stylesheet declares a fixed bottom element (static rule)', 'Cannot bind it to a CTA without layout.', {});
     return fail('no fixed bottom bar (static rule)', 'No sticky CTA.', {});
   },

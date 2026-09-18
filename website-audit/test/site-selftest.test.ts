@@ -48,6 +48,9 @@ test('the sticky bar and the above-fold image are both seen when the CSS lives i
   const file = site(dir, 'index.html', 'assets/site.css');
   const res = runSelfTest({ file, slug: 'landscaping', repo: REPO_ROOT, out: null });
   const verdict = (id: string) => res.items.find((i) => i.id === id)?.verdict;
-  assert.equal(verdict('sticky-mobile-cta'), 'partial', 'an external stylesheet declaring a fixed bottom bar is now visible');
+  // The external stylesheet pins .actionbar to the bottom and .actionbar holds the tel: link, so the
+  // rule can bind the two and award a full pass — a class-based bar is not worth less than an
+  // inline style="position:fixed".
+  assert.equal(verdict('sticky-mobile-cta'), 'pass', 'an external stylesheet declaring a fixed bottom bar is bound to its CTA');
   assert.equal(verdict('above-fold-images'), 'pass', 'the hero image is in the first section, not the header');
 });

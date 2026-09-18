@@ -29,7 +29,6 @@ const BRAND_TOKENS = ['--brand-accent', '--brand-accent-dark'];
  * template forces its own removal — and the last removal deletes this block.
  */
 const PENDING_ANNOTATION = new Set([
-  'landscaping',
   'cleaning',
   'med-spa',
   'senior-care',
@@ -135,20 +134,23 @@ for (const t of templates) {
     assertOrPending(t.slug, missing, 'brand token(s) missing');
   });
 
-  test(`${t.slug}: no claim in <main> text outside a [data-slot]`, () => {
-    assertOrPending(t.slug, unslottedClaims(t.$), 'claim-bearing text node(s) in <main> outside a [data-slot]');
+  test(`${t.slug}: no claim in header/main/footer text outside a [data-slot]`, () => {
+    assertOrPending(t.slug, unslottedClaims(t.$), 'claim-bearing text node(s) outside a [data-slot]');
   });
 }
 
 /**
- * Text nodes in `<main>` with no `[data-slot]` ancestor that carry a number or a hard claim.
- * Returns a human-readable list, because this test's failure output is the annotation work order.
+ * Text nodes with no `[data-slot]` ancestor that carry a number or a hard claim. Returns a
+ * human-readable list, because this test's failure output is the annotation work order.
+ *
+ * Scans the header and footer as well as <main>: the footer is where a licence number, an insurance
+ * figure and the business name all sit, and a fill that leaves them behind ships the mock business.
  */
 function unslottedClaims($: CheerioAPI): string[] {
   const out: string[] = [];
-  const main = $('main');
-  if (!main.length) return out;
-  for (const node of main.find('*').contents().toArray()) {
+  const scope = $('header, main, footer');
+  if (!scope.length) return out;
+  for (const node of scope.find('*').contents().toArray()) {
     if ((node as { type?: string }).type !== 'text') continue;
     const text = $(node).text().trim();
     if (!text) continue;

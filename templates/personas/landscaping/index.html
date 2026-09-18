@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-mock-tokens="Hollow%20Creek%20Landscape%20Co. Hollow%20Creek hollowcreeklandscape.com (440)%20555-0148 +14405550148 office@hollowcreeklandscape.com C-48219 128%20Solon%20Road">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -37,10 +37,10 @@
       --paper: #f7f4ec;
       --paper-2: #efeade;
       --line: #ddd6c4;
-      --accent: #bf4318;
-      --accent-ink: #8f3211;
+      --brand-accent: #bf4318;
+      --brand-accent-dark: #8f3211;
       --white: #fff;
-      --accent-fg: #fff;
+      --brand-accent-fg: #fff;
       --display: "Helvetica Neue", Helvetica, Arial, "Liberation Sans", sans-serif;
       --text: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
       --wrap: 1180px;
@@ -64,14 +64,14 @@
     h3 { font-size: 1.22rem; letter-spacing: -.02em; line-height: 1.22; }
     h4 { font-size: 1rem; letter-spacing: .01em; }
     p { margin: 0 0 1.1em; max-width: 66ch; }
-    a { color: var(--accent-ink); }
+    a { color: var(--brand-accent-dark); }
     a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, summary:focus-visible {
-      outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 4px;
+      outline: 3px solid var(--brand-accent); outline-offset: 3px; border-radius: 4px;
     }
     .wrap { width: 100%; max-width: var(--wrap); margin-inline: auto; padding-inline: 22px; }
     .skip-link { position: absolute; left: -9999px; top: 0; background: var(--spruce); color: #fff; padding: 12px 18px; z-index: 60; }
     .skip-link:focus { left: 8px; top: 8px; }
-    .eyebrow { font-family: var(--display); font-size: .78rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--accent-ink); margin: 0 0 14px; }
+    .eyebrow { font-family: var(--display); font-size: .78rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--brand-accent-dark); margin: 0 0 14px; }
 
     /* Header ------------------------------------------------------------- */
     header { background: var(--spruce); color: #e9e6da; }
@@ -98,8 +98,8 @@
 
     .cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 30px; }
     .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 54px; padding: 0 26px; border-radius: var(--r); font-family: var(--display); font-weight: 700; font-size: 1.04rem; letter-spacing: -.01em; text-decoration: none; border: 2px solid transparent; cursor: pointer; transition: transform .15s ease, background-color .15s ease; }
-    .btn-primary { background: var(--accent); color: var(--accent-fg); box-shadow: 0 6px 20px rgba(191,67,24,.32); }
-    .btn-primary:hover { background: var(--accent-ink); transform: translateY(-2px); }
+    .btn-primary { background: var(--brand-accent); color: var(--brand-accent-fg); box-shadow: 0 6px 20px color-mix(in srgb, var(--brand-accent) 32%, transparent); }
+    .btn-primary:hover { background: var(--brand-accent-dark); transform: translateY(-2px); }
     .btn-ghost { border-color: rgba(255,255,255,.5); color: #fff; }
     .btn-ghost:hover { background: rgba(255,255,255,.12); }
     .btn-dark { background: var(--spruce); color: #fff; }
@@ -125,7 +125,9 @@
     .section-alt { background: var(--paper-2); }
     .section-dark { background: var(--spruce); color: #dfe4da; }
     .section-dark h2, .section-dark h3 { color: #fff; }
-    .section-dark .eyebrow { color: #9fd0ac; }
+    .section-dark .eyebrow, .hero .eyebrow { color: #9fd0ac; }
+    .rating .score .of { font-size: 1rem; font-weight: 500; }
+    .hint-call { margin-top: 14px; }
     @media (min-width: 900px) { .section { padding: 96px 0; } }
     .answer { font-size: 1.14rem; color: var(--ink); max-width: 62ch; }
     .section-dark .answer { color: #eef1e9; }
@@ -142,10 +144,10 @@
     .card { background: var(--white); border: 1px solid var(--line); border-radius: var(--r); padding: 22px; display: flex; flex-direction: column; }
     .card h4 { font-size: 1.1rem; margin-bottom: 8px; }
     .card p { font-size: .96rem; margin-bottom: 14px; }
-    .price { margin-top: auto; font-family: var(--display); font-weight: 800; font-size: .95rem; color: var(--accent-ink); font-variant-numeric: tabular-nums; }
+    .price { margin-top: auto; font-family: var(--display); font-weight: 800; font-size: .95rem; color: var(--brand-accent-dark); font-variant-numeric: tabular-nums; }
     .price small { display: block; font-family: var(--text); font-weight: 400; font-size: .8rem; color: var(--muted); letter-spacing: 0; }
 
-    .card.feature { background: var(--paper-2); border-color: var(--line); box-shadow: inset 3px 0 0 var(--accent); }
+    .card.feature { background: var(--paper-2); border-color: var(--line); box-shadow: inset 3px 0 0 var(--brand-accent); }
     .card.feature h4 { font-size: 1.2rem; }
 
     /* Gallery ------------------------------------------------------------ */
@@ -172,6 +174,7 @@
     .rating { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18); border-radius: var(--r); padding: 18px 20px; }
     .rating .score { font-family: var(--display); font-weight: 800; font-size: 2.3rem; color: #fff; line-height: 1; letter-spacing: -.03em; }
     .rating p { margin: 6px 0 0; font-size: .92rem; color: #c8d2c5; }
+    .quotes { display: grid; gap: 14px; }
     .quote { background: rgba(255,255,255,.06); border-radius: var(--r); padding: 18px 20px; }
     .quote p { margin: 0 0 10px; color: #eef1e9; font-size: 1rem; }
     .quote cite { font-style: normal; font-size: .86rem; color: #a9bfae; }
@@ -184,7 +187,7 @@
     .steps li::before { content: counter(s); display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; background: var(--spruce); color: #fff; font-family: var(--display); font-weight: 800; font-size: 1rem; margin-bottom: 12px; }
     .steps h3 { font-size: 1.04rem; margin-bottom: 6px; }
     .steps p { font-size: .92rem; margin: 0; }
-    .plan { margin-top: 34px; background: var(--white); border: 1px solid var(--line); border-left: 5px solid var(--accent); border-radius: var(--r); padding: 24px; }
+    .plan { margin-top: 34px; background: var(--white); border: 1px solid var(--line); border-left: 5px solid var(--brand-accent); border-radius: var(--r); padding: 24px; }
     .plan h3 { margin-bottom: 8px; }
     .plan p:last-child { margin-bottom: 0; }
 
@@ -194,7 +197,7 @@
     .faq-item summary { list-style: none; cursor: pointer; padding: 20px 44px 20px 0; position: relative; }
     .faq-item summary::-webkit-details-marker { display: none; }
     .faq-q { font-family: var(--display); font-weight: 700; font-size: 1.1rem; color: var(--ink); letter-spacing: -.02em; margin: 0; display: inline; }
-    .faq-item summary::after { content: ""; position: absolute; right: 8px; top: 27px; width: 12px; height: 12px; border-right: 2.5px solid var(--accent-ink); border-bottom: 2.5px solid var(--accent-ink); transform: rotate(45deg); transition: transform .2s ease; }
+    .faq-item summary::after { content: ""; position: absolute; right: 8px; top: 27px; width: 12px; height: 12px; border-right: 2.5px solid var(--brand-accent-dark); border-bottom: 2.5px solid var(--brand-accent-dark); transform: rotate(45deg); transition: transform .2s ease; }
     .faq-item[open] summary::after { transform: rotate(-135deg); top: 32px; }
     .faq-a { margin: 0 0 22px; font-size: 1rem; }
 
@@ -228,10 +231,10 @@
     .legal { border-top: 1px solid rgba(255,255,255,.14); margin-top: 32px; padding-top: 20px; font-size: .84rem; color: #a49c8c; }
 
     /* Sticky mobile bar --------------------------------------------------- */
-    .callbar { left: 0; right: 0; z-index: 50; display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: rgba(0,0,0,.2); box-shadow: 0 -6px 22px rgba(0,0,0,.22); }
+    .callbar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 50; display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: rgba(0,0,0,.2); box-shadow: 0 -6px 22px rgba(0,0,0,.22); }
     .callbar a { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 60px; font-family: var(--display); font-weight: 700; font-size: 1.02rem; text-decoration: none; }
     .callbar .b1 { background: var(--spruce); color: #fff; }
-    .callbar .b2 { background: var(--accent); color: var(--accent-fg); }
+    .callbar .b2 { background: var(--brand-accent); color: var(--brand-accent-fg); }
     @media (min-width: 900px) { .callbar { display: none; } }
 
     /* Motion -------------------------------------------------------------- */
@@ -251,7 +254,7 @@
       --spruce: #0e1410; --spruce-2: #141d17; --bark: #12100c;
       --ink: #f1eee2; --body: #c8cdbd; --muted: #8e977f;
       --paper: #11150f; --paper-2: #161b13; --line: #2d3428;
-      --accent: #e2652f; --accent-ink: #f09062; --accent-fg: #12160f; --white: #1a1f17;
+      --brand-accent: #e2652f; --brand-accent-dark: #f09062; --brand-accent-fg: #12160f; --white: #1a1f17;
       }
       .card.feature { background: #242b20; }
       img, svg[role="img"] { filter: brightness(.92) saturate(.94); }
@@ -370,7 +373,7 @@
 
   <header>
     <div class="wrap bar">
-      <a class="brand" href="/">Hollow Creek<span>Landscape Co.</span></a>
+      <a class="brand" href="/" data-slot="fact.business_name">Hollow Creek<span>Landscape Co.</span></a>
       <nav class="nav" aria-label="Primary">
         <a href="#services">Services</a>
         <a href="#work">Our work</a>
@@ -378,9 +381,9 @@
         <a href="#faq">FAQ</a>
         <a href="#contact">Service area</a>
       </nav>
-      <a class="tel" href="tel:+14405550148" data-checklist="tel-link-above-fold tel-link">
+      <a class="tel" href="tel:+14405550148" data-slot-href="fact.phone_href" data-checklist="tel-link-above-fold tel-link">
         <svg width="20" height="20" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M222.37,158.46l-47.11-21.11-.13-.06a16,16,0,0,0-15.17,1.4,8.12,8.12,0,0,0-.75.56L134.87,160c-15.42-7.49-31.34-23.29-38.83-38.51l20.78-24.71c.2-.25.39-.5.57-.77a16,16,0,0,0,1.32-15.06l0-.12L97.54,33.64a16,16,0,0,0-16.62-9.52A56.26,56.26,0,0,0,32,80c0,79.4,64.6,144,144,144a56.26,56.26,0,0,0,55.88-48.92A16,16,0,0,0,222.37,158.46ZM176,208A128.14,128.14,0,0,1,48,80,40.2,40.2,0,0,1,82.87,40a.61.61,0,0,0,0,.12l21,47L83.2,111.86a6.13,6.13,0,0,0-.57.77,16,16,0,0,0-1,15.7c9.06,18.53,27.73,37.06,46.46,46.11a16,16,0,0,0,15.75-1.14,8,8,0,0,0,.74-.56L168.89,152l47,21.05h0s.08,0,.11,0A40.21,40.21,0,0,1,176,208Z"/></svg>
-        (440) 555-0148
+        <span data-slot="fact.phone">(440) 555-0148</span>
       </a>
     </div>
   </header>
@@ -428,22 +431,22 @@
       </div>
       <div class="hero-scrim" aria-hidden="true"></div>
       <div class="wrap">
-        <p class="eyebrow" style="color:#9fd0ac">Chagrin Falls, Ohio &middot; Since 2009</p>
-        <h1 id="hero-h" data-checklist="single-h1">Patios, walls and drainage, built by the crew that designed them.</h1>
-        <p class="lede" data-answer-first data-checklist="LS-service-area C-answer-first">Hollow Creek Landscape Co. designs and builds paver patios, retaining walls, drainage and full landscape installations, and mows weekly, in Chagrin Falls, Bainbridge, Moreland Hills, Gates Mills, Hunting Valley, Solon, Novelty and Russell Township.</p>
+        <p class="eyebrow" data-slot="hero.eyebrow" data-slot-kind="heading" data-slot-max="60" data-slot-optional data-slot-intent="The town and state, and the year established if the source states one. Omit if the source gives neither.">Chagrin Falls, Ohio &middot; Since 2009</p>
+        <h1 id="hero-h" data-slot="hero.h1" data-slot-kind="heading" data-slot-max="80" data-slot-intent="One sentence naming what this business builds and who builds it. No superlatives." data-checklist="single-h1">Patios, walls and drainage, built by the crew that designed them.</h1>
+        <p class="lede" data-slot="hero.lede" data-slot-kind="paragraph" data-slot-max="280" data-slot-intent="Answer-first: the named services and every town served, in one sentence, using the source site's own service and place names." data-answer-first data-checklist="LS-service-area C-answer-first">Hollow Creek Landscape Co. designs and builds paver patios, retaining walls, drainage and full landscape installations, and mows weekly, in Chagrin Falls, Bainbridge, Moreland Hills, Gates Mills, Hunting Valley, Solon, Novelty and Russell Township.</p>
         <div class="cta-row">
-          <a class="btn btn-primary" href="#contact" data-checklist="LS-quote-cta">Get a quote</a>
-          <a class="btn btn-ghost" href="#maintenance">Start weekly mowing</a>
+          <a class="btn btn-primary" href="#contact" data-slot="hero.cta_primary" data-slot-kind="heading" data-slot-max="24" data-slot-intent="The primary action, at most four words. One label per intent across the whole page." data-checklist="LS-quote-cta">Get a quote</a>
+          <a class="btn btn-ghost" href="#maintenance" data-slot="hero.cta_secondary" data-slot-kind="heading" data-slot-max="28" data-slot-optional data-slot-intent="The recurring-work action, at most four words. Omit when the business has no recurring service." data-omit-if-empty="plans">Start weekly mowing</a>
         </div>
       </div>
     </section>
 
-    <section class="band band-dark" aria-label="How we work">
+    <section class="band band-dark" aria-label="How we work" data-omit-if-empty="promises">
       <div class="wrap">
-        <dl class="facts">
-          <div><dt>Site visit</dt><dd>Booked within 7 days</dd></div>
-          <div><dt>Proposal</dt><dd>Fixed price, in 5 business days</dd></div>
-          <div><dt>Office hours</dt><dd>Mon-Fri 7:00 am-5:30 pm</dd></div>
+        <dl class="facts" data-repeat="promises" data-repeat-min="2" data-repeat-max="3">
+          <div data-repeat-item><dt data-slot="promises[].label" data-slot-kind="heading" data-slot-max="20" data-slot-intent="What is being promised, one or two words.">Site visit</dt><dd data-slot="promises[].value" data-slot-kind="paragraph" data-slot-max="40" data-slot-intent="The promise itself, stated only if the source states it.">Booked within 7 days</dd></div>
+          <div data-repeat-item><dt data-slot="promises[].label" data-slot-kind="heading" data-slot-max="20" data-slot-intent="What is being promised, one or two words.">Proposal</dt><dd data-slot="promises[].value" data-slot-kind="paragraph" data-slot-max="40" data-slot-intent="The promise itself, stated only if the source states it.">Fixed price, in 5 business days</dd></div>
+          <div data-repeat-item><dt data-slot="promises[].label" data-slot-kind="heading" data-slot-max="20" data-slot-intent="What is being promised, one or two words.">Office hours</dt><dd data-slot="promises[].value" data-slot-kind="paragraph" data-slot-max="40" data-slot-intent="The promise itself, stated only if the source states it.">Mon-Fri 7:00 am-5:30 pm</dd></div>
         </dl>
       </div>
     </section>
@@ -451,81 +454,81 @@
     <section class="section" id="services" aria-labelledby="services-h" data-checklist="LS-services-clear">
       <div class="wrap">
         <div class="head">
-          <h2 id="services-h">Two ways to work with us</h2>
-          <p class="answer" data-answer-first data-checklist="LS-two-buyers C-answer-first">Hollow Creek runs two separate sides of the business: a design-and-build crew that installs hardscape and planting projects, and a maintenance crew that mows, cleans up and keeps beds in shape every week. They quote separately, and you can hire either one on its own.</p>
+          <h2 id="services-h" data-slot="services.h2" data-slot-kind="heading" data-slot-max="60" data-slot-intent="A section heading for what the business sells. Carry no claim the source has not made.">Two ways to work with us</h2>
+          <p class="answer" data-slot="services.answer" data-slot-kind="paragraph" data-slot-max="360" data-slot-intent="Answer-first: name the distinct kinds of work this business sells and say plainly whether they are bought separately." data-answer-first data-checklist="LS-two-buyers C-answer-first">Hollow Creek runs two separate sides of the business: a design-and-build crew that installs hardscape and planting projects, and a maintenance crew that mows, cleans up and keeps beds in shape every week. They quote separately, and you can hire either one on its own.</p>
         </div>
 
         <div class="group" id="designbuild">
           <div class="group-h">
-            <h3>Design &amp; build</h3>
-            <p>One project, one fixed-price proposal, one crew from dig to walkthrough.</p>
+            <h3 data-slot="projects_group.h3" data-slot-kind="heading" data-slot-max="32" data-slot-intent="A name for the one-off project side of the business.">Design &amp; build</h3>
+            <p data-slot="projects_group.blurb" data-slot-kind="paragraph" data-slot-max="120" data-slot-intent="How a one-off project is bought, in the source's own terms.">One project, one fixed-price proposal, one crew from dig to walkthrough.</p>
           </div>
-          <div class="cards" data-checklist="LS-price-ranges">
-            <article class="card feature">
-              <h4>Paver patios &amp; walkways</h4>
-              <p>An outdoor room you can use the week we leave: compacted base, edge restraint, polymeric sand, and the fire pit if you want one.</p>
-              <p class="price">From $14,500<small>~350 sq ft, standard paver</small></p>
+          <div class="cards" data-repeat="services" data-repeat-min="2" data-repeat-max="6" data-checklist="LS-price-ranges">
+            <article class="card feature" data-repeat-item>
+              <h4 data-slot="services[].name" data-slot-kind="heading" data-slot-max="48" data-slot-intent="Name one one-off project type, exactly as the source site names it.">Paver patios &amp; walkways</h4>
+              <p data-slot="services[].blurb" data-slot-kind="paragraph" data-slot-max="220" data-slot-intent="What the buyer gets, in the source's own terms. No number the source has not stated.">An outdoor room you can use the week we leave: compacted base, edge restraint, polymeric sand, and the fire pit if you want one.</p>
+              <p class="price" data-slot="services[].price" data-slot-kind="price" data-slot-max="28" data-slot-optional data-slot-intent="A starting price ONLY if the source states one for this item. Omit otherwise.">From $14,500<small data-slot="services[].price_note" data-slot-kind="paragraph" data-slot-max="40" data-slot-optional data-slot-intent="What that price covers, only if the source says.">~350 sq ft, standard paver</small></p>
             </article>
-            <article class="card">
-              <h4>Retaining walls &amp; steps</h4>
-              <p>A grade change that stops moving: engineered block, drainage stone behind it, and steps that meet the patio at the right height.</p>
-              <p class="price">From $9,200<small>up to 4 ft exposed face</small></p>
+            <article class="card" data-repeat-item>
+              <h4 data-slot="services[].name" data-slot-kind="heading" data-slot-max="48" data-slot-intent="Name one one-off project type, exactly as the source site names it.">Retaining walls &amp; steps</h4>
+              <p data-slot="services[].blurb" data-slot-kind="paragraph" data-slot-max="220" data-slot-intent="What the buyer gets, in the source's own terms. No number the source has not stated.">A grade change that stops moving: engineered block, drainage stone behind it, and steps that meet the patio at the right height.</p>
+              <p class="price" data-slot="services[].price" data-slot-kind="price" data-slot-max="28" data-slot-optional data-slot-intent="A starting price ONLY if the source states one for this item. Omit otherwise.">From $9,200<small data-slot="services[].price_note" data-slot-kind="paragraph" data-slot-max="40" data-slot-optional data-slot-intent="What that price covers, only if the source says.">up to 4 ft exposed face</small></p>
             </article>
-            <article class="card">
-              <h4>Drainage &amp; regrading</h4>
-              <p>A yard that drains away from the house: French drains, buried downspouts, dry wells, and regrading where water sits after a storm.</p>
-              <p class="price">From $3,800<small>typical single-problem fix</small></p>
+            <article class="card" data-repeat-item>
+              <h4 data-slot="services[].name" data-slot-kind="heading" data-slot-max="48" data-slot-intent="Name one one-off project type, exactly as the source site names it.">Drainage &amp; regrading</h4>
+              <p data-slot="services[].blurb" data-slot-kind="paragraph" data-slot-max="220" data-slot-intent="What the buyer gets, in the source's own terms. No number the source has not stated.">A yard that drains away from the house: French drains, buried downspouts, dry wells, and regrading where water sits after a storm.</p>
+              <p class="price" data-slot="services[].price" data-slot-kind="price" data-slot-max="28" data-slot-optional data-slot-intent="A starting price ONLY if the source states one for this item. Omit otherwise.">From $3,800<small data-slot="services[].price_note" data-slot-kind="paragraph" data-slot-max="40" data-slot-optional data-slot-intent="What that price covers, only if the source says.">typical single-problem fix</small></p>
             </article>
-            <article class="card">
-              <h4>Landscape design &amp; installation</h4>
-              <p>A measured plan for the whole property, then the planting, lighting, irrigation and beds installed to match it.</p>
-              <p class="price">From $28,000<small>design fee credited to the build</small></p>
+            <article class="card" data-repeat-item>
+              <h4 data-slot="services[].name" data-slot-kind="heading" data-slot-max="48" data-slot-intent="Name one one-off project type, exactly as the source site names it.">Landscape design &amp; installation</h4>
+              <p data-slot="services[].blurb" data-slot-kind="paragraph" data-slot-max="220" data-slot-intent="What the buyer gets, in the source's own terms. No number the source has not stated.">A measured plan for the whole property, then the planting, lighting, irrigation and beds installed to match it.</p>
+              <p class="price" data-slot="services[].price" data-slot-kind="price" data-slot-max="28" data-slot-optional data-slot-intent="A starting price ONLY if the source states one for this item. Omit otherwise.">From $28,000<small data-slot="services[].price_note" data-slot-kind="paragraph" data-slot-max="40" data-slot-optional data-slot-intent="What that price covers, only if the source says.">design fee credited to the build</small></p>
             </article>
           </div>
         </div>
 
-        <div class="group" id="maintenance">
+        <div class="group" id="maintenance" data-omit-if-empty="plans">
           <div class="group-h">
-            <h3>Recurring maintenance</h3>
-            <p>Priced from your lot size. Sign up online, no site visit needed.</p>
+            <h3 data-slot="plans_group.h3" data-slot-kind="heading" data-slot-max="32" data-slot-intent="A name for the recurring side of the business.">Recurring maintenance</h3>
+            <p data-slot="plans_group.blurb" data-slot-kind="paragraph" data-slot-max="120" data-slot-intent="How recurring work is bought and priced, only as the source states it.">Priced from your lot size. Sign up online, no site visit needed.</p>
           </div>
-          <div class="cards">
-            <article class="card feature">
-              <h4>Weekly mowing</h4>
-              <p>Cut, trim, edge and blow-off, the same day each week, April through November. Same two-person crew on your street all season.</p>
-              <p class="price">From $52 a visit<small>lots up to &frac14; acre</small></p>
+          <div class="cards" data-repeat="plans" data-repeat-min="2" data-repeat-max="6">
+            <article class="card feature" data-repeat-item>
+              <h4 data-slot="plans[].name" data-slot-kind="heading" data-slot-max="48" data-slot-intent="Name one recurring plan, exactly as the source site names it.">Weekly mowing</h4>
+              <p data-slot="plans[].blurb" data-slot-kind="paragraph" data-slot-max="220" data-slot-intent="What the buyer gets, in the source's own terms. No number the source has not stated.">Cut, trim, edge and blow-off, the same day each week, April through November. Same two-person crew on your street all season.</p>
+              <p class="price" data-slot="plans[].price" data-slot-kind="price" data-slot-max="28" data-slot-optional data-slot-intent="A starting price ONLY if the source states one for this item. Omit otherwise.">From $52 a visit<small data-slot="plans[].price_note" data-slot-kind="paragraph" data-slot-max="40" data-slot-optional data-slot-intent="What that price covers, only if the source says.">lots up to &frac14; acre</small></p>
             </article>
-            <article class="card">
-              <h4>Spring &amp; fall clean-ups</h4>
-              <p>Beds cut back and edged in spring; leaves, debris and the last cut hauled away in fall.</p>
-              <p class="price">From $340 each<small>&frac14;-&frac12; acre</small></p>
+            <article class="card" data-repeat-item>
+              <h4 data-slot="plans[].name" data-slot-kind="heading" data-slot-max="48" data-slot-intent="Name one recurring plan, exactly as the source site names it.">Spring &amp; fall clean-ups</h4>
+              <p data-slot="plans[].blurb" data-slot-kind="paragraph" data-slot-max="220" data-slot-intent="What the buyer gets, in the source's own terms. No number the source has not stated.">Beds cut back and edged in spring; leaves, debris and the last cut hauled away in fall.</p>
+              <p class="price" data-slot="plans[].price" data-slot-kind="price" data-slot-max="28" data-slot-optional data-slot-intent="A starting price ONLY if the source states one for this item. Omit otherwise.">From $340 each<small data-slot="plans[].price_note" data-slot-kind="paragraph" data-slot-max="40" data-slot-optional data-slot-intent="What that price covers, only if the source says.">&frac14;-&frac12; acre</small></p>
             </article>
-            <article class="card">
-              <h4>Mulch &amp; bed maintenance</h4>
-              <p>Hardwood mulch, crisp edges, pruning and weeding on a set schedule so the beds never get away from you.</p>
-              <p class="price">From $620 a season<small>includes 6 cu yd mulch</small></p>
+            <article class="card" data-repeat-item>
+              <h4 data-slot="plans[].name" data-slot-kind="heading" data-slot-max="48" data-slot-intent="Name one recurring plan, exactly as the source site names it.">Mulch &amp; bed maintenance</h4>
+              <p data-slot="plans[].blurb" data-slot-kind="paragraph" data-slot-max="220" data-slot-intent="What the buyer gets, in the source's own terms. No number the source has not stated.">Hardwood mulch, crisp edges, pruning and weeding on a set schedule so the beds never get away from you.</p>
+              <p class="price" data-slot="plans[].price" data-slot-kind="price" data-slot-max="28" data-slot-optional data-slot-intent="A starting price ONLY if the source states one for this item. Omit otherwise.">From $620 a season<small data-slot="plans[].price_note" data-slot-kind="paragraph" data-slot-max="40" data-slot-optional data-slot-intent="What that price covers, only if the source says.">includes 6 cu yd mulch</small></p>
             </article>
-            <article class="card">
-              <h4>Snow &amp; ice</h4>
-              <p>Driveway and walks cleared on a two-inch trigger, salted on request, November through March.</p>
-              <p class="price">From $65 a visit<small>standard 2-car drive</small></p>
+            <article class="card" data-repeat-item>
+              <h4 data-slot="plans[].name" data-slot-kind="heading" data-slot-max="48" data-slot-intent="Name one recurring plan, exactly as the source site names it.">Snow &amp; ice</h4>
+              <p data-slot="plans[].blurb" data-slot-kind="paragraph" data-slot-max="220" data-slot-intent="What the buyer gets, in the source's own terms. No number the source has not stated.">Driveway and walks cleared on a two-inch trigger, salted on request, November through March.</p>
+              <p class="price" data-slot="plans[].price" data-slot-kind="price" data-slot-max="28" data-slot-optional data-slot-intent="A starting price ONLY if the source states one for this item. Omit otherwise.">From $65 a visit<small data-slot="plans[].price_note" data-slot-kind="paragraph" data-slot-max="40" data-slot-optional data-slot-intent="What that price covers, only if the source says.">standard 2-car drive</small></p>
             </article>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="section section-alt" id="work" aria-labelledby="work-h">
+    <section class="section section-alt" id="work" aria-labelledby="work-h" data-omit-if-empty="projects">
       <div class="wrap">
         <div class="head">
-          <h2 id="work-h">Finished projects, before and after</h2>
-          <p class="answer" data-answer-first data-checklist="C-answer-first">Every project below was designed, dug and installed by our own crew, photographed from the same spot before we started and after we finished.</p>
+          <h2 id="work-h" data-slot="work.h2" data-slot-kind="heading" data-slot-max="60" data-slot-intent="A heading for the finished-work section.">Finished projects, before and after</h2>
+          <p class="answer" data-slot="work.answer" data-slot-kind="paragraph" data-slot-max="240" data-slot-intent="Answer-first: say who did the work shown and how the images were taken. Claim nothing the source has not." data-answer-first data-checklist="C-answer-first">Every project below was designed, dug and installed by our own crew, photographed from the same spot before we started and after we finished.</p>
         </div>
-        <div class="pairs" data-checklist="LS-project-gallery LS-gallery-organized">
-          <article class="pair">
+        <div class="pairs" data-repeat="projects" data-repeat-min="1" data-repeat-max="6" data-checklist="LS-project-gallery LS-gallery-organized">
+          <article class="pair" data-repeat-item>
             <div class="pair-imgs">
               <figure>
-                <svg viewBox="0 0 400 300" role="img" aria-label="Before: a patchy back lawn with a worn dirt path and a tired concrete slab.">
+                <svg viewBox="0 0 400 300" role="img" data-slot-aria-label="projects[].before_alt" data-slot-kind="paragraph" data-slot-optional data-slot-intent="Describe the client's own BEFORE photograph of this job." aria-label="Before: a patchy back lawn with a worn dirt path and a tired concrete slab.">
                   <rect width="400" height="300" fill="#8d8a77"/>
                   <rect y="150" width="400" height="150" fill="#6f7358"/>
                   <path d="M0 150 h400 v40 H0 Z" fill="#7c7f64"/>
@@ -538,7 +541,7 @@
                 <figcaption>Before</figcaption>
               </figure>
               <figure>
-                <svg viewBox="0 0 400 300" role="img" aria-label="After: a paver patio with a seat wall and fire pit set into a level lawn.">
+                <svg viewBox="0 0 400 300" role="img" data-slot-aria-label="projects[].after_alt" data-slot-kind="paragraph" data-slot-optional data-slot-intent="Describe the client's own AFTER photograph of this job." aria-label="After: a paver patio with a seat wall and fire pit set into a level lawn.">
                   <rect width="400" height="300" fill="#7b8f66"/>
                   <rect y="0" width="400" height="140" fill="#5d6b4d"/>
                   <path d="M0 140 q60 -46 120 -4 q70 -42 140 0 q70 -38 140 6 Z" fill="#3f4f36"/>
@@ -556,15 +559,15 @@
               </figure>
             </div>
             <div class="pair-body">
-              <h3>Paver patio &amp; fire pit</h3>
-              <p>Moreland Hills, 420 sq ft, 9 working days</p>
+              <h3 data-slot="projects[].title" data-slot-kind="heading" data-slot-max="48" data-slot-intent="Name the job, as the source names it.">Paver patio &amp; fire pit</h3>
+              <p data-slot="projects[].detail" data-slot-kind="paragraph" data-slot-max="80" data-slot-optional data-slot-intent="Town, size and duration, ONLY where the source states them. Omit otherwise.">Moreland Hills, 420 sq ft, 9 working days</p>
             </div>
           </article>
 
-          <article class="pair">
+          <article class="pair" data-repeat-item>
             <div class="pair-imgs">
               <figure>
-                <svg viewBox="0 0 400 300" role="img" aria-label="Before: an eroded slope falling away from a lawn, with exposed soil and a leaning railway tie wall.">
+                <svg viewBox="0 0 400 300" role="img" data-slot-aria-label="projects[].before_alt" data-slot-kind="paragraph" data-slot-optional data-slot-intent="Describe the client's own BEFORE photograph of this job." aria-label="Before: an eroded slope falling away from a lawn, with exposed soil and a leaning railway tie wall.">
                   <rect width="400" height="300" fill="#7d8a66"/>
                   <rect y="0" width="400" height="120" fill="#5d6b4d"/>
                   <path d="M0 120 q70 -40 140 -2 q70 -38 140 2 q60 -30 120 6 Z" fill="#3f4f36"/>
@@ -576,7 +579,7 @@
                 <figcaption>Before</figcaption>
               </figure>
               <figure>
-                <svg viewBox="0 0 400 300" role="img" aria-label="After: a terraced segmental block retaining wall with planted beds and stone steps.">
+                <svg viewBox="0 0 400 300" role="img" data-slot-aria-label="projects[].after_alt" data-slot-kind="paragraph" data-slot-optional data-slot-intent="Describe the client's own AFTER photograph of this job." aria-label="After: a terraced segmental block retaining wall with planted beds and stone steps.">
                   <rect width="400" height="300" fill="#7b8f66"/>
                   <rect y="0" width="400" height="118" fill="#5d6b4d"/>
                   <path d="M0 118 q70 -38 140 -2 q70 -36 140 2 q60 -28 120 6 Z" fill="#3f4f36"/>
@@ -597,15 +600,15 @@
               </figure>
             </div>
             <div class="pair-body">
-              <h3>Retaining wall &amp; steps</h3>
-              <p>Gates Mills, 68 linear ft, 11 working days</p>
+              <h3 data-slot="projects[].title" data-slot-kind="heading" data-slot-max="48" data-slot-intent="Name the job, as the source names it.">Retaining wall &amp; steps</h3>
+              <p data-slot="projects[].detail" data-slot-kind="paragraph" data-slot-max="80" data-slot-optional data-slot-intent="Town, size and duration, ONLY where the source states them. Omit otherwise.">Gates Mills, 68 linear ft, 11 working days</p>
             </div>
           </article>
 
-          <article class="pair">
+          <article class="pair" data-repeat-item>
             <div class="pair-imgs">
               <figure>
-                <svg viewBox="0 0 400 300" role="img" aria-label="Before: standing water pooled against a house foundation after rain.">
+                <svg viewBox="0 0 400 300" role="img" data-slot-aria-label="projects[].before_alt" data-slot-kind="paragraph" data-slot-optional data-slot-intent="Describe the client's own BEFORE photograph of this job." aria-label="Before: standing water pooled against a house foundation after rain.">
                   <rect width="400" height="300" fill="#6f7d59"/>
                   <rect y="0" width="400" height="126" fill="#4e5a41"/>
                   <rect x="40" y="26" width="320" height="100" fill="#8e8778"/>
@@ -618,7 +621,7 @@
                 <figcaption>Before</figcaption>
               </figure>
               <figure>
-                <svg viewBox="0 0 400 300" role="img" aria-label="After: a regraded lawn with a gravel french drain line carrying water away from the house.">
+                <svg viewBox="0 0 400 300" role="img" data-slot-aria-label="projects[].after_alt" data-slot-kind="paragraph" data-slot-optional data-slot-intent="Describe the client's own AFTER photograph of this job." aria-label="After: a regraded lawn with a gravel french drain line carrying water away from the house.">
                   <rect width="400" height="300" fill="#7b8f66"/>
                   <rect y="0" width="400" height="126" fill="#4e5a41"/>
                   <rect x="40" y="26" width="320" height="100" fill="#8e8778"/>
@@ -634,55 +637,57 @@
               </figure>
             </div>
             <div class="pair-body">
-              <h3>Drainage &amp; regrade</h3>
-              <p>Bainbridge Township, 140 ft of French drain, 4 working days</p>
+              <h3 data-slot="projects[].title" data-slot-kind="heading" data-slot-max="48" data-slot-intent="Name the job, as the source names it.">Drainage &amp; regrade</h3>
+              <p data-slot="projects[].detail" data-slot-kind="paragraph" data-slot-max="80" data-slot-optional data-slot-intent="Town, size and duration, ONLY where the source states them. Omit otherwise.">Bainbridge Township, 140 ft of French drain, 4 working days</p>
             </div>
           </article>
         </div>
-        <p class="note">Illustrated stand-ins. On a live build each pair is replaced by the client's own before/after photographs, shot wide, in daylight, from a fixed position.</p>
+        <p class="note" data-slot="work.note" data-slot-kind="paragraph" data-slot-max="200" data-slot-optional data-slot-intent="Say plainly that the images are stand-ins for the client's own photographs. Keep it when no real photography was supplied.">Illustrated stand-ins. On a live build each pair is replaced by the client's own before/after photographs, shot wide, in daylight, from a fixed position.</p>
       </div>
     </section>
 
     <section class="section section-dark" id="trust" aria-labelledby="trust-h">
       <div class="wrap">
         <div class="head">
-          <p class="eyebrow">Why people hire us twice</p>
-          <h2 id="trust-h">Licensed, insured, and still here in the spring</h2>
-          <p class="answer" data-answer-first data-checklist="C-answer-first">Hollow Creek has been installing hardscape in the Chagrin Valley since 2009 with eleven full-time staff, four crews, and the same two estimators who have written every proposal for the last six years.</p>
+          <p class="eyebrow" data-slot="trust.eyebrow" data-slot-kind="heading" data-slot-max="36" data-slot-optional data-slot-intent="A short label for the trust section. Omit rather than invent one.">Why people hire us twice</p>
+          <h2 id="trust-h" data-slot="trust.h2" data-slot-kind="heading" data-slot-max="60" data-slot-intent="A heading for the trust section. It may name a credential ONLY if the source states that credential.">Licensed, insured, and still here in the spring</h2>
+          <p class="answer" data-slot="trust.answer" data-slot-kind="paragraph" data-slot-max="280" data-slot-intent="Answer-first: how long the business has operated, where, and how big the crew is. Every number must come from the source." data-answer-first data-checklist="C-answer-first">Hollow Creek has been installing hardscape in the Chagrin Valley since 2009 with eleven full-time staff, four crews, and the same two estimators who have written every proposal for the last six years.</p>
         </div>
         <div class="trust-grid">
-          <ul class="creds" data-checklist="LS-credentials LS-crew-fleet">
-            <li>
+          <ul class="creds" data-repeat="credentials" data-repeat-min="1" data-repeat-max="6" data-checklist="LS-credentials LS-crew-fleet">
+            <li data-repeat-item>
               <svg width="22" height="22" viewBox="0 0 256 256" fill="#9fd0ac" aria-hidden="true"><path d="M208,40H48A16,16,0,0,0,32,56v56c0,52.72,25.52,84.67,46.93,102.19,23.06,18.86,46,25.26,47,25.53a8,8,0,0,0,4.2,0c1-.27,23.91-6.67,47-25.53C198.48,196.67,224,164.72,224,112V56A16,16,0,0,0,208,40Zm0,72c0,37.07-13.66,67.16-40.6,89.42A129.3,129.3,0,0,1,128,223.62a128.25,128.25,0,0,1-38.92-21.81C61.82,179.51,48,149.42,48,112V56H208ZM82.34,141.66a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32l-56,56a8,8,0,0,1-11.32,0Z"/></svg>
-              <span><strong>$2,000,000 general liability</strong> plus Ohio workers' compensation. Certificates emailed on request before the first visit.</span>
+              <span><strong data-slot="credentials[].label" data-slot-kind="heading" data-slot-max="80" data-slot-intent="The credential itself, verbatim from the source: a licence, a registration, an insurance figure, a warranty term.">$2,000,000 general liability</strong><span data-slot="credentials[].detail" data-slot-kind="paragraph" data-slot-max="160" data-slot-optional data-slot-intent="What the credential covers, only as the source states it."> plus Ohio workers' compensation. Certificates emailed on request before the first visit.</span></span>
             </li>
-            <li>
+            <li data-repeat-item>
               <svg width="22" height="22" viewBox="0 0 256 256" fill="#9fd0ac" aria-hidden="true"><path d="M208,40H48A16,16,0,0,0,32,56v56c0,52.72,25.52,84.67,46.93,102.19,23.06,18.86,46,25.26,47,25.53a8,8,0,0,0,4.2,0c1-.27,23.91-6.67,47-25.53C198.48,196.67,224,164.72,224,112V56A16,16,0,0,0,208,40Zm0,72c0,37.07-13.66,67.16-40.6,89.42A129.3,129.3,0,0,1,128,223.62a128.25,128.25,0,0,1-38.92-21.81C61.82,179.51,48,149.42,48,112V56H208ZM82.34,141.66a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32l-56,56a8,8,0,0,1-11.32,0Z"/></svg>
-              <span><strong>Ohio Department of Agriculture pesticide applicator licence C-48219</strong>, renewed annually, covering turf and ornamental categories.</span>
+              <span><strong data-slot="credentials[].label" data-slot-kind="heading" data-slot-max="80" data-slot-intent="The credential itself, verbatim from the source: a licence, a registration, an insurance figure, a warranty term.">Ohio Department of Agriculture pesticide applicator licence C-48219</strong><span data-slot="credentials[].detail" data-slot-kind="paragraph" data-slot-max="160" data-slot-optional data-slot-intent="What the credential covers, only as the source states it.">, renewed annually, covering turf and ornamental categories.</span></span>
             </li>
-            <li>
+            <li data-repeat-item>
               <svg width="22" height="22" viewBox="0 0 256 256" fill="#9fd0ac" aria-hidden="true"><path d="M208,40H48A16,16,0,0,0,32,56v56c0,52.72,25.52,84.67,46.93,102.19,23.06,18.86,46,25.26,47,25.53a8,8,0,0,0,4.2,0c1-.27,23.91-6.67,47-25.53C198.48,196.67,224,164.72,224,112V56A16,16,0,0,0,208,40Zm0,72c0,37.07-13.66,67.16-40.6,89.42A129.3,129.3,0,0,1,128,223.62a128.25,128.25,0,0,1-38.92-21.81C61.82,179.51,48,149.42,48,112V56H208ZM82.34,141.66a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32l-56,56a8,8,0,0,1-11.32,0Z"/></svg>
-              <span><strong>Two ICPI-certified paver installers</strong> on staff, and a member of the National Association of Landscape Professionals since 2014.</span>
+              <span><strong data-slot="credentials[].label" data-slot-kind="heading" data-slot-max="80" data-slot-intent="The credential itself, verbatim from the source: a licence, a registration, an insurance figure, a warranty term.">Two ICPI-certified paver installers</strong><span data-slot="credentials[].detail" data-slot-kind="paragraph" data-slot-max="160" data-slot-optional data-slot-intent="What the credential covers, only as the source states it."> on staff, and a member of the National Association of Landscape Professionals since 2014.</span></span>
             </li>
-            <li>
+            <li data-repeat-item>
               <svg width="22" height="22" viewBox="0 0 256 256" fill="#9fd0ac" aria-hidden="true"><path d="M208,40H48A16,16,0,0,0,32,56v56c0,52.72,25.52,84.67,46.93,102.19,23.06,18.86,46,25.26,47,25.53a8,8,0,0,0,4.2,0c1-.27,23.91-6.67,47-25.53C198.48,196.67,224,164.72,224,112V56A16,16,0,0,0,208,40Zm0,72c0,37.07-13.66,67.16-40.6,89.42A129.3,129.3,0,0,1,128,223.62a128.25,128.25,0,0,1-38.92-21.81C61.82,179.51,48,149.42,48,112V56H208ZM82.34,141.66a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32l-56,56a8,8,0,0,1-11.32,0Z"/></svg>
-              <span><strong>Three-year workmanship warranty</strong> on hardscape settling, written into every proposal alongside the manufacturer's paver warranty.</span>
+              <span><strong data-slot="credentials[].label" data-slot-kind="heading" data-slot-max="80" data-slot-intent="The credential itself, verbatim from the source: a licence, a registration, an insurance figure, a warranty term.">Three-year workmanship warranty</strong><span data-slot="credentials[].detail" data-slot-kind="paragraph" data-slot-max="160" data-slot-optional data-slot-intent="What the credential covers, only as the source states it."> on hardscape settling, written into every proposal alongside the manufacturer's paver warranty.</span></span>
             </li>
           </ul>
           <div class="reviews" data-checklist="review-markup">
-            <div class="rating">
+            <div class="rating" data-omit-if-empty="rating.value">
               <p class="stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</p>
-              <p class="score">4.9<span style="font-size:1rem;font-weight:500"> / 5</span></p>
-              <p>Average across 187 Google reviews, Chagrin Falls location.</p>
+              <p class="score"><span data-slot="rating.value" data-slot-kind="price" data-slot-max="4" data-slot-optional data-slot-intent="The rating value ONLY when the source states both a value and a review count. Omit otherwise.">4.9</span><span class="of"> / 5</span></p>
+              <p data-slot="rating.note" data-slot-kind="paragraph" data-slot-max="80" data-slot-optional data-slot-intent="Where the rating is from and across how many reviews, verbatim from the source.">Average across 187 Google reviews, Chagrin Falls location.</p>
             </div>
-            <blockquote class="quote">
-              <p>&ldquo;They built our patio and fire pit in Moreland Hills in nine days, on the price they quoted. The crew swept the driveway every single evening.&rdquo;</p>
-              <cite>Danielle R., Moreland Hills</cite>
-            </blockquote>
-            <blockquote class="quote">
-              <p>&ldquo;Third spring on the mowing plan. Same two guys every Thursday, and they text me when a storm pushes the route.&rdquo;</p>
-              <cite>Mark T., Solon</cite>
-            </blockquote>
+            <div class="quotes" data-repeat="reviews" data-repeat-min="1" data-repeat-max="4" data-omit-if-empty="reviews">
+              <blockquote class="quote" data-repeat-item>
+                <p data-slot="reviews[].text" data-slot-kind="quote" data-slot-max="280" data-slot-intent="A review the source site already publishes, quoted verbatim. Never write one.">&ldquo;They built our patio and fire pit in Moreland Hills in nine days, on the price they quoted. The crew swept the driveway every single evening.&rdquo;</p>
+                <cite data-slot="reviews[].cite" data-slot-kind="paragraph" data-slot-max="48" data-slot-intent="The reviewer's name and town, exactly as the source publishes it.">Danielle R., Moreland Hills</cite>
+              </blockquote>
+              <blockquote class="quote" data-repeat-item>
+                <p data-slot="reviews[].text" data-slot-kind="quote" data-slot-max="280" data-slot-intent="A review the source site already publishes, quoted verbatim. Never write one.">&ldquo;Third spring on the mowing plan. Same two guys every Thursday, and they text me when a storm pushes the route.&rdquo;</p>
+                <cite data-slot="reviews[].cite" data-slot-kind="paragraph" data-slot-max="48" data-slot-intent="The reviewer's name and town, exactly as the source publishes it.">Mark T., Solon</cite>
+              </blockquote>
+            </div>
           </div>
         </div>
       </div>
@@ -691,35 +696,35 @@
     <section class="section" id="process" aria-labelledby="process-h">
       <div class="wrap">
         <div class="head">
-          <h2 id="process-h">From first call to final walkthrough</h2>
-          <p class="answer" data-answer-first data-checklist="C-answer-first">A design-and-build project runs through five steps, and you know the full price at step three, before anyone digs.</p>
+          <h2 id="process-h" data-slot="process.h2" data-slot-kind="heading" data-slot-max="60" data-slot-intent="A heading for how the work runs from enquiry to finish.">From first call to final walkthrough</h2>
+          <p class="answer" data-slot="process.answer" data-slot-kind="paragraph" data-slot-max="200" data-slot-intent="Answer-first: how many steps there are and when the buyer learns the price. The step count must match the steps you write." data-answer-first data-checklist="C-answer-first">A design-and-build project runs through five steps, and you know the full price at step three, before anyone digs.</p>
         </div>
-        <ol class="steps" data-checklist="LS-process">
-          <li>
-            <h3>Tell us the job</h3>
-            <p>Call, or send the address and a few photos through the form. We reply the same business day.</p>
+        <ol class="steps" data-repeat="steps" data-repeat-min="3" data-repeat-max="6" data-checklist="LS-process">
+          <li data-repeat-item>
+            <h3 data-slot="steps[].title" data-slot-kind="heading" data-slot-max="32" data-slot-intent="Name this step in two or three words.">Tell us the job</h3>
+            <p data-slot="steps[].body" data-slot-kind="paragraph" data-slot-max="180" data-slot-intent="What happens at this step. Any duration or count must come from the source.">Call, or send the address and a few photos through the form. We reply the same business day.</p>
           </li>
-          <li>
-            <h3>Site visit</h3>
-            <p>An estimator walks the property with you for 60-90 minutes, measures, and checks grade and equipment access.</p>
+          <li data-repeat-item>
+            <h3 data-slot="steps[].title" data-slot-kind="heading" data-slot-max="32" data-slot-intent="Name this step in two or three words.">Site visit</h3>
+            <p data-slot="steps[].body" data-slot-kind="paragraph" data-slot-max="180" data-slot-intent="What happens at this step. Any duration or count must come from the source.">An estimator walks the property with you for 60-90 minutes, measures, and checks grade and equipment access.</p>
           </li>
-          <li>
-            <h3>Design &amp; fixed price</h3>
-            <p>You get a measured plan and a written proposal with one number on it, within five business days.</p>
+          <li data-repeat-item>
+            <h3 data-slot="steps[].title" data-slot-kind="heading" data-slot-max="32" data-slot-intent="Name this step in two or three words.">Design &amp; fixed price</h3>
+            <p data-slot="steps[].body" data-slot-kind="paragraph" data-slot-max="180" data-slot-intent="What happens at this step. Any duration or count must come from the source.">You get a measured plan and a written proposal with one number on it, within five business days.</p>
           </li>
-          <li>
-            <h3>Build</h3>
-            <p>One crew, start to finish, with a scheduled start date and a daily clean-up. Changes are re-quoted in writing first.</p>
+          <li data-repeat-item>
+            <h3 data-slot="steps[].title" data-slot-kind="heading" data-slot-max="32" data-slot-intent="Name this step in two or three words.">Build</h3>
+            <p data-slot="steps[].body" data-slot-kind="paragraph" data-slot-max="180" data-slot-intent="What happens at this step. Any duration or count must come from the source.">One crew, start to finish, with a scheduled start date and a daily clean-up. Changes are re-quoted in writing first.</p>
           </li>
-          <li>
-            <h3>Walkthrough</h3>
-            <p>We walk it with you, hand over care notes, and register the three-year workmanship warranty.</p>
+          <li data-repeat-item>
+            <h3 data-slot="steps[].title" data-slot-kind="heading" data-slot-max="32" data-slot-intent="Name this step in two or three words.">Walkthrough</h3>
+            <p data-slot="steps[].body" data-slot-kind="paragraph" data-slot-max="180" data-slot-intent="What happens at this step. Any duration or count must come from the source.">We walk it with you, hand over care notes, and register the three-year workmanship warranty.</p>
           </li>
         </ol>
-        <div class="plan" data-checklist="LS-maintenance-plan">
-          <h3>Signing up for maintenance instead</h3>
-          <p>Maintenance is a separate, simpler path: send your address, we price weekly mowing from the lot size, and you approve by text. Plans run <strong>April 1 through November 30</strong>, are billed monthly on the first, and can be cancelled with thirty days' notice. Snow and ice routes run November through March and are billed per visit.</p>
-          <p><a href="#contact">Start a maintenance plan &rarr;</a></p>
+        <div class="plan" data-omit-if-empty="plans" data-checklist="LS-maintenance-plan">
+          <h3 data-slot="plan.h3" data-slot-kind="heading" data-slot-max="48" data-slot-intent="A heading for how recurring work is signed up for.">Signing up for maintenance instead</h3>
+          <p data-slot="plan.body" data-slot-kind="paragraph" data-slot-max="400" data-slot-intent="How a recurring plan is bought, billed and cancelled. Every date, term and notice period must come from the source; write none of them yourself.">Maintenance is a separate, simpler path: send your address, we price weekly mowing from the lot size, and you approve by text. Plans run <strong>April 1 through November 30</strong>, are billed monthly on the first, and can be cancelled with thirty days' notice. Snow and ice routes run November through March and are billed per visit.</p>
+          <p><a href="#contact" data-slot="plan.cta" data-slot-kind="heading" data-slot-max="36" data-slot-intent="The action that starts a recurring plan.">Start a maintenance plan &rarr;</a></p>
         </div>
       </div>
     </section>
@@ -727,41 +732,41 @@
     <section class="section section-alt" id="faq" aria-labelledby="faq-h">
       <div class="wrap">
         <div class="head">
-          <h2 id="faq-h">Frequently asked questions</h2>
-          <p class="answer" data-answer-first data-checklist="C-answer-first">These are the eight questions our estimators are asked most often on a first phone call.</p>
+          <h2 id="faq-h" data-slot="faq.h2" data-slot-kind="heading" data-slot-max="48" data-slot-intent="A heading for the question-and-answer section.">Frequently asked questions</h2>
+          <p class="answer" data-slot="faq.answer" data-slot-kind="paragraph" data-slot-max="160" data-slot-intent="Answer-first: say whose questions these are. If you name a count it must equal the number of questions you write." data-answer-first data-checklist="C-answer-first">These are the eight questions our estimators are asked most often on a first phone call.</p>
         </div>
-        <div class="faq-list" data-checklist="faq-present">
-          <details class="faq-item" open>
-            <summary><h3 class="faq-q">Do you work in my town?</h3></summary>
-            <p class="faq-a" data-answer-first>We work in Chagrin Falls, Bainbridge Township, Moreland Hills, Gates Mills, Hunting Valley, Solon, Novelty and Russell Township. If you are just outside that ring, call and ask. We will tell you honestly whether the drive makes sense.</p>
+        <div class="faq-list" data-repeat="faq" data-repeat-min="3" data-repeat-max="10" data-checklist="faq-present">
+          <details class="faq-item" open data-repeat-item>
+            <summary><h3 class="faq-q" data-slot="faq[].q" data-slot-kind="heading" data-slot-max="90" data-slot-intent="A question a real buyer asks, in question form.">Do you work in my town?</h3></summary>
+            <p class="faq-a" data-slot="faq[].a" data-slot-kind="paragraph" data-slot-max="420" data-slot-intent="Answer it in the first sentence. Every price, term, licence and figure must come from the source." data-answer-first>We work in Chagrin Falls, Bainbridge Township, Moreland Hills, Gates Mills, Hunting Valley, Solon, Novelty and Russell Township. If you are just outside that ring, call and ask. We will tell you honestly whether the drive makes sense.</p>
           </details>
-          <details class="faq-item">
-            <summary><h3 class="faq-q">Do you handle the design as well as the build?</h3></summary>
-            <p class="faq-a" data-answer-first>Yes. Every design-and-build project starts with a measured site plan drawn in-house, and the same crew that reviews the plan with you installs it. We do not subcontract hardscape.</p>
+          <details class="faq-item" data-repeat-item>
+            <summary><h3 class="faq-q" data-slot="faq[].q" data-slot-kind="heading" data-slot-max="90" data-slot-intent="A question a real buyer asks, in question form.">Do you handle the design as well as the build?</h3></summary>
+            <p class="faq-a" data-slot="faq[].a" data-slot-kind="paragraph" data-slot-max="420" data-slot-intent="Answer it in the first sentence. Every price, term, licence and figure must come from the source." data-answer-first>Yes. Every design-and-build project starts with a measured site plan drawn in-house, and the same crew that reviews the plan with you installs it. We do not subcontract hardscape.</p>
           </details>
-          <details class="faq-item">
-            <summary><h3 class="faq-q">Can I get a quote without an in-person visit?</h3></summary>
-            <p class="faq-a" data-answer-first>For mowing and seasonal clean-ups, yes. Send the address and we price from the lot size. For patios, walls and drainage we need to stand on the ground first, because grade and access change the number.</p>
+          <details class="faq-item" data-repeat-item>
+            <summary><h3 class="faq-q" data-slot="faq[].q" data-slot-kind="heading" data-slot-max="90" data-slot-intent="A question a real buyer asks, in question form.">Can I get a quote without an in-person visit?</h3></summary>
+            <p class="faq-a" data-slot="faq[].a" data-slot-kind="paragraph" data-slot-max="420" data-slot-intent="Answer it in the first sentence. Every price, term, licence and figure must come from the source." data-answer-first>For mowing and seasonal clean-ups, yes. Send the address and we price from the lot size. For patios, walls and drainage we need to stand on the ground first, because grade and access change the number.</p>
           </details>
-          <details class="faq-item">
-            <summary><h3 class="faq-q">What does a paver patio cost in Chagrin Falls?</h3></summary>
-            <p class="faq-a" data-answer-first>Paver patios start at $14,500 for roughly 350 square feet of standard paver on a compacted base. Larger patios, seat walls, fire pits and permeable systems price above that, and your proposal names a fixed number before anything is dug.</p>
+          <details class="faq-item" data-repeat-item>
+            <summary><h3 class="faq-q" data-slot="faq[].q" data-slot-kind="heading" data-slot-max="90" data-slot-intent="A question a real buyer asks, in question form.">What does a paver patio cost in Chagrin Falls?</h3></summary>
+            <p class="faq-a" data-slot="faq[].a" data-slot-kind="paragraph" data-slot-max="420" data-slot-intent="Answer it in the first sentence. Every price, term, licence and figure must come from the source." data-answer-first>Paver patios start at $14,500 for roughly 350 square feet of standard paver on a compacted base. Larger patios, seat walls, fire pits and permeable systems price above that, and your proposal names a fixed number before anything is dug.</p>
           </details>
-          <details class="faq-item">
-            <summary><h3 class="faq-q">Do you take on recurring maintenance as well as one-off projects?</h3></summary>
-            <p class="faq-a" data-answer-first>Yes, and they are separate signups. Maintenance plans run April 1 through November 30, are billed monthly, and can be cancelled with thirty days' notice.</p>
+          <details class="faq-item" data-repeat-item>
+            <summary><h3 class="faq-q" data-slot="faq[].q" data-slot-kind="heading" data-slot-max="90" data-slot-intent="A question a real buyer asks, in question form.">Do you take on recurring maintenance as well as one-off projects?</h3></summary>
+            <p class="faq-a" data-slot="faq[].a" data-slot-kind="paragraph" data-slot-max="420" data-slot-intent="Answer it in the first sentence. Every price, term, licence and figure must come from the source." data-answer-first>Yes, and they are separate signups. Maintenance plans run April 1 through November 30, are billed monthly, and can be cancelled with thirty days' notice.</p>
           </details>
-          <details class="faq-item">
-            <summary><h3 class="faq-q">Are you licensed and insured?</h3></summary>
-            <p class="faq-a" data-answer-first>Hollow Creek carries $2,000,000 in general liability plus Ohio workers' compensation, and holds Ohio Department of Agriculture pesticide applicator licence C-48219. We will email both certificates before the first visit if you ask.</p>
+          <details class="faq-item" data-repeat-item>
+            <summary><h3 class="faq-q" data-slot="faq[].q" data-slot-kind="heading" data-slot-max="90" data-slot-intent="A question a real buyer asks, in question form.">Are you licensed and insured?</h3></summary>
+            <p class="faq-a" data-slot="faq[].a" data-slot-kind="paragraph" data-slot-max="420" data-slot-intent="Answer it in the first sentence. Every price, term, licence and figure must come from the source." data-answer-first>Hollow Creek carries $2,000,000 in general liability plus Ohio workers' compensation, and holds Ohio Department of Agriculture pesticide applicator licence C-48219. We will email both certificates before the first visit if you ask.</p>
           </details>
-          <details class="faq-item">
-            <summary><h3 class="faq-q">What happens at the first site visit?</h3></summary>
-            <p class="faq-a" data-answer-first>One of our two estimators walks the property with you for sixty to ninety minutes, measures, checks drainage and access for equipment, and photographs the area. You get the written proposal within five business days.</p>
+          <details class="faq-item" data-repeat-item>
+            <summary><h3 class="faq-q" data-slot="faq[].q" data-slot-kind="heading" data-slot-max="90" data-slot-intent="A question a real buyer asks, in question form.">What happens at the first site visit?</h3></summary>
+            <p class="faq-a" data-slot="faq[].a" data-slot-kind="paragraph" data-slot-max="420" data-slot-intent="Answer it in the first sentence. Every price, term, licence and figure must come from the source." data-answer-first>One of our two estimators walks the property with you for sixty to ninety minutes, measures, checks drainage and access for equipment, and photographs the area. You get the written proposal within five business days.</p>
           </details>
-          <details class="faq-item">
-            <summary><h3 class="faq-q">Do you work through the winter?</h3></summary>
-            <p class="faq-a" data-answer-first>Hardscape installation continues until the ground freezes, usually into December, and design work runs all winter. From November through March our crews are on snow and ice routes.</p>
+          <details class="faq-item" data-repeat-item>
+            <summary><h3 class="faq-q" data-slot="faq[].q" data-slot-kind="heading" data-slot-max="90" data-slot-intent="A question a real buyer asks, in question form.">Do you work through the winter?</h3></summary>
+            <p class="faq-a" data-slot="faq[].a" data-slot-kind="paragraph" data-slot-max="420" data-slot-intent="Answer it in the first sentence. Every price, term, licence and figure must come from the source." data-answer-first>Hardscape installation continues until the ground freezes, usually into December, and design work runs all winter. From November through March our crews are on snow and ice routes.</p>
           </details>
         </div>
       </div>
@@ -770,9 +775,9 @@
     <section class="section" id="contact" aria-labelledby="contact-h">
       <div class="wrap">
         <div class="head">
-          <p class="eyebrow">Get started</p>
-          <h2 id="contact-h">Tell us about the property</h2>
-          <p class="answer" data-answer-first data-checklist="C-answer-first">Send the address, the job and a couple of photos, and an estimator calls you back the same business day to book the site visit.</p>
+          <p class="eyebrow" data-slot="contact.eyebrow" data-slot-kind="heading" data-slot-max="24" data-slot-optional data-slot-intent="A short label for the enquiry section.">Get started</p>
+          <h2 id="contact-h" data-slot="contact.h2" data-slot-kind="heading" data-slot-max="48" data-slot-intent="A heading that asks for the enquiry, in this industry's terms.">Tell us about the property</h2>
+          <p class="answer" data-slot="contact.answer" data-slot-kind="paragraph" data-slot-max="220" data-slot-intent="Answer-first: what to send and what happens next. Any response time must come from the source." data-answer-first data-checklist="C-answer-first">Send the address, the job and a couple of photos, and an estimator calls you back the same business day to book the site visit.</p>
         </div>
         <div class="contact-grid">
           <form action="#" method="post" data-checklist="contact-form LS-quote-form-qualifies" novalidate>
@@ -793,31 +798,31 @@
             <div class="field">
               <label for="address">Property address</label>
               <input id="address" name="address" type="text" autocomplete="street-address" required>
-              <p class="hint" id="address-hint">Street and town. We price mowing straight from the lot size.</p>
+              <p class="hint" id="address-hint" data-slot="contact.address_hint" data-slot-kind="paragraph" data-slot-max="90" data-slot-optional data-slot-intent="Why the address is being asked for.">Street and town. We price mowing straight from the lot size.</p>
             </div>
             <div class="two">
               <div class="field">
                 <label for="job">What do you need?</label>
-                <select id="job" name="job">
-                  <option>Paver patio or walkway</option>
-                  <option>Retaining wall or steps</option>
-                  <option>Drainage or regrading</option>
-                  <option>Full landscape design</option>
-                  <option>Weekly mowing</option>
-                  <option>Spring or fall clean-up</option>
-                  <option>Snow &amp; ice</option>
-                  <option>Something else</option>
+                <select id="job" name="job" data-repeat="job_options" data-repeat-min="2" data-repeat-max="12">
+                  <option data-repeat-item data-slot="job_options[].label" data-slot-kind="heading" data-slot-max="40" data-slot-intent="One job the buyer can ask for, named as the source names it.">Paver patio or walkway</option>
+                  <option data-repeat-item data-slot="job_options[].label" data-slot-kind="heading" data-slot-max="40" data-slot-intent="One job the buyer can ask for, named as the source names it.">Retaining wall or steps</option>
+                  <option data-repeat-item data-slot="job_options[].label" data-slot-kind="heading" data-slot-max="40" data-slot-intent="One job the buyer can ask for, named as the source names it.">Drainage or regrading</option>
+                  <option data-repeat-item data-slot="job_options[].label" data-slot-kind="heading" data-slot-max="40" data-slot-intent="One job the buyer can ask for, named as the source names it.">Full landscape design</option>
+                  <option data-repeat-item data-slot="job_options[].label" data-slot-kind="heading" data-slot-max="40" data-slot-intent="One job the buyer can ask for, named as the source names it.">Weekly mowing</option>
+                  <option data-repeat-item data-slot="job_options[].label" data-slot-kind="heading" data-slot-max="40" data-slot-intent="One job the buyer can ask for, named as the source names it.">Spring or fall clean-up</option>
+                  <option data-repeat-item data-slot="job_options[].label" data-slot-kind="heading" data-slot-max="40" data-slot-intent="One job the buyer can ask for, named as the source names it.">Snow &amp; ice</option>
+                  <option data-repeat-item data-slot="job_options[].label" data-slot-kind="heading" data-slot-max="40" data-slot-intent="One job the buyer can ask for, named as the source names it.">Something else</option>
                 </select>
               </div>
-              <div class="field">
+              <div class="field" data-omit-if-empty="budget_options">
                 <label for="budget">Budget range</label>
-                <select id="budget" name="budget">
-                  <option>Under $5,000</option>
-                  <option>$5,000 - $15,000</option>
-                  <option>$15,000 - $30,000</option>
-                  <option>$30,000 - $60,000</option>
-                  <option>Over $60,000</option>
-                  <option>Recurring maintenance</option>
+                <select id="budget" name="budget" data-repeat="budget_options" data-repeat-min="2" data-repeat-max="8">
+                  <option data-repeat-item data-slot="budget_options[].label" data-slot-kind="price" data-slot-max="28" data-slot-intent="One budget band. Use ONLY figures the source site states; if it states no prices at all, return no items for this group.">Under $5,000</option>
+                  <option data-repeat-item data-slot="budget_options[].label" data-slot-kind="price" data-slot-max="28" data-slot-intent="One budget band. Use ONLY figures the source site states; if it states no prices at all, return no items for this group.">$5,000 - $15,000</option>
+                  <option data-repeat-item data-slot="budget_options[].label" data-slot-kind="price" data-slot-max="28" data-slot-intent="One budget band. Use ONLY figures the source site states; if it states no prices at all, return no items for this group.">$15,000 - $30,000</option>
+                  <option data-repeat-item data-slot="budget_options[].label" data-slot-kind="price" data-slot-max="28" data-slot-intent="One budget band. Use ONLY figures the source site states; if it states no prices at all, return no items for this group.">$30,000 - $60,000</option>
+                  <option data-repeat-item data-slot="budget_options[].label" data-slot-kind="price" data-slot-max="28" data-slot-intent="One budget band. Use ONLY figures the source site states; if it states no prices at all, return no items for this group.">Over $60,000</option>
+                  <option data-repeat-item data-slot="budget_options[].label" data-slot-kind="price" data-slot-max="28" data-slot-intent="One budget band. Use ONLY figures the source site states; if it states no prices at all, return no items for this group.">Recurring maintenance</option>
                 </select>
               </div>
             </div>
@@ -827,34 +832,40 @@
             </div>
             <div class="field">
               <label for="details">Describe the job</label>
-              <textarea id="details" name="details" placeholder="Where does the water sit? How big is the patio you have in mind? Anything we should know about access?"></textarea>
+              <textarea id="details" name="details" data-slot-placeholder="contact.details_placeholder" data-slot-kind="paragraph" data-slot-max="140" data-slot-optional data-slot-intent="Two or three questions this trade actually needs answered up front." placeholder="Where does the water sit? How big is the patio you have in mind? Anything we should know about access?"></textarea>
             </div>
-            <button class="btn btn-primary" type="submit">Request a site visit</button>
-            <p class="hint" style="margin-top:14px">Or call <a href="tel:+14405550148">(440) 555-0148</a>. We answer Monday to Friday, 7:00 am to 5:30 pm.</p>
+            <button class="btn btn-primary" type="submit" data-slot="contact.submit" data-slot-kind="heading" data-slot-max="28" data-slot-intent="The submit label, at most four words, matching the primary action elsewhere on the page.">Request a site visit</button>
+            <p class="hint hint-call">Or call <a href="tel:+14405550148" data-slot-href="fact.phone_href" data-slot="fact.phone">(440) 555-0148</a>. <span data-slot="contact.hours_note" data-slot-kind="paragraph" data-slot-max="90" data-slot-optional data-slot-intent="When the phone is answered, verbatim from the source's stated hours.">We answer Monday to Friday, 7:00 am to 5:30 pm.</span></p>
           </form>
 
           <div class="info">
-            <h3>Where we work</h3>
-            <ul class="areas" data-checklist="LS-service-area-pages">
-              <li>Chagrin Falls</li><li>Bainbridge Township</li><li>Moreland Hills</li><li>Gates Mills</li>
-              <li>Hunting Valley</li><li>Solon</li><li>Novelty</li><li>Russell Township</li>
+            <h3 data-slot="areas.h3" data-slot-kind="heading" data-slot-max="32" data-slot-intent="A heading for the list of places served.">Where we work</h3>
+            <ul class="areas" data-repeat="areas" data-repeat-min="1" data-repeat-max="16" data-checklist="LS-service-area-pages">
+              <li data-repeat-item data-slot="areas[].name" data-slot-kind="heading" data-slot-max="32" data-slot-intent="One town or neighbourhood the source says it serves.">Chagrin Falls</li>
+              <li data-repeat-item data-slot="areas[].name" data-slot-kind="heading" data-slot-max="32" data-slot-intent="One town or neighbourhood the source says it serves.">Bainbridge Township</li>
+              <li data-repeat-item data-slot="areas[].name" data-slot-kind="heading" data-slot-max="32" data-slot-intent="One town or neighbourhood the source says it serves.">Moreland Hills</li>
+              <li data-repeat-item data-slot="areas[].name" data-slot-kind="heading" data-slot-max="32" data-slot-intent="One town or neighbourhood the source says it serves.">Gates Mills</li>
+              <li data-repeat-item data-slot="areas[].name" data-slot-kind="heading" data-slot-max="32" data-slot-intent="One town or neighbourhood the source says it serves.">Hunting Valley</li>
+              <li data-repeat-item data-slot="areas[].name" data-slot-kind="heading" data-slot-max="32" data-slot-intent="One town or neighbourhood the source says it serves.">Solon</li>
+              <li data-repeat-item data-slot="areas[].name" data-slot-kind="heading" data-slot-max="32" data-slot-intent="One town or neighbourhood the source says it serves.">Novelty</li>
+              <li data-repeat-item data-slot="areas[].name" data-slot-kind="heading" data-slot-max="32" data-slot-intent="One town or neighbourhood the source says it serves.">Russell Township</li>
             </ul>
             <dl data-checklist="hours-present address-present">
               <div>
                 <dt>Yard &amp; office</dt>
-                <dd><address>128 Solon Road<br>Chagrin Falls, OH 44022</address></dd>
+                <dd><address data-slot="fact.address">128 Solon Road<br>Chagrin Falls, OH 44022</address></dd>
               </div>
               <div>
                 <dt>Hours</dt>
-                <dd>Monday-Friday 7:00 am-5:30 pm<br>Saturday 8:00 am-1:00 pm<br>Sunday closed</dd>
+                <dd data-slot="fact.hours">Monday-Friday 7:00 am-5:30 pm<br>Saturday 8:00 am-1:00 pm<br>Sunday closed</dd>
               </div>
               <div>
                 <dt>Phone</dt>
-                <dd><a href="tel:+14405550148">(440) 555-0148</a></dd>
+                <dd><a href="tel:+14405550148" data-slot-href="fact.phone_href" data-slot="fact.phone">(440) 555-0148</a></dd>
               </div>
               <div>
                 <dt>Email</dt>
-                <dd><a href="mailto:office@hollowcreeklandscape.com">office@hollowcreeklandscape.com</a></dd>
+                <dd data-omit-if-empty="fact.email"><a href="mailto:office@hollowcreeklandscape.com" data-slot-href="fact.email_href" data-slot="fact.email">office@hollowcreeklandscape.com</a></dd>
               </div>
             </dl>
           </div>
@@ -867,12 +878,12 @@
     <div class="wrap">
       <div class="foot">
         <div>
-          <h2>Hollow Creek Landscape Co.</h2>
-          <p>Landscape design, hardscape construction and lawn maintenance in the Chagrin Valley since 2009.</p>
-          <p><a href="tel:+14405550148">(440) 555-0148</a><br>128 Solon Road, Chagrin Falls, OH 44022</p>
+          <h2 data-slot="fact.business_name">Hollow Creek Landscape Co.</h2>
+          <p data-slot="footer.blurb" data-slot-kind="paragraph" data-slot-max="160" data-slot-intent="One line naming what the business does and where. Any year must come from the source.">Landscape design, hardscape construction and lawn maintenance in the Chagrin Valley since 2009.</p>
+          <p><a href="tel:+14405550148" data-slot-href="fact.phone_href" data-slot="fact.phone">(440) 555-0148</a><br><span data-slot="fact.address_line">128 Solon Road, Chagrin Falls, OH 44022</span></p>
         </div>
-        <div>
-          <h2>Design &amp; build</h2>
+        <div data-omit-if-empty="services">
+          <h2 data-slot="projects_group.h3" data-slot-mirror>Design &amp; build</h2>
           <ul>
             <li><a href="#designbuild">Paver patios &amp; walkways</a></li>
             <li><a href="#designbuild">Retaining walls &amp; steps</a></li>
@@ -880,8 +891,8 @@
             <li><a href="#designbuild">Landscape design</a></li>
           </ul>
         </div>
-        <div>
-          <h2>Maintenance</h2>
+        <div data-omit-if-empty="plans">
+          <h2 data-slot="plans_group.h3" data-slot-mirror>Maintenance</h2>
           <ul>
             <li><a href="#maintenance">Weekly mowing</a></li>
             <li><a href="#maintenance">Spring &amp; fall clean-ups</a></li>
@@ -890,16 +901,16 @@
           </ul>
         </div>
       </div>
-      <p class="legal">Ohio Department of Agriculture pesticide applicator licence C-48219, $2,000,000 general liability, NALP member since 2014. Demonstration page built for the AgencyOS landscaping persona; the business, prices and reviews are illustrative.</p>
+      <p class="legal" data-omit-if-empty="footer.legal" data-slot="footer.legal" data-slot-kind="paragraph" data-slot-max="240" data-slot-optional data-slot-intent="Licence numbers, registrations and insurance figures, verbatim from the source. Omit entirely when the source states none.">Ohio Department of Agriculture pesticide applicator licence C-48219, $2,000,000 general liability, NALP member since 2014. Demonstration page built for the AgencyOS landscaping persona; the business, prices and reviews are illustrative.</p>
     </div>
   </footer>
 
-  <div class="callbar" style="position:fixed;bottom:0" data-checklist="sticky-mobile-cta">
-    <a class="b1" href="tel:+14405550148">
+  <div class="callbar" data-checklist="sticky-mobile-cta">
+    <a class="b1" href="tel:+14405550148" data-slot-href="fact.phone_href">
       <svg width="18" height="18" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M222.37,158.46l-47.11-21.11-.13-.06a16,16,0,0,0-15.17,1.4,8.12,8.12,0,0,0-.75.56L134.87,160c-15.42-7.49-31.34-23.29-38.83-38.51l20.78-24.71c.2-.25.39-.5.57-.77a16,16,0,0,0,1.32-15.06l0-.12L97.54,33.64a16,16,0,0,0-16.62-9.52A56.26,56.26,0,0,0,32,80c0,79.4,64.6,144,144,144a56.26,56.26,0,0,0,55.88-48.92A16,16,0,0,0,222.37,158.46ZM176,208A128.14,128.14,0,0,1,48,80,40.2,40.2,0,0,1,82.87,40a.61.61,0,0,0,0,.12l21,47L83.2,111.86a6.13,6.13,0,0,0-.57.77,16,16,0,0,0-1,15.7c9.06,18.53,27.73,37.06,46.46,46.11a16,16,0,0,0,15.75-1.14,8,8,0,0,0,.74-.56L168.89,152l47,21.05h0s.08,0,.11,0A40.21,40.21,0,0,1,176,208Z"/></svg>
-      Call now
+      <span data-slot="sticky.call_label" data-slot-kind="heading" data-slot-max="16" data-slot-intent="The call action, two words at most.">Call now</span>
     </a>
-    <a class="b2" href="#contact">Get a quote</a>
+    <a class="b2" href="#contact" data-slot="hero.cta_primary" data-slot-mirror>Get a quote</a>
   </div>
 </body>
 </html>

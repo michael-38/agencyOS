@@ -40,6 +40,13 @@ export interface SlotDef {
   checklistIds: string[];
   /** True when this slot is (or sits inside) the section's `[data-answer-first]` opener. */
   answerFirst: boolean;
+  /**
+   * A second place the same value belongs — a section heading echoed in the footer, the hero's
+   * primary action repeated in the sticky bar. Mirrors are filled from the canonical declaration's
+   * value, are never asked of the model, and are how the page guarantees one label per intent
+   * rather than hoping for it.
+   */
+  mirror: boolean;
   /** The mock business's text, as checked in. Never emitted — it seeds the residue lexicon. */
   demoText: string;
 }
@@ -48,7 +55,12 @@ export interface RepeatDef {
   group: string;
   min: number;
   max: number;
-  /** Prototype count: 2 means index 0 renders from the feature prototype. */
+  /**
+   * How many `[data-repeat-item]` children the container ships. Item `i` renders from prototype
+   * `min(i, prototypes - 1)`, so a first cell styled as a feature stays a feature and every later
+   * item reuses the last prototype. The demo's full set of items can therefore stay in the file,
+   * which is what keeps the template previewable and lintable as a finished page.
+   */
   prototypes: number;
   slotIds: string[];
   /** The `id` of the section that owns this group, when it has one. */
@@ -57,7 +69,10 @@ export interface RepeatDef {
 
 export interface SectionDef {
   id: string;
-  /** Repeat group whose emptiness removes this section, from `data-omit-if-empty`. */
+  /**
+   * What must be empty for this section to be removed, from `data-omit-if-empty`: either a repeat
+   * group that came back with too few items, or a single slot the source could not fill.
+   */
   omitGroup: string | null;
   checklistIds: string[];
 }
@@ -85,8 +100,8 @@ export class TemplateError extends Error {
   }
 }
 
-const REPEAT_ID_RE = /^([a-z0-9-]+)\[\]\.([a-z0-9_-]+)$/;
-const PLAIN_ID_RE = /^[a-z0-9-]+(\.[a-z0-9_-]+)*$/;
+const REPEAT_ID_RE = /^([a-z0-9_-]+)\[\]\.([a-z0-9_-]+)$/;
+const PLAIN_ID_RE = /^[a-z0-9_-]+(\.[a-z0-9_-]+)*$/;
 
 const attrList = (v: string | undefined): string[] => (v ?? '').split(/\s+/).filter(Boolean);
 
@@ -96,7 +111,7 @@ function inheritedChecklist($: CheerioAPI, el: Cheerio<Element>): string[] {
   return owner.length ? attrList(owner.attr('data-checklist')) : [];
 }
 
-function slotKindOf(id: string, raw: string | undefined, problems: string[]): SlotKind {
+function slotKindOf(id: string, raw: string | undefined, mirror: boolean, problems: string[]): SlotKind {
   if (raw) {
     if ((SLOT_KINDS as readonly string[]).includes(raw)) return raw as SlotKind;
     problems.push(`slot "${id}": data-slot-kind "${raw}" is not one of ${SLOT_KINDS.join('|')}`);
@@ -105,6 +120,8 @@ function slotKindOf(id: string, raw: string | undefined, problems: string[]): Sl
   // A fact slot's kind is implied by its name; everything else must say.
   if (id === `${FACT_PREFIX}phone` || id === `${FACT_PREFIX}phone_href`) return 'phone';
   if (id.startsWith(FACT_PREFIX)) return 'paragraph';
+  // A mirror is not prompted, so it has no kind of its own; it takes the canonical's below.
+  if (mirror) return 'paragraph';
   problems.push(`slot "${id}": data-slot-kind is required`);
   return 'paragraph';
 }
@@ -117,6 +134,7 @@ function slotsOn($: CheerioAPI, el: Cheerio<Element>, problems: string[]): SlotD
   const maxRaw = attribs['data-slot-max'];
   const intent = (attribs['data-slot-intent'] ?? '').trim();
   const optional = 'data-slot-optional' in attribs;
+  const mirror = 'data-slot-mirror' in attribs;
   const fallback = attribs['data-slot-fallback'] ?? null;
   const checklistIds = inheritedChecklist($, el);
   const answerFirst = el.closest('[data-answer-first]').length > 0;
@@ -134,7 +152,7 @@ function slotsOn($: CheerioAPI, el: Cheerio<Element>, problems: string[]): SlotD
   for (const [attrName, value] of Object.entries(attribs)) {
     if (attrName !== 'data-slot' && !attrName.startsWith('data-slot-')) continue;
     // Modifiers, not slot declarations.
-    if (['data-slot-kind', 'data-slot-max', 'data-slot-intent', 'data-slot-optional', 'data-slot-fallback'].includes(attrName)) continue;
+    if (['data-slot-kind', 'data-slot-max', 'data-slot-intent', 'data-slot-optional', 'data-slot-fallback', 'data-slot-mirror'].includes(attrName)) continue;
     const id = value.trim();
     const targetAttr = attrName === 'data-slot' ? null : attrName.slice('data-slot-'.length);
     if (!id) {
@@ -149,10 +167,10 @@ function slotsOn($: CheerioAPI, el: Cheerio<Element>, problems: string[]): SlotD
       if (group) problems.push(`slot "${id}" is inside [data-repeat="${group}"], so its id must be "${group}[].<field>"`);
       if (!PLAIN_ID_RE.test(id)) problems.push(`slot id "${id}" must be lower-kebab dot-separated`);
     }
-    if (!id.startsWith(FACT_PREFIX) && !intent) problems.push(`slot "${id}": data-slot-intent is required (it is the prompt)`);
+    if (!id.startsWith(FACT_PREFIX) && !mirror && !intent) problems.push(`slot "${id}": data-slot-intent is required (it is the prompt)`);
     out.push({
       id,
-      kind: slotKindOf(id, kindRaw, problems),
+      kind: slotKindOf(id, kindRaw, mirror, problems),
       attr: targetAttr,
       group,
       max,
@@ -161,6 +179,7 @@ function slotsOn($: CheerioAPI, el: Cheerio<Element>, problems: string[]): SlotD
       intent,
       checklistIds,
       answerFirst,
+      mirror,
       demoText: targetAttr ? (attribs[targetAttr] ?? '') : el.text().replace(/\s+/g, ' ').trim(),
     });
   }
@@ -186,9 +205,24 @@ export function readTemplate(absFile: string, slug: string, repoRelFile = absFil
     byId.get(s.id)!.push(s);
   }
   for (const [id, defs] of byId) {
-    // The same id on two elements would make the fill ambiguous — except across repeat prototypes,
-    // where the second prototype is a variant of the first and legitimately repeats every field.
-    if (defs.length > 1 && !defs[0].group) problems.push(`slot "${id}" is declared ${defs.length} times`);
+    // Two elements claiming one id would make the fill ambiguous, with two exceptions: repeat
+    // prototypes legitimately declare every field of their group, and a `fact.*` value is one
+    // atomic string that belongs in several places at once (the phone sits in the header, the
+    // contact block, the footer and the sticky bar).
+    const canonical = defs.filter((d) => !d.mirror);
+    if (defs.length > 1 && !defs[0].group && !id.startsWith(FACT_PREFIX) && canonical.length > 1) {
+      problems.push(`slot "${id}" is declared ${canonical.length} times without [data-slot-mirror]`);
+    }
+    // A mirror with nothing to mirror would render empty; it is a typo, not a variant.
+    if (!canonical.length) problems.push(`slot "${id}" is only ever a [data-slot-mirror]; one declaration must be canonical`);
+    // Mirrors carry the canonical's kind, budget and intent, so every consumer sees one contract.
+    for (const d of defs) {
+      if (!d.mirror || !canonical.length) continue;
+      d.kind = canonical[0].kind;
+      d.max = canonical[0].max;
+      d.intent = canonical[0].intent;
+      d.optional = canonical[0].optional;
+    }
   }
 
   // ---- repeats ---------------------------------------------------------------------------------
@@ -205,7 +239,6 @@ export function readTemplate(absFile: string, slug: string, repoRelFile = absFil
     seenGroups.add(group);
     const prototypes = $el.children('[data-repeat-item]').length;
     if (prototypes < 1) problems.push(`repeat group "${group}" has no [data-repeat-item] prototype`);
-    if (prototypes > 2) problems.push(`repeat group "${group}" has ${prototypes} prototypes; at most 2 are used (feature cell, then the rest)`);
     const min = Number.parseInt($el.attr('data-repeat-min') ?? '1', 10);
     const max = Number.parseInt($el.attr('data-repeat-max') ?? '0', 10);
     if (!Number.isFinite(max) || max < 1) problems.push(`repeat group "${group}": data-repeat-max is required and must be >= 1`);
@@ -222,13 +255,19 @@ export function readTemplate(absFile: string, slug: string, repoRelFile = absFil
     const id = $el.attr('id');
     if (!id) return;
     const omitGroup = ($el.attr('data-omit-if-empty') ?? '').trim() || null;
-    if (omitGroup && !seenGroups.has(omitGroup)) problems.push(`section#${id}: data-omit-if-empty="${omitGroup}" names no [data-repeat] group`);
     sections.push({ id, omitGroup, checklistIds: attrList($el.attr('data-checklist')) });
   });
+  const slotIds = new Set(slots.map((s2) => s2.id));
   $('[data-omit-if-empty]').each((_, el) => {
     const $el = $(el as Element);
-    const group = ($el.attr('data-omit-if-empty') ?? '').trim();
-    if (group && !seenGroups.has(group)) problems.push(`[data-omit-if-empty="${group}"] names no [data-repeat] group`);
+    const target = ($el.attr('data-omit-if-empty') ?? '').trim();
+    if (!target) {
+      problems.push('a [data-omit-if-empty] is empty');
+      return;
+    }
+    if (!seenGroups.has(target) && !slotIds.has(target)) {
+      problems.push(`[data-omit-if-empty="${target}"] names neither a [data-repeat] group nor a slot`);
+    }
   });
 
   // ---- checklist coverage ----------------------------------------------------------------------

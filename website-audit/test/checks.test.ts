@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { CHECKS, REGISTERED_CHECK_IDS, REGISTRY, runCheck, type CheckResult } from '../src/checks/registry.js';
+import { CHECKS, REGISTERED_CHECK_IDS, REGISTRY, STATIC_LAYOUT_RULES, runCheck, type CheckResult } from '../src/checks/registry.js';
 import type { Verdict } from '../src/personas/schema.js';
 import { pageCtx } from './helpers.js';
 
@@ -159,4 +159,41 @@ test('a crashing check is reported as fail with check-error, not thrown', () => 
   const r = runCheck('booking-widget', ctx);
   assert.equal(r.verdict, 'fail');
   assert.equal(r.note, 'check-error');
+});
+
+test('sticky-mobile-cta credits a class-based bar, not just an inline style', () => {
+  // Best practice is a class, not style="position:fixed", and the check used to cap that at partial
+  // — so a well-built page scored worse than a sloppy one. It now binds the rule to the DOM.
+  const bar = '<div class="callbar"><a href="tel:+15550100">Call</a><a href="#book">Book</a></div>';
+  const page = (css: string, body = bar) =>
+    `<!doctype html><html lang="en"><head><style>${css}</style></head><body><main><section><h2>x</h2></section></main>${body}</body></html>`;
+
+  // The offline static rule, which is what check-html runs against a template or a built page.
+  const run = (html: string) => {
+    const ctx = pageCtx('landscaping-good', { probe: false });
+    ctx.rawHtml = html;
+    ctx.probe = null;
+    ctx._$ = undefined;
+    const r = STATIC_LAYOUT_RULES['sticky-mobile-cta'](ctx);
+    assert.ok(r, 'the static rule should always reach a verdict for this markup');
+    return r;
+  };
+
+  const classBased = run(page('/* sticky bar */\n.callbar { position: fixed; bottom: 0; left: 0; right: 0; display: grid; }'));
+  assert.equal(classBased.verdict, 'pass', classBased.evidence.summary);
+  assert.match(classBased.evidence.summary, /pins "\.callbar" to the bottom/);
+
+  // A comment immediately before the rule must not be swallowed into the selector.
+  assert.equal(run(page('.callbar{position:fixed;bottom:0}')).verdict, 'pass');
+
+  // A fixed bottom element holding no action is still only partial.
+  const noAction = run(page('.callbar { position: fixed; bottom: 0; }', '<div class="callbar"><span>Hours today</span></div>'));
+  assert.equal(noAction.verdict, 'partial', noAction.evidence.summary);
+
+  // A selector cheerio cannot evaluate falls back rather than throwing.
+  const exotic = run(page('.callbar:has(> a:nth-of-type(2)) { position: fixed; bottom: 0; }'));
+  assert.notEqual(exotic.verdict, 'fail');
+
+  // No fixed bottom rule at all is still a fail.
+  assert.equal(run(page('.callbar { display: grid; }')).verdict, 'fail');
 });

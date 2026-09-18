@@ -155,6 +155,28 @@ test('a slot whose group disagrees with its container is rejected', () => {
   );
 });
 
+test('a repeat may ship every demo item as a prototype, so the page still previews as finished', () => {
+  const items = Array.from({ length: 4 }, (_, i) => `<p data-repeat-item data-slot="s[].a" data-slot-kind="heading" data-slot-intent="x">item ${i}</p>`).join('');
+  const m = parse(SECTION(`<div data-repeat="s" data-repeat-max="6">${items}</div>`));
+  assert.equal(m.repeats[0].prototypes, 4);
+  assert.equal(m.slots.filter((sl) => sl.id === 's[].a').length, 4);
+});
+
+test('a fact.* slot may be declared many times; any other repeated id may not', () => {
+  const m = parse(SECTION(`<a data-slot="${FACT_PREFIX}phone">(440) 555-0148</a><p data-slot="${FACT_PREFIX}phone">(440) 555-0148</p>`));
+  assert.equal(m.slots.filter((sl) => sl.id === `${FACT_PREFIX}phone`).length, 2);
+});
+
+test('data-omit-if-empty may name a single slot as well as a repeat group', () => {
+  const m = parse(
+    SECTION(
+      '<div data-omit-if-empty="rating.value"><p data-slot="rating.value" data-slot-kind="price" data-slot-optional data-slot-intent="Only a stated rating.">4.9</p></div>',
+    ),
+  );
+  assert.equal(m.sections[0].omitGroup, null, 'the attribute is on the inner div, not the section');
+  assert.doesNotThrow(() => m);
+});
+
 test('a repeat with no prototype, no slots, no max, or a bad range is rejected', () => {
   rejects(SECTION('<div data-repeat="services" data-repeat-max="4"><p>nothing</p></div>'), /has no \[data-repeat-item\] prototype/);
   rejects(SECTION('<div data-repeat="services" data-repeat-max="4"><p data-repeat-item>nothing</p></div>'), /contains no slots/);
@@ -176,8 +198,11 @@ test('a repeat group declared twice is rejected', () => {
   );
 });
 
-test('data-omit-if-empty naming no group is rejected, because the section could never be removed', () => {
-  rejects(SECTION('<p data-slot="a.b" data-slot-kind="paragraph" data-slot-intent="x">y</p>', ' data-omit-if-empty="ghosts"'), /names no \[data-repeat\] group/);
+test('data-omit-if-empty naming nothing real is rejected, because the region could never be removed', () => {
+  rejects(
+    SECTION('<p data-slot="a.b" data-slot-kind="paragraph" data-slot-intent="x">y</p>', ' data-omit-if-empty="ghosts"'),
+    /names neither a \[data-repeat\] group nor a slot/,
+  );
 });
 
 test('every problem is reported at once, so one read gives the whole work order', () => {
