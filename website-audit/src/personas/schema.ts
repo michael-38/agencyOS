@@ -24,6 +24,8 @@ export const DetectorsSchema = z.object({
   hours_regex: z.string().optional(),
   address_regex: z.string().optional(),
   phone_regex: z.string().optional(),
+  /** Page chrome the facts extractor must not mistake for a service. */
+  nav_chrome: z.array(z.string()).default([]),
 });
 export type DetectorsFile = z.infer<typeof DetectorsSchema>;
 export const DetectorsPartialSchema = DetectorsSchema.partial();
