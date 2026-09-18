@@ -8,7 +8,17 @@ import { REPO_ROOT, tmpDir } from './helpers.js';
 import { fixtureCorpus, fixturePlan, fixtureReport, item, replaceCopy, writeFixtureSite } from './site-helpers.js';
 import type { BuildProfile } from '../src/site/types.js';
 
-function run(opts: { profile?: BuildProfile; mutate?: (p: string, html: string) => string; plan?: ReturnType<typeof fixturePlan>; report?: ReturnType<typeof fixtureReport> } = {}): SiteValidation {
+interface RunOpts {
+  profile?: BuildProfile;
+  mutate?: (p: string, html: string) => string;
+  plan?: ReturnType<typeof fixturePlan>;
+  report?: ReturnType<typeof fixtureReport>;
+  residue?: { mockTokens: string[]; demoLexicon: string[] } | null;
+  allowedLinkHosts?: string[];
+  templateCoveredIds?: string[] | null;
+}
+
+function run(opts: RunOpts = {}): SiteValidation {
   const dir = tmpDir('siteredesign-validate-');
   const plan = opts.plan ?? fixturePlan();
   const site = writeFixtureSite(dir, { profile: opts.profile, plan, mutate: opts.mutate });
@@ -23,6 +33,9 @@ function run(opts: { profile?: BuildProfile; mutate?: (p: string, html: string) 
     report: opts.report ?? fixtureReport([item('tel-link')]),
     installedFonts: [],
     jsonldType: 'LocalBusiness',
+    residue: opts.residue ?? null,
+    allowedLinkHosts: opts.allowedLinkHosts,
+    templateCoveredIds: opts.templateCoveredIds ?? null,
   });
 }
 
@@ -312,4 +325,89 @@ test('a link to an image that was never written is an error', () => {
 
 test('the fixture site has no dead links', () => {
   assert.ok(!errors(run(), 'structure').some((m) => m.includes('dead link')));
+});
+
+// ---- residue ---------------------------------------------------------------------------------
+
+test("the template's mock business must not survive the fill", () => {
+  const residue = { mockTokens: ['Hollow Creek Landscape Co.', 'C-48219'], demoLexicon: ['Hollow Creek has been installing hardscape since 2009.'] };
+
+  // A page that never mentions the mock is silent on this gate.
+  assert.deepEqual(errors(run({ residue }), 'residue'), []);
+
+  // An identity string in rendered text.
+  const named = run({ residue, mutate: (p, h) => (p === '/' ? h.replace('</main>', '<p data-copy-id="zz">Call Hollow Creek Landscape Co. today.</p></main>') : h) });
+  assert.ok(errors(named, 'residue').some((m) => m.includes('Hollow Creek Landscape Co.')));
+
+  // An identity string hiding in an attribute a reader sees.
+  const inAttr = run({ residue, mutate: (p, h) => (p === '/' ? h.replace('</main>', '<img src="a.webp" alt="C-48219" width="1" height="1"></main>') : h) });
+  assert.ok(errors(inAttr, 'residue').some((m) => m.includes('C-48219')));
+
+  // Demo prose rendered verbatim.
+  const prose = run({ residue, mutate: (p, h) => (p === '/' ? h.replace('</main>', '<p data-copy-id="zz">Hollow Creek has been installing hardscape since 2009.</p></main>') : h) });
+  assert.ok(errors(prose, 'residue').some((m) => m.includes('template demo copy was rendered verbatim')));
+
+  // The stylesheet is not the mock business, and neither is the build's own JSON-LD.
+  const inStyle = run({ residue, mutate: (p, h) => (p === '/' ? h.replace('</head>', '<style>/* C-48219 */</style></head>') : h) });
+  assert.deepEqual(errors(inStyle, 'residue'), [], 'a token inside <style> is not rendered text');
+});
+
+// ---- off-site links --------------------------------------------------------------------------
+
+test('an off-site link is allowed only to a host the audited site itself links to', () => {
+  const link = (href: string) => (p: string, h: string) => (p === '/' ? h.replace('</main>', `<a href="${href}">Book</a></main>`) : h);
+
+  const allowed = run({ allowedLinkHosts: ['booking.joinblvd.com'], mutate: link('https://booking.joinblvd.com/verdant') });
+  assert.deepEqual(errors(allowed, 'structure'), [], 'a real booking system the source linked to survives');
+
+  const invented = run({ allowedLinkHosts: ['booking.joinblvd.com'], mutate: link('https://evil.example/pay') });
+  assert.ok(errors(invented, 'structure').some((m) => m.includes('evil.example is not a host the audited site links to')));
+
+  // www. is not a different host.
+  const withWww = run({ allowedLinkHosts: ['joinblvd.com'], mutate: link('https://www.joinblvd.com/x') });
+  assert.deepEqual(errors(withWww, 'structure'), []);
+
+  // With no allowlist at all, every off-site link is an error, as before.
+  assert.ok(errors(run({ mutate: link('https://anything.example/') }), 'structure').length > 0);
+});
+
+test('an anchor pointing at no element is a dead link, because omitting a section can orphan one', () => {
+  const v = run({ mutate: (p, h) => (p === '/' ? h.replace('</main>', '<a href="#gone">Jump</a></main>') : h) });
+  assert.ok(errors(v, 'structure').some((m) => m.includes('dead anchor: <a href="#gone">')));
+  // The fixture's own in-page anchors must not trip it.
+  assert.deepEqual(errors(run(), 'structure'), []);
+});
+
+// ---- coverage tiers --------------------------------------------------------------------------
+
+test('an audit gap the template cannot carry is a warning; one it can carry and dropped is an error', () => {
+  // The fixture tags tel-link from the plan and faq-present from the build's own FAQ block, so
+  // live-chat and review-markup are the untagged gaps.
+  const report = fixtureReport([item('tel-link'), item('live-chat'), item('review-markup')]);
+
+  // With no template declared, every untagged gap is a build failure, as before.
+  const strict = run({ report });
+  assert.equal(errors(strict, 'coverage').filter((m) => m.includes('live-chat')).length, 1);
+  assert.equal(errors(strict, 'coverage').filter((m) => m.includes('review-markup')).length, 1);
+
+  // Declaring what the template can carry splits them. review-markup is inside its remit, so the
+  // built page dropping it is still a real bug; live-chat needs a third-party chat script no
+  // template ships, so it is reported rather than failing the build.
+  const tiered = run({ report, templateCoveredIds: ['tel-link', 'review-markup'] });
+  assert.deepEqual(errors(tiered, 'coverage').filter((m) => m.includes('live-chat')), []);
+  assert.deepEqual(tiered.coverage.uncoverable, ['live-chat']);
+  assert.ok(
+    tiered.findings.some((f) => f.gate === 'coverage' && f.level === 'warning' && /live-chat.*outside what this template can carry/.test(f.message)),
+  );
+  assert.ok(errors(tiered, 'coverage').some((m) => m.includes('review-markup')));
+  assert.deepEqual(tiered.coverage.missing, ['review-markup']);
+});
+
+test('template boilerplate is held to the same fact-only standard as placeholder copy', () => {
+  const v = run({
+    mutate: (p, h) =>
+      p === '/' ? h.replace('</main>', '<p data-copy-id="tpl">Fully licensed, with 25 years behind us.</p></main>') : h,
+  });
+  // The block is not in copy_map.json at all, which is itself the error the gate reports first.
+  assert.ok(errors(v, 'fabrication').some((m) => m.includes('not in copy_map.json')));
 });

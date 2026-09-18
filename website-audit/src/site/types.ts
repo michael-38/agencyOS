@@ -360,7 +360,13 @@ export interface CopyMapEntry {
   copy_id: string;
   page_path: string;
   text_sha256: string;
-  source: 'placeholder' | { url: string; quote: string };
+  /**
+   * Where this string came from. `'template'` means it is checked into the page template verbatim —
+   * no model wrote it — and it is held to the same fact-only standard as `'placeholder'`, because
+   * boilerplate that states a number or a credential would be stating it about a business the
+   * template has never seen.
+   */
+  source: 'placeholder' | 'template' | { url: string; quote: string };
 }
 
 export interface CopyMap {

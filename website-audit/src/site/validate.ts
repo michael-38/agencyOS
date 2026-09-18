@@ -20,7 +20,7 @@ import type { BuildProfile, CopyMap, PlanPage, SitePlan } from './types.js';
 export interface Finding {
   page: string;
   level: 'error' | 'warning';
-  gate: 'structure' | 'seo' | 'aeo' | 'fabrication' | 'coverage';
+  gate: 'structure' | 'seo' | 'aeo' | 'fabrication' | 'coverage' | 'residue';
   message: string;
 }
 
@@ -29,7 +29,13 @@ export interface SiteValidation {
   findings: Finding[];
   placeholder: { placeholder: number; total: number };
   selfTest: Record<string, SelfTestResult>;
-  coverage: { tagged: string[]; missing: string[]; deferred: string[] };
+  coverage: {
+    tagged: string[];
+    missing: string[];
+    deferred: string[];
+    /** Audit gaps the template cannot carry at all — the honest account of what the page leaves open. */
+    uncoverable: string[];
+  };
 }
 
 export interface ValidateOptions {
@@ -45,6 +51,22 @@ export interface ValidateOptions {
   installedFonts: string[];
   /** schema.org type for the industry's archetype, from config/industries.yaml. */
   jsonldType: string;
+  /**
+   * The template's mock business, for the residue gate. Its identity strings and its distinctive
+   * demo prose must not appear in the filled page — a template-based build's characteristic failure
+   * is shipping someone else's business, and it is invisible to every other gate.
+   */
+  residue?: { mockTokens: string[]; demoLexicon: string[] } | null;
+  /**
+   * Hosts the page may link off-site to: the audited domain's own outbound links, so a real booking
+   * system or social profile survives while an invented one does not.
+   */
+  allowedLinkHosts?: string[];
+  /**
+   * Every `data-checklist` id the template is capable of carrying. An audit gap outside this set is
+   * something a one-page template cannot close, which is a warning to report, not a build failure.
+   */
+  templateCoveredIds?: string[] | null;
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -125,6 +147,15 @@ export function buildAllowedClaims(copyIndex: CopyIndex, report: Report | null):
 
 const REMOTE_ATTR_RE = /^(https?:)?\/\//i;
 
+/** Host of an absolute or protocol-relative URL, lowercased and without `www.`. */
+function hostOf(url: string): string | null {
+  try {
+    return new URL(url.startsWith('//') ? `https:${url}` : url).hostname.toLowerCase().replace(/^www\./, '');
+  } catch {
+    return null;
+  }
+}
+
 interface PageCtx {
   page: PlanPage;
   file: string;
@@ -147,7 +178,7 @@ function localTargets($: CheerioAPI): string[] {
   return [...out];
 }
 
-function checkStructure(c: PageCtx, installedFonts: string[]): void {
+function checkStructure(c: PageCtx, installedFonts: string[], allowedLinkHosts: string[]): void {
   const { $, html, push } = c;
   if (!/^\s*<!doctype html>/i.test(html)) push('error', 'structure', 'missing <!doctype html>');
   if ($('html').length !== 1) push('error', 'structure', `expected exactly one <html>, found ${$('html').length}`);
@@ -174,13 +205,32 @@ function checkStructure(c: PageCtx, installedFonts: string[]): void {
     const tag = (el as unknown as { tagName: string }).tagName;
     if (REMOTE_ATTR_RE.test(v)) push('error', 'structure', `external request: <${tag} … ${v.slice(0, 80)}>`);
   });
+  // An off-site link is allowed only to a host the audited site itself linked to. That keeps a real
+  // booking system or social profile working while an invented destination still fails.
   $('a[href]').each((_, el) => {
     const href = $(el).attr('href') ?? '';
-    if (REMOTE_ATTR_RE.test(href)) push('error', 'structure', `off-site link <a href="${href.slice(0, 80)}"> — generated pages link only within the site`);
+    if (!REMOTE_ATTR_RE.test(href)) return;
+    const host = hostOf(href);
+    if (host && allowedLinkHosts.includes(host)) return;
+    push(
+      'error',
+      'structure',
+      `off-site link <a href="${href.slice(0, 80)}"> — ${host ? `${host} is not a host the audited site links to` : 'the URL has no host'}`,
+    );
   });
   for (const target of localTargets($)) {
     if (!c.resolves(target)) push('error', 'structure', `dead link: ${target} does not exist`);
   }
+  // Removing a section the source could not fill can orphan a nav item or a CTA, and the dead-link
+  // check above only looks at files.
+  const ids = new Set<string>();
+  $('[id]').each((_, el) => {
+    ids.add($(el).attr('id') as string);
+  });
+  $('a[href^="#"]').each((_, el) => {
+    const frag = ($(el).attr('href') ?? '').slice(1);
+    if (frag && !ids.has(frag)) push('error', 'structure', `dead anchor: <a href="#${frag}"> points at no element on the page`);
+  });
   if (allowedLocal.size === 0 && /@font-face/i.test(html)) push('warning', 'structure', 'page declares @font-face but no font files were installed');
 }
 
@@ -323,19 +373,26 @@ function checkFabrication(c: PageCtx, allowed: AllowedClaims, copyMap: CopyMap):
     if (sha256Text(text) !== entry.text_sha256) {
       push('error', 'fabrication', `the text of ${id} does not match the planned copy; the rendered wording was changed`);
     }
-    // Unsourced copy is held to the stricter standard: it may repeat an extracted fact (the phone
-    // number, the address) but nothing that only exists inside some other sentence's quote.
-    const isPlaceholder = entry.source === 'placeholder';
-    const okText = isPlaceholder ? allowed.factText : allowed.text;
-    const okDigits = isPlaceholder ? allowed.factDigits : allowed.digits;
-    const why = isPlaceholder ? 'has no verified source and may only repeat an extracted fact' : 'appears in no source quote or extracted fact';
+    // Copy with no verified quote behind it is held to the stricter standard: it may repeat an
+    // extracted fact (the phone number, the address) but nothing that only exists inside some other
+    // sentence's quote. Template boilerplate is in the same position — nobody sourced it for this
+    // client — so it is checked the same way.
+    const unsourced = entry.source === 'placeholder' || entry.source === 'template';
+    const okText = unsourced ? allowed.factText : allowed.text;
+    const okDigits = unsourced ? allowed.factDigits : allowed.digits;
+    const why =
+      entry.source === 'template'
+        ? 'is template boilerplate and may only repeat an extracted fact'
+        : unsourced
+          ? 'has no verified source and may only repeat an extracted fact'
+          : 'appears in no source quote or extracted fact';
     const claims = findClaims(text);
     for (const n of claims.numbers) {
       const d = digitsOf(n);
-      if (d && !okDigits.has(d)) push('error', 'fabrication', `${id} states "${n}", which ${isPlaceholder ? 'is not an extracted fact and the block has no verified source' : why}`);
+      if (d && !okDigits.has(d)) push('error', 'fabrication', `${id} states "${n}", which ${unsourced ? 'is not an extracted fact and the block has no verified source' : why}`);
     }
     for (const h of claims.hard) {
-      if (!okText.includes(normalizeForMatch(h))) push('error', 'fabrication', `${id} claims "${h}", which ${isPlaceholder ? why : 'the source site never says'}`);
+      if (!okText.includes(normalizeForMatch(h))) push('error', 'fabrication', `${id} claims "${h}", which ${unsourced ? why : 'the source site never says'}`);
     }
     for (const s of claims.soft) {
       if (!allowed.text.includes(normalizeForMatch(s))) push('warning', 'fabrication', `${id} uses the superlative "${s}", which the source site never says`);
@@ -371,6 +428,43 @@ function checkFabrication(c: PageCtx, allowed: AllowedClaims, copyMap: CopyMap):
   }
 }
 
+/**
+ * Nothing of the template's mock business may survive a fill.
+ *
+ * This gate exists because the failure it catches is invisible to every other one: a page that
+ * validates perfectly, reads perfectly, and names the wrong company. Two things are checked —
+ * identity strings (the mock name, domain, phone, email, licence number, street) and the mock's own
+ * distinctive prose.
+ *
+ * Numbers are deliberately not compared. checkFabrication already owns those, and a real client may
+ * genuinely charge $14,500 or genuinely be in the same town as the mock.
+ */
+function checkResidue(c: PageCtx, residue: { mockTokens: string[]; demoLexicon: string[] }): void {
+  const { $, push } = c;
+  // Only rendered text and the attributes a reader sees; the stylesheet's colour names are not the
+  // mock business, and a <script> here is the JSON-LD the build wrote itself.
+  const body = $('body').clone();
+  body.find('style, script').remove();
+  const text = body.text().replace(/\s+/g, ' ');
+  const attrs: string[] = [];
+  body.find('[href], [src], [alt], [aria-label], [title], [content]').each((_, el) => {
+    for (const name of ['href', 'src', 'alt', 'aria-label', 'title', 'content']) {
+      const v = $(el).attr(name);
+      if (v) attrs.push(v);
+    }
+  });
+  const haystack = `${text}\n${attrs.join('\n')}`;
+
+  for (const token of residue.mockTokens) {
+    if (!token.trim()) continue;
+    if (haystack.includes(token)) push('error', 'residue', `the template's mock business survived the fill: "${token}"`);
+  }
+  for (const phrase of residue.demoLexicon) {
+    if (phrase.length < 24) continue;
+    if (text.includes(phrase)) push('error', 'residue', `template demo copy was rendered verbatim: "${phrase.slice(0, 80)}${phrase.length > 80 ? '…' : ''}"`);
+  }
+}
+
 // ---------------------------------------------------------------------------------------------
 // Site-wide
 // ---------------------------------------------------------------------------------------------
@@ -401,10 +495,11 @@ export function validateSiteTree(o: ValidateOptions): SiteValidation {
     };
     const c: PageCtx = { page, file: rel, html, $, push, resolves };
 
-    checkStructure(c, o.installedFonts);
+    checkStructure(c, o.installedFonts, o.allowedLinkHosts ?? []);
     checkSeo(c, o.profile, titleIndex, descIndex);
     checkAeo(c, { jsonldType });
     checkFabrication(c, allowed, o.copyMap);
+    if (o.residue) checkResidue(c, o.residue);
 
     $('[data-checklist]').each((_, el) => {
       for (const id of ($(el).attr('data-checklist') ?? '').split(/[\s,]+/)) if (id) taggedIds.add(id);
@@ -449,6 +544,8 @@ export function validateSiteTree(o: ValidateOptions): SiteValidation {
   // not fed to the repair pass, which would otherwise spend the whole budget trying to cram a
   // twelve-page site's checklist onto one page.
   const missing: string[] = [];
+  /** Gaps this template is structurally unable to close. Reported, never a build failure. */
+  const uncoverable: string[] = [];
   const deferredIds = new Set((o.plan.deferred_pages ?? []).flatMap((d) => d.checklist_ids));
   const deferred: string[] = [];
   if (o.report) {
@@ -463,6 +560,21 @@ export function validateSiteTree(o: ValidateOptions): SiteValidation {
           level: 'warning',
           gate: 'coverage',
           message: `audit gap ${item.id} (${item.verdict}) is planned for ${(o.plan.deferred_pages ?? []).find((d) => d.checklist_ids.includes(item.id))!.path}, which this preview did not build`,
+        });
+        continue;
+      }
+      // Two tiers, because a fixed template cannot be asked to close every gap. An id the template
+      // does carry but the built page does not is a real bug — the fill dropped the section meant to
+      // satisfy it. An id the template cannot carry at all needs a subpage, a third-party widget, or
+      // content only the client has; that belongs in seo-report.md, not in a failed build.
+      const coverable = o.templateCoveredIds;
+      if (coverable && !coverable.includes(item.id)) {
+        uncoverable.push(item.id);
+        findings.push({
+          page: '/',
+          level: 'warning',
+          gate: 'coverage',
+          message: `audit gap ${item.id} (${item.verdict}) is outside what this template can carry; it needs a subpage, a third-party widget, or content the client must supply`,
         });
         continue;
       }
@@ -502,7 +614,7 @@ export function validateSiteTree(o: ValidateOptions): SiteValidation {
     findings,
     placeholder: { placeholder: placeholders, total: o.copyMap.paragraphs.length },
     selfTest,
-    coverage: { tagged: [...taggedIds].sort(), missing, deferred: deferred.sort() },
+    coverage: { tagged: [...taggedIds].sort(), missing, deferred: deferred.sort(), uncoverable: uncoverable.sort() },
   };
 }
 
