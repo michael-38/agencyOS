@@ -112,6 +112,25 @@ for (const t of templates) {
     assert.deepEqual(unknown, [], `unknown data-checklist ids: ${unknown.join(', ')}`);
   });
 
+  test(`${t.slug}: the FAQ is machine-readable, so the JSON-LD can mirror it`, () => {
+    // checkAeo requires FAQPage.mainEntity to match the rendered FAQ verbatim. The template owns the
+    // FAQ markup (every persona words it differently), so code reads the questions back out of the
+    // filled page — which only works if the question and answer elements say which they are. The
+    // slot scaffolding is stripped at fill time, so these markers cannot be data-slot attributes.
+    const groups = new Set<string>();
+    t.$('[data-repeat]').each((_, el) => {
+      groups.add(t.$(el).attr('data-repeat') ?? '');
+    });
+    if (!groups.has('faq')) return; // a template with no FAQ repeat has nothing to mark
+    const qs = t.$('[data-faq-q]').length;
+    const as = t.$('[data-faq-a]').length;
+    assert.ok(qs > 0, 'the faq repeat declares no [data-faq-q]');
+    assert.equal(qs, as, `${qs} [data-faq-q] but ${as} [data-faq-a]`);
+    t.$('[data-faq-q]').each((_, el) => {
+      assert.ok(/^h[1-6]$/.test((el as unknown as { tagName: string }).tagName), 'a question must be a heading');
+    });
+  });
+
   test(`${t.slug}: images declare alt and intrinsic size`, () => {
     const bad: string[] = [];
     t.$('img').each((_, el) => {
