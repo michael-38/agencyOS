@@ -6,9 +6,10 @@ import { Command } from 'commander';
 import { MODELS, PIPELINE_VERSION, SITE_LIMITS, repoRoot } from './config.js';
 import { CHECKS, REGISTERED_CHECK_IDS } from './checks/registry.js';
 import { MODULES, parseList, resolveModules } from './modules.js';
-import { validateAllPersonas } from './personas/load.js';
+import { loadIndustries, validateAllPersonas } from './personas/load.js';
 import { runAudit } from './pipeline.js';
 import { checkHtmlCommand } from './site/check-html.js';
+import { readTemplate } from './site/template.js';
 import { evalCommand } from './evals/run.js';
 import { siteScaffold, sitePreview, siteValidate } from './site/commands.js';
 import { DEFAULT_LIMITS, DEFAULT_MODELS, STAGES, runBuild, type Stage } from './site/build.js';
@@ -133,6 +134,47 @@ program
       for (const m of rows) {
         process.stdout.write(`  ${m.id.padEnd(24)} ${m.default ? 'on ' : 'off'} ${billingTag(m.billing).padEnd(13)} ${m.built ? '' : '(not built) '}${m.label} — ${m.cost}\n`);
       }
+    }
+  });
+
+program
+  .command('template:manifest')
+  .description("Print a page template's slot contract, derived from the template itself")
+  .requiredOption('--slug <slug>', 'industry slug (the template comes from industries.yaml)')
+  .option('--template <path>', 'read this file instead of the industry\'s registered template')
+  .option('--json', 'JSON output', false)
+  .option('--repo-root <dir>')
+  .action((o) => {
+    const repo = repoRoot(o.repoRoot);
+    const industries = loadIndustries(repo);
+    const industry = industries.industries.find((i) => i.slug === o.slug);
+    if (!industry) {
+      process.stderr.write(`error: unknown slug "${o.slug}"; valid: ${industries.industries.map((i) => i.slug).join(', ')}\n`);
+      process.exit(2);
+    }
+    const rel = o.template ?? industry.template_file;
+    try {
+      const m = readTemplate(path.isAbsolute(rel) ? rel : path.join(repo, rel), o.slug, rel);
+      if (o.json) {
+        process.stdout.write(`${JSON.stringify(m, null, 2)}\n`);
+        return;
+      }
+      process.stdout.write(`${m.file}\n  sha256 ${m.sha256.slice(0, 16)}\n\n`);
+      process.stdout.write(`slots (${m.slots.length})\n`);
+      for (const sl of m.slots) {
+        const flags = [sl.attr ? `@${sl.attr}` : null, sl.optional ? 'optional' : null, sl.max ? `<=${sl.max}` : null, sl.answerFirst ? 'answer-first' : null].filter(Boolean).join(' ');
+        process.stdout.write(`  ${sl.id.padEnd(30)} ${sl.kind.padEnd(10)} ${flags.padEnd(28)} ${sl.intent}\n`);
+      }
+      process.stdout.write(`\nrepeats (${m.repeats.length})\n`);
+      for (const r of m.repeats) process.stdout.write(`  ${r.group.padEnd(20)} ${r.min}-${r.max} items, ${r.prototypes} prototype(s), section#${r.sectionId ?? '-'}\n`);
+      process.stdout.write(`\nsections (${m.sections.length})\n`);
+      for (const sec of m.sections) process.stdout.write(`  ${sec.id.padEnd(20)} ${sec.omitGroup ? `omit if "${sec.omitGroup}" empty` : ''}\n`);
+      process.stdout.write(`\nchecklist ids covered (${m.coveredChecklistIds.length}): ${m.coveredChecklistIds.join(' ')}\n`);
+      process.stdout.write(`mock identity tokens (${m.mockTokens.length}): ${m.mockTokens.join(' | ')}\n`);
+      process.stdout.write(`demo lexicon entries (${m.demoLexicon.length})\n`);
+    } catch (e) {
+      process.stderr.write(`\n${(e as Error).message}\n`);
+      process.exit(1);
     }
   });
 
