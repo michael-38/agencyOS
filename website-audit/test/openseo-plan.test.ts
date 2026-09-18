@@ -7,6 +7,7 @@ import type { Facts } from '../src/checks/facts.js';
 const facts: Facts = {
   business_name: 'Cascade Lawn & Landscape',
   phones: ['+1-801-555-0100'],
+  emails: [],
   address: { addressLocality: 'Provo', addressRegion: 'UT', postalCode: '84601' },
   hours: null,
   services: ['Lawn care', 'Sprinkler repair', 'Landscape design'],

@@ -35,6 +35,7 @@ export function fixtureCorpus() {
     facts: {
       business_name: 'Example Yard Co',
       phones: ['801-555-0100'],
+      emails: [],
       address: { '@type': 'PostalAddress', streetAddress: '1 Test Way', addressLocality: 'Riverton', addressRegion: 'UT', postalCode: '84065' },
       hours: null,
       services: ['Mowing', 'Paver installation'],

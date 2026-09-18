@@ -5,6 +5,7 @@ import { headingTexts, snippet, telHrefs, typesOf, visibleText } from './html.js
 export interface Facts {
   business_name: string | null;
   phones: string[];
+  emails: string[];
   address: Record<string, unknown> | string | null;
   hours: unknown | null;
   services: string[];
@@ -54,6 +55,19 @@ export function extractFacts(ctx: PageContext, navText?: string[]): Facts {
   }
   if (phones.size) sources.phones = telHrefs($).length ? 'tel-links' : org ? 'jsonld' : 'regex';
 
+  // mailto: only. A regex over visible text picks up obfuscated and third-party addresses, and a
+  // wrong contact address on a rebuilt page is worse than no contact address.
+  const emails = new Set<string>();
+  $('a[href^="mailto:"]').each((_, el) => {
+    const addr = ($(el).attr('href') ?? '').replace(/^mailto:/i, '').split('?')[0].trim().toLowerCase();
+    if (/^[^@\s]+@[^@\s]+\.[a-z]{2,}$/.test(addr)) emails.add(addr);
+  });
+  if (org && typeof org['email'] === 'string') {
+    const addr = String(org['email']).replace(/^mailto:/i, '').trim().toLowerCase();
+    if (/^[^@\s]+@[^@\s]+\.[a-z]{2,}$/.test(addr)) emails.add(addr);
+  }
+  if (emails.size) sources.emails = $('a[href^="mailto:"]').length ? 'mailto-links' : 'jsonld';
+
   let address: Facts['address'] = null;
   const ldAddr = ld.objects.find((o) => 'address' in o);
   if (ldAddr) {
@@ -96,6 +110,7 @@ export function extractFacts(ctx: PageContext, navText?: string[]): Facts {
   return {
     business_name,
     phones: [...phones].slice(0, 5),
+    emails: [...emails].slice(0, 3),
     address,
     hours,
     services: [...services].slice(0, 25),
