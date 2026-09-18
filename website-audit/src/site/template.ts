@@ -13,6 +13,7 @@ import crypto from 'node:crypto';
 import type { CheerioAPI, Cheerio } from 'cheerio';
 import type { Element } from 'domhandler';
 import { loadHtml } from '../checks/html.js';
+import { findClaims } from './validate.js';
 
 export const SLOT_KINDS = ['heading', 'paragraph', 'bullet', 'price', 'url', 'phone', 'quote'] as const;
 export type SlotKind = (typeof SLOT_KINDS)[number];
@@ -89,7 +90,12 @@ export interface TemplateManifest {
   coveredChecklistIds: string[];
   /** Identity strings of the mock business, which must never survive a fill. */
   mockTokens: string[];
-  /** Distinctive demo prose the residue gate looks for in the filled page. */
+  /**
+   * Demo prose distinctive enough to identify the mock business. A phrase with no number, no claim
+   * and no mock token in it is generic boilerplate — "Frequently asked questions" is the template's
+   * demo text and also what a real client's page says — so matching on it would fail honest builds
+   * without catching anything. The gate's job is the mock business, not common phrasing.
+   */
   demoLexicon: string[];
 }
 
@@ -278,7 +284,12 @@ export function readTemplate(absFile: string, slug: string, repoRelFile = absFil
 
   // ---- residue lexicon -------------------------------------------------------------------------
   const mockTokens = [...new Set(attrList($('html').attr('data-mock-tokens')).map(decodeURIComponent))];
-  const demoLexicon = [...new Set(slots.map((s) => s.demoText.trim()).filter((t) => t.length >= RESIDUE_MIN_CHARS))];
+  const identifying = (t: string): boolean => {
+    const claims = findClaims(t);
+    if (claims.numbers.length || claims.hard.length) return true;
+    return mockTokens.some((tok) => tok.length >= 4 && t.includes(tok));
+  };
+  const demoLexicon = [...new Set(slots.map((s) => s.demoText.trim()).filter((t) => t.length >= RESIDUE_MIN_CHARS && identifying(t)))];
 
   if (problems.length) throw new TemplateError(repoRelFile, problems);
 

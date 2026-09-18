@@ -15,7 +15,7 @@ import type { Report } from '../report/schema.js';
 import { runSelfTest, type SelfTestResult } from './check-html.js';
 import { normalizeForMatch, sha256Text, type CopyIndex } from './copy.js';
 import { fileForPath } from './paths.js';
-import type { BuildProfile, CopyMap, PlanPage, SitePlan } from './types.js';
+import type { BuildProfile, CopyMap } from './types.js';
 
 export interface Finding {
   page: string;
@@ -32,7 +32,6 @@ export interface SiteValidation {
   coverage: {
     tagged: string[];
     missing: string[];
-    deferred: string[];
     /** Audit gaps the template cannot carry at all — the honest account of what the page leaves open. */
     uncoverable: string[];
   };
@@ -43,7 +42,8 @@ export interface ValidateOptions {
   repo: string;
   slug: string;
   profile: BuildProfile;
-  plan: SitePlan;
+  /** The page's own title and description, for the length and presence checks. */
+  page: { path: string; title: string; meta_description: string };
   copyMap: CopyMap;
   copyIndex: CopyIndex;
   report: Report | null;
@@ -157,7 +157,7 @@ function hostOf(url: string): string | null {
 }
 
 interface PageCtx {
-  page: PlanPage;
+  page: { path: string; title: string; meta_description: string };
   file: string;
   html: string;
   $: CheerioAPI;
@@ -199,7 +199,11 @@ function checkStructure(c: PageCtx, installedFonts: string[], allowedLinkHosts: 
 
   // Zero external requests, in either profile: assets are local and relative.
   const allowedLocal = new Set(installedFonts);
-  $('script[src], link[href], img[src], source[src], source[srcset], video[src], audio[src], form[action], iframe[src]').each((_, el) => {
+  // `link[rel=canonical]` and the markdown alternate name a URL without fetching it, and in the
+  // production profile they are *required* to be absolute. Counting them as external requests made
+  // a correct production build fail its own structure gate — which it did, unnoticed, because the
+  // existing test only asserted seo-gate errors.
+  $('script[src], link[href]:not([rel="canonical"]):not([rel="alternate"]), img[src], source[src], source[srcset], video[src], audio[src], form[action], iframe[src]').each((_, el) => {
     const $el = $(el);
     const v = $el.attr('src') || $el.attr('href') || $el.attr('action') || $el.attr('srcset') || '';
     const tag = (el as unknown as { tagName: string }).tagName;
@@ -294,19 +298,22 @@ function checkAeo(c: PageCtx, ctx: { jsonldType: string }): void {
   for (const want of ['WebSite', 'WebPage', ctx.jsonldType]) {
     if (!hasType(ld, [want])) push('error', 'aeo', `JSON-LD @graph has no ${want} node`);
   }
-  if (page.breadcrumb.length && !hasType(ld, ['BreadcrumbList'])) push('error', 'aeo', 'a page below the home page has no BreadcrumbList');
   const webPage = ld.objects.find((o) => typesOf(o).includes('WebPage'));
   if (webPage && !webPage.speakable) push('warning', 'aeo', 'WebPage node has no speakable specification');
 
   // The FAQ in the markup and the FAQ in the structured data must be the same FAQ.
   const faqNode = ld.objects.find((o) => typesOf(o).includes('FAQPage'));
-  if (page.faq.length) {
+  // The rendered FAQ is read out of the markup rather than taken from a plan, because the template
+  // owns the FAQ markup and every persona words it differently. That also makes this check stronger:
+  // it compares the structured data against what a reader actually sees.
+  const renderedFaq = $('[data-faq-q]').length;
+  if (renderedFaq) {
     if (!faqNode) {
       push('error', 'aeo', 'the page renders an FAQ but has no FAQPage node');
     } else {
       const entities = (faqNode.mainEntity as { name?: string; acceptedAnswer?: { text?: string } }[]) ?? [];
-      if (entities.length !== page.faq.length) {
-        push('error', 'aeo', `FAQPage lists ${entities.length} question(s) but the page plans ${page.faq.length}`);
+      if (entities.length !== renderedFaq) {
+        push('error', 'aeo', `FAQPage lists ${entities.length} question(s) but the page renders ${renderedFaq}`);
       }
       // Both halves must be on the page: a question or an answer that only exists in the markup is
       // exactly the kind of invisible structured data search engines treat as a manipulation.
@@ -350,16 +357,13 @@ function checkFabrication(c: PageCtx, allowed: AllowedClaims, copyMap: CopyMap):
   const mapped = new Map(copyMap.paragraphs.filter((p) => p.page_path === page.path).map((p) => [p.copy_id, p]));
   const seen = new Set<string>();
 
-  $('main').find('p, li, blockquote, dd').each((_, el) => {
+  // Every copy-mapped string, whatever element carries it. A heading, a span in the sticky bar and a
+  // paragraph are all copy; keying the walk on tag names meant a value the fill had written was
+  // reported as never rendered.
+  $('[data-copy-id]').each((_, el) => {
     const $el = $(el);
-    if ($el.parents('nav').length) return;
     const text = $el.text().trim();
-    if (!text) return;
-    const id = $el.attr('data-copy-id');
-    if (!id) {
-      push('error', 'fabrication', `untracked text in <main> with no data-copy-id: "${text.slice(0, 80)}"`);
-      return;
-    }
+    const id = $el.attr('data-copy-id') as string;
     const entry = mapped.get(id);
     if (!entry) {
       push('error', 'fabrication', `data-copy-id="${id}" is not in copy_map.json for this page`);
@@ -399,10 +403,25 @@ function checkFabrication(c: PageCtx, allowed: AllowedClaims, copyMap: CopyMap):
     }
   });
 
-  // Headings, captions, and table cells make claims too, and none of them are copy-mapped.
-  $('main').find('h1, h2, h3, h4, figcaption, caption, td, th, dt').each((_, el) => {
+  // Prose with no copy id behind it is text nobody vouched for. Header and footer are in scope as
+  // well as <main>: the footer is where a licence number, an insurance figure and the business name
+  // all sit, and text there is no less published.
+  $('header, main, footer').find('p, li, blockquote, dd, address').each((_, el) => {
     const $el = $(el);
     if ($el.parents('nav').length) return;
+    if ($el.attr('data-copy-id')) return;
+    // An element whose copy-mapped child carries the text is tracked through that child.
+    if ($el.find('[data-copy-id]').length) return;
+    const text = $el.text().trim();
+    if (!text) return;
+    push('error', 'fabrication', `untracked text with no data-copy-id: "${text.slice(0, 80)}"`);
+  });
+
+  // Headings, captions, and table cells make claims too, and are not always copy-mapped.
+  $('header, main, footer').find('h1, h2, h3, h4, figcaption, caption, td, th, dt').each((_, el) => {
+    const $el = $(el);
+    if ($el.parents('nav').length) return;
+    if ($el.attr('data-copy-id')) return; // already checked, with its provenance
     const text = $el.text().trim();
     if (!text) return;
     const where = `${(el as unknown as { tagName: string }).tagName} "${text.slice(0, 60)}"`;
@@ -478,7 +497,7 @@ export function validateSiteTree(o: ValidateOptions): SiteValidation {
   const taggedIds = new Set<string>();
   const jsonldType = o.jsonldType;
 
-  for (const page of o.plan.pages) {
+  for (const page of [o.page]) {
     const rel = fileForPath(page.path);
     const abs = path.join(o.siteDir, rel);
     if (!fs.existsSync(abs)) {
@@ -527,7 +546,7 @@ export function validateSiteTree(o: ValidateOptions): SiteValidation {
     $home('a[href]').each((_, el) => {
       hrefs.add(($home(el).attr('href') ?? '').split('#')[0]);
     });
-    for (const page of o.plan.pages) {
+    for (const page of [o.page]) {
       if (page.path === '/') continue;
       const expected = o.profile === 'production' ? page.path : fileForPath(page.path);
       if (![...hrefs].some((h) => h === expected || h.endsWith(fileForPath(page.path)))) {
@@ -536,33 +555,14 @@ export function validateSiteTree(o: ValidateOptions): SiteValidation {
     }
   }
 
-  // Audit coverage: every gap the audit found must be tagged somewhere in the site.
-  //
-  // A preview build only writes the home page, so gaps the architecture assigned to a page it did not
-  // write cannot be tagged and are not that page's failure. They are reported as deferred — the
-  // acceptance build has to satisfy them — but they do not fail the preview, and crucially they are
-  // not fed to the repair pass, which would otherwise spend the whole budget trying to cram a
-  // twelve-page site's checklist onto one page.
+  // Audit coverage: every gap the audit found must be tagged somewhere on the page, unless the
+  // template is structurally unable to carry it.
   const missing: string[] = [];
   /** Gaps this template is structurally unable to close. Reported, never a build failure. */
   const uncoverable: string[] = [];
-  const deferredIds = new Set((o.plan.deferred_pages ?? []).flatMap((d) => d.checklist_ids));
-  const deferred: string[] = [];
   if (o.report) {
-    const ownerOf = new Map<string, string>();
-    for (const page of o.plan.pages) for (const s of page.sections) for (const id of s.checklist_ids) if (!ownerOf.has(id)) ownerOf.set(id, page.path);
     for (const item of o.report.items.filter((i) => i.verdict !== 'pass')) {
       if (taggedIds.has(item.id)) continue;
-      if (!ownerOf.has(item.id) && deferredIds.has(item.id)) {
-        deferred.push(item.id);
-        findings.push({
-          page: '/',
-          level: 'warning',
-          gate: 'coverage',
-          message: `audit gap ${item.id} (${item.verdict}) is planned for ${(o.plan.deferred_pages ?? []).find((d) => d.checklist_ids.includes(item.id))!.path}, which this preview did not build`,
-        });
-        continue;
-      }
       // Two tiers, because a fixed template cannot be asked to close every gap. An id the template
       // does carry but the built page does not is a real bug — the fill dropped the section meant to
       // satisfy it. An id the template cannot carry at all needs a subpage, a third-party widget, or
@@ -579,9 +579,8 @@ export function validateSiteTree(o: ValidateOptions): SiteValidation {
         continue;
       }
       missing.push(item.id);
-      const owner = ownerOf.get(item.id) ?? '/';
       findings.push({
-        page: owner,
+        page: '/',
         level: 'error',
         gate: 'coverage',
         message: `audit gap ${item.id} (${item.verdict}) has no data-checklist element; put data-checklist="${item.id}" on the element that satisfies it`,
@@ -596,11 +595,11 @@ export function validateSiteTree(o: ValidateOptions): SiteValidation {
     else {
       const xml = fs.readFileSync(sitemapPath, 'utf8');
       const locs = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
-      for (const page of o.plan.pages) {
-        if (!locs.some((l) => l.endsWith(page.path))) findings.push({ page: page.path, level: 'error', gate: 'seo', message: `${page.path} is missing from sitemap.xml` });
+      if (!locs.some((l) => l.endsWith(o.page.path))) {
+        findings.push({ page: o.page.path, level: 'error', gate: 'seo', message: `${o.page.path} is missing from sitemap.xml` });
       }
-      if (locs.length !== o.plan.pages.length) {
-        findings.push({ page: '/', level: 'error', gate: 'seo', message: `sitemap.xml lists ${locs.length} url(s) but the site has ${o.plan.pages.length} page(s)` });
+      if (locs.length !== 1) {
+        findings.push({ page: '/', level: 'error', gate: 'seo', message: `sitemap.xml lists ${locs.length} url(s) but the build wrote one page` });
       }
     }
     for (const f of ['robots.txt', 'llms.txt']) {
@@ -614,19 +613,7 @@ export function validateSiteTree(o: ValidateOptions): SiteValidation {
     findings,
     placeholder: { placeholder: placeholders, total: o.copyMap.paragraphs.length },
     selfTest,
-    coverage: { tagged: [...taggedIds].sort(), missing, deferred: deferred.sort(), uncoverable: uncoverable.sort() },
+    coverage: { tagged: [...taggedIds].sort(), missing, uncoverable: uncoverable.sort() },
   };
 }
 
-/**
- * Findings for one page, in the shape the repair pass wants. SEO findings that come from the plan
- * rather than the markup — a title the copy pass made too long, a duplicate description — are left
- * out, because re-rendering the body cannot fix them and telling the model to try wastes a call.
- */
-const NOT_FIXABLE_BY_RENDER = /^(<title> is|meta description is|duplicate <title>|duplicate meta description|canonical link missing|sitemap\.xml|robots\.txt|llms\.txt|.* is missing from sitemap)/;
-
-export function repairNotesFor(validation: SiteValidation, pagePath: string): string[] {
-  return validation.findings
-    .filter((f) => f.page === pagePath && f.level === 'error' && !NOT_FIXABLE_BY_RENDER.test(f.message))
-    .map((f) => f.message);
-}

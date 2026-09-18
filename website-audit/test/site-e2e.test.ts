@@ -1,55 +1,57 @@
-// The whole orchestrator, driven from recorded stage outputs. No API calls, no network, no spend.
+// The whole orchestrator, driven from a recorded content pack. No API calls, no network, no spend.
 //
-// Every structural bug the first paid build surfaced — the FAQ rendered twice, internal-link list
-// items with invented copy ids, breadcrumbs linking to hub pages that are never generated — is
-// visible here. This test exists so finding the next one costs nothing.
+// This is the loop the new design exists for: the only billed stage is one call, so everything after
+// it — fill, brand, head, structured data, sidecars, all six gates, the report — is exercised here
+// for free. Finding the next structural bug should cost nothing.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
-import { estimateCost, runBuild, type BuildOptions } from '../src/site/build.js';
+import { BudgetExceeded, estimateCost, runBuild, type BuildOptions } from '../src/site/build.js';
 import type { LlmParser, ParseRequest, ParseResult } from '../src/llm/client.js';
+import { loadHtml } from '../src/checks/html.js';
 import { REPO_ROOT, tmpDir } from './helpers.js';
-import { CORPUS_TEXT, fixtureArchitecture, fixtureContent, fixtureReport, homeMarkup, item, serviceMarkup } from './site-helpers.js';
-import type { DesignSpec, PageContent, RenderedPage, SiteArchitecture } from '../src/site/types.js';
+import { CORPUS_TEXT, FIXTURE_TEMPLATE, fixturePack, fixtureReport, item } from './site-helpers.js';
+import type { ContentPack } from '../src/site/content.js';
 
-const DESIGN: DesignSpec = {
-  css: ':root{--ink:#111}\n.actionbar{position:fixed;bottom:0}\n@media (prefers-reduced-motion: reduce){*{animation:none}}',
-  design_md: '# Contract\n\n`.wrap` — the container. `.btn` — the button.',
-  theme_color: '#123456',
-  direction: 'test direction',
-};
-
-/**
- * Serves recorded stage outputs keyed by `step/label`, and records what it was asked for. Keyed
- * rather than queued because pages render concurrently, so call order is not deterministic; a repair
- * label (`home-repair1`) falls back to its base page's recording.
- */
+/** Serves one recorded pack, and records what it was asked for. */
 class ReplayClient implements LlmParser {
   usd = 0;
   readonly calls: string[] = [];
-  constructor(private readonly responses: Record<string, unknown>) {}
+  constructor(private readonly pack: ContentPack | null) {}
   async parse<T>(req: ParseRequest<T>): Promise<ParseResult<T>> {
-    const key = `${req.step}/${req.label}`;
-    this.calls.push(key);
-    const base = `${req.step}/${req.label.replace(/-repair\d+$/, '')}`;
-    const parsed = (this.responses[key] ?? this.responses[base]) as T | undefined;
-    if (parsed === undefined) throw new Error(`replay: nothing recorded for "${key}"`);
-    return { parsed, usage: null, stopReason: 'end_turn', model: 'replay', cacheHit: true, attempts: 1, logFile: null, usd: 0 };
+    this.calls.push(`${req.step}/${req.label}`);
+    if (!this.pack) throw new Error(`replay: nothing recorded for "${req.step}/${req.label}"`);
+    return { parsed: this.pack as unknown as T, usage: null, stopReason: 'end_turn', model: 'replay', cacheHit: true, attempts: 1, logFile: null, usd: 0 };
   }
 }
 
+/** A client that reports spend, to exercise the budget guard without a network. */
+class SpendingClient extends ReplayClient {
+  constructor(pack: ContentPack | null, public usd: number) {
+    super(pack);
+  }
+}
+
+let tplN = 0;
+function seedTemplate(): string {
+  const dir = tmpDir('tpl-e2e-');
+  const file = path.join(dir, `template${tplN++}.html`);
+  fs.writeFileSync(file, FIXTURE_TEMPLATE);
+  return file;
+}
+
 /** A run directory with just enough on disk for buildCorpus to work. */
-function seedRun(): string {
-  const dir = tmpDir('siteredesign-e2e-');
-  const report = fixtureReport([item('tel-link'), item('faq-present')]);
+function seedRun(items = [item('tel-link'), item('faq-present')]): string {
+  const dir = tmpDir('sitefill-e2e-');
+  const report = fixtureReport(items);
   report.pages = [
     {
       url: 'https://example.test/',
       role: 'home',
       page_key: 'aaa',
       markdown_path: 'raw/pages/aaa/page.md',
-      html_path: null,
+      html_path: 'raw/pages/aaa/page.html',
       judge_text_path: null,
       judge_text_stats: null,
       screenshots: { mobile: null, desktop: null, mobile_fold: null, desktop_fold: null, mobile_tiles: [] },
@@ -58,157 +60,222 @@ function seedRun(): string {
   ];
   fs.mkdirSync(path.join(dir, 'raw', 'pages', 'aaa'), { recursive: true });
   fs.writeFileSync(path.join(dir, 'raw', 'pages', 'aaa', 'page.md'), CORPUS_TEXT);
+  // The source site's own outbound links, which is what the off-site link allowlist is built from.
+  fs.writeFileSync(
+    path.join(dir, 'raw', 'pages', 'aaa', 'page.html'),
+    '<html><body><a href="https://booking.example/now">Book</a><a href="/local">Local</a></body></html>',
+  );
   fs.writeFileSync(path.join(dir, 'report.json'), JSON.stringify(report, null, 2));
   return dir;
 }
 
-function options(dir: string, llm: LlmParser, over: Partial<BuildOptions> = {}): BuildOptions {
+function options(dir: string, over: Partial<BuildOptions> = {}): BuildOptions {
   return {
     reportPath: path.join(dir, 'report.json'),
     repo: REPO_ROOT,
     profile: 'mockup',
     baseUrl: null,
     slug: 'landscaping',
-    maxPages: 4,
-    preview: false,
+    templatePath: seedTemplate(),
+    brand: 'off',
     maxAssets: 0,
     useAssets: false,
     startStage: 'assets',
-    repairPasses: 2,
-    maxUsd: 6,
+    maxUsd: 1.5,
     fromCache: null,
-    offline: false,
-    models: { plan: 'replay', design: 'replay', render: 'replay' },
+    offline: true,
+    model: 'claude-opus-5',
     verbose: false,
     dryRun: false,
-    llm,
     ...over,
   };
 }
 
-function goodResponses(): Record<string, unknown> {
-  const arch: SiteArchitecture = fixtureArchitecture();
-  return {
-    'site-arch/architecture': arch,
-    // The blocks and the FAQ line up with homeMarkup()'s copy ids: p001 opener, p002 block, p003 answer.
-    'site-copy/home': fixtureContent(
-      'overview',
-      'Example Yard Co has kept gardens tidy in Riverton since 2009.',
-      'Example Yard Co has kept gardens tidy in Riverton since 2009.',
-      [{ text: 'Our crews work across Riverton and Draper.', quote: 'Our crews work across Riverton and Draper.' }],
-      [{ q: 'When can I reach you?', a: 'We answer the phone seven days a week.', quote: 'We answer the phone seven days a week.' }],
-    ) satisfies PageContent,
-    'site-copy/services_mowing': fixtureContent('mowing', 'Weekly mowing starts at $45 per visit.', 'Weekly mowing starts at $45 per visit.') satisfies PageContent,
-    'site-design/design': DESIGN,
-    'site-render/home': homeMarkup() satisfies RenderedPage,
-    'site-render/services_mowing': serviceMarkup() satisfies RenderedPage,
-  };
-}
+const errorsOf = (res: Awaited<ReturnType<typeof runBuild>>) =>
+  (res.validation?.findings ?? []).filter((f) => f.level === 'error').map((f) => `[${f.gate}] ${f.message}`);
 
-test('a full build runs end to end from recorded stage outputs, with no API calls', async () => {
+test('a full build passes every gate and writes the artifacts', async () => {
   const dir = seedRun();
-  const llm = new ReplayClient(goodResponses());
-  const res = await runBuild(options(dir, llm));
+  const llm = new ReplayClient(fixturePack());
+  const res = await runBuild({ ...options(dir), llm });
 
-  assert.equal(res.validation?.ok, true, `unexpected errors: ${JSON.stringify(res.validation?.findings.filter((f) => f.level === 'error'), null, 2)}`);
-  assert.equal(res.budgetStop, null);
-  assert.deepEqual(res.pagesWritten.sort(), ['index.html', 'services/mowing/index.html']);
-  assert.deepEqual(llm.calls, ['site-arch/architecture', 'site-copy/home', 'site-copy/services_mowing', 'site-design/design', 'site-render/home', 'site-render/services_mowing']);
+  assert.deepEqual(errorsOf(res), [], 'a correct build produces no errors');
+  assert.equal(res.validation?.ok, true);
+  assert.deepEqual(res.pagesWritten, ['/']);
+  assert.deepEqual(llm.calls, ['site-content/content'], 'exactly one billed call');
 
-  for (const f of ['index.html', 'services/mowing/index.html', 'assets/site.css', 'plan.json', 'design.json', 'copy_map.json', 'assets.json', 'design.md', 'validate.json', 'self-test.json', 'seo-report.md']) {
+  for (const f of ['index.html', 'content.json', 'copy_map.json', 'template.json', 'validate.json', 'self-test.json', 'seo-report.md', 'assets.json']) {
     assert.ok(fs.existsSync(path.join(res.siteDir, f)), `${f} was not written`);
   }
-  assert.ok(fs.readFileSync(path.join(res.siteDir, 'seo-report.md'), 'utf8').includes('Validation: passed'));
+  // A mockup ships no sidecars: they are meaningless without a host.
+  for (const f of ['sitemap.xml', 'robots.txt', 'llms.txt', 'index.md']) {
+    assert.ok(!fs.existsSync(path.join(res.siteDir, f)), `${f} should not exist in the mockup profile`);
+  }
 });
 
-test('the build it produces has no dead local links', async () => {
+test('the built page is about the client and carries nothing of the template', async () => {
   const dir = seedRun();
-  const res = await runBuild(options(dir, new ReplayClient(goodResponses())));
-  const bad: string[] = [];
-  const walk = (d: string) => {
-    for (const e of fs.readdirSync(d, { withFileTypes: true })) {
-      const p = path.join(d, e.name);
-      if (e.isDirectory()) walk(p);
-      else if (e.name.endsWith('.html')) {
-        for (const m of fs.readFileSync(p, 'utf8').matchAll(/(?:href|src)="([^"#][^"]*)"/g)) {
-          const t = m[1].split('#')[0];
-          if (!t || /^[a-z][a-z0-9+.-]*:/i.test(t) || t.startsWith('//')) continue;
-          if (!fs.existsSync(path.resolve(path.dirname(p), t))) bad.push(`${path.relative(res.siteDir, p)} → ${t}`);
-        }
-      }
-    }
-  };
-  walk(res.siteDir);
-  assert.deepEqual(bad, []);
+  const res = await runBuild({ ...options(dir), llm: new ReplayClient(fixturePack()) });
+  const html = fs.readFileSync(path.join(res.siteDir, 'index.html'), 'utf8');
+  const $ = loadHtml(html);
+
+  for (const token of ['Mock Yard Co', 'mockyard.example', '(555) 000-0000', 'Mocktown']) {
+    assert.ok(!html.includes(token), `the template's mock business survived: ${token}`);
+  }
+  assert.match($('h1').text(), /Example Yard Co/);
+  assert.equal($('a[href^="tel:"]').first().attr('href'), 'tel:8015550100');
+  // The persona's own design is untouched.
+  assert.equal($('meta[name="theme-color"]').attr('content'), '#123456');
+  assert.equal($('link[rel="stylesheet"]').length, 0, 'still zero network requests');
+  assert.equal($('script').length, 1, 'the only script is the JSON-LD');
+  // Scaffolding never ships.
+  assert.doesNotMatch(html, /data-slot|data-repeat|data-omit-if-empty|data-mock-tokens/);
+  // The audit's tags do.
+  assert.ok($('[data-checklist]').length > 5);
+  assert.ok($('[data-answer-first]').length >= 4);
 });
 
-test('the FAQ and the internal links are emitted once, by the build, not by the markup stage', async () => {
+test('FAQPage mirrors the rendered questions, and the structured data names the client', async () => {
   const dir = seedRun();
-  const res = await runBuild(options(dir, new ReplayClient(goodResponses())));
-  const home = fs.readFileSync(path.join(res.siteDir, 'index.html'), 'utf8');
-  assert.equal(home.split('class="faq-q"').length - 1, 1, 'exactly one rendered question');
-  assert.equal(home.split('class="related"').length - 1, 1);
-  assert.equal(home.split('data-copy-id="p003"').length - 1, 1, 'no planned block is rendered twice');
+  const res = await runBuild({ ...options(dir), llm: new ReplayClient(fixturePack()) });
+  const $ = loadHtml(fs.readFileSync(path.join(res.siteDir, 'index.html'), 'utf8'));
+  const graph = JSON.parse($('script[type="application/ld+json"]').text())['@graph'] as Record<string, unknown>[];
+  const faq = graph.find((n) => n['@type'] === 'FAQPage') as { mainEntity: { name: string; acceptedAnswer: { text: string } }[] };
+  assert.deepEqual(
+    faq.mainEntity.map((q) => q.name),
+    $('[data-faq-q]').map((_, el) => $(el).text().trim()).toArray(),
+  );
+  const org = graph.find((n) => n['@type'] === 'LocalBusiness') as Record<string, unknown>;
+  assert.equal(org.name, 'Example Yard Co');
+  assert.equal(org.telephone, '801-555-0100');
 });
 
-test('the repair loop stops as soon as a pass fails to reduce the error count', async () => {
+test('production writes the sidecars, and they describe the one page', async () => {
   const dir = seedRun();
-  const broken = goodResponses();
-  // Markup that always fails the same way: an untracked paragraph the repair pass never removes.
-  const stubborn: RenderedPage = { ...homeMarkup(), main_html: `${homeMarkup().main_html}\n<p>Untracked, every time.</p>` };
-  broken['site-render/home'] = stubborn;
-  const llm = new ReplayClient(broken);
-  const res = await runBuild(options(dir, llm, { repairPasses: 2 }));
-
-  assert.equal(res.validation?.ok, false);
-  const renders = llm.calls.filter((c) => c.startsWith('site-render')).length;
-  assert.ok(renders <= 3, `expected the loop to give up early, but it made ${renders} render calls`);
-  assert.ok(res.notes.some((n) => n.includes('repair stopped after pass')), `notes were: ${JSON.stringify(res.notes)}`);
+  const res = await runBuild({ ...options(dir), profile: 'production', baseUrl: 'https://client.example', llm: new ReplayClient(fixturePack()) });
+  assert.deepEqual(errorsOf(res), []);
+  const read = (f: string) => fs.readFileSync(path.join(res.siteDir, f), 'utf8');
+  assert.match(read('sitemap.xml'), /<loc>https:\/\/client\.example\/<\/loc>/);
+  assert.equal(read('sitemap.xml').match(/<loc>/g)?.length, 1);
+  assert.match(read('robots.txt'), /User-agent: ClaudeBot/);
+  assert.match(read('robots.txt'), /Sitemap: https:\/\/client\.example\/sitemap\.xml/);
+  assert.match(read('llms.txt'), /# Example Yard Co/);
+  assert.match(read('llms.txt'), /- Phone: 801-555-0100/);
+  assert.match(read('index.md'), /^# Example Yard Co/);
+  assert.ok(fs.existsSync(path.join(res.siteDir, '_headers')));
+  const $ = loadHtml(read('index.html'));
+  assert.equal($('link[rel="canonical"]').attr('href'), 'https://client.example/');
 });
 
-test('--max-usd refuses to start a build it cannot afford, before anything is billed', async () => {
+test('production without a base URL is refused rather than guessed at', async () => {
   const dir = seedRun();
-  const llm = new ReplayClient(goodResponses());
-  // A budget that only watches the running total is useless: the first and largest batch has already
-  // been paid for by the time it notices. This must fail with zero calls made.
-  await assert.rejects(() => runBuild(options(dir, llm, { maxUsd: 0.0001 })), /max-usd .* would be exceeded by the plan stage/);
-  assert.deepEqual(llm.calls, [], 'no call may be made once the budget is known to be insufficient');
+  await assert.rejects(
+    () => runBuild({ ...options(dir), profile: 'production', llm: new ReplayClient(fixturePack()) }),
+    /--profile production requires --base-url/,
+  );
 });
 
-test('--max-usd stops a build that overruns partway through', async () => {
+test('a section the source gives nothing for is removed, with its nav link', async () => {
   const dir = seedRun();
-  const llm = new ReplayClient(goodResponses());
-  Object.defineProperty(llm, 'usd', { get: () => 99 });
-  await assert.rejects(() => runBuild(options(dir, llm, { maxUsd: 100 })), /max-usd/);
+  const pack = fixturePack({ omit_sections: ['faq'] });
+  const res = await runBuild({ ...options(dir), llm: new ReplayClient(pack) });
+  const $ = loadHtml(fs.readFileSync(path.join(res.siteDir, 'index.html'), 'utf8'));
+  assert.equal($('#faq').length, 0);
+  assert.equal($('a[href="#faq"]').length, 0, 'the nav link went with it');
+  // And the gate that would otherwise have been satisfied by it is reported, not silently dropped.
+  assert.ok(res.validation);
+  assert.ok(errorsOf(res).some((m) => m.includes('faq-present')), 'a dropped section that owed a gap is an error');
 });
 
-test('a budget that comfortably covers the estimate lets the build through', async () => {
+test('an audit gap the template cannot carry is a warning, and lands in the report', async () => {
+  const dir = seedRun([item('tel-link'), item('faq-present'), item('live-chat')]);
+  const res = await runBuild({ ...options(dir), llm: new ReplayClient(fixturePack()) });
+  assert.deepEqual(errorsOf(res), [], 'live-chat must not fail an otherwise perfect build');
+  assert.deepEqual(res.validation?.coverage.uncoverable, ['live-chat']);
+  const report = fs.readFileSync(path.join(res.siteDir, 'seo-report.md'), 'utf8');
+  assert.match(report, /## What this page does not close/);
+  assert.match(report, /`live-chat`/);
+  assert.match(report, /Audit gaps closed: 2 of 3/);
+});
+
+test('--stage fill re-fills from content.json without a second call', async () => {
   const dir = seedRun();
-  const llm = new ReplayClient(goodResponses());
-  const res = await runBuild(options(dir, llm, { maxUsd: 1000 }));
-  assert.equal(res.validation?.ok, true);
-  assert.ok(llm.calls.length > 0);
+  const template = seedTemplate();
+  const first = await runBuild({ ...options(dir), templatePath: template, llm: new ReplayClient(fixturePack()) });
+  assert.ok(fs.existsSync(path.join(first.siteDir, 'content.json')));
+
+  // No pack recorded: a client that would throw if asked proves nothing was.
+  const silent = new ReplayClient(null);
+  const again = await runBuild({ ...options(dir), templatePath: template, startStage: 'fill', llm: silent });
+  assert.deepEqual(silent.calls, [], 'the fill stage is free');
+  assert.deepEqual(errorsOf(again), []);
+  assert.equal(again.usd, 0);
 });
 
-test('the dry-run estimate brackets what the observed build actually cost', () => {
-  // The 6-page build this was calibrated against cost $4.25 with render on Opus and one repair pass.
-  const est = estimateCost({ corpusChars: 48_315, maxPages: 6, repairPasses: 2, models: { plan: 'claude-opus-5', design: 'claude-opus-5', render: 'claude-opus-5' } });
-  assert.ok(est.expectedUsd > 3 && est.expectedUsd < 5.5, `expected should sit near the $4.25 actual, got $${est.expectedUsd.toFixed(2)}`);
-  assert.ok(est.usd > est.expectedUsd, 'the worst case must exceed the expected case');
-  assert.equal(est.lines.length, 4);
-  assert.ok(est.lines.some((l) => l.includes('corpus cached after the first')));
+test('--stage fill against a missing artifact says which stage to run first', async () => {
+  const dir = seedRun();
+  await assert.rejects(
+    () => runBuild({ ...options(dir), startStage: 'fill', llm: new ReplayClient(null) }),
+    /--stage fill needs content\.json, which does not exist/,
+  );
 });
 
-test('the budget is gated on the expected cost, not the worst case', () => {
-  // Gating on the worst case would refuse a routine build that was never going to be expensive.
-  const est = estimateCost({ corpusChars: 48_315, maxPages: 6, repairPasses: 2, models: { plan: 'claude-opus-5', design: 'claude-opus-5', render: 'claude-opus-5' } });
-  assert.ok(est.usd > 6 && est.expectedUsd < 6, 'this is exactly the case that must still be allowed under the $6 default');
+test('the budget is checked before the call, not after the money is gone', async () => {
+  const dir = seedRun();
+  await assert.rejects(
+    () => runBuild({ ...options(dir), maxUsd: 0.000001, llm: new ReplayClient(fixturePack()) }),
+    (e: unknown) => e instanceof BudgetExceeded && /would be exceeded by the content stage/.test(e.message),
+  );
+  // Nothing was written, because the refusal happens before any stage runs.
+  assert.ok(!fs.existsSync(path.join(dir, 'site', 'index.html')));
+
+  // Spend already on the clock counts toward the ceiling.
+  const spent = new SpendingClient(fixturePack(), 1.4);
+  await assert.rejects(() => runBuild({ ...options(dir), maxUsd: 1.5, llm: spent }), BudgetExceeded);
 });
 
-test('the estimate scales with corpus size and page count', () => {
-  const models = { plan: 'claude-opus-5', design: 'claude-opus-5', render: 'claude-opus-5' };
-  const small = estimateCost({ corpusChars: 10_000, maxPages: 2, repairPasses: 0, models });
-  const big = estimateCost({ corpusChars: 100_000, maxPages: 12, repairPasses: 2, models });
-  assert.ok(big.usd > small.usd * 4);
-  assert.ok(big.expectedUsd > small.expectedUsd * 4);
+test('a dry run prices the build and writes nothing', async () => {
+  const dir = seedRun();
+  const res = await runBuild({ ...options(dir), dryRun: true, llm: new ReplayClient(fixturePack()) });
+  assert.equal(res.usd, 0);
+  assert.deepEqual(res.pagesWritten, []);
+  assert.equal(res.validation, null);
+  assert.ok(!fs.existsSync(path.join(dir, 'site', 'index.html')));
+});
+
+test('the estimate brackets what a build actually looks like, and scales with the template', async () => {
+  const small = estimateCost({ corpusChars: 48_000, slotCount: 20, model: 'claude-opus-5' });
+  const large = estimateCost({ corpusChars: 48_000, slotCount: 62, model: 'claude-opus-5' });
+  assert.ok(large.expectedUsd > small.expectedUsd, 'more slots costs more');
+  assert.ok(large.usd >= large.expectedUsd, 'the worst case is never below the expected case');
+  // The real Olympus corpus is 48,315 chars and landscaping declares 62 prompted slots. The whole
+  // point of this rewrite is that the number is under a dollar.
+  assert.ok(large.expectedUsd < 1, `expected under $1, got $${large.expectedUsd.toFixed(2)}`);
+  assert.ok(large.expectedUsd > 0.1, `an estimate this low is probably a bug: $${large.expectedUsd.toFixed(2)}`);
+  assert.ok(large.lines.some((l) => /assets, fill, head, sidecars and every gate are code/.test(l)));
+});
+
+test('a pack naming a slot the template does not declare is dropped, not written', async () => {
+  const dir = seedRun();
+  const pack = fixturePack();
+  pack.slots.push({ slot: 'ghost.slot', text: 'Invented copy that must not appear.', source_kind: 'source', source_page_url: 'u', source_quote: 'q' });
+  const res = await runBuild({ ...options(dir), llm: new ReplayClient(pack) });
+  const html = fs.readFileSync(path.join(res.siteDir, 'index.html'), 'utf8');
+  assert.ok(!html.includes('Invented copy'));
+  const tpl = JSON.parse(fs.readFileSync(path.join(res.siteDir, 'template.json'), 'utf8')) as { slots_unknown: string[] };
+  assert.deepEqual(tpl.slots_unknown, ['ghost.slot']);
+});
+
+test('an unverifiable quote loses its credit and brings the notice with it', async () => {
+  const dir = seedRun();
+  const pack = fixturePack();
+  const hero = pack.slots.find((s) => s.slot === 'hero.lede')!;
+  hero.source_quote = 'A sentence that appears nowhere in the scraped source at all.';
+  const res = await runBuild({ ...options(dir), llm: new ReplayClient(pack) });
+  const $ = loadHtml(fs.readFileSync(path.join(res.siteDir, 'index.html'), 'utf8'));
+  assert.equal($('[data-copy="placeholder"]').length, 1);
+  assert.equal($('[data-placeholder-notice]').length, 1);
+  assert.ok(res.notes.some((n) => /quote not found in any scraped page/.test(n)));
+  const copyMap = JSON.parse(fs.readFileSync(path.join(res.siteDir, 'copy_map.json'), 'utf8')) as { placeholder_ratio: number };
+  assert.ok(copyMap.placeholder_ratio > 0);
 });

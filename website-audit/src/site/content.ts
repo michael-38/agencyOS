@@ -7,7 +7,11 @@
 // templates grow; repeat cardinality rides in the slot id (`services[2].name`) rather than in a
 // nested shape.
 import { z } from 'zod';
+import { SITE_LIMITS } from '../config.js';
+import type { LlmParser } from '../llm/client.js';
+import { siteContentSystem, siteContentUser, sourceCorpusBlock, type ContentGap, type ContentGuidance, type ContentPersona } from '../llm/prompts/site-content.js';
 import { NamedEntitySchema, provenanceOf, type Entities, type NamedEntity, type Provenance } from './types.js';
+import type { TemplateManifest } from './template.js';
 
 export const SlotValueSchema = z.object({
   /** A slot id from the manifest. Repeat fields carry their index: `services[2].name`. */
@@ -104,4 +108,56 @@ export function clampToWords(s: string, max: number | null): string {
   const cut = s.slice(0, max);
   const at = cut.lastIndexOf(' ');
   return (at > max * 0.6 ? cut.slice(0, at) : cut).replace(/[\s,;:.]+$/, '');
+}
+
+
+// ---------------------------------------------------------------------------------------------
+// The stage
+// ---------------------------------------------------------------------------------------------
+
+export interface ContentStageOptions {
+  llm: LlmParser;
+  model: string;
+  persona: ContentPersona;
+  guidance: ContentGuidance;
+  gaps: ContentGap[];
+  manifest: TemplateManifest;
+  /** The scraped pages, already cleaned and capped by buildCorpus. */
+  corpus: string;
+  facts: string;
+  profile: 'mockup' | 'production';
+}
+
+export interface ContentStageResult {
+  pack: ContentPack;
+  usd: number;
+  cacheHit: boolean;
+}
+
+/**
+ * The one billed call.
+ *
+ * The corpus leads the request as its own block so it is the cacheable prefix: a retry, a
+ * `--from-cache` replay, or a second build in the same run directory reads it at a tenth of the
+ * price instead of paying for it again.
+ */
+export async function runContentStage(o: ContentStageOptions): Promise<ContentStageResult> {
+  const res = await o.llm.parse({
+    step: 'site-content',
+    label: 'content',
+    model: o.model,
+    system: siteContentSystem(o.persona),
+    content: [
+      { type: 'text', text: sourceCorpusBlock(o.corpus), cacheable: true },
+      {
+        type: 'text',
+        text: siteContentUser({ facts: o.facts, guidance: o.guidance, gaps: o.gaps, manifest: o.manifest, profile: o.profile }),
+      },
+    ],
+    schema: ContentPackSchema,
+    maxTokens: SITE_LIMITS.packMaxTokens,
+    thinking: { effort: 'medium' },
+    fallbacks: true,
+  });
+  return { pack: res.parsed, usd: res.usd, cacheHit: res.cacheHit };
 }

@@ -362,3 +362,66 @@ export function pageLlmsTxt($: CheerioAPI, ctx: PageSeoContext, faq: FaqEntryDom
   }
   return out.join('\n');
 }
+
+// ---------------------------------------------------------------------------------------------
+// Site-level files
+// ---------------------------------------------------------------------------------------------
+
+/**
+ * The AI crawlers robots.txt names explicitly. A wildcard Allow is not enough for several of them,
+ * and an assistant cannot cite a page it is not permitted to fetch. It is still the client's call,
+ * so the handoff has to mention it.
+ */
+export const AI_CRAWLERS = [
+  'GPTBot',
+  'OAI-SearchBot',
+  'ChatGPT-User',
+  'ClaudeBot',
+  'Claude-User',
+  'Claude-SearchBot',
+  'PerplexityBot',
+  'Perplexity-User',
+  'Google-Extended',
+  'Applebot-Extended',
+  'CCBot',
+  'Bytespider',
+  'meta-externalagent',
+];
+
+export function buildSitemap(baseUrl: string, buildDate: string): string {
+  const loc = `${baseUrl.replace(/\/+$/, '')}/`;
+  return (
+    `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
+    `  <url>\n    <loc>${loc}</loc>\n    <lastmod>${buildDate}</lastmod>\n    <priority>1.0</priority>\n  </url>\n</urlset>\n`
+  );
+}
+
+export function buildRobots(baseUrl: string): string {
+  const base = baseUrl.replace(/\/+$/, '');
+  const blocks = ['User-agent: *\nAllow: /', ...AI_CRAWLERS.map((ua) => `User-agent: ${ua}\nAllow: /`)];
+  return `${blocks.join('\n\n')}\n\nSitemap: ${base}/sitemap.xml\n`;
+}
+
+export function buildHeadersFile(): string {
+  return `/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  Permissions-Policy: geolocation=(), microphone=(), camera=()
+
+/*.html
+  Cache-Control: public, max-age=300
+
+/assets/img/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/sitemap.xml
+  Cache-Control: public, max-age=3600
+
+/robots.txt
+  Cache-Control: public, max-age=3600
+
+/llms.txt
+  Cache-Control: public, max-age=3600
+`;
+}

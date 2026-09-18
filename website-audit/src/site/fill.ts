@@ -92,7 +92,15 @@ function factValues(facts: Facts | null): Map<string, string> {
     out.set(`${FACT_PREFIX}email_href`, `mailto:${email}`);
   }
   if (facts.address) {
-    const text = typeof facts.address === 'string' ? facts.address : Object.values(facts.address).filter((v) => typeof v === 'string').join(', ');
+    // A PostalAddress object carries an `@type`, which is schema metadata and not part of the
+    // address a visitor reads.
+    const text =
+      typeof facts.address === 'string'
+        ? facts.address
+        : Object.entries(facts.address)
+            .filter(([k, v]) => !k.startsWith('@') && typeof v === 'string')
+            .map(([, v]) => v as string)
+            .join(', ');
     if (text.trim()) {
       out.set(`${FACT_PREFIX}address`, text.trim());
       out.set(`${FACT_PREFIX}address_line`, text.trim());
@@ -281,11 +289,10 @@ export function fill(o: FillOptions): FillResult {
   // ---- images ------------------------------------------------------------------------------------
   placeImages($, o.assets ?? []);
 
-  // ---- unverified-copy notice --------------------------------------------------------------------
+  // The notice is not injected here. Whether a value is really sourced is not known until its quote
+  // has been checked against the scraped pages, which happens after this function returns — so
+  // `markUnverified` below owns both the remaining attributes and the notice.
   const placeholderCount = $('[data-copy="placeholder"]').length;
-  if (placeholderCount > 0) {
-    $('body').prepend(`<div class="notice" role="status" data-placeholder-notice>${NOTICE_TEXT}</div>`);
-  }
 
   // ---- brand override ----------------------------------------------------------------------------
   if (o.brandCss) {
@@ -342,3 +349,23 @@ function placeImages($: CheerioAPI, assets: AssetRecord[]): void {
 const escapeAttr = (s: string) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
 /** Section ids come from a model, so they get escaped before they reach a selector. */
 const cssEscape = (s: string) => s.replace(/[^a-zA-Z0-9_-]/g, '\\$&');
+
+/**
+ * Mark the copy whose quote did not survive verification, and add the notice if anything on the page
+ * is unverified.
+ *
+ * Split from `fill` because of ordering: the fill knows which values the model *declared* as
+ * placeholders, but not which of its sourced values carry a quote that cannot be found in the
+ * scraped pages. That is decided by `indexFilledCopy`, after the markup exists. Marking placeholders
+ * at fill time meant a fabricated quote produced a page with no notice on it.
+ */
+export function markUnverified($: CheerioAPI, placeholderIds: Set<string>): number {
+  for (const id of placeholderIds) {
+    $(`[data-copy-id="${id.replace(/"/g, '')}"]`).attr('data-copy', 'placeholder');
+  }
+  const count = $('[data-copy="placeholder"]').length;
+  if (count > 0 && !$('[data-placeholder-notice], .notice').length) {
+    $('body').prepend(`<div class="notice" role="status" data-placeholder-notice>${NOTICE_TEXT}</div>`);
+  }
+  return count;
+}

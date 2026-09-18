@@ -1,9 +1,15 @@
+// seo-report.md is what a human reads before the page goes anywhere, so the tests are about whether
+// it states the uncomfortable things: what did not validate, which images cannot be published, and
+// which of the audit's findings a one-page rebuild leaves open.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { renderSeoReport } from '../src/site/report.js';
-import { buildCopyMap, indexCopy } from '../src/site/copy.js';
-import { fixtureCorpus, fixturePlan } from './site-helpers.js';
-import type { AssetManifest, AssetRecord, SitePlan } from '../src/site/types.js';
+import path from 'node:path';
+import { renderSeoReport, type ReportChecklistItem } from '../src/site/report.js';
+import { buildFilledCopyMap, indexFilledCopy } from '../src/site/copy.js';
+import { fill } from '../src/site/fill.js';
+import { entitiesOf } from '../src/site/content.js';
+import { fixtureCorpus, fixturePack, fixtureReport, fixtureTemplate } from './site-helpers.js';
+import type { AssetManifest, AssetRecord } from '../src/site/types.js';
 import type { SiteValidation } from '../src/site/validate.js';
 
 function asset(over: Partial<AssetRecord> = {}): AssetRecord {
@@ -22,35 +28,61 @@ function asset(over: Partial<AssetRecord> = {}): AssetRecord {
   };
 }
 
-function report(over: { assets?: AssetManifest; validation?: SiteValidation | null; notes?: string[]; preview?: boolean; plan?: SitePlan; shots?: string[] } = {}) {
-  const plan = over.plan ?? fixturePlan();
-  const copyMap = buildCopyMap(indexCopy(plan, fixtureCorpus()));
+const validation = (over: Partial<SiteValidation> = {}): SiteValidation =>
+  ({
+    ok: true,
+    findings: [],
+    placeholder: { placeholder: 0, total: 4 },
+    selfTest: {},
+    coverage: { tagged: ['tel-link'], missing: [], uncoverable: [] },
+    ...over,
+  }) as SiteValidation;
+
+const CHECKLIST: ReportChecklistItem[] = [
+  { id: 'tel-link', criterion: 'A tap-to-call link exists', verdict: 'fail', weight: 'high', scope: 'home' },
+];
+
+function report(
+  over: {
+    assets?: AssetManifest;
+    validation?: SiteValidation | null;
+    notes?: string[];
+    checklist?: ReportChecklistItem[];
+    pack?: ReturnType<typeof fixturePack>;
+    shots?: string[];
+  } = {},
+) {
+  const tpl = fixtureTemplate();
+  const pack = over.pack ?? fixturePack();
+  const filled = fill({ manifest: tpl.manifest, templateHtml: tpl.html, pack, facts: fixtureReport().facts, assets: [] });
+  const copyMap = buildFilledCopyMap(indexFilledCopy(filled.copy, entitiesOf(pack), fixtureCorpus()));
   return renderSeoReport({
-    file: '/tmp/x.md',
-    plan,
+    file: path.join('/tmp', 'x.md'),
     profile: 'mockup',
     baseUrl: 'https://example.test',
     slug: 'landscaping',
+    manifest: tpl.manifest,
+    pack,
     assets: over.assets ?? { assets: [asset()], skipped: [], harvested: 3, downloaded: 1 },
     copyMap,
-    validation: over.validation === undefined ? ({ ok: true, findings: [], placeholder: { placeholder: 0, total: 4 }, selfTest: {}, coverage: { tagged: [], missing: [], deferred: [], uncoverable: [] } } as SiteValidation) : over.validation,
+    validation: over.validation === undefined ? validation() : over.validation,
+    checklist: over.checklist ?? CHECKLIST,
     notes: over.notes ?? [],
-    usd: 2.5,
-    preview: over.preview ?? false,
-    shots: over.shots,
+    usd: 0.47,
   });
 }
 
 test('the report leads with the numbers an operator has to check', () => {
   const md = report();
-  assert.ok(md.includes('# Example Yard Co — generated site'));
-  assert.ok(md.includes('- Pages: 2'));
-  assert.ok(md.includes('- Anthropic spend: $2.5000'));
-  assert.ok(md.includes('- Validation: passed'));
-  assert.ok(/Placeholder copy: \d+ of \d+ blocks/.test(md));
+  assert.match(md, /^# Example Yard Co — rebuilt home page/);
+  assert.match(md, /- Template: `test\/fixture-template\.html` \(sha256 `[0-9a-f]{16}`\)/);
+  assert.match(md, /- Audit gaps closed: 1 of 1 \(100%\)/);
+  assert.match(md, /- Anthropic spend: \$0\.4700/);
+  assert.match(md, /- Validation: passed/);
+  assert.match(md, /- Unverified copy: \d+ of \d+ blocks/);
 });
 
-test('images that need a licence check are called out, including stock-looking ones on the client\'s own host', () => {
+test("images that need a licence check are called out, including stock-looking ones on the client's own host", () => {
   const md = report({
     assets: {
       assets: [
@@ -63,35 +95,72 @@ test('images that need a licence check are called out, including stock-looking o
       downloaded: 3,
     },
   });
-  assert.ok(md.includes('## Images to check before publishing'));
-  assert.ok(md.includes('`assets/img/a.webp` — filename looks like a stock-library download'));
-  assert.ok(md.includes('`assets/img/b.webp` — hosted off the audited domain'));
+  assert.match(md, /## Images to check before publishing/);
+  assert.match(md, /`assets\/img\/a\.webp` — filename looks like a stock-library download/);
+  assert.match(md, /`assets\/img\/b\.webp` — hosted off the audited domain/);
   assert.ok(!md.includes('`assets/img/c.webp`'), 'a clean image is not listed');
 });
 
-test('unresolved errors are reproduced verbatim rather than summarised away', () => {
+test('unresolved errors are reproduced verbatim, and each says where to fix it', () => {
   const md = report({
-    validation: {
+    validation: validation({
       ok: false,
       findings: [
         { page: '/', level: 'error', gate: 'fabrication', message: 'p003 claims "accredited", which the source site never says' },
-        { page: '/faq/', level: 'warning', gate: 'aeo', message: 'no speakable specification' },
+        { page: '/', level: 'warning', gate: 'aeo', message: 'section#hero has no [data-answer-first] opener' },
       ],
-      placeholder: { placeholder: 1, total: 4 },
-      selfTest: {},
-      coverage: { tagged: [], missing: ['review-markup'], deferred: [], uncoverable: [] },
-    } as SiteValidation,
+      coverage: { tagged: [], missing: ['review-markup'], uncoverable: [] },
+    }),
+    checklist: [...CHECKLIST, { id: 'review-markup', criterion: 'Review markup is present', verdict: 'fail', weight: 'med', scope: 'home' }],
     notes: ['build reference: med-spa.md is an unfilled authoring skeleton'],
   });
-  assert.ok(md.includes('## Unresolved validation errors'));
-  assert.ok(md.includes('`/` [fabrication] p003 claims "accredited"'));
-  assert.ok(md.includes('## Warnings'));
-  assert.ok(md.includes('## Audit gaps with no home on the page'));
-  assert.ok(md.includes('- `review-markup`'));
-  assert.ok(md.includes('unfilled authoring skeleton'));
-  assert.ok(md.includes('- Validation: 1 error(s)'));
+  assert.match(md, /## Unresolved validation errors/);
+  assert.match(md, /\[fabrication\] p003 claims "accredited"/);
+  assert.match(md, /re-run `--stage fill`, which is free/);
+  assert.match(md, /## Warnings/);
+  assert.match(md, /## Audit gaps the template should have closed, and did not/);
+  assert.match(md, /- `review-markup` — Review markup is present/);
+  assert.match(md, /unfilled authoring skeleton/);
+  assert.match(md, /- Validation: 1 error\(s\)/);
+});
+
+test('the honest accounting of what a one-page rebuild leaves open is its own section', () => {
+  const md = report({
+    validation: validation({ coverage: { tagged: ['tel-link'], missing: [], uncoverable: ['live-chat', 'LS-service-area-pages'] } }),
+    checklist: [
+      ...CHECKLIST,
+      { id: 'live-chat', criterion: 'A live chat widget is available', verdict: 'fail', weight: 'low', scope: 'home' },
+      { id: 'LS-service-area-pages', criterion: 'A page exists per town served', verdict: 'fail', weight: 'med', scope: 'subpath' },
+    ],
+  });
+  assert.match(md, /## What this page does not close/);
+  assert.match(md, /2 of the audit's 3 open items are outside what a single templated page can carry/);
+  assert.match(md, /do not let the rebuild imply a clean sweep/);
+  // A subpath criterion needs a page; everything else needs a widget or client material.
+  assert.match(md, /`LS-service-area-pages`.*needs a page of its own.*a dedicated page/);
+  assert.match(md, /`live-chat`.*third-party widget or content only the business can supply/);
+  assert.match(md, /- Audit gaps closed: 1 of 3 \(33%\)/);
+});
+
+test('a clean sweep says so plainly rather than printing an empty table', () => {
+  const md = report();
+  assert.match(md, /Every one of the audit's 1 open items is addressed on this page\./);
+  assert.ok(!md.includes('| criterion | weight |'));
+});
+
+test('sections the source could not fill are listed as things to ask the client for', () => {
+  const md = report({ pack: fixturePack({ omit_sections: ['faq'] }) });
+  assert.match(md, /## Sections removed for lack of source material/);
+  assert.match(md, /- `faq`/);
+  assert.match(md, /a specific thing to ask the client for/);
+});
+
+test('the report says the design is the template, and how to change its accent', () => {
+  assert.match(report(), /The design is this industry's template, not a bespoke one\./);
+  assert.match(report(), /pass `--brand <hex>` and re-run `--stage fill`/);
+  assert.match(report({ notes: ['brand: accent #0057b8 from logo, contrast 5.10:1 (light, needs 4.5)'] }), /taken from the client's own logo/);
 });
 
 test('the mockup profile says why the production-only files are absent', () => {
-  assert.ok(report().includes('Re-run with `--profile production --base-url …`'));
+  assert.match(report(), /Re-run with `--profile production --base-url …`/);
 });

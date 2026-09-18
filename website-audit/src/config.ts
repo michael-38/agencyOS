@@ -39,6 +39,17 @@ export const SITE_LIMITS = {
   corpusMaxCharsPerPage: 40_000,
   /** Total pages a build may generate, including the home page. */
   maxPages: 12,
+  /**
+   * Output ceiling for the one content call. A fully annotated template asks for around sixty slots,
+   * each with a sentence and a verbatim quote, plus the entity lists — observed near 9k output
+   * tokens, so this is roughly 2.5x headroom rather than a target.
+   */
+  packMaxTokens: 24_000,
+  /**
+   * Stop the templated build once spend passes this. One call, so a run that approaches the old $6
+   * ceiling is a bug, not an expensive site.
+   */
+  templateMaxUsd: 1.5,
   /** Images downloaded from the source site. */
   maxAssets: 24,
   architectureMaxTokens: 24_000,

@@ -11,7 +11,7 @@ import path from 'node:path';
 import { loadHtml } from '../src/checks/html.js';
 import { loadIndustries } from '../src/personas/load.js';
 import { readTemplate, type TemplateManifest } from '../src/site/template.js';
-import { FillError, NOTICE_TEXT, fill } from '../src/site/fill.js';
+import { FillError, NOTICE_TEXT, fill, markUnverified } from '../src/site/fill.js';
 import type { ContentPack, SlotValue } from '../src/site/content.js';
 import type { Facts } from '../src/checks/facts.js';
 import { REPO_ROOT } from './helpers.js';
@@ -91,22 +91,48 @@ test('an attribute slot sets the attribute and is not copy, because it carries n
   assert.equal(r.copy.length, 0);
 });
 
-test('placeholder copy is marked and brings the non-dismissible notice with it', () => {
+test('a model-declared placeholder is marked at fill time', () => {
   const t = template(SECTION(`<p data-slot="a.b" data-slot-kind="paragraph" ${I}="x">demo</p>`));
   const r = run(t, pack([placeholder('a.b', 'A claim-free sentence about the work.')]));
   const $ = loadHtml(r.html);
   assert.equal($('[data-copy="placeholder"]').length, 1);
   assert.equal(r.placeholderCount, 1);
+  // The notice is not fill's job: whether a *sourced* value is really sourced is not known until its
+  // quote has been checked, which happens after the markup exists. See markUnverified.
+  assert.equal($('[data-placeholder-notice], .notice').length, 0);
+});
+
+test('markUnverified adds the notice once verification has actually happened', () => {
+  const t = template(SECTION(`<p data-slot="a.b" data-slot-kind="paragraph" ${I}="x">demo</p>`));
+  const r = run(t, pack([placeholder('a.b', 'A claim-free sentence about the work.')]));
+  const $ = loadHtml(r.html);
+  const count = markUnverified($, new Set([r.copy[0].copyId]));
+  assert.equal(count, 1);
   const notice = $('body').children().first();
   assert.ok(notice.is('[data-placeholder-notice]'), 'the notice is the first child of <body>');
   assert.equal(notice.text(), NOTICE_TEXT);
-  assert.equal(notice.find('button').length, 0);
+  assert.equal(notice.find('button').length, 0, 'and it cannot be dismissed');
+  // Idempotent: a second pass must not stack a second notice.
+  markUnverified($, new Set([r.copy[0].copyId]));
+  assert.equal($('[data-placeholder-notice]').length, 1);
+});
+
+test('a sourced value whose quote cannot be found is marked after the fact, not before', () => {
+  const t = template(SECTION(`<p data-slot="a.b" data-slot-kind="paragraph" ${I}="x">demo</p>`));
+  const r = run(t, pack([sourced('a.b', 'Every word of this is sourced.')]));
+  const $ = loadHtml(r.html);
+  assert.equal($('[data-copy="placeholder"]').length, 0, 'the fill trusts the declaration');
+  markUnverified($, new Set([r.copy[0].copyId]));
+  assert.equal($('[data-copy="placeholder"]').length, 1, 'verification overrides it');
+  assert.equal($('[data-placeholder-notice]').length, 1);
 });
 
 test('no placeholder means no notice', () => {
   const t = template(SECTION(`<p data-slot="a.b" data-slot-kind="paragraph" ${I}="x">demo</p>`));
   const r = run(t, pack([sourced('a.b', 'Every word of this is sourced.')]));
-  assert.equal(loadHtml(r.html)('[data-placeholder-notice], .notice').length, 0);
+  const $ = loadHtml(r.html);
+  assert.equal(markUnverified($, new Set()), 0);
+  assert.equal($('[data-placeholder-notice], .notice').length, 0);
 });
 
 test('fact slots come from the audit, not the model, and may appear many times', () => {

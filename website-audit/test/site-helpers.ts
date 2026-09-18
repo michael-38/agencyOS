@@ -1,7 +1,17 @@
-// Fixture builders for the SiteRedesign (site:build) tests: a small plan, a matching report, and a
-// renderer that produces a page the validator should pass, so each test can break exactly one thing.
+// Fixture builders for the templated-build tests: a small source corpus, a matching report, a
+// fixture template, and a fill of that template that passes every gate — so each test can break
+// exactly one thing.
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { loadHtml } from '../src/checks/html.js';
+import { buildFilledCopyMap, indexFilledCopy, type CopyIndex } from '../src/site/copy.js';
+import { fill, markUnverified } from '../src/site/fill.js';
+import { patchHead, type PageSeoContext } from '../src/site/page-seo.js';
+import { entitiesOf, type ContentPack, type SlotValue } from '../src/site/content.js';
+import { readTemplate, type TemplateManifest } from '../src/site/template.js';
 import type { Report, ReportItem } from '../src/report/schema.js';
-import type { CopyBlock, PageContent, PlanPage, Provenance, SiteArchitecture, SitePlan } from '../src/site/types.js';
+import type { BuildProfile, CopyMap, Provenance } from '../src/site/types.js';
 
 export const SOURCE_URL = 'https://example.test/';
 
@@ -9,10 +19,6 @@ export function sourced(quote: string, url = SOURCE_URL): Provenance {
   return { kind: 'source', page_url: url, quote };
 }
 export const placeholder: Provenance = { kind: 'placeholder', page_url: null, quote: null };
-
-export function block(text: string, source: Provenance = placeholder, kind: CopyBlock['kind'] = 'paragraph'): CopyBlock {
-  return { kind, text, source };
-}
 
 /** The scraped page text every sourced quote in the fixture plan must be found inside. */
 export const CORPUS_TEXT = [
@@ -42,132 +48,6 @@ export function fixtureCorpus() {
       sources: { business_name: 'jsonld' },
     },
     total_chars: CORPUS_TEXT.length,
-  };
-}
-
-export function fixturePlan(overrides: Partial<SitePlan> = {}): SitePlan {
-  const home: PlanPage = {
-    path: '/',
-    kind: 'home',
-    title: 'Example Yard Co — garden care in Riverton',
-    meta_description: 'Example Yard Co has kept gardens tidy in Riverton since 2009, with weekly mowing and paver work across Riverton and Draper.',
-    primary_query: 'who does garden care in Riverton',
-    h1: 'Garden care in Riverton',
-    breadcrumb: [],
-    entity_name: null,
-    sections: [
-      {
-        id: 'overview',
-        h2: 'What we do',
-        answer_first_opener: block('Example Yard Co has kept gardens tidy in Riverton since 2009.', sourced('Example Yard Co has kept gardens tidy in Riverton since 2009.')),
-        blocks: [block('Our crews work across Riverton and Draper.', sourced('Our crews work across Riverton and Draper.'))],
-        cta: { label: 'Call us', kind: 'tel', target: '801-555-0100' },
-        image_slot: 'none',
-        checklist_ids: ['tel-link'],
-      },
-    ],
-    faq: [{ q: 'When can I reach you?', a: 'We answer the phone seven days a week.', source: sourced('We answer the phone seven days a week.') }],
-  };
-  const service: PlanPage = {
-    path: '/services/mowing/',
-    kind: 'service',
-    title: 'Weekly mowing in Riverton — Example Yard Co',
-    meta_description: 'Weekly mowing from Example Yard Co, the crew that has kept gardens tidy in Riverton since 2009. Booked by phone.',
-    primary_query: 'weekly mowing Riverton',
-    h1: 'Weekly mowing',
-    breadcrumb: ['Services', 'Mowing'],
-    entity_name: 'Weekly mowing',
-    sections: [
-      {
-        id: 'mowing',
-        h2: 'How mowing works',
-        answer_first_opener: block('Weekly mowing starts at $45 per visit.', sourced('Weekly mowing starts at $45 per visit.')),
-        blocks: [],
-        cta: null,
-        image_slot: 'none',
-        checklist_ids: [],
-      },
-    ],
-    faq: [],
-  };
-  return {
-    business_name: 'Example Yard Co',
-    site_summary: 'Example Yard Co keeps gardens tidy in Riverton and Draper.',
-    pages: [home, service],
-    entities: {
-      services: [{ name: 'Weekly mowing', detail: 'Mowing every week', source: sourced('Weekly mowing starts at $45 per visit.') }],
-      areas: [{ name: 'Riverton', detail: '', source: sourced('Our crews work across Riverton and Draper.') }],
-      credentials: [{ name: 'Licensed and insured', detail: '', source: sourced('We are licensed and insured for every job we take on.') }],
-      rating: { value: '4.9', count: '132', source: sourced('Rated 4.9 by 132 customers on our review page.') },
-      price_statements: [],
-    },
-    internal_links: [{ from_path: '/', to_path: '/services/mowing/', anchor_text: 'Weekly mowing' }],
-    deferred_pages: [],
-    notes: [],
-    ...overrides,
-  };
-}
-
-/** The pass-1 shape: page architecture plus the facts the site may state. */
-export function fixtureArchitecture(over: Partial<SiteArchitecture> = {}): SiteArchitecture {
-  return {
-    business_name: 'Example Yard Co',
-    site_summary: 'Example Yard Co keeps gardens tidy in Riverton and Draper.',
-    pages: [
-      {
-        path: '/',
-        kind: 'home',
-        title: 'Example Yard Co — garden care in Riverton',
-        meta_description: 'Example Yard Co has kept gardens tidy in Riverton since 2009, with weekly mowing and paver work across Riverton and Draper.',
-        primary_query: 'who does garden care in Riverton',
-        h1: 'Garden care in Riverton',
-        breadcrumb: [],
-        entity_name: null,
-        sections: [{ id: 'overview', h2: 'What we do', intent: 'Say what the company does and where.', image_slot: 'none', checklist_ids: ['tel-link'] }],
-      },
-      {
-        path: '/services/mowing/',
-        kind: 'service',
-        title: 'Weekly mowing in Riverton — Example Yard Co',
-        meta_description: 'Weekly mowing from Example Yard Co, the crew that has kept gardens tidy in Riverton since 2009. Booked by phone.',
-        primary_query: 'weekly mowing Riverton',
-        h1: 'Weekly mowing',
-        breadcrumb: ['Services', 'Mowing'],
-        entity_name: 'Weekly mowing',
-        sections: [{ id: 'mowing', h2: 'How mowing works', intent: 'Explain the mowing offer.', image_slot: 'none', checklist_ids: [] }],
-      },
-    ],
-    services: [{ name: 'Weekly mowing', detail: 'Mowing every week', source_kind: 'source', source_page_url: SOURCE_URL, source_quote: 'Weekly mowing starts at $45 per visit.' }],
-    areas: [{ name: 'Riverton', detail: '', source_kind: 'source', source_page_url: SOURCE_URL, source_quote: 'Our crews work across Riverton and Draper.' }],
-    credentials: [{ name: 'Licensed and insured', detail: '', source_kind: 'source', source_page_url: SOURCE_URL, source_quote: 'We are licensed and insured for every job we take on.' }],
-    price_statements: [],
-    rating_value: '4.9',
-    rating_count: '132',
-    rating_page_url: SOURCE_URL,
-    rating_quote: 'Rated 4.9 by 132 customers on our review page.',
-    internal_links: [{ from_path: '/', to_path: '/services/mowing/', anchor_text: 'Weekly mowing' }],
-    notes: [],
-  };
-}
-
-/** The pass-2 shape for one page. */
-export function fixtureContent(sectionId: string, opener: string, quote: string | null, blocks: { text: string; quote: string | null }[] = [], faq: { q: string; a: string; quote: string | null }[] = []): PageContent {
-  const prov = (q: string | null) =>
-    q ? { source_kind: 'source' as const, source_page_url: SOURCE_URL, source_quote: q } : { source_kind: 'placeholder' as const, source_page_url: null, source_quote: null };
-  return {
-    sections: [
-      {
-        id: sectionId,
-        h2: sectionId === 'overview' ? 'What we do' : 'How mowing works',
-        opener: { kind: 'paragraph', text: opener, ...prov(quote) },
-        blocks: blocks.map((b) => ({ kind: 'paragraph' as const, text: b.text, ...prov(b.quote) })),
-        cta_label: 'Call us',
-        cta_kind: 'tel',
-        cta_target: '801-555-0100',
-      },
-    ],
-    faq: faq.map((f) => ({ q: f.q, a: f.a, ...prov(f.quote) })),
-    notes: [],
   };
 }
 
@@ -228,139 +108,223 @@ export function fixtureReport(items: ReportItem[] = [item('tel-link')]): Report 
   };
 }
 
+
 // ---------------------------------------------------------------------------------------------
-// A rendered site on disk, correct by construction, so each validator test can break one thing.
+// A filled page on disk, correct by construction, so each gate test can break one thing.
 // ---------------------------------------------------------------------------------------------
 
-import fs from 'node:fs';
-import path from 'node:path';
-import { buildCopyMap, indexCopy, type CopyIndex } from '../src/site/copy.js';
-import { assembleDocument } from '../src/site/render.js';
-import type { SeoContext } from '../src/site/seo.js';
-import type { BuildProfile, CopyMap, RenderedPage } from '../src/site/types.js';
-import { hrefBetween, outputFile } from '../src/site/paths.js';
-
-const HOME_HEADER = `<nav aria-label="Site">
-  <a href="index.html" aria-current="page">Home</a>
-  <a href="services/mowing/index.html">Weekly mowing</a>
-</nav>
-<a class="tel" href="tel:8015550100" data-checklist="tel-link">801-555-0100</a>`;
-
-const SERVICE_HEADER = `<nav aria-label="Site">
-  <a href="../../index.html">Home</a>
-  <a href="index.html" aria-current="page">Weekly mowing</a>
-</nav>
-<a class="tel" href="tel:8015550100">801-555-0100</a>`;
-
-const FOOTER = `<nav aria-label="Footer"><a href="index.html">Home</a></nav>
-<address>1 Test Way, Riverton, UT, 84065</address>`;
-
-export function homeMarkup(): RenderedPage {
-  return {
-    header_html: HOME_HEADER,
-    main_html: `<section id="overview" aria-labelledby="overview-h">
-  <h1 id="overview-h">Garden care in Riverton</h1>
-  <p data-copy-id="p001" data-answer-first>Example Yard Co has kept gardens tidy in Riverton since 2009.</p>
-  <p data-copy-id="p002">Our crews work across Riverton and Draper.</p>
-  <a class="cta" href="tel:8015550100">Call us</a>
-</section>`,
-    footer_html: FOOTER,
-    sticky_html: '',
-  };
-}
+const I = 'data-slot-intent';
 
 /**
- * What the render stage produces in a `--preview` build: the deferred page is still named in the nav,
- * but its link goes to the home page, because its file does not exist.
+ * A miniature template with one of everything the fill has to handle: a required paragraph, an
+ * optional price, a repeat with two prototypes, an omittable region, a marked FAQ, and the audit
+ * tags the coverage gate looks for.
  */
-export function previewHomeMarkup(): RenderedPage {
+export const FIXTURE_TEMPLATE = `<!doctype html>
+<html lang="en" data-mock-tokens="Mock%20Yard%20Co mockyard.example (555)%20000-0000">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mock Yard Co</title>
+  <meta name="description" content="The mock business, which must not survive a fill of this template.">
+  <meta name="theme-color" content="#123456">
+  <style>
+    :root { --brand-accent: #1f6f43; --brand-accent-dark: #14532d; --brand-accent-fg: #ffffff; }
+    body { background: #ffffff; color: #111111; }
+    a { color: var(--brand-accent-dark); }
+    .btn { background: var(--brand-accent); color: var(--brand-accent-fg); }
+    .callbar { position: fixed; bottom: 0; left: 0; right: 0; }
+    @media (prefers-reduced-motion: reduce) { * { animation: none } }
+    @media (prefers-color-scheme: dark) { :root { --brand-accent: #4ade80; --brand-accent-dark: #86efac; --brand-accent-fg: #06130b; } body { background: #0b0f0c; color: #e8efe9; } }
+  </style>
+  <script type="application/ld+json" data-checklist="structured-data jsonld-localbusiness meta-title-description">{"@context":"https://schema.org","@graph":[{"@type":"LocalBusiness","name":"Mock Yard Co"}]}</script>
+</head>
+<body>
+  <header>
+    <nav aria-label="Site"><a class="skip-link" href="#main">Skip to content</a><a href="#services">Services</a><a href="#faq">FAQ</a><a href="#contact">Contact</a></nav>
+    <a class="tel" href="tel:+15550000000" data-slot-href="fact.phone_href" data-checklist="tel-link tel-link-above-fold"><span data-slot="fact.phone">(555) 000-0000</span></a>
+  </header>
+  <main id="main" data-checklist="h2-structure">
+    <section class="hero" id="hero" aria-labelledby="hero-h">
+      <h1 id="hero-h" data-slot="hero.h1" data-slot-kind="heading" data-slot-max="80" ${I}="What the business does." data-checklist="single-h1">Mock Yard Co keeps gardens tidy</h1>
+      <p class="lede" data-answer-first data-slot="hero.lede" data-slot-kind="paragraph" data-slot-max="280" ${I}="Answer-first: services and places." data-checklist="C-answer-first">Mock Yard Co has kept gardens tidy in Mocktown since 1999.</p>
+      <a class="btn" href="#contact" data-slot="hero.cta" data-slot-kind="heading" data-slot-max="24" ${I}="The primary action.">Get a quote</a>
+    </section>
+    <section class="section" id="services" aria-labelledby="services-h" data-omit-if-empty="services">
+      <h2 id="services-h" data-slot="services.h2" data-slot-kind="heading" data-slot-max="60" ${I}="Heading for what is sold.">What we do</h2>
+      <p data-answer-first data-slot="services.answer" data-slot-kind="paragraph" data-slot-max="240" ${I}="Answer-first: the kinds of work." data-checklist="C-answer-first">We mow, we edge, and we haul it away.</p>
+      <div class="cards" data-repeat="services" data-repeat-min="2" data-repeat-max="4">
+        <article class="card feature" data-repeat-item>
+          <h3 data-slot="services[].name" data-slot-kind="heading" data-slot-max="48" ${I}="Name one service.">Weekly mowing</h3>
+          <p data-slot="services[].blurb" data-slot-kind="paragraph" data-slot-max="180" ${I}="What the buyer gets.">Cut, trim and blow off, same day each week.</p>
+          <p class="price" data-slot="services[].price" data-slot-kind="price" data-slot-max="28" data-slot-optional ${I}="A price only if stated.">From $45 a visit</p>
+        </article>
+        <article class="card" data-repeat-item>
+          <h3 data-slot="services[].name" data-slot-kind="heading" data-slot-max="48" ${I}="Name one service.">Paver installation</h3>
+          <p data-slot="services[].blurb" data-slot-kind="paragraph" data-slot-max="180" ${I}="What the buyer gets.">Compacted base, edge restraint, polymeric sand.</p>
+          <p class="price" data-slot="services[].price" data-slot-kind="price" data-slot-max="28" data-slot-optional ${I}="A price only if stated.">From $9,200</p>
+        </article>
+      </div>
+    </section>
+    <section class="section" id="faq" aria-labelledby="faq-h" data-omit-if-empty="faq">
+      <h2 id="faq-h" data-slot="faq.h2" data-slot-kind="heading" data-slot-max="48" ${I}="Heading for the questions.">Frequently asked questions</h2>
+      <p data-answer-first data-slot="faq.answer" data-slot-kind="paragraph" data-slot-max="160" ${I}="Answer-first: whose questions." data-checklist="C-answer-first">These are the questions we are asked most.</p>
+      <div class="faq-list" data-repeat="faq" data-repeat-min="1" data-repeat-max="6" data-checklist="faq-present">
+        <details class="faq-item" data-repeat-item>
+          <summary><h3 class="faq-q" data-faq-q data-slot="faq[].q" data-slot-kind="heading" data-slot-max="90" ${I}="A question a buyer asks.">Do you work in my town?</h3></summary>
+          <p class="faq-a" data-faq-a data-answer-first data-slot="faq[].a" data-slot-kind="paragraph" data-slot-max="420" ${I}="Answer it in the first sentence.">We work across Mocktown and Mockville.</p>
+        </details>
+      </div>
+    </section>
+    <section class="section" id="contact" aria-labelledby="contact-h">
+      <h2 id="contact-h" data-slot="contact.h2" data-slot-kind="heading" data-slot-max="48" ${I}="Ask for the enquiry.">Get in touch</h2>
+      <p data-answer-first data-slot="contact.answer" data-slot-kind="paragraph" data-slot-max="220" ${I}="Answer-first: what happens next." data-checklist="C-answer-first">Send the address and we call you back.</p>
+      <form action="#" method="post" data-checklist="contact-form"><label for="n">Name</label><input id="n" name="n" type="text"><button class="btn" type="submit" data-slot="contact.submit" data-slot-kind="heading" data-slot-max="28" ${I}="The submit label.">Request a visit</button></form>
+      <dl data-checklist="address-present hours-present">
+        <div><dt>Address</dt><dd><address data-slot="fact.address">1 Mock Way, Mocktown</address></dd></div>
+        <div><dt>Hours</dt><dd data-slot="fact.hours" data-slot-optional>Mon-Fri</dd></div>
+      </dl>
+    </section>
+  </main>
+  <footer>
+    <nav aria-label="Footer"><a href="#main">Back to top</a></nav>
+    <p data-slot="fact.business_name">Mock Yard Co</p>
+  </footer>
+  <div class="callbar" data-checklist="sticky-mobile-cta">
+    <a href="tel:+15550000000" data-slot-href="fact.phone_href"><span data-slot="hero.cta" data-slot-mirror>Get a quote</span></a>
+  </div>
+</body>
+</html>
+`;
+
+let templateN = 0;
+
+/** Write the fixture template to a temp file and read its manifest. */
+export function fixtureTemplate(html = FIXTURE_TEMPLATE): { file: string; html: string; manifest: TemplateManifest } {
+  const file = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'fixture-tpl-')), `t${templateN++}.html`);
+  fs.writeFileSync(file, html);
+  return { file, html, manifest: readTemplate(file, 'landscaping', 'test/fixture-template.html') };
+}
+
+export const sourcedSlot = (slot: string, text: string, quote: string): SlotValue => ({
+  slot,
+  text,
+  source_kind: 'source',
+  source_page_url: SOURCE_URL,
+  source_quote: quote,
+});
+export const placeholderSlot = (slot: string, text: string): SlotValue => ({
+  slot,
+  text,
+  source_kind: 'placeholder',
+  source_page_url: null,
+  source_quote: null,
+});
+
+/** A pack that fills the fixture template completely, with every quote present in CORPUS_TEXT. */
+export function fixturePack(over: Partial<ContentPack> = {}): ContentPack {
+  const slots: SlotValue[] = [
+    sourcedSlot('hero.h1', 'Example Yard Co keeps gardens tidy', 'Example Yard Co has kept gardens tidy in Riverton since 2009.'),
+    sourcedSlot('hero.lede', 'Example Yard Co has kept gardens tidy in Riverton since 2009.', 'Example Yard Co has kept gardens tidy in Riverton since 2009.'),
+    sourcedSlot('hero.cta', 'Get a quote', 'We answer the phone seven days a week.'),
+    sourcedSlot('services.h2', 'What we do', 'Our crews work across Riverton and Draper.'),
+    sourcedSlot('services.answer', 'Our crews work across Riverton and Draper.', 'Our crews work across Riverton and Draper.'),
+    sourcedSlot('services[0].name', 'Weekly mowing', 'Weekly mowing starts at $45 per visit.'),
+    sourcedSlot('services[0].blurb', 'Weekly mowing, on the same day each week.', 'Weekly mowing starts at $45 per visit.'),
+    sourcedSlot('services[0].price', 'From $45 per visit', 'Weekly mowing starts at $45 per visit.'),
+    sourcedSlot('services[1].name', 'Paver installation', 'Our crews work across Riverton and Draper.'),
+    sourcedSlot('services[1].blurb', 'Installed by our own crew across Riverton.', 'Our crews work across Riverton and Draper.'),
+    sourcedSlot('faq.h2', 'Frequently asked questions', 'We answer the phone seven days a week.'),
+    sourcedSlot('faq.answer', 'These are the questions we are asked most often.', 'We answer the phone seven days a week.'),
+    sourcedSlot('faq[0].q', 'Do you work in my town?', 'Our crews work across Riverton and Draper.'),
+    // Deliberately not the same sentence as services.answer: two identical strings on the page would
+    // let an FAQ answer be edited without the AEO mirror check noticing.
+    sourcedSlot('faq[0].a', 'We answer the phone seven days a week, across Riverton and Draper.', 'We answer the phone seven days a week.'),
+    sourcedSlot('contact.h2', 'Get in touch', 'We answer the phone seven days a week.'),
+    sourcedSlot('contact.answer', 'We answer the phone seven days a week.', 'We answer the phone seven days a week.'),
+    sourcedSlot('contact.submit', 'Request a visit', 'We answer the phone seven days a week.'),
+  ];
   return {
-    ...homeMarkup(),
-    header_html: `<nav aria-label="Site">
-  <a href="index.html" aria-current="page">Home</a>
-  <a href="index.html">Weekly mowing</a>
-</nav>
-<a class="tel" href="tel:8015550100" data-checklist="tel-link">801-555-0100</a>`,
+    business_name: 'Example Yard Co',
+    title: 'Example Yard Co, garden care in Riverton',
+    meta_description: 'Example Yard Co has kept gardens tidy in Riverton and Draper since 2009, with weekly mowing and paver installation.',
+    site_summary: 'Garden care in Riverton, Utah.',
+    slots,
+    services: [{ name: 'Weekly mowing', detail: 'Same day each week', ...sourceFields('Weekly mowing starts at $45 per visit.') }],
+    areas: [{ name: 'Riverton', detail: '', ...sourceFields('Our crews work across Riverton and Draper.') }],
+    credentials: [],
+    price_statements: [],
+    rating_value: null,
+    rating_count: null,
+    rating_page_url: null,
+    rating_quote: null,
+    omit_sections: [],
+    notes: [],
+    ...over,
   };
 }
 
-export function serviceMarkup(): RenderedPage {
-  return {
-    header_html: SERVICE_HEADER,
-    main_html: `<section id="mowing" aria-labelledby="mowing-h">
-  <h1 id="mowing-h">Weekly mowing</h1>
-  <p data-copy-id="p004" data-answer-first>Weekly mowing starts at $45 per visit.</p>
-</section>`,
-    footer_html: `<nav aria-label="Footer"><a href="../../index.html">Home</a></nav>`,
-    sticky_html: '',
-  };
-}
+const sourceFields = (quote: string) => ({ source_kind: 'source' as const, source_page_url: SOURCE_URL, source_quote: quote });
 
 export interface FixtureSite {
   dir: string;
   copyIndex: CopyIndex;
   copyMap: CopyMap;
-  seo: SeoContext;
+  manifest: TemplateManifest;
+  pack: ContentPack;
+  html: string;
 }
 
-/** Write a two-page site that passes every gate. `mutate` may rewrite a page before it lands. */
+/**
+ * Fill the fixture template and write the result, exactly as a build would. `mutate` may rewrite the
+ * page before it lands, which is how each gate test breaks one thing.
+ */
 export function writeFixtureSite(
   dir: string,
-  opts: { profile?: BuildProfile; plan?: SitePlan; mutate?: (path: string, html: string) => string } = {},
+  opts: {
+    profile?: BuildProfile;
+    pack?: ContentPack;
+    template?: string;
+    mutate?: (pagePath: string, html: string) => string;
+    brandCss?: string | null;
+  } = {},
 ): FixtureSite {
   const profile = opts.profile ?? 'mockup';
-  const plan = opts.plan ?? fixturePlan();
-  const copyIndex = indexCopy(plan, fixtureCorpus());
-  const copyMap = buildCopyMap(copyIndex);
-  const seo: SeoContext = {
+  const tpl = fixtureTemplate(opts.template);
+  const pack = opts.pack ?? fixturePack();
+  const report = fixtureReport();
+
+  const filled = fill({ manifest: tpl.manifest, templateHtml: tpl.html, pack, facts: report.facts, assets: [], brandCss: opts.brandCss ?? null });
+  const copyIndex = indexFilledCopy(filled.copy, entitiesOf(pack), fixtureCorpus());
+  const copyMap = buildFilledCopyMap(copyIndex);
+
+  const $ = loadHtml(filled.html);
+  markUnverified($, copyIndex.placeholderIds);
+  const ctx: PageSeoContext = {
     profile,
     baseUrl: 'https://example.test',
     jsonldType: 'LocalBusiness',
-    facts: fixtureReport().facts,
-    plan,
+    facts: report.facts,
+    businessName: 'Example Yard Co',
+    siteSummary: pack.site_summary,
+    title: pack.title,
+    metaDescription: pack.meta_description,
+    entities: entitiesOf(pack),
     assets: [],
-    themeColor: '#123456',
-    buildDate: '2026-09-16',
+    buildDate: '2026-09-18',
   };
-  const ctx = {
-    llm: null as never,
-    model: '',
-    seo,
-    copy: copyIndex,
-    assets: [],
-    designMd: '',
-    telHref: 'tel:8015550100',
-    telLabel: '801-555-0100',
-    addressText: '1 Test Way, Riverton, UT, 84065',
-    hoursText: null,
-  };
-  fs.mkdirSync(path.join(dir, 'assets'), { recursive: true });
-  fs.writeFileSync(path.join(dir, 'assets', 'site.css'), ':root{--x:1}\n@media (prefers-reduced-motion: reduce){*{animation:none}}\n');
-  const markup: Record<string, RenderedPage> = { '/': homeMarkup(), '/services/mowing/': serviceMarkup() };
-  for (const page of plan.pages) {
-    const rendered = markup[page.path];
-    if (!rendered) continue;
-    let html = assembleDocument({
-      page,
-      rendered,
-      ctx,
-      lcpImage: null,
-      hasPlaceholders: false,
-      headChecklistIds: [],
-      faqChecklistIds: page.faq.length ? ['faq-present'] : [],
-      internalLinks: seo.plan.internal_links.filter((l) => l.from_path === page.path).map((l) => ({ href: hrefBetween(page.path, l.to_path, profile), label: l.anchor_text })),
-    });
-    if (opts.mutate) html = opts.mutate(page.path, html);
-    const file = outputFile(dir, page.path);
-    fs.mkdirSync(path.dirname(file), { recursive: true });
-    fs.writeFileSync(file, html);
-  }
-  return { dir, copyIndex, copyMap, seo };
+  patchHead($, ctx);
+  let html = $.html();
+  if (opts.mutate) html = opts.mutate('/', html);
+
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(path.join(dir, 'index.html'), html);
+  return { dir, copyIndex, copyMap, manifest: tpl.manifest, pack, html };
 }
 
-/** Replace the text of one copy-mapped paragraph without touching the head or the structured data. */
+/** Replace the text of one copy-mapped element without touching the head or the structured data. */
 export function replaceCopy(html: string, copyId: string, newText: string): string {
-  const re = new RegExp(`(<p[^>]*\\bdata-copy-id="${copyId}"[^>]*>)([^<]*)(</p>)`);
-  if (!re.test(html)) throw new Error(`replaceCopy: no paragraph with data-copy-id="${copyId}"`);
+  const re = new RegExp(`(<(?:p|h[1-6]|li|dd|cite|span|a|button|address)[^>]*\\bdata-copy-id="${copyId}"[^>]*>)([^<]*)(</)`);
+  if (!re.test(html)) throw new Error(`replaceCopy: no element with data-copy-id="${copyId}"`);
   return html.replace(re, `$1${newText}$3`);
 }
